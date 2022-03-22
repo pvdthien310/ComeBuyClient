@@ -1,11 +1,11 @@
-import logo from './logo.svg';
 import './App.css';
+import LoginRegister from './components/LoginAndRegister/LoginRegister';
 
 function App() {
   return (
-   <div>
-     ComeBuy website
-  </div>
+    <div>
+      <LoginRegister />
+    </div>
   );
 }
 
