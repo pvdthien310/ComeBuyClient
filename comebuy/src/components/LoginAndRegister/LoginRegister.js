@@ -1,14 +1,37 @@
 import React, {useState, useRef} from 'react'
-import {TextField, Checkbox, Typography, FormControlLabel, Modal, Box, Button, Collapse, IconButton } from '@material-ui/core';
+import {TextField, Checkbox, Typography, FormControlLabel, Modal, Box, Button } from '@material-ui/core';
 import CheckCircleRoundedIcon from '@mui/icons-material/CheckCircleRounded';
 import Alert from '@mui/material/Alert';
 import RefreshRoundedIcon from '@mui/icons-material/RefreshRounded';
-import CloseIcon from '@mui/icons-material/Close';
+import { makeStyles } from "@material-ui/core";
+import { Autorenew } from "@material-ui/icons";
+import clsx from "clsx";
+
 import CountDown from './CountDown'
-
-import CheckPassword from  './ValidationDataForAccount'
-
+import * as Validation from  './ValidationDataForAccount'
 import checkPassword from './LoginRegister.css'
+
+
+const useStyles = makeStyles((theme) => ({
+	refresh: {
+		marginTop: "20px",
+		cursor: "pointer",
+		margin: "auto",
+		"&.spin": {
+			animation: "$spin 1s 1",
+			pointerEvents:'none'
+		}
+	},
+	"@keyframes spin": {
+		"0%": {
+			transform: "rotate(0deg)"
+		},
+		"100%": {
+			transform: "rotate(360deg)"
+		}
+	}
+}));
+
 
 function LoginRegister() {
 
@@ -32,6 +55,12 @@ function LoginRegister() {
 
      //for open error alert CFpassword
      const [openCfPasswordError, setOpenCfPasswordError] = useState(false); 
+
+     //for open error alert username
+     const [openUsernameError, setOpenUsernameError] = useState(false); 
+
+     //for open error alert email
+     const [openEmailError, setOpenEmailError] = useState(false); 
 
     //useRef for auto focusing
     const pin1Ref = useRef(null)
@@ -65,30 +94,49 @@ function LoginRegister() {
         setToggleRefresh(true);
     }
 
-    //validation username if it's true then it's wrong
-    const validateUsername = (username) => {
-        return username === null || username.match(/^ *$.,;:(){}[]/) !== null;
-    }
+    //for animation refresh in verify
+    const [spin, setSpin] = useState(false);
+	const classes = useStyles();
+
+	const refreshCanvas = () => {
+		setSpin(true);
+		setTimeout(() => {
+			setSpin(false);
+		}, 1000);
+	};
+
+
 
     const handleCreateAccount  = () => {
-       //validate password
-       if(dataForReg.password.length < 8) {
-            setOpenPasswordError(true)
-       } else {
-            if(!CheckPassword(dataForReg.password)) {
-                setOpenPasswordError(true)
-            } else {
-                if(dataForReg.password !== cfPass) {
-                    setOpenCfPasswordError(true)
-                } else {
-                    return
-                }
-            }
-       }
-
-
+        //validate username first -> email -> password
+    //    if(Validation.CheckUsername(dataForReg.username)) {
+    //        setOpenUsernameError(true);
+    //    } else {
+    //         //Validate email
+    //         if(!Validation.CheckEmail(dataForReg.email)) {
+    //             setOpenEmailError(true);
+    //         } else {
+    //              //validate password
+    //             if(dataForReg.password.length < 8) {
+    //                 setOpenPasswordError(true);
+    //             } else {
+    //                 if(!Validation.CheckPassword(dataForReg.password)) {
+    //                     setOpenPasswordError(true)
+    //                 } else {
+    //                     if(dataForReg.password !== cfPass) {
+    //                         setOpenCfPasswordError(true)
+    //                         } else {
+    //                             handleOpenModalVerify();
+    //                         }
+    //                     }
+    //                 }
+    //             }
+    //         }
+    handleOpenModalVerify();
     }
 
+
+    
     const handleVerifyAndReg = () => {
         console.log(pin1 + pin2 + pin3 + pin4 + pin5);
     }
@@ -99,6 +147,7 @@ function LoginRegister() {
             <form validate>
             <Typography variant="h4" style={{marginBottom: '20px', fontFamily:'-moz-initial'}}>Create an account</Typography>
                 
+                {/*USERNAME*/}
                 <TextField
                     style={{marginBottom: '10px'}} 
                     name="username"
@@ -107,8 +156,16 @@ function LoginRegister() {
                     type="text"
                     fullWidth
                     value={dataForReg.username}
+                    onFocus={() => setOpenUsernameError(false)}
                     onChange={(e) => setDataForReg({...dataForReg, username: e.target.value })}
                 />
+                { openUsernameError ? (
+                    <Alert severity="warning">Username can't have only space or any these letter /^ *$.,;:@#""''-!`~%&\/(){}[]/</Alert>
+                ):(
+                    null
+                )}
+
+                {/*EMAIL*/}
                 <TextField 
                     style={{marginBottom: '10px'}} 
                     name="email"
@@ -117,10 +174,16 @@ function LoginRegister() {
                     type="email"
                     fullWidth
                     value={dataForReg.email}
+                    onFocus={() => setOpenEmailError(false)}
                     onChange={(e) => setDataForReg({...dataForReg, email: e.target.value })}
                 />
+                 { openEmailError ? (
+                    <Alert severity="warning">Please type email</Alert>
+                ):(
+                    null
+                )}
 
-                {/*Password */}
+                {/*PASSWORD */}
                 <TextField 
                     style={{marginBottom: '10px'}} 
                     name="password"
@@ -169,8 +232,6 @@ function LoginRegister() {
                     View Term for signing up
                 </Button>
                 )}
-               
-
                  <Modal
                     open={openModal}
                     onClose={handleCloseModal}
@@ -323,9 +384,17 @@ function LoginRegister() {
                         <div style={{marginTop: '15px', display: 'flex', flexDirection: 'row', justifyContent: 'center'}}>
                             {
                                 toggleRefresh ? (
-                                    <Button>
-                                        <RefreshRoundedIcon style={{width: '30px', height: '30px',}} />
-                                    </Button>
+                                    // <Button>
+                                    //     <RefreshRoundedIcon style={{width: '30px', height: '30px',}} />
+                                    // </Button>
+                                    <Autorenew
+			className={clsx({
+				[classes.refresh]: true,
+				spin: spin
+			})}
+			onClick={refreshCanvas}
+			spin={360}
+		/>
                                 ) : (
                                     <CountDown onTimesup={onTimesup} />
                                 )
