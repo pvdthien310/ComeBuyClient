@@ -1,28 +1,28 @@
 import validator from 'validator'
 
 //Validate password if it's false then it's false
-export function CheckPassword (password) {
-    // at least one number, one lowercase and one uppercase letter
-    var re = /(?=.*\d)(?=.*[a-z])(?=.*[A-Z])/;
-    return re.test(password);
-  };
+export function CheckPassword(password) {
+  // at least one number, one lowercase and one uppercase letter
+  var re = /(?=.*\d)(?=.*[a-z])(?=.*[A-Z])/;
+  return re.test(password);
+};
 
-  //validation username if it's true then it's wrong
-export function CheckUsername (username) {
+//validation username if it's true then it's wrong
+export function CheckUsername(username) {
   var format = /[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]+/;
 
-  if(format.test(username)){
+  if (format.test(username)) {
     return true;
   } else {
     return false;
   }
 }
 
-  //Validation email
+//Validation email
 export function CheckEmail(mail) {
-    if (validator.isEmail(mail)) {
-      return true;
-    } else {
-      return false
-    }
+  if (validator.isEmail(mail)) {
+    return true;
+  } else {
+    return false
+  }
 }

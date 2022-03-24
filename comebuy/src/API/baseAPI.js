@@ -1,6 +1,6 @@
 import axios from 'axios'
 
-import { local_base_URL } from '../constant.js';
+import { local_base_URL } from '../../constant.js';
 import JWTApi from './JWTAPI.js';
 
 
@@ -41,7 +41,7 @@ DatabaseClient.interceptors.response.use(
                     try {
                         const refreshToken = await localStorage.getItem('refreshToken');
                         const rs = await JWTApi.RefreshToken(refreshToken);
-                        await localStorage.setItem('accessToken',rs.accessToken)
+                        await localStorage.setItem('accessToken', rs.accessToken)
                         return DatabaseClient(originalConfig);
                     }
                     catch (_error) {
