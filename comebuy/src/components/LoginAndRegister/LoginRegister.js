@@ -9,6 +9,12 @@ import { makeStyles } from "@material-ui/core";
 import { Autorenew } from "@material-ui/icons";
 import clsx from "clsx";
 
+//For redux
+import { useDispatch } from 'react-redux'
+import { toast } from 'react-toastify';
+import { register } from '../../redux/slices/accountSlice'
+
+
 import CountDown from './CountDown'
 import * as Validation from './ValidationDataForAccount'
 import checkPassword from './LoginRegister.css'
@@ -50,9 +56,17 @@ function LoginRegister() {
 
     //Data for register
     const [dataForReg, setDataForReg] = useState({
-        username: '',
-        email: '',
-        password: '',
+        userID: "00000000-0000-0000-0000-000000000000",
+        name: "kkk",
+        dob: "kk",
+        avatar: "kk",
+        phoneNumber: "kkk",
+        email: "test.com",
+        password: "xxxxxxxxxxxxxxxxxxxx",
+        bio: "kkk",
+        address: "kk",
+        role: "kk",
+        sex: "kk"
     })
 
     //for open error alert password
@@ -126,6 +140,10 @@ function LoginRegister() {
     //For register button
     const [canReg, setCanReg] = useState(true);
 
+
+    //for redux
+    const dispatch = useDispatch();
+
     const refreshCanvas = () => {
         setSpin(true);
         setTimeout(() => {
@@ -137,7 +155,7 @@ function LoginRegister() {
     const handleCreateAccount = () => {
         //validate username first -> email -> password
         //validate username
-        if (Validation.CheckUsername(dataForReg.username)) {
+        if (Validation.CheckUsername(dataForReg.name)) {
             setOpenUsernameError(true);
         } else {
             //Validate email
@@ -164,6 +182,7 @@ function LoginRegister() {
 
     const handleVerifyAndReg = () => {
         console.log(pin1 + pin2 + pin3 + pin4 + pin5);
+        dispatch(register({ dataForReg, toast }))
     }
 
     return (
@@ -180,9 +199,9 @@ function LoginRegister() {
                         label="User name"
                         type="text"
                         fullWidth
-                        value={dataForReg.username}
+                        value={dataForReg.name}
                         onFocus={() => setOpenUsernameError(false)}
-                        onChange={(e) => setDataForReg({ ...dataForReg, username: e.target.value })}
+                        onChange={(e) => setDataForReg({ ...dataForReg, name: e.target.value })}
                     />
                     {openUsernameError ? (
                         <Alert severity="warning">Username can't have only space or any of these letter /^ *$.,;:@#""''-!`~%&\/(){ }[]/</Alert>
