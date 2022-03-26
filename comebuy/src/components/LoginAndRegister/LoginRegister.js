@@ -8,9 +8,10 @@ import Alert from '@mui/material/Alert';
 import { makeStyles } from "@material-ui/core";
 import { Autorenew } from "@material-ui/icons";
 import clsx from "clsx";
+import {currentUser} from './../../redux/selectors'
 
 //For redux
-import { useDispatch } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 import { toast } from 'react-toastify';
 import { register, login } from '../../redux/slices/accountSlice'
 
@@ -45,6 +46,8 @@ const useStyles = makeStyles((theme) => ({
 
 
 function LoginRegister() {
+
+    const _currentUser = useSelector(currentUser)
 
     const [addClass, setAddClass] = useState("");
 
@@ -162,6 +165,7 @@ function LoginRegister() {
         if (emailUser != null && passwordUser != null) {
             dispatch(login({ email: emailUser, password: passwordUser }))
         }
+        console.log('aaaaa')
     }
     const handleCreateAccount = () => {
         //validate username first -> email -> password
@@ -552,7 +556,13 @@ function LoginRegister() {
                         onChange={(e) => {
                             setPasswordUser(e.target.value);
                         }} />
-                    <button type="submit" onClick={handleLogin} >Sign in</button>
+                    <Button
+                        onClick={() => {
+                            handleLogin()
+                        }}
+                    >
+                        Sign In
+                    </Button>
                 </form>
             </div>
 
