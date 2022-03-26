@@ -1,6 +1,5 @@
 import axios from 'axios'
-
-import { local_base_URL } from '../constant';
+import { local_base_URL } from '../constant.js';
 import JWTApi from './JWTAPI.js';
 
 
