@@ -4,10 +4,6 @@ import { local_base_URL } from '../constant';
 import JWTApi from './JWTAPI.js';
 
 
-// const { refreshToken } = useSelector(state => { return state.JWT })
-// const { accessToken } = useSelector(state => { return state.JWT });
-
-
 const DatabaseClient = axios.create({
     baseURL: local_base_URL,
     headers: {
