@@ -45,7 +45,7 @@ export const accountSlice = createSlice({
       "sex": "kk"
     },
     loading: false,
-    error: ''
+    errorMessage: 'this is message'
   },
   extraReducers: {
     [register.pending]: (state, action) => {
