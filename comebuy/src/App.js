@@ -1,9 +1,9 @@
 
 import './App.css';
-import React, { useEffect,useState } from 'react'
-import { useDispatch,useSelector } from 'react-redux';
-import { currentUser, loading_user,messageError } from './redux/selectors';
-import {login } from './redux/slices/accountSlice';
+import React, { useEffect, useState } from 'react'
+import { useDispatch, useSelector } from 'react-redux';
+import { currentUser, loading_user, messageError } from './redux/selectors';
+import { login } from './redux/slices/accountSlice';
 
 function App() {
   const [, forceRerender] = useState();
@@ -17,9 +17,11 @@ function App() {
       <button onClick={() => dispatch(login({ email: "pvdthien@gmail.com", password: "123456" }))}>
         Login
       </button>
+      <input name='email' type={'email'}></input>
+      <input name='password' type={'password'}></input>
       <div>
         {
-          _loadingUser? <p>loading.....</p> :
+          _loadingUser ? <p>loading.....</p> :
             <div> <p> {_currentUser.email != 'test.com' && !_loadingUser ? _currentUser.email : _messageError}</p>
             </div>
         }

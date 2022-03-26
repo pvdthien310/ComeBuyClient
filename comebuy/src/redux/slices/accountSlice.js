@@ -4,9 +4,7 @@ import accountApi from "../../API/accountAPI";
 
 
 export const login = createAsyncThunk(
-  // Tên action
   'account/login',
-
   // Code async logic, tham số đầu tiên data là dữ liệu truyền vào khi gọi action
   async (data, { rejectWithValue }) => {
     const response = await JWTApi.login(data.email, data.password)
@@ -18,7 +16,6 @@ export const login = createAsyncThunk(
       return jsonData;
     }
   }
-
 );
 
 export const accountSlice = createSlice({
@@ -50,22 +47,17 @@ export const accountSlice = createSlice({
 
   },
   extraReducers: (builder) => {
-    // Bắt đầu thực hiện action login (Promise pending)
+    
     builder.addCase(login.pending, (state) => {
-      // Bật trạng thái loading
       state.loading = true;
     });
 
-    // Khi thực hiện action login thành công (Promise fulfilled)
     builder.addCase(login.fulfilled, (state, action) => {
-      // Tắt trạng thái loading, lưu thông tin user vào store
       state.loading = false;
       state.user = action.payload;
     });
 
-    // Khi thực hiện action login thất bại (Promise rejected)
     builder.addCase(login.rejected, (state, action) => {
-      // Tắt trạng thái loading, lưu thông báo lỗi vào store
       state.loading = false;
       state.errorMessage = action.payload;
     });
