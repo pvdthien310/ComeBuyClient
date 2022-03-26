@@ -1,6 +1,25 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import * as api from "../../API/AccountAPI"
 
+import JWTApi from "../../API/JWTAPI";
+import accountApi from "../../API/accountAPI";
+
+
+export const login = createAsyncThunk(
+  'account/login',
+  // Code async logic, tham số đầu tiên data là dữ liệu truyền vào khi gọi action
+  async (data, { rejectWithValue }) => {
+    const response = await JWTApi.login(data.email, data.password)
+    if (!response.accessToken) {
+      return rejectWithValue("Login Failed");
+    }
+    else {
+      const jsonData = await accountApi.getAccountbyEmail(data.email)
+      return jsonData;
+    }
+  }
+);
+
 export const register = createAsyncThunk("account/register", async ({ dataForReg, toast }) => {
     try {
         const response = await api.register(dataForReg);
@@ -40,7 +59,20 @@ const accountSlice = createSlice({
         [register.rejected]: (state, action) => {
             state.loading = false;
             state.error = action.payload.message;
-        }
+        },
+        [login.pending]: (state) => {
+            state.loading = true;
+          },
+      
+          [login.fulfilled]:  (state, action) => {
+            state.loading = false;
+            state.user = action.payload;
+          },
+      
+          [login.rejected]: (state, action) => {
+            state.loading = false;
+            state.errorMessage = action.payload;
+          }
     }
 })
 
