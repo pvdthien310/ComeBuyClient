@@ -12,7 +12,7 @@ import clsx from "clsx";
 //For redux
 import { useDispatch } from 'react-redux'
 import { toast } from 'react-toastify';
-import { register } from '../../redux/slices/accountSlice'
+import { register, login } from '../../redux/slices/accountSlice'
 
 
 import CountDown from './CountDown'
@@ -84,6 +84,12 @@ function LoginRegister() {
     //For show password
     const [passwordShown, setPasswordShown] = useState(false);
 
+    //For email login 
+    const [emailUser, setEmailUser] = useState(null);
+
+    //For password login 
+    const [passwordUser, setPasswordUser] = useState(null);
+
     // Password toggle handler
     const togglePassword = () => {
         // When the handler is invoked
@@ -152,6 +158,11 @@ function LoginRegister() {
         }, 1000);
     };
 
+    const handleLogin = () => {
+        if (emailUser != null && passwordUser != null) {
+            dispatch(login({ email: emailUser, password: passwordUser }))
+        }
+    }
     const handleCreateAccount = () => {
         //validate username first -> email -> password
         //validate username
@@ -529,9 +540,19 @@ function LoginRegister() {
             <div className="form-container sign-in-container">
                 <form>
                     <h1>Sign in</h1>
-                    <TextField type="email" placeholder="Email" />
-                    <TextField type="password" placeholder="Password" />
-                    <button type="submit" >Sign in</button>
+                    <TextField
+                        type="email"
+                        placeholder="Email"
+                        onChange={(e) => {
+                            setEmailUser(e.target.value);
+                        }} />
+                    <TextField
+                        type="password"
+                        placeholder="Password"
+                        onChange={(e) => {
+                            setPasswordUser(e.target.value);
+                        }} />
+                    <button type="submit" onClick={handleLogin} >Sign in</button>
                 </form>
             </div>
 

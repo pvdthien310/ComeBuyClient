@@ -1,5 +1,15 @@
-import axios from 'axios'
-import DatabaseClient from './baseAPI'
+import DatabaseClient from './baseAPI.js'
 
+const baseURL = 'account'
 
-export const register = (dataForReg) => DatabaseClient.post('/account', dataForReg)
+const accountApi = {
+    getAccountbyEmail: async (email) => {
+        const res = await DatabaseClient.get('/' + baseURL + '/email/' +  email);
+        return res.data;
+    },
+    register: async (dataForReg) => {
+        const res = DatabaseClient.post('/' + baseURL, dataForReg)
+        return res.data
+    }
+}
+export default accountApi
