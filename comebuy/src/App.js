@@ -1,7 +1,7 @@
 import './App.css';
-import LoginRegister from './components/LoginAndRegister/LoginRegister';
+import LoginRegister from './container/LoginAndRegister/LoginRegister';
 import { Route, Routes } from 'react-router-dom';
-import HomePage from './components/HomePage/HomePage';
+import HomePage from './container/HomePage/HomePage';
 
 function App() {
   return (

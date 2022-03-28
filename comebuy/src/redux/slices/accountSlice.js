@@ -68,7 +68,6 @@ export const accountSlice = createSlice({
       state.user = action.payload;
       state.isSignedIn = true
     },
-
     [login.rejected]: (state, action) => {
       state.loading = false;
       state.errorMessage = action.payload;

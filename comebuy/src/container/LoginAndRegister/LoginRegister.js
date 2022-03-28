@@ -8,7 +8,7 @@ import Alert from '@mui/material/Alert';
 import { makeStyles } from "@material-ui/core";
 import { Autorenew } from "@material-ui/icons";
 import clsx from "clsx";
-import { currentUser, isSignedIn_user, loading_user, messageError } from './../../redux/selectors'
+import { currentUser, isSignedIn_user, loading_user, messageError } from '../../redux/selectors'
 
 //For redux
 import { useDispatch, useSelector } from 'react-redux'
