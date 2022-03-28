@@ -20,7 +20,7 @@ function HomePage() {
                 <p>
                     <p>{_currentUser.name}</p>
 
-                    <Button onClick={NavigateLogin}>click me</Button>
+                    <Button onClick={NavigateLogin}>Login</Button>
                 </p>
             </div>
             <Slider style={{ position: 'relative' }}></Slider>
