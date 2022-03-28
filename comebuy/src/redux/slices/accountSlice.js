@@ -3,6 +3,19 @@ import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import JWTApi from "../../api/JWTAPI";
 import accountApi from "../../api/accountAPI";
 
+const defaultUser = {
+  "userID": "00000000-0000-0000-0000-000000000000",
+  "name": "kkk",
+  "dob": "kk",
+  "avatar": "kk",
+  "phoneNumber": "kkk",
+  "email": "test.com",
+  "password": "xxxxxxxxxxxxxxxxxxxx",
+  "bio": "kkk",
+  "address": "kk",
+  "role": "kk",
+  "sex": "kk"
+}
 
 export const login = createAsyncThunk(
   'account/login',
@@ -19,34 +32,31 @@ export const login = createAsyncThunk(
   }
 );
 
-export const register = createAsyncThunk("account/register", async ({ dataForReg, toast }) => {
-  try {
-    const response = await accountApi.register(dataForReg);
-    toast.success("Register successfully")
-  } catch (error) {
-    console.log(error);
-  }
-})
+export const register = createAsyncThunk(
+  "account/register",
+  async ({ dataForReg, toast }) => {
+    try {
+      const response = await accountApi.register(dataForReg);
+      if (response)
+        toast.success("Register successfully")
+    } catch (error) {
+      console.log(error);
+    }
+  })
 
 export const accountSlice = createSlice({
   name: 'account',
   initialState: {
-    user: {
-      "userID": "00000000-0000-0000-0000-000000000000",
-      "name": "kkk",
-      "dob": "kk",
-      "avatar": "kk",
-      "phoneNumber": "kkk",
-      "email": "test.com",
-      "password": "xxxxxxxxxxxxxxxxxxxx",
-      "bio": "kkk",
-      "address": "kk",
-      "role": "kk",
-      "sex": "kk"
-    },
+    user: defaultUser,
     loading: false,
     errorMessage: 'this is message',
     isSignedIn: false
+  },
+  reducers: {
+    logout: (state) => {
+      state.isSignedIn = false;
+      state.user = defaultUser;
+    }
   },
   extraReducers: {
     [register.pending]: (state, action) => {

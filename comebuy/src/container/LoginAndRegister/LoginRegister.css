@@ -13,7 +13,25 @@
   margin: -20px 0 50px;
 } */
 
+/* #container {
+  background: #7f209c;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  font-family: "Montserrat", sans-serif;
+  
+} */
 
+.login_register{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  font-family: "Montserrat", sans-serif;
+  height: 100vh;
+  margin: -20px 0 50px;
+}
 
 h1 {
   font-weight: bold;
@@ -88,6 +106,10 @@ input {
   width: 100%;
 }
 
+.login_register {
+  display: flex;
+}
+
 .container {
   background-color: #fff;
   border-radius: 10px;
@@ -95,8 +117,11 @@ input {
   position: relative;
   overflow: hidden;
   width: 768px;
+  align-self: center;
   max-width: 100%;
   min-height: 650px;
+  align-items: center;
+  justify-content: center;
 }
 
 .form-container {
