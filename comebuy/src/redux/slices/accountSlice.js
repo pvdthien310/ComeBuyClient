@@ -45,7 +45,8 @@ export const accountSlice = createSlice({
       "sex": "kk"
     },
     loading: false,
-    errorMessage: 'this is message'
+    errorMessage: 'this is message',
+    isSignedIn: false
   },
   extraReducers: {
     [register.pending]: (state, action) => {
@@ -65,6 +66,7 @@ export const accountSlice = createSlice({
     [login.fulfilled]: (state, action) => {
       state.loading = false;
       state.user = action.payload;
+      state.isSignedIn = true
     },
 
     [login.rejected]: (state, action) => {

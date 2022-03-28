@@ -1,4 +1,4 @@
-import React, { useState, useRef } from 'react'
+import React, { useState, useRef, useEffect } from 'react'
 import { TextField, Checkbox, Typography, FormControlLabel, Modal, Box, Button } from '@material-ui/core';
 import IconButton from '@mui/material/IconButton';
 import CheckCircleRoundedIcon from '@mui/icons-material/CheckCircleRounded';
@@ -8,13 +8,13 @@ import Alert from '@mui/material/Alert';
 import { makeStyles } from "@material-ui/core";
 import { Autorenew } from "@material-ui/icons";
 import clsx from "clsx";
-import {currentUser} from './../../redux/selectors'
+import { currentUser, isSignedIn_user, loading_user, messageError } from './../../redux/selectors'
 
 //For redux
 import { useDispatch, useSelector } from 'react-redux'
 import { toast } from 'react-toastify';
 import { register, login } from '../../redux/slices/accountSlice'
-
+import { useNavigate } from 'react-router';
 
 import CountDown from './CountDown'
 import * as Validation from './ValidationDataForAccount'
@@ -48,6 +48,9 @@ const useStyles = makeStyles((theme) => ({
 function LoginRegister() {
 
     const _currentUser = useSelector(currentUser)
+    const _loadingUser = useSelector(loading_user)
+    const _isSignedIn = useSelector(isSignedIn_user)
+    const _messageError = useSelector(messageError)
 
     const [addClass, setAddClass] = useState("");
 
@@ -161,12 +164,21 @@ function LoginRegister() {
         }, 1000);
     };
 
+    const navigate = useNavigate()
+    useEffect(() => {
+        if (_currentUser.email !== 'test.com' && _isSignedIn == true) {
+            navigate('/')
+        }
+
+    }, [_currentUser]);
+
     const handleLogin = () => {
         if (emailUser != null && passwordUser != null) {
             dispatch(login({ email: emailUser, password: passwordUser }))
         }
         console.log('aaaaa')
     }
+
     const handleCreateAccount = () => {
         //validate username first -> email -> password
         //validate username
@@ -557,12 +569,15 @@ function LoginRegister() {
                             setPasswordUser(e.target.value);
                         }} />
                     <Button
-                        onClick={() => {
-                            handleLogin()
-                        }}
+                        onClick={() => handleLogin()}
                     >
                         Sign In
                     </Button>
+                    {
+                        _loadingUser == true ?
+                            <p>loading.....</p> :
+                            null
+                    }
                 </form>
             </div>
 
