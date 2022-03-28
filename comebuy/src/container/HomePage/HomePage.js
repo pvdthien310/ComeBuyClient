@@ -5,7 +5,7 @@ import { useNavigate } from 'react-router'
 import { Button } from '@material-ui/core';
 import { useSelector } from 'react-redux';
 import { currentUser } from '../../redux/selectors';
-import Slider from '../../components/Slider/slider';
+import Slider from '../../components/Slider/Slider';
 
 
 function HomePage() {

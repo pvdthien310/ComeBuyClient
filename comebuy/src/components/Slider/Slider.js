@@ -1,12 +1,9 @@
-import React, { useRef, useState, useEffect } from "react";
-// Import Swiper React components
+import React, {useState, useEffect } from "react";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { useDispatch, useSelector } from 'react-redux'
-import SwiperCore, { Autoplay } from 'swiper'
 import "swiper/css";
 import { getAll } from '../../redux/slices/productSlice'
 import { productListSelector } from "../../redux/selectors";
-import { red } from "@mui/material/colors";
 import SliderItem from "./SliderItem/SliderItem";
 function Slider() {
     const _productList = useSelector(productListSelector)
