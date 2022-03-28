@@ -1,7 +1,7 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 
-import JWTApi from "../../API/JWTAPI";
-import accountApi from "../../API/accountAPI";
+import JWTApi from "../../api/JWTAPI";
+import accountApi from "../../api/accountAPI";
 
 
 export const login = createAsyncThunk(

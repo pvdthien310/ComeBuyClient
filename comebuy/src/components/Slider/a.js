@@ -12,18 +12,15 @@ function Slider() {
     const _productList = useSelector(productListSelector)
     const dispatch = useDispatch()
     const [productList, setProductList] = useState([])
+
     useEffect(() => {
         dispatch(getAll())
-        console.log('aaaaa')
     }, [])
+
     useEffect(() => {
         setProductList(_productList)
-        console.log(productList)
     }, [_productList])
-    useEffect(() => {
-        console.log('bbbb')
-        console.log(productList)
-    }, [productList])
+    
     return (
         <Swiper
         // modules={[Autoplay]}
