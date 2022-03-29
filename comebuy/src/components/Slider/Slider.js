@@ -19,13 +19,7 @@ function Slider() {
     }, [_productList])
     
     return (
-        <Swiper
-        // modules={[Autoplay]}
-        // grabCursor={true}
-        // spaceBetween={0}
-        // slidesPerView={1}
-        //autoplay={{ delay: 3000 }}
-        >
+        <Swiper>
             {
                 productList.map((item, i) => (
                     <SwiperSlide key={i}>
