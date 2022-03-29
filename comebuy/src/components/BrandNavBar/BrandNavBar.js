@@ -22,7 +22,7 @@ const ImageButton = styled(ButtonBase)(({ theme }) => ({
         },
         '& .MuiTypography-root': {
             border: '3px solid currentColor',
-            height: '60%'
+            height: '80%'
         },
     },
 }));
@@ -69,27 +69,13 @@ const ImageMarked = styled('span')(({ theme }) => ({
     left: 'calc(50% - 9px)',
     transition: theme.transitions.create('opacity'),
 }));
-function BrandNavBar() {
 
-    const brandLine = [
-        {
-            title: 'Apple',
-            url: 'https://images.unsplash.com/photo-1598972428564-8dbf76afc2ae?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1169&q=80',
-        },
-        {
-            title: 'Dell',
-            url: 'https://cf.shopee.vn/file/b02801b98dbe4ba4a99e7ab48dc38e83_tn',
-        },
-        {
-            title: 'HP',
-            url: 'https://www.macitynet.it/wp-content/uploads/2016/04/HPlogo.jpg',
-        },
-        {
-            title: 'Lenovo',
-            url: 'https://images.unsplash.com/photo-1601406984081-44d85ce92f90?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1170&q=80',
-        }
-    ]
-
+const NavigateBrandLine = (value) => {
+    window.location="#Line_" + value
+    
+}
+function BrandNavBar(props) {
+    const brandLine = props.brandLine;
     return (
         <Box sx={{ flexGrow: 1, display: { xs: 'none', md: 'flex' } }}>
             {brandLine.map((brand) => (
@@ -98,14 +84,16 @@ function BrandNavBar() {
                     key={brand.title}
                     style={{
                         width: '15%',
-                        height: '80px'
+                        height: '70px'
                     }}
+                    onClick={() => NavigateBrandLine(brand.title)}
                 >
+                   
                     <ImageSrc style={{ backgroundImage: `url(${brand.url})` }} />
                     <ImageBackdrop className="MuiImageBackdrop-root" />
                     <Image>
                         <Typography
-                            
+
                             component="span"
                             variant="subtitle2"
                             color="inherit"

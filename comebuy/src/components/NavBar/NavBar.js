@@ -19,8 +19,6 @@ import { useNavigate } from 'react-router-dom'
 import { useSelector, useDispatch } from 'react-redux'
 import { isSignedIn_user } from './../../redux/selectors'
 import { accountSlice } from './../../redux/slices/accountSlice'
-import Tooltip from '@mui/material/Tooltip';
-import Avatar from '@mui/material/Avatar';
 
 
 const Search = styled('div')(({ theme }) => ({
@@ -202,6 +200,7 @@ export default function NavBar() {
 
     return (
         <Box sx={{ flexGrow: 1 }}>
+          
             <AppBar position="static" style={{ backgroundColor: 'black' }}>
                 <Toolbar>
                     <IconButton

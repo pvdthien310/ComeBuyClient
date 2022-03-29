@@ -1,0 +1,17 @@
+.BrandLine {
+    background-color: black;
+    padding: 12px;
+    margin-bottom: 10px;
+}
+.BrandLine__ImgBrand__Name
+{
+    color: white; 
+    align-self: center;
+}
+/* .MuiTypography-h6
+{
+    color: red
+}
+.a{
+    color: blue
+} */
