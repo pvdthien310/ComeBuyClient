@@ -1,18 +1,18 @@
 import React, { useState, useRef, useEffect } from 'react'
-import { TextField, Checkbox, Typography, FormControlLabel, Modal, Box, Button } from '@material-ui/core';
+import { TextField, Checkbox, Typography, FormControlLabel, Modal, Box, Button, Dialog, DialogTitle } from '@material-ui/core';
 import IconButton from '@mui/material/IconButton';
 import CheckCircleRoundedIcon from '@mui/icons-material/CheckCircleRounded';
 import VisibilityIcon from '@mui/icons-material/Visibility';
 import VisibilityOffIcon from '@mui/icons-material/VisibilityOff';
 import Alert from '@mui/material/Alert';
 import { makeStyles } from "@material-ui/core";
-import { Autorenew } from "@material-ui/icons";
+import { ArrowBackIosRounded, ArrowRightRounded, Autorenew, ErrorOutlineOutlined } from "@material-ui/icons";
 import clsx from "clsx";
-import { currentUser, isSignedIn_user, loading_user, messageError } from '../../redux/selectors'
+import { currentUser, isSignedIn_user, loading_user, messageError, is_Reg_Success } from '../../redux/selectors'
+import { unwrapResult } from '@reduxjs/toolkit'
 
 //For redux
 import { useDispatch, useSelector } from 'react-redux'
-import { toast } from 'react-toastify';
 import { register, login } from '../../redux/slices/accountSlice'
 import { useNavigate } from 'react-router';
 
@@ -43,14 +43,19 @@ const useStyles = makeStyles((theme) => ({
     }
 }));
 
-
-
 function LoginRegister() {
 
+    //for selector
     const _currentUser = useSelector(currentUser)
     const _loadingUser = useSelector(loading_user)
     const _isSignedIn = useSelector(isSignedIn_user)
     const _messageError = useSelector(messageError)
+    // const _isEmailExisted = useSelector(isEmail_existed)
+    const _isRegSuccess = useSelector(is_Reg_Success)
+
+
+    //for checking is email isEmailExisted
+    const [isEmailExisted, setIsEmailExisted] = useState(false)
 
     const [addClass, setAddClass] = useState("");
 
@@ -62,17 +67,17 @@ function LoginRegister() {
 
     //Data for register
     const [dataForReg, setDataForReg] = useState({
-        userID: "00000000-0000-0000-0000-000000000000",
-        name: "kkk",
-        dob: "kk",
-        avatar: "kk",
-        phoneNumber: "kkk",
-        email: "test.com",
-        password: "xxxxxxxxxxxxxxxxxxxx",
-        bio: "kkk",
-        address: "kk",
-        role: "kk",
-        sex: "kk"
+        userID: "",
+        name: "",
+        dob: "",
+        avatar: "",
+        phoneNumber: "",
+        email: "",
+        password: "",
+        bio: "",
+        address: "",
+        role: "",
+        sex: ""
     })
 
     //for open error alert password
@@ -95,6 +100,9 @@ function LoginRegister() {
 
     //For password login 
     const [passwordUser, setPasswordUser] = useState(null);
+
+    //For back to login button
+    const [getBackToLoginBtn, setBackToLoginBtn] = useState(false);
 
     // Password toggle handler
     const togglePassword = () => {
@@ -135,10 +143,24 @@ function LoginRegister() {
     //For modal verify
     const [openModalVerify, setOpenModalVerify] = useState(false);
     const handleOpenModalVerify = () => { setOpenModalVerify(true); setToggleRefresh(false) };
-    const handleCloseModalVerify = () => setOpenModalVerify(false);
+    const handleCloseModalVerify = () => { setOpenModalVerify(false) }
 
     //For toggle refresh button
     const [toggleRefresh, setToggleRefresh] = useState(false);
+
+    //for dialog alert that you reg successfully or not
+    const [openDialogRegSuccessfully, setOpenDialogRegSuccessfully] = useState(false);
+    const handleCloseDialogRegSuccessfully = () => {
+        setOpenDialogRegSuccessfully(false);;
+    };
+    const [openDialogRegFailed, setOpenDialogRegFailed] = useState(false);
+    const handleCloseDialogRegFailed = () => {
+        setOpenDialogRegFailed(false);;
+        setDataForReg({
+            ...dataForReg,
+            email: ""
+        })
+    };
 
     //For countdown caution
     const onTimesup = () => {
@@ -164,14 +186,15 @@ function LoginRegister() {
         }, 1000);
     };
 
-    const navigate = useNavigate()
-    useEffect(() => {
-        if (_currentUser.email !== 'test.com' && _isSignedIn == true) {
-            navigate('/')
-        }
+    //const navigate = useNavigate()
+    // useEffect(() => {
+    //     if (_currentUser.email !== '' && _isSignedIn == true) {
+    //         navigate('/')
+    //     }
+    // }, [_currentUser]);
 
-    }, [_currentUser]);
 
+    //handle login function
     const handleLogin = () => {
         if (emailUser != null && passwordUser != null) {
             dispatch(login({ email: emailUser, password: passwordUser }))
@@ -206,9 +229,38 @@ function LoginRegister() {
         }
     }
 
-    const handleVerifyAndReg = () => {
-        console.log(pin1 + pin2 + pin3 + pin4 + pin5);
-        dispatch(register({ dataForReg, toast }))
+    const [status, setStatus] = useState("")
+
+    const handleVerifyAndReg = async () => {
+        // dispatch(register({ dataForReg }))
+        //     .unwrap()
+        //     .then((originalPromiseResult) => {
+        //         console.log(originalPromiseResult);
+        //         // setStatus(true)
+        //         // console.log(status);
+        //     })
+        //     .catch((rejectedValueOrSerializedError) => {
+        //         console.log(rejectedValueOrSerializedError);
+        //         // setStatus(false)
+        //         // console.log(status);
+        //     })
+        try {
+            const resultAction = await dispatch(register({ dataForReg }))
+            const originalPromiseResult = unwrapResult(resultAction)
+            // handle result here
+            console.log(originalPromiseResult)
+            if (originalPromiseResult === true) {
+                setOpenDialogRegFailed(false)
+                setOpenDialogRegSuccessfully(!openDialogRegSuccessfully)
+            }
+        } catch (rejectedValueOrSerializedError) {
+            // handle error here
+            console.log(rejectedValueOrSerializedError);
+            if (rejectedValueOrSerializedError.message === 'Rejected') {
+                setOpenDialogRegFailed(true)
+                setOpenDialogRegSuccessfully(false)
+            }
+        }
     }
 
     return (
@@ -413,6 +465,35 @@ function LoginRegister() {
                             Register
                         </Button>
 
+                        {/*Dialog for having registered successfully or email existed */}
+                        {isEmailExisted ? (
+                            <Dialog open={openDialogRegFailed} onClose={handleCloseDialogRegFailed}>
+                                <DialogTitle color='success'>Registered failed</DialogTitle>
+                                <IconButton size='large' color='error' onClick={handleCloseDialogRegFailed}>
+                                    <ErrorOutlineOutlined color="error" />
+                                </IconButton>
+                            </Dialog>
+                        ) : (
+                            <Dialog open={openDialogRegSuccessfully} onClose={handleCloseDialogRegSuccessfully}>
+                                <DialogTitle color='success'>Registered successfully</DialogTitle>
+                                <IconButton size='large' color='success' onClick={handleCloseDialogRegSuccessfully}>
+                                    <ArrowRightRounded color="success" />
+                                </IconButton>
+                            </Dialog>
+                        )}
+
+
+                        {getBackToLoginBtn ? (
+                            <div>
+                                <IconButton color="success" size="small">
+                                    <ArrowBackIosRounded />
+                                    <p style={{ marginTop: "30px" }}>Back to login</p>
+                                </IconButton>
+                            </div>
+                        ) : (
+                            null
+                        )}
+
                         <Modal
                             open={openModalVerify}
                             onClose={handleCloseModalVerify}
@@ -596,8 +677,8 @@ function LoginRegister() {
                         </div>
                     </div>
                 </div>
-            </div>
-        </div>
+            </div >
+        </div >
     )
 }
 

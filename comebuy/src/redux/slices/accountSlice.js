@@ -1,4 +1,4 @@
-import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
+import { createSlice, createAsyncThunk, isFulfilled } from "@reduxjs/toolkit";
 
 import JWTApi from "../../api/JWTAPI";
 import accountApi from "../../api/accountAPI";
@@ -34,11 +34,14 @@ export const login = createAsyncThunk(
 
 export const register = createAsyncThunk(
   "account/register",
-  async ({ dataForReg, toast }) => {
+  async ({ dataForReg }, { rejectWithValue }) => {
     try {
       const response = await accountApi.register(dataForReg);
-      if (response)
-        toast.success("Register successfully")
+      if (response.data === "Account existed!") {
+        return rejectWithValue(false);
+      } else {
+        return true;
+      }
     } catch (error) {
       console.log(error);
     }
@@ -50,25 +53,38 @@ export const accountSlice = createSlice({
     user: defaultUser,
     loading: false,
     errorMessage: 'this is message',
-    isSignedIn: false
+    isSignedIn: false,
+    //isEmailExisted: false,
+    isRegSuccess: false
   },
   reducers: {
     logout: (state) => {
       state.isSignedIn = false;
       state.user = defaultUser;
-    }
+    },
   },
   extraReducers: {
     [register.pending]: (state, action) => {
       state.loading = true
+      //state.isEmailExisted = false
+      state.isRegSuccess = false
+      console.log("Pending -  isSuccess = " + state.isRegSuccess);
     },
     [register.fulfilled]: (state, action) => {
       state.loading = false;
-      state.user = action.payload
+      state.user = action.payload;
+      //state.isEmailExisted = false;
+      state.isRegSuccess = true;
+      console.log("Fulfilled -  isSuccess = " + state.isRegSuccess);
+      console.log("Registered successfully");
     },
     [register.rejected]: (state, action) => {
       state.loading = false;
       state.error = action.payload.message;
+      //state.isEmailExisted = true;
+      state.isRegSuccess = false;
+      console.log("Rejected -  isSuccess = " + state.isRegSuccess);
+      console.log("Email existed");
     },
     [login.pending]: (state) => {
       state.loading = true;
