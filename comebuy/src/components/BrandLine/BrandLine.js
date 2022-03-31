@@ -13,15 +13,17 @@ const Img = styled('img')({
 });
 
 const CustomButton = styled(Button)({
-  color: 'black',
+  color:'black',
+  variant: 'outlined',
   fontWeight:'bold',
   backgroundColor: 'white',
-  borderRadius: '20px', 
+  borderRadius: '5px', 
   borderWidth: '3px',
   marginBottom: '5px',
   hover: {
       color: 'white',
       backgroundColor: 'white',
+      border: '5px solid'
   }
   
 //   '&:hover, &.Mui-focusVisible': {
@@ -48,10 +50,9 @@ function BrandLine(props) {
     return (
         <Grid className='BrandLine' container rowSpacing={1} columnSpacing={{ xs: 1, sm: 2, md: 3 }}>
             <Grid container justifyContent={'flex-end'} item xs={12} className='BrandLine__ImgBrand'>
-                <CustomButton variant='contained' endIcon={<NavigateNextIcon />} >
+                <CustomButton  endIcon={<NavigateNextIcon />} >
                     {brandName}
                 </CustomButton>
-                
             </Grid>
             <Grid item xs={2}>
                 <Img style={{}} alt="complex" src={brandurl} />

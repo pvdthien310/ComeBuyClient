@@ -1,9 +1,22 @@
 
 import './HomePage.css'
-import { BrandNavBar, Slider, NavBar, BrandLine } from '../../components'
+import { BrandNavBar, Slider, NavBar, BrandLine, FeatureBar } from '../../components'
+import { styled } from '@mui/material/styles';
+
+
+const ImgFeatureLine = styled('img')(({theme}) => ({
+    maxWidth: '100%',
+    maxHeight: '100%',
+    
+    [theme.breakpoints.down('sm')]: {
+        display: 'none',
+      },
+
+}));
 
 
 function HomePage() {
+   
     const brandList = [
         {
             title: 'Apple',
@@ -27,23 +40,23 @@ function HomePage() {
         }
     ]
     return (
-        <div style={{ position: 'relative' }}>
-            <a href='#Line_Apple'> aaaaa</a>
+        <div >
             <NavBar ></NavBar>
             <BrandNavBar brandLine={brandList} ></BrandNavBar>
-
             <Slider></Slider>
+            <ImgFeatureLine src='https://images.unsplash.com/photo-1537498425277-c283d32ef9db?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1178&q=80'></ImgFeatureLine>
+            <FeatureBar></FeatureBar>
+            <div>
                 {
-                    brandList.map((item) => {
+                    brandList.map((item,i) => {
                         const stringID = 'Line_' + item.title
+                        
                         return (
-                            <BrandLine id={stringID} brandName={item.title} url ={item.url} ></BrandLine>
+                            <BrandLine key={i} id={stringID} brandName={item.title} url={item.url} ></BrandLine>
                         );
                     })
                 }
-            
-
-
+            </div>
         </div>
     )
 
