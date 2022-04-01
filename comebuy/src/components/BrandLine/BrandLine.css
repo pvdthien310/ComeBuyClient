@@ -1,0 +1,10 @@
+.BrandLine {
+    background-color: white;
+    padding: 12px;
+    margin-bottom: 10px;
+}
+.BrandLine__ImgBrand__Name
+{
+    color: white; 
+    align-self: center;
+}
