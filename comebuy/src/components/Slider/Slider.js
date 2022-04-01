@@ -5,7 +5,6 @@ import "swiper/css";
 import "swiper/css/pagination";
 import { Pagination } from "swiper";
 import { getAll } from '../../redux/slices/productSlice'
-import { productListSelector } from "../../redux/selectors";
 import SliderItem from "./SliderItem/SliderItem";
 function Slider() {
     const dispatch = useDispatch()

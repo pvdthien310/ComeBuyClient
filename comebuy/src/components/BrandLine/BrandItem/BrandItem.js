@@ -14,6 +14,10 @@ const Img = styled('img')({
   maxHeight: '100%',
 });
 
+const CustomButton = styled(Button)(() => ({
+  backgroundColor: 'black'
+}));
+
 export default function BrandItem() {
   return (
     <Paper
@@ -29,7 +33,8 @@ export default function BrandItem() {
       <Grid container spacing={2}>
         <Grid item>
           <ButtonBase sx={{ width: 128, height: 128 }}>
-            <Img alt="complex" src="https://store.storeimages.cdn-apple.com/4982/as-images.apple.com/is/macbook-air-space-gray-select-201810?wid=452&hei=420&fmt=jpeg&qlt=95&.v=1633027804000" />
+            {/* <Img alt="complex" src="https://store.storeimages.cdn-apple.com/4982/as-images.apple.com/is/macbook-air-space-gray-select-201810?wid=452&hei=420&fmt=jpeg&qlt=95&.v=1633027804000" /> */}
+            <Img alt="complex" src="https://store.storeimages.cdn-apple.com/4982/as-images.apple.com/is/mbp-14-digitalmat-gallery-1-202111?wid=364&hei=333&fmt=png-alpha&.v=1635183223000" />
           </ButtonBase>
         </Grid>
         <Grid item xs={12} sm container>
@@ -46,10 +51,9 @@ export default function BrandItem() {
               </Typography>
             </Grid>
             <Grid item>
-            <Button variant="contained"
-             endIcon={<ShoppingCartIcon />} 
-             color="secondary"
-             >Buy Now</Button>
+              <CustomButton variant="contained"
+                endIcon={<ShoppingCartIcon />}
+              >Buy Now</CustomButton>
             </Grid>
           </Grid>
           <Grid item>
