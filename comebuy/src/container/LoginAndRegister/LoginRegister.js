@@ -1,4 +1,11 @@
+//LIBRARY
+//React + Redux
 import React, { useState, useRef, useEffect } from 'react'
+import { useDispatch, useSelector } from 'react-redux'
+import { unwrapResult } from '@reduxjs/toolkit'
+import { useNavigate } from 'react-router';
+
+//M-UI
 import { TextField, Checkbox, Typography, FormControlLabel, Modal, Box, Button, Dialog, DialogTitle } from '@material-ui/core';
 import IconButton from '@mui/material/IconButton';
 import CheckCircleRoundedIcon from '@mui/icons-material/CheckCircleRounded';
@@ -6,20 +13,22 @@ import VisibilityIcon from '@mui/icons-material/Visibility';
 import VisibilityOffIcon from '@mui/icons-material/VisibilityOff';
 import Alert from '@mui/material/Alert';
 import { makeStyles } from "@material-ui/core";
-import { ArrowBackIosRounded, ArrowRightRounded, Autorenew, ErrorOutlineOutlined } from "@material-ui/icons";
-import clsx from "clsx";
+import { Autorenew } from "@material-ui/icons";
+import Backdrop from '@mui/material/Backdrop';
+import CircularProgress from '@mui/material/CircularProgress';
+import Snackbar from '@mui/material/Snackbar';
+import MuiAlert from '@mui/material/Alert';
+
+//From file
 import { currentUser, isSignedIn_user, loading_user, messageError, is_Reg_Success } from '../../redux/selectors'
-import { unwrapResult } from '@reduxjs/toolkit'
-
-//For redux
-import { useDispatch, useSelector } from 'react-redux'
 import { register, login } from '../../redux/slices/accountSlice'
-import { useNavigate } from 'react-router';
-
 import CountDown from './CountDown'
 import * as Validation from './ValidationDataForAccount'
 import './LoginRegister.css'
+import emailApi from './../../api/emailAPI';
 
+//Beside
+import clsx from "clsx";
 
 //Style for refresh button in verify modal
 const useStyles = makeStyles((theme) => ({
@@ -45,19 +54,18 @@ const useStyles = makeStyles((theme) => ({
 
 function LoginRegister() {
 
+
     //for selector
     const _currentUser = useSelector(currentUser)
     const _loadingUser = useSelector(loading_user)
     const _isSignedIn = useSelector(isSignedIn_user)
     const _messageError = useSelector(messageError)
-    // const _isEmailExisted = useSelector(isEmail_existed)
-    const _isRegSuccess = useSelector(is_Reg_Success)
 
-
+    //STATE
     //for checking is email isEmailExisted
     const [isEmailExisted, setIsEmailExisted] = useState(false)
 
-    const [addClass, setAddClass] = useState("");
+    const [addClass, setAddClass] = useState("")
 
     //For checkbox in modal
     const [isChecked, setIsChecked] = useState(false);
@@ -101,8 +109,45 @@ function LoginRegister() {
     //For password login 
     const [passwordUser, setPasswordUser] = useState(null);
 
-    //For back to login button
-    const [getBackToLoginBtn, setBackToLoginBtn] = useState(false);
+    //For show password
+    const [cfPasswordShown, setCfPasswordShown] = useState(false);
+
+    //UseState for auto focusing
+    const [pin1, setPin1] = useState("")
+    const [pin2, setPin2] = useState("")
+    const [pin3, setPin3] = useState("")
+    const [pin4, setPin4] = useState("")
+    const [pin5, setPin5] = useState("")
+
+    //For modal terms
+    const [openModal, setOpenModal] = useState(false);
+
+    //For modal verify
+    const [openModalVerify, setOpenModalVerify] = useState(false);
+
+    //For toggle refresh button
+    const [toggleRefresh, setToggleRefresh] = useState(false);
+
+    //for dialog alert that you reg successfully or not
+    const [openDialogRegSuccessfully, setOpenDialogRegSuccessfully] = useState(false);
+
+    const [openDialogRegFailed, setOpenDialogRegFailed] = useState(false);
+
+    //For animation refresh in verify
+    const [spin, setSpin] = useState(false);
+    const classes = useStyles();
+
+    //For register button
+    const [canReg, setCanReg] = useState(true);
+
+    //for backdrop
+    const [openBackdrop, setOpenBackdrop] = useState(false);
+
+    const [verifyCode, setVerifyCode] = useState('')
+
+    //for redux
+    const dispatch = useDispatch();
+
 
     // Password toggle handler
     const togglePassword = () => {
@@ -110,9 +155,6 @@ function LoginRegister() {
         // inverse the boolean state of passwordShown
         setPasswordShown(!passwordShown);
     };
-
-    //For show password
-    const [cfPasswordShown, setCfPasswordShown] = useState(false);
 
     // Password toggle handler
     const toggleCfPassword = () => {
@@ -128,38 +170,42 @@ function LoginRegister() {
     const pin4Ref = useRef(null)
     const pin5Ref = useRef(null)
 
-    //UseState for auto focusing
-    const [pin1, setPin1] = useState("")
-    const [pin2, setPin2] = useState("")
-    const [pin3, setPin3] = useState("")
-    const [pin4, setPin4] = useState("")
-    const [pin5, setPin5] = useState("")
-
-    //For modal terms
-    const [openModal, setOpenModal] = useState(false);
     const handleOpenModal = () => setOpenModal(true);
     const handleCloseModal = () => setOpenModal(false);
 
-    //For modal verify
-    const [openModalVerify, setOpenModalVerify] = useState(false);
     const handleOpenModalVerify = () => { setOpenModalVerify(true); setToggleRefresh(false) };
     const handleCloseModalVerify = () => { setOpenModalVerify(false) }
 
-    //For toggle refresh button
-    const [toggleRefresh, setToggleRefresh] = useState(false);
-
-    //for dialog alert that you reg successfully or not
-    const [openDialogRegSuccessfully, setOpenDialogRegSuccessfully] = useState(false);
     const handleCloseDialogRegSuccessfully = () => {
-        setOpenDialogRegSuccessfully(false);;
+        setOpenDialogRegSuccessfully(false);
+        setCanReg(true);
+        setDataForReg({
+            userID: "",
+            name: "",
+            dob: "",
+            avatar: "",
+            phoneNumber: "",
+            email: "",
+            password: "",
+            bio: "",
+            address: "",
+            role: "",
+            sex: ""
+        });
+        setCfPass("")
+        setIsChecked(false)
+        handleCloseModal()
     };
-    const [openDialogRegFailed, setOpenDialogRegFailed] = useState(false);
+
     const handleCloseDialogRegFailed = () => {
-        setOpenDialogRegFailed(false);;
+        setOpenDialogRegFailed(false);
+        setCanReg(true);
         setDataForReg({
             ...dataForReg,
             email: ""
         })
+        setIsChecked(false)
+        handleCloseModal()
     };
 
     //For countdown caution
@@ -167,23 +213,16 @@ function LoginRegister() {
         setToggleRefresh(true);
     }
 
-    //For animation refresh in verify
-    const [spin, setSpin] = useState(false);
-    const classes = useStyles();
-
-    //For register button
-    const [canReg, setCanReg] = useState(true);
-
-
-    //for redux
-    const dispatch = useDispatch();
-
     const refreshCanvas = () => {
         setSpin(true);
         setTimeout(() => {
             setSpin(false);
             setToggleRefresh(false);
-        }, 1000);
+        }, 2000);
+        setOpenBackdrop(!openBackdrop);
+        let temp = generateOTP()
+        console.log(temp);
+        setVerifyCode(temp)
     };
 
     //const navigate = useNavigate()
@@ -193,7 +232,6 @@ function LoginRegister() {
     //     }
     // }, [_currentUser]);
 
-
     //handle login function
     const handleLogin = () => {
         if (emailUser != null && passwordUser != null) {
@@ -201,10 +239,20 @@ function LoginRegister() {
         }
     }
 
+    //generate verify code
+    function generateOTP() {
+        let num = '1234567890'
+        let OTP = '';
+        for (let i = 0; i < 5; i++) {
+            OTP += num[Math.floor(Math.random() * 10)];
+        }
+        return OTP
+    }
+
     const handleCreateAccount = () => {
         //validate username first -> email -> password
         //validate username
-        if (Validation.CheckUsername(dataForReg.name)) {
+        if (dataForReg.name.length <= 5 || dataForReg.name === "" || Validation.CheckUsername(dataForReg.name)) {
             setOpenUsernameError(true);
         } else {
             //Validate email
@@ -221,7 +269,10 @@ function LoginRegister() {
                         if (dataForReg.password !== cfPass) {
                             setOpenCfPasswordError(true)
                         } else {
-                            handleOpenModalVerify();
+                            setOpenBackdrop(!openBackdrop);
+                            let temp = generateOTP()
+                            console.log(temp);
+                            setVerifyCode(temp)
                         }
                     }
                 }
@@ -229,36 +280,70 @@ function LoginRegister() {
         }
     }
 
-    const [status, setStatus] = useState("")
+    useEffect(() => {
+        if (verifyCode != '') {
+            console.log(verifyCode);
+            emailApi.sendEmail({
+                to: dataForReg.email,
+                subject: "Please use OTP code below to register ",
+                text: "Thank you for using our website. \nThis is your OTP code: " + verifyCode
+            }).then(data => {
+                handleOpenModalVerify();
+                setOpenBackdrop(false)
+            })
+                .catch(err => console.log(err))
+        } else {
+            return;
+        }
+    }, [verifyCode])
+
+    const [openWrongVerify, setOpenWrongVerify] = useState(false)
+    const handleCloseWrongVerify = (event, reason) => {
+        if (reason === 'clickaway') {
+            return;
+        }
+        setOpenWrongVerify(false);
+    };
+
+    const [isRegistering, setIsRegistering] = useState(0)
+
+    useEffect(() => {
+        if (isRegistering === 0) {
+            return;
+        } else if (isRegistering === 1) {
+            setOpenBackdrop(false)
+            setOpenDialogRegSuccessfully(true)
+        } else {
+            setOpenBackdrop(false)
+            setOpenDialogRegFailed(true)
+        }
+    }, [isRegistering])
 
     const handleVerifyAndReg = async () => {
-        // dispatch(register({ dataForReg }))
-        //     .unwrap()
-        //     .then((originalPromiseResult) => {
-        //         console.log(originalPromiseResult);
-        //         // setStatus(true)
-        //         // console.log(status);
-        //     })
-        //     .catch((rejectedValueOrSerializedError) => {
-        //         console.log(rejectedValueOrSerializedError);
-        //         // setStatus(false)
-        //         // console.log(status);
-        //     })
+        let here = pin1 + pin2 + pin3 + pin4 + pin5
         try {
-            const resultAction = await dispatch(register({ dataForReg }))
-            const originalPromiseResult = unwrapResult(resultAction)
-            // handle result here
-            console.log(originalPromiseResult)
-            if (originalPromiseResult === true) {
-                setOpenDialogRegFailed(false)
-                setOpenDialogRegSuccessfully(!openDialogRegSuccessfully)
+            if (here === verifyCode) {
+                setOpenBackdrop(true)
+                const resultAction = await dispatch(register({ dataForReg }))
+                const originalPromiseResult = unwrapResult(resultAction)
+                // handle result here
+                console.log(originalPromiseResult)
+                if (originalPromiseResult === true) {
+                    // setOpenDialogRegFailed(false)
+                    handleCloseModalVerify()
+                    setOpenDialogRegFailed(false)
+                    setIsRegistering(1)
+                }
+            } else {
+                setOpenWrongVerify(true)
             }
         } catch (rejectedValueOrSerializedError) {
             // handle error here
-            console.log(rejectedValueOrSerializedError);
-            if (rejectedValueOrSerializedError.message === 'Rejected') {
-                setOpenDialogRegFailed(true)
+            //setOpenDialogRegFailed(true)
+            if (rejectedValueOrSerializedError != null) {
+                handleCloseModalVerify()
                 setOpenDialogRegSuccessfully(false)
+                setIsRegistering(2)
             }
         }
     }
@@ -284,7 +369,7 @@ function LoginRegister() {
                             onChange={(e) => setDataForReg({ ...dataForReg, name: e.target.value })}
                         />
                         {openUsernameError ? (
-                            <Alert severity="warning">Username can't have only space or any of these letter /^ *$.,;:@#""''-!`~%&\/(){ }[]/</Alert>
+                            <Alert severity="warning">Username can't have length under 5 and can't have only space or any of these letter /^ *$.,;:@#""''-!`~%&\/(){ }[]/</Alert>
                         ) : (
                             null
                         )}
@@ -465,34 +550,63 @@ function LoginRegister() {
                             Register
                         </Button>
 
+                        <Backdrop
+                            sx={{ color: '#fff', zIndex: (theme) => theme.zIndex.drawer + 1 }}
+                            open={openBackdrop}
+                        >
+                            <CircularProgress color="inherit" />
+                        </Backdrop>
+
                         {/*Dialog for having registered successfully or email existed */}
-                        {isEmailExisted ? (
+                        {openDialogRegFailed ? (
                             <Dialog open={openDialogRegFailed} onClose={handleCloseDialogRegFailed}>
-                                <DialogTitle color='success'>Registered failed</DialogTitle>
-                                <IconButton size='large' color='error' onClick={handleCloseDialogRegFailed}>
-                                    <ErrorOutlineOutlined color="error" />
-                                </IconButton>
+                                <DialogTitle color='error'>Registered failed</DialogTitle>
+                                <Button
+                                    onClick={handleCloseDialogRegFailed}
+                                    style={{
+                                        alignSelf: 'center',
+                                        width: '30px',
+                                        height: '30px',
+                                        borderRadius: '15px',
+                                        border: '1px solid #18608a',
+                                        backgroundColor: 'red',
+                                        color: 'black',
+                                        fontSize: '13px',
+                                        marginBottom: '10px',
+                                        fontWeight: 'bold',
+                                        padding: '12px 45px',
+                                    }}
+                                >
+                                    OK
+                                </Button>
                             </Dialog>
-                        ) : (
-                            <Dialog open={openDialogRegSuccessfully} onClose={handleCloseDialogRegSuccessfully}>
-                                <DialogTitle color='success'>Registered successfully</DialogTitle>
-                                <IconButton size='large' color='success' onClick={handleCloseDialogRegSuccessfully}>
-                                    <ArrowRightRounded color="success" />
-                                </IconButton>
-                            </Dialog>
-                        )}
+                        ) : null
+                        }
 
-
-                        {getBackToLoginBtn ? (
-                            <div>
-                                <IconButton color="success" size="small">
-                                    <ArrowBackIosRounded />
-                                    <p style={{ marginTop: "30px" }}>Back to login</p>
-                                </IconButton>
-                            </div>
-                        ) : (
-                            null
-                        )}
+                        {openDialogRegSuccessfully ?
+                            (
+                                <Dialog open={openDialogRegSuccessfully} onClose={handleCloseDialogRegSuccessfully}>
+                                    <DialogTitle>Registered successfully</DialogTitle>
+                                    <Button
+                                        onClick={handleCloseDialogRegSuccessfully}
+                                        style={{
+                                            alignSelf: 'center',
+                                            width: '30px',
+                                            height: '30px',
+                                            borderRadius: '15px',
+                                            border: '1px solid #18608a',
+                                            backgroundColor: 'green',
+                                            color: '#ffffff',
+                                            fontSize: '13px',
+                                            marginBottom: '10px',
+                                            fontWeight: 'bold',
+                                            padding: '12px 45px',
+                                        }}
+                                    >
+                                        OK
+                                    </Button>
+                                </Dialog>
+                            ) : null}
 
                         <Modal
                             open={openModalVerify}
@@ -633,6 +747,12 @@ function LoginRegister() {
                     </form>
                 </div>
 
+                {/*Snackbar*/}
+                <Snackbar open={openWrongVerify} autoHideDuration={6000} onClose={handleCloseWrongVerify}>
+                    <Alert onClose={handleCloseWrongVerify} severity="error" sx={{ width: '100%' }}>
+                        Wrong verify code. Please try again.
+                    </Alert>
+                </Snackbar>
 
                 {/* SIGN IN */}
                 <div className="form-container sign-in-container">

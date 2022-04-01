@@ -17,6 +17,7 @@ const defaultUser = {
   "sex": "kk"
 }
 
+
 export const login = createAsyncThunk(
   'account/login',
   // Code async logic, tham số đầu tiên data là dữ liệu truyền vào khi gọi action
