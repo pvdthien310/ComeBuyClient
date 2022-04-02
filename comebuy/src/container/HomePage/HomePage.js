@@ -1,16 +1,17 @@
 
 import './HomePage.css'
-import { 
-    BrandNavBar, 
-    Slider, 
-    NavBar, 
-    BrandLine, 
-    FeatureBar, 
+import {
+    BrandNavBar,
+    Slider,
+    NavBar,
+    BrandLine,
+    FeatureBar,
     FeatureImage,
-    BrandLineImage, 
-    LaptopImageLine } from '../../components'
+    BrandLineImage,
+    LaptopImageLine
+} from '../../components'
 
-function HomePage() {
+const HomePage = () => {
 
     const brandList = [
         {

@@ -28,6 +28,8 @@ export const login = createAsyncThunk(
     }
     else {
       const jsonData = await accountApi.getAccountbyEmail(data.email)
+      localStorage.setItem('idUser', jsonData.userID);
+      localStorage.setItem('role', jsonData.role);
       return jsonData;
     }
   }
@@ -94,8 +96,8 @@ export const accountSlice = createSlice({
     [login.fulfilled]: (state, action) => {
       state.loading = false;
       state.user = action.payload;
-      state.isSignedIn = true;
-      console.log("Fulfilled -  isSigning = " + state.isSignedIn);
+      state.isSignedIn = true
+      localStorage.setItem("role", state.user.role)
     },
     [login.rejected]: (state, action) => {
       state.loading = false;

@@ -24,7 +24,9 @@ import Snackbar from '@mui/material/Snackbar';
 import MuiAlert from '@mui/material/Alert';
 
 //From file
-import { currentUser, isSignedIn_user, loading_user, messageError, is_Reg_Success } from '../../redux/selectors'
+import { currentUser, isSignedIn_user, loading_user, messageError } from '../../redux/selectors'
+//For redux
+import { useDispatch, useSelector } from 'react-redux'
 import { register, login } from '../../redux/slices/accountSlice'
 import CountDown from './CountDown'
 import * as Validation from './ValidationDataForAccount'
@@ -59,7 +61,6 @@ const LoginRegister = () => {
 
     const [addClass, setAddClass] = useState("")
 
-    //for selector
     const _currentUser = useSelector(currentUser)
     const _loadingUser = useSelector(loading_user)
     const _isSignedIn = useSelector(isSignedIn_user)
