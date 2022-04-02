@@ -1,10 +1,14 @@
+import { ReactComponent as Register1SVG } from '../../assets/img/register1.svg'
+import { ReactComponent as Register2SVG } from '../../assets/img/register2.svg'
+import './TestUI.css'
+import './LoginRegister.css'
+
 //LIBRARY
 //React + Redux
 import React, { useState, useRef, useEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { unwrapResult } from '@reduxjs/toolkit'
 import { useNavigate } from 'react-router';
-
 //M-UI
 import { TextField, Checkbox, Typography, FormControlLabel, Modal, Box, Button, Dialog, DialogTitle } from '@material-ui/core';
 import IconButton from '@mui/material/IconButton';
@@ -24,8 +28,7 @@ import { currentUser, isSignedIn_user, loading_user, messageError, is_Reg_Succes
 import { register, login } from '../../redux/slices/accountSlice'
 import CountDown from './CountDown'
 import * as Validation from './ValidationDataForAccount'
-import './LoginRegister.css'
-import emailApi from './../../api/emailAPI';
+import emailApi from '../../api/emailAPI';
 
 //Beside
 import clsx from "clsx";
@@ -52,8 +55,9 @@ const useStyles = makeStyles((theme) => ({
     }
 }));
 
-function LoginRegister() {
+const LoginRegister = () => {
 
+    const [addClass, setAddClass] = useState("")
 
     //for selector
     const _currentUser = useSelector(currentUser)
@@ -64,8 +68,6 @@ function LoginRegister() {
     //STATE
     //for checking is email isEmailExisted
     const [isEmailExisted, setIsEmailExisted] = useState(false)
-
-    const [addClass, setAddClass] = useState("")
 
     //For checkbox in modal
     const [isChecked, setIsChecked] = useState(false);
@@ -94,11 +96,17 @@ function LoginRegister() {
     //for open error alert CFpassword
     const [openCfPasswordError, setOpenCfPasswordError] = useState(false);
 
+    //for open error alert password in login
+    const [openPasswordLoginError, setOpenPasswordLoginError] = useState(false);
+
     //for open error alert username
     const [openUsernameError, setOpenUsernameError] = useState(false);
 
     //for open error alert email
     const [openEmailError, setOpenEmailError] = useState(false);
+
+    //for open error alert email in login
+    const [openEmailLoginError, setOpenEmailLoginError] = useState(true);
 
     //For show password
     const [passwordShown, setPasswordShown] = useState(false);
@@ -225,7 +233,7 @@ function LoginRegister() {
         setVerifyCode(temp)
     };
 
-    //const navigate = useNavigate()
+    // const navigate = useNavigate()
     // useEffect(() => {
     //     if (_currentUser.email !== '' && _isSignedIn == true) {
     //         navigate('/')
@@ -233,9 +241,27 @@ function LoginRegister() {
     // }, [_currentUser]);
 
     //handle login function
-    const handleLogin = () => {
-        if (emailUser != null && passwordUser != null) {
-            dispatch(login({ email: emailUser, password: passwordUser }))
+    const handleLogin = async () => {
+        // if (emailUser != null && passwordUser != null) {
+        //     dispatch(login({ email: emailUser, password: passwordUser }))
+        // }
+        if (emailUser === null) {
+            setOpenEmailLoginError(true);
+        } else {
+            if (passwordUser === null) {
+                setOpenPasswordLoginError(true)
+            } else {
+                try {
+                    const resultAction = await dispatch(login({ email: emailUser, password: passwordUser }))
+                    const originalPromiseResult = unwrapResult(resultAction)
+                    // handle result here
+                    console.log(originalPromiseResult)
+                } catch (rejectedValueOrSerializedError) {
+                    // handle error here
+                    //setOpenDialogRegFailed(true)
+                    console.log(rejectedValueOrSerializedError);
+                }
+            }
         }
     }
 
@@ -349,12 +375,11 @@ function LoginRegister() {
     }
 
     return (
-        <div className="login_register">
-            <div className={`container ${addClass}`} id="container">
-                <div className="form-container sign-up-container">
-                    {/* <form validate> */}
-                    <form>
-                        <Typography variant="h4" style={{ marginBottom: '20px', fontFamily: '-moz-initial' }}>Create an account</Typography>
+        <div className={`container ${addClass}`}>
+            <div className="forms-container">
+                <div className="signin-signup">
+                    <form className='sign-up-form'>
+                        <h2 className="title">Sign up</h2>
 
                         {/*USERNAME*/}
                         <TextField
@@ -369,14 +394,23 @@ function LoginRegister() {
                             onChange={(e) => setDataForReg({ ...dataForReg, name: e.target.value })}
                         />
                         {openUsernameError ? (
-                            <Alert severity="warning">Username can't have length under 5 and can't have only space or any of these letter /^ *$.,;:@#""''-!`~%&\/(){ }[]/</Alert>
+                            <Alert style={{ marginTop: '10px' }} severity="warning">Username can't have length under 5 and can't have only space or any of these letter /^ *$.,;:@#""''-!`~%&\/(){ }[]/</Alert>
                         ) : (
                             null
                         )}
 
                         {/*EMAIL*/}
                         <TextField
-                            className='text-field-in-form'
+                            // className='text-field-in-form'
+                            style={{
+                                maxWidth: '380px',
+                                marginBottom: '50px',
+                                marginTop: '20px',
+                                lineHeight: '1',
+                                fontWeight: '600',
+                                fontSize: '1.1rem',
+                                color: '#333',
+                            }}
                             name="email"
                             variant='standard'
                             label="Email"
@@ -387,7 +421,7 @@ function LoginRegister() {
                             onChange={(e) => setDataForReg({ ...dataForReg, email: e.target.value })}
                         />
                         {openEmailError ? (
-                            <Alert severity="warning">Please type email</Alert>
+                            <Alert style={{ marginTop: '-40px' }} severity="warning">Please type email</Alert>
                         ) : (
                             null
                         )}
@@ -416,7 +450,7 @@ function LoginRegister() {
                             )}
                         </div>
                         {openPasswordError ? (
-                            <Alert severity="warning">
+                            <Alert style={{ marginTop: '-40px' }} severity="warning">
                                 Password has to have at least 8 letters, one number, one lowercase and one uppercase letter
                             </Alert>
                         ) : (
@@ -474,11 +508,11 @@ function LoginRegister() {
                                 variant='outlined'
                                 size="small"
                                 style={{
-                                    width: '80%',
-                                    height: '4%',
+                                    maxWidth: '400px',
+                                    height: '10%',
                                     borderRadius: '15px',
                                     color: 'black',
-                                    marginTop: '40px',
+                                    marginTop: '10px',
                                     marginBottom: '10px'
                                 }}
                             >
@@ -744,36 +778,90 @@ function LoginRegister() {
                             </Box>
                         </Modal>
 
+                        {/*Snackbar*/}
+                        <Snackbar open={openWrongVerify} autoHideDuration={6000} onClose={handleCloseWrongVerify}>
+                            <Alert onClose={handleCloseWrongVerify} severity="error" sx={{ width: '100%' }}>
+                                Wrong verify code. Please try again.
+                            </Alert>
+                        </Snackbar>
                     </form>
-                </div>
 
-                {/*Snackbar*/}
-                <Snackbar open={openWrongVerify} autoHideDuration={6000} onClose={handleCloseWrongVerify}>
-                    <Alert onClose={handleCloseWrongVerify} severity="error" sx={{ width: '100%' }}>
-                        Wrong verify code. Please try again.
-                    </Alert>
-                </Snackbar>
 
-                {/* SIGN IN */}
-                <div className="form-container sign-in-container">
-                    <form>
-                        <h1>Sign in</h1>
+                    {/* LOGIN */}
+                    <form action="#" className="sign-in-form">
+                        <h2 className="title">Sign in</h2>
+                        {/*EMAIL*/}
                         <TextField
+                            className='text-field-in-form'
+                            name="email"
+                            variant='standard'
+                            label="Email"
                             type="email"
-                            placeholder="Email"
-                            onChange={(e) => {
-                                setEmailUser(e.target.value);
-                            }} />
-                        <TextField
-                            type="password"
-                            placeholder="Password"
-                            onChange={(e) => {
-                                setPasswordUser(e.target.value);
-                            }} />
+                            fullWidth
+                            value={emailUser}
+                            onFocus={() => setOpenEmailLoginError(false)}
+                            onChange={(e) => setEmailUser(e.target.value)}
+                        />
+                        {openEmailLoginError ? (
+                            <Alert style={{ marginTop: '15px' }} severity="warning">Please type email</Alert>
+                        ) : (
+                            null
+                        )}
+
+                        {/*PASSWORD */}
+                        <div className="password-in-form">
+                            <TextField
+                                style={{
+                                    maxWidth: '380px',
+                                    marginBottom: '50px',
+                                    marginTop: '20px',
+                                    lineHeight: '1',
+                                    fontWeight: '600',
+                                    fontSize: '1.1rem',
+                                    color: '#333',
+                                }}
+                                name="password"
+                                variant='standard'
+                                label="Password"
+                                type={passwordShown ? "text" : "password"}
+                                fullWidth
+                                value={passwordUser}
+                                onFocus={() => setOpenPasswordLoginError(false)}
+                                onChange={(e) => setPasswordUser(e.target.value)}
+                            />
+                            {passwordShown ? (
+                                <IconButton onClick={togglePassword}>
+                                    <VisibilityIcon color="success" />
+                                </IconButton>
+                            ) : (
+                                <IconButton onClick={togglePassword}>
+                                    <VisibilityOffIcon />
+                                </IconButton>
+                            )}
+                        </div>
+                        {openPasswordLoginError ? (
+                            <Alert severity="warning">
+                                Type password
+                            </Alert>
+                        ) : (
+                            null
+                        )}
+
                         <Button
                             onClick={() => handleLogin()}
+                            style={{
+                                marginTop: '25px',
+                                borderRadius: '20px',
+                                border: '1px solid #18608a',
+                                backgroundColor: '#18608a',
+                                color: '#ffffff',
+                                fontSize: '13px',
+                                fontWeight: 'bold',
+                                padding: '12px 45px',
+                                letterSpacing: '1px',
+                            }}
                         >
-                            Sign In
+                            Login
                         </Button>
                         {
                             _loadingUser == true ?
@@ -782,22 +870,36 @@ function LoginRegister() {
                         }
                     </form>
                 </div>
-
-                <div className="overlay-container">
-                    <div className="overlay">
-                        <div className="overlay-panel overlay-left">
-                            <button className="ghost" id="signIn" onClick={() => setAddClass("")}>
-                                Had an account ? Go to sign in now
-                            </button>
-                        </div>
-                        <div className="overlay-panel overlay-right">
-                            <button className="ghost" id="signUp" onClick={() => setAddClass("right-panel-active")}>
-                                Create an account
-                            </button>
-                        </div>
-                    </div>
-                </div>
             </div >
+
+            <div className="panels-container">
+                <div className="panel left-panel">
+                    <div className="content">
+                        <h3>New here ?</h3>
+                        <p>
+                            Lorem ipsum, dolor sit amet consectetur adipisicing elit. Debitis,
+                            ex ratione. Aliquid!
+                        </p>
+                        <button className="btn transparent" id="sign-up-btn" onClick={() => setAddClass('sign-up-mode')}>
+                            Sign up
+                        </button>
+                    </div>
+                    <Register2SVG className="image" />
+                </div>
+                <div className="panel right-panel">
+                    <div className="content">
+                        <h3>One of us ?</h3>
+                        <p>
+                            Lorem ipsum dolor sit amet consectetur adipisicing elit. Nostrum
+                            laboriosam ad deleniti.
+                        </p>
+                        <button className="btn transparent" id="sign-in-btn" onClick={() => setAddClass('')}>
+                            Sign in
+                        </button>
+                    </div>
+                    <Register1SVG className="image" />
+                </div>
+            </div>
         </div >
     )
 }

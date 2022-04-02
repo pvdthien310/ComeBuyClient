@@ -89,15 +89,18 @@ export const accountSlice = createSlice({
     },
     [login.pending]: (state) => {
       state.loading = true;
+      console.log("Pending -  isSigning = " + state.isSignedIn);
     },
     [login.fulfilled]: (state, action) => {
       state.loading = false;
       state.user = action.payload;
-      state.isSignedIn = true
+      state.isSignedIn = true;
+      console.log("Fulfilled -  isSigning = " + state.isSignedIn);
     },
     [login.rejected]: (state, action) => {
       state.loading = false;
       state.errorMessage = action.payload;
+      console.log("Rejected -  isSigning = " + state.isSignedIn);
     }
   }
 })

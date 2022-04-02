@@ -5,9 +5,6 @@ import HomePage from './container/HomePage/HomePage';
 
 function App() {
   return (
-    // <div>
-    //   <LoginRegister />
-    // </div>
     <Routes>
       <Route path="/" element={<HomePage />} />
       <Route path="login" element={<LoginRegister />} />
