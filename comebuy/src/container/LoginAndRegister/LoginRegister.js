@@ -6,7 +6,6 @@ import './LoginRegister.css'
 //LIBRARY
 //React + Redux
 import React, { useState, useRef, useEffect } from 'react'
-import { useDispatch, useSelector } from 'react-redux'
 import { unwrapResult } from '@reduxjs/toolkit'
 import { useNavigate } from 'react-router';
 //M-UI
@@ -107,7 +106,7 @@ const LoginRegister = () => {
     const [openEmailError, setOpenEmailError] = useState(false);
 
     //for open error alert email in login
-    const [openEmailLoginError, setOpenEmailLoginError] = useState(true);
+    const [openEmailLoginError, setOpenEmailLoginError] = useState(false);
 
     //For show password
     const [passwordShown, setPasswordShown] = useState(false);
@@ -234,12 +233,12 @@ const LoginRegister = () => {
         setVerifyCode(temp)
     };
 
-    // const navigate = useNavigate()
-    // useEffect(() => {
-    //     if (_currentUser.email !== '' && _isSignedIn == true) {
-    //         navigate('/')
-    //     }
-    // }, [_currentUser]);
+    const navigate = useNavigate()
+    useEffect(() => {
+        if (_currentUser.email !== '' && _isSignedIn == true) {
+            navigate('/')
+        }
+    }, [_currentUser]);
 
     //handle login function
     const handleLogin = async () => {
