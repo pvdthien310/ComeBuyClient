@@ -9,7 +9,6 @@ import { makeStyles } from "@material-ui/core";
 import { Autorenew } from "@material-ui/icons";
 import clsx from "clsx";
 import { currentUser, isSignedIn_user, loading_user, messageError } from '../../redux/selectors'
-
 //For redux
 import { useDispatch, useSelector } from 'react-redux'
 import { toast } from 'react-toastify';
@@ -45,7 +44,7 @@ const useStyles = makeStyles((theme) => ({
 
 
 
-function LoginRegister() {
+const LoginRegister = () => {
 
     const _currentUser = useSelector(currentUser)
     const _loadingUser = useSelector(loading_user)

@@ -89,14 +89,18 @@ export default function NavBar() {
         setMobileMoreAnchorEl(null);
     };
 
-    const handleMenuClose = (e) => {
+    const handleMenuClose = async (e) => {
         setAnchorEl(null);
         handleMobileMenuClose();
 
         if (e.target.innerText === 'Sign In')
             handleLogin();
         else if (e.target.innerText === 'Log Out')
-            dispatch(accountSlice.actions.logout());
+            {
+                dispatch(accountSlice.actions.logout());
+                await localStorage.setItem('role',null)
+                navigate("/")
+            }
 
     };
 
