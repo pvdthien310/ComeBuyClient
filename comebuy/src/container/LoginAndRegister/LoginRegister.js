@@ -480,7 +480,7 @@ const LoginRegister = () => {
                             )}
                         </div>
                         {openCfPasswordError ? (
-                            <Alert severity="warning">Password is not match</Alert>
+                            <Alert style={{ marginTop: '-25px' }} severity="warning">Password is not match</Alert>
                         ) : (
                             null
                         )}
@@ -488,7 +488,7 @@ const LoginRegister = () => {
 
                         {/*button for opening modal term */}
                         {(!openModal && isChecked) ? (
-                            <div style={{ display: 'flex', flexDirection: 'row' }}>
+                            <div style={{ display: 'flex', flexDirection: 'row', marginTop: '10px' }}>
                                 <CheckCircleRoundedIcon
                                     style={{
                                         color: 'green',
@@ -498,7 +498,7 @@ const LoginRegister = () => {
                                         paddingTop: '5px'
                                     }}
                                 />
-                                <p style={{ fontWeight: 'bold' }}>
+                                <p style={{ fontWeight: 'bold', marginTop: '15px' }}>
                                     Accepted all the terms in this web.
                                 </p>
                             </div>
@@ -877,8 +877,7 @@ const LoginRegister = () => {
                     <div className="content">
                         <h3>New here ?</h3>
                         <p>
-                            Lorem ipsum, dolor sit amet consectetur adipisicing elit. Debitis,
-                            ex ratione. Aliquid!
+                            Getting your best laptop on ComeBuy is always your best choice
                         </p>
                         <button className="btn transparent" id="sign-up-btn" onClick={() => setAddClass('sign-up-mode')}>
                             Sign up
@@ -890,8 +889,7 @@ const LoginRegister = () => {
                     <div className="content">
                         <h3>One of us ?</h3>
                         <p>
-                            Lorem ipsum dolor sit amet consectetur adipisicing elit. Nostrum
-                            laboriosam ad deleniti.
+                            Let's log in now. Something perfect is waiting for you
                         </p>
                         <button className="btn transparent" id="sign-in-btn" onClick={() => setAddClass('')}>
                             Sign in
