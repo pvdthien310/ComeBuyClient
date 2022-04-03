@@ -4,12 +4,12 @@ const baseURL = 'account'
 
 const accountApi = {
     getAccountbyEmail: async (email) => {
-        const res = await DatabaseClient.get('/' + baseURL + '/email/' +  email);
+        const res = await DatabaseClient.get('/' + baseURL + '/email/' + email);
         return res.data;
     },
     register: async (dataForReg) => {
         const res = DatabaseClient.post('/' + baseURL, dataForReg)
-        return res.data
+        return res
     }
 }
 export default accountApi

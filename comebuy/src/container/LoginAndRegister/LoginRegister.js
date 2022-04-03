@@ -1,5 +1,15 @@
+import { ReactComponent as Register1SVG } from '../../assets/img/register1.svg'
+import { ReactComponent as Register2SVG } from '../../assets/img/register2.svg'
+import './TestUI.css'
+import './LoginRegister.css'
+
+//LIBRARY
+//React + Redux
 import React, { useState, useRef, useEffect } from 'react'
-import { TextField, Checkbox, Typography, FormControlLabel, Modal, Box, Button } from '@material-ui/core';
+import { unwrapResult } from '@reduxjs/toolkit'
+import { useNavigate } from 'react-router';
+//M-UI
+import { TextField, Checkbox, Typography, FormControlLabel, Modal, Box, Button, Dialog, DialogTitle } from '@material-ui/core';
 import IconButton from '@mui/material/IconButton';
 import CheckCircleRoundedIcon from '@mui/icons-material/CheckCircleRounded';
 import VisibilityIcon from '@mui/icons-material/Visibility';
@@ -7,18 +17,22 @@ import VisibilityOffIcon from '@mui/icons-material/VisibilityOff';
 import Alert from '@mui/material/Alert';
 import { makeStyles } from "@material-ui/core";
 import { Autorenew } from "@material-ui/icons";
-import clsx from "clsx";
+import Backdrop from '@mui/material/Backdrop';
+import CircularProgress from '@mui/material/CircularProgress';
+import Snackbar from '@mui/material/Snackbar';
+import MuiAlert from '@mui/material/Alert';
+
+//From file
 import { currentUser, isSignedIn_user, loading_user, messageError } from '../../redux/selectors'
 //For redux
 import { useDispatch, useSelector } from 'react-redux'
-import { toast } from 'react-toastify';
 import { register, login } from '../../redux/slices/accountSlice'
-import { useNavigate } from 'react-router';
-
 import CountDown from './CountDown'
 import * as Validation from './ValidationDataForAccount'
-import './LoginRegister.css'
+import emailApi from '../../api/emailAPI';
 
+//Beside
+import clsx from "clsx";
 
 //Style for refresh button in verify modal
 const useStyles = makeStyles((theme) => ({
@@ -42,16 +56,18 @@ const useStyles = makeStyles((theme) => ({
     }
 }));
 
-
-
 const LoginRegister = () => {
+
+    const [addClass, setAddClass] = useState("")
 
     const _currentUser = useSelector(currentUser)
     const _loadingUser = useSelector(loading_user)
     const _isSignedIn = useSelector(isSignedIn_user)
     const _messageError = useSelector(messageError)
 
-    const [addClass, setAddClass] = useState("");
+    //STATE
+    //for checking is email isEmailExisted
+    const [isEmailExisted, setIsEmailExisted] = useState(false)
 
     //For checkbox in modal
     const [isChecked, setIsChecked] = useState(false);
@@ -61,17 +77,17 @@ const LoginRegister = () => {
 
     //Data for register
     const [dataForReg, setDataForReg] = useState({
-        userID: "00000000-0000-0000-0000-000000000000",
-        name: "kkk",
-        dob: "kk",
-        avatar: "kk",
-        phoneNumber: "kkk",
-        email: "test.com",
-        password: "xxxxxxxxxxxxxxxxxxxx",
-        bio: "kkk",
-        address: "kk",
-        role: "kk",
-        sex: "kk"
+        userID: "",
+        name: "",
+        dob: "",
+        avatar: "",
+        phoneNumber: "",
+        email: "",
+        password: "",
+        bio: "",
+        address: "",
+        role: "",
+        sex: ""
     })
 
     //for open error alert password
@@ -80,11 +96,17 @@ const LoginRegister = () => {
     //for open error alert CFpassword
     const [openCfPasswordError, setOpenCfPasswordError] = useState(false);
 
+    //for open error alert password in login
+    const [openPasswordLoginError, setOpenPasswordLoginError] = useState(false);
+
     //for open error alert username
     const [openUsernameError, setOpenUsernameError] = useState(false);
 
     //for open error alert email
     const [openEmailError, setOpenEmailError] = useState(false);
+
+    //for open error alert email in login
+    const [openEmailLoginError, setOpenEmailLoginError] = useState(false);
 
     //For show password
     const [passwordShown, setPasswordShown] = useState(false);
@@ -95,15 +117,52 @@ const LoginRegister = () => {
     //For password login 
     const [passwordUser, setPasswordUser] = useState(null);
 
+    //For show password
+    const [cfPasswordShown, setCfPasswordShown] = useState(false);
+
+    //UseState for auto focusing
+    const [pin1, setPin1] = useState("")
+    const [pin2, setPin2] = useState("")
+    const [pin3, setPin3] = useState("")
+    const [pin4, setPin4] = useState("")
+    const [pin5, setPin5] = useState("")
+
+    //For modal terms
+    const [openModal, setOpenModal] = useState(false);
+
+    //For modal verify
+    const [openModalVerify, setOpenModalVerify] = useState(false);
+
+    //For toggle refresh button
+    const [toggleRefresh, setToggleRefresh] = useState(false);
+
+    //for dialog alert that you reg successfully or not
+    const [openDialogRegSuccessfully, setOpenDialogRegSuccessfully] = useState(false);
+
+    const [openDialogRegFailed, setOpenDialogRegFailed] = useState(false);
+
+    //For animation refresh in verify
+    const [spin, setSpin] = useState(false);
+    const classes = useStyles();
+
+    //For register button
+    const [canReg, setCanReg] = useState(true);
+
+    //for backdrop
+    const [openBackdrop, setOpenBackdrop] = useState(false);
+
+    const [verifyCode, setVerifyCode] = useState('')
+
+    //for redux
+    const dispatch = useDispatch();
+
+
     // Password toggle handler
     const togglePassword = () => {
         // When the handler is invoked
         // inverse the boolean state of passwordShown
         setPasswordShown(!passwordShown);
     };
-
-    //For show password
-    const [cfPasswordShown, setCfPasswordShown] = useState(false);
 
     // Password toggle handler
     const toggleCfPassword = () => {
@@ -119,68 +178,107 @@ const LoginRegister = () => {
     const pin4Ref = useRef(null)
     const pin5Ref = useRef(null)
 
-    //UseState for auto focusing
-    const [pin1, setPin1] = useState("")
-    const [pin2, setPin2] = useState("")
-    const [pin3, setPin3] = useState("")
-    const [pin4, setPin4] = useState("")
-    const [pin5, setPin5] = useState("")
-
-    //For modal terms
-    const [openModal, setOpenModal] = useState(false);
     const handleOpenModal = () => setOpenModal(true);
     const handleCloseModal = () => setOpenModal(false);
 
-    //For modal verify
-    const [openModalVerify, setOpenModalVerify] = useState(false);
     const handleOpenModalVerify = () => { setOpenModalVerify(true); setToggleRefresh(false) };
-    const handleCloseModalVerify = () => setOpenModalVerify(false);
+    const handleCloseModalVerify = () => { setOpenModalVerify(false) }
 
-    //For toggle refresh button
-    const [toggleRefresh, setToggleRefresh] = useState(false);
+    const handleCloseDialogRegSuccessfully = () => {
+        setOpenDialogRegSuccessfully(false);
+        setCanReg(true);
+        setDataForReg({
+            userID: "",
+            name: "",
+            dob: "",
+            avatar: "",
+            phoneNumber: "",
+            email: "",
+            password: "",
+            bio: "",
+            address: "",
+            role: "",
+            sex: ""
+        });
+        setCfPass("")
+        setIsChecked(false)
+        handleCloseModal()
+    };
+
+    const handleCloseDialogRegFailed = () => {
+        setOpenDialogRegFailed(false);
+        setCanReg(true);
+        setDataForReg({
+            ...dataForReg,
+            email: ""
+        })
+        setIsChecked(false)
+        handleCloseModal()
+    };
 
     //For countdown caution
     const onTimesup = () => {
         setToggleRefresh(true);
     }
 
-    //For animation refresh in verify
-    const [spin, setSpin] = useState(false);
-    const classes = useStyles();
-
-    //For register button
-    const [canReg, setCanReg] = useState(true);
-
-
-    //for redux
-    const dispatch = useDispatch();
-
     const refreshCanvas = () => {
         setSpin(true);
         setTimeout(() => {
             setSpin(false);
             setToggleRefresh(false);
-        }, 1000);
+        }, 2000);
+        setOpenBackdrop(!openBackdrop);
+        let temp = generateOTP()
+        console.log(temp);
+        setVerifyCode(temp)
     };
 
     const navigate = useNavigate()
     useEffect(() => {
-        if (_currentUser.email !== 'test.com' && _isSignedIn == true) {
+        if (_currentUser.email !== '' && _isSignedIn == true) {
             navigate('/')
         }
-
     }, [_currentUser]);
 
-    const handleLogin = () => {
-        if (emailUser != null && passwordUser != null) {
-            dispatch(login({ email: emailUser, password: passwordUser }))
+    //handle login function
+    const handleLogin = async () => {
+        // if (emailUser != null && passwordUser != null) {
+        //     dispatch(login({ email: emailUser, password: passwordUser }))
+        // }
+        if (emailUser === null) {
+            setOpenEmailLoginError(true);
+        } else {
+            if (passwordUser === null) {
+                setOpenPasswordLoginError(true)
+            } else {
+                try {
+                    const resultAction = await dispatch(login({ email: emailUser, password: passwordUser }))
+                    const originalPromiseResult = unwrapResult(resultAction)
+                    // handle result here
+                    console.log(originalPromiseResult)
+                } catch (rejectedValueOrSerializedError) {
+                    // handle error here
+                    //setOpenDialogRegFailed(true)
+                    console.log(rejectedValueOrSerializedError);
+                }
+            }
         }
+    }
+
+    //generate verify code
+    function generateOTP() {
+        let num = '1234567890'
+        let OTP = '';
+        for (let i = 0; i < 5; i++) {
+            OTP += num[Math.floor(Math.random() * 10)];
+        }
+        return OTP
     }
 
     const handleCreateAccount = () => {
         //validate username first -> email -> password
         //validate username
-        if (Validation.CheckUsername(dataForReg.name)) {
+        if (dataForReg.name.length <= 5 || dataForReg.name === "" || Validation.CheckUsername(dataForReg.name)) {
             setOpenUsernameError(true);
         } else {
             //Validate email
@@ -197,7 +295,10 @@ const LoginRegister = () => {
                         if (dataForReg.password !== cfPass) {
                             setOpenCfPasswordError(true)
                         } else {
-                            handleOpenModalVerify();
+                            setOpenBackdrop(!openBackdrop);
+                            let temp = generateOTP()
+                            console.log(temp);
+                            setVerifyCode(temp)
                         }
                     }
                 }
@@ -205,18 +306,80 @@ const LoginRegister = () => {
         }
     }
 
-    const handleVerifyAndReg = () => {
-        console.log(pin1 + pin2 + pin3 + pin4 + pin5);
-        dispatch(register({ dataForReg, toast }))
+    useEffect(() => {
+        if (verifyCode != '') {
+            console.log(verifyCode);
+            emailApi.sendEmail({
+                to: dataForReg.email,
+                subject: "Please use OTP code below to register ",
+                text: "Thank you for using our website. \nThis is your OTP code: " + verifyCode
+            }).then(data => {
+                handleOpenModalVerify();
+                setOpenBackdrop(false)
+            })
+                .catch(err => console.log(err))
+        } else {
+            return;
+        }
+    }, [verifyCode])
+
+    const [openWrongVerify, setOpenWrongVerify] = useState(false)
+    const handleCloseWrongVerify = (event, reason) => {
+        if (reason === 'clickaway') {
+            return;
+        }
+        setOpenWrongVerify(false);
+    };
+
+    const [isRegistering, setIsRegistering] = useState(0)
+
+    useEffect(() => {
+        if (isRegistering === 0) {
+            return;
+        } else if (isRegistering === 1) {
+            setOpenBackdrop(false)
+            setOpenDialogRegSuccessfully(true)
+        } else {
+            setOpenBackdrop(false)
+            setOpenDialogRegFailed(true)
+        }
+    }, [isRegistering])
+
+    const handleVerifyAndReg = async () => {
+        let here = pin1 + pin2 + pin3 + pin4 + pin5
+        try {
+            if (here === verifyCode) {
+                setOpenBackdrop(true)
+                const resultAction = await dispatch(register({ dataForReg }))
+                const originalPromiseResult = unwrapResult(resultAction)
+                // handle result here
+                console.log(originalPromiseResult)
+                if (originalPromiseResult === true) {
+                    // setOpenDialogRegFailed(false)
+                    handleCloseModalVerify()
+                    setOpenDialogRegFailed(false)
+                    setIsRegistering(1)
+                }
+            } else {
+                setOpenWrongVerify(true)
+            }
+        } catch (rejectedValueOrSerializedError) {
+            // handle error here
+            //setOpenDialogRegFailed(true)
+            if (rejectedValueOrSerializedError != null) {
+                handleCloseModalVerify()
+                setOpenDialogRegSuccessfully(false)
+                setIsRegistering(2)
+            }
+        }
     }
 
     return (
-        <div className="login_register">
-            <div className={`container ${addClass}`} id="container">
-                <div className="form-container sign-up-container">
-                    {/* <form validate> */}
-                    <form>
-                        <Typography variant="h4" style={{ marginBottom: '20px', fontFamily: '-moz-initial' }}>Create an account</Typography>
+        <div className={`container ${addClass}`}>
+            <div className="forms-container">
+                <div className="signin-signup">
+                    <form className='sign-up-form'>
+                        <h2 className="title">Sign up</h2>
 
                         {/*USERNAME*/}
                         <TextField
@@ -231,14 +394,23 @@ const LoginRegister = () => {
                             onChange={(e) => setDataForReg({ ...dataForReg, name: e.target.value })}
                         />
                         {openUsernameError ? (
-                            <Alert severity="warning">Username can't have only space or any of these letter /^ *$.,;:@#""''-!`~%&\/(){ }[]/</Alert>
+                            <Alert style={{ marginTop: '10px' }} severity="warning">Username can't have length under 5 and can't have only space or any of these letter /^ *$.,;:@#""''-!`~%&\/(){ }[]/</Alert>
                         ) : (
                             null
                         )}
 
                         {/*EMAIL*/}
                         <TextField
-                            className='text-field-in-form'
+                            // className='text-field-in-form'
+                            style={{
+                                maxWidth: '380px',
+                                marginBottom: '50px',
+                                marginTop: '20px',
+                                lineHeight: '1',
+                                fontWeight: '600',
+                                fontSize: '1.1rem',
+                                color: '#333',
+                            }}
                             name="email"
                             variant='standard'
                             label="Email"
@@ -249,7 +421,7 @@ const LoginRegister = () => {
                             onChange={(e) => setDataForReg({ ...dataForReg, email: e.target.value })}
                         />
                         {openEmailError ? (
-                            <Alert severity="warning">Please type email</Alert>
+                            <Alert style={{ marginTop: '-40px' }} severity="warning">Please type email</Alert>
                         ) : (
                             null
                         )}
@@ -278,7 +450,7 @@ const LoginRegister = () => {
                             )}
                         </div>
                         {openPasswordError ? (
-                            <Alert severity="warning">
+                            <Alert style={{ marginTop: '-40px' }} severity="warning">
                                 Password has to have at least 8 letters, one number, one lowercase and one uppercase letter
                             </Alert>
                         ) : (
@@ -308,7 +480,7 @@ const LoginRegister = () => {
                             )}
                         </div>
                         {openCfPasswordError ? (
-                            <Alert severity="warning">Password is not match</Alert>
+                            <Alert style={{ marginTop: '-25px' }} severity="warning">Password is not match</Alert>
                         ) : (
                             null
                         )}
@@ -316,7 +488,7 @@ const LoginRegister = () => {
 
                         {/*button for opening modal term */}
                         {(!openModal && isChecked) ? (
-                            <div style={{ display: 'flex', flexDirection: 'row' }}>
+                            <div style={{ display: 'flex', flexDirection: 'row', marginTop: '10px' }}>
                                 <CheckCircleRoundedIcon
                                     style={{
                                         color: 'green',
@@ -326,7 +498,7 @@ const LoginRegister = () => {
                                         paddingTop: '5px'
                                     }}
                                 />
-                                <p style={{ fontWeight: 'bold' }}>
+                                <p style={{ fontWeight: 'bold', marginTop: '15px' }}>
                                     Accepted all the terms in this web.
                                 </p>
                             </div>
@@ -336,11 +508,11 @@ const LoginRegister = () => {
                                 variant='outlined'
                                 size="small"
                                 style={{
-                                    width: '80%',
-                                    height: '4%',
+                                    maxWidth: '400px',
+                                    height: '10%',
                                     borderRadius: '15px',
                                     color: 'black',
-                                    marginTop: '40px',
+                                    marginTop: '10px',
                                     marginBottom: '10px'
                                 }}
                             >
@@ -411,6 +583,64 @@ const LoginRegister = () => {
                         >
                             Register
                         </Button>
+
+                        <Backdrop
+                            sx={{ color: '#fff', zIndex: (theme) => theme.zIndex.drawer + 1 }}
+                            open={openBackdrop}
+                        >
+                            <CircularProgress color="inherit" />
+                        </Backdrop>
+
+                        {/*Dialog for having registered successfully or email existed */}
+                        {openDialogRegFailed ? (
+                            <Dialog open={openDialogRegFailed} onClose={handleCloseDialogRegFailed}>
+                                <DialogTitle color='error'>Registered failed</DialogTitle>
+                                <Button
+                                    onClick={handleCloseDialogRegFailed}
+                                    style={{
+                                        alignSelf: 'center',
+                                        width: '30px',
+                                        height: '30px',
+                                        borderRadius: '15px',
+                                        border: '1px solid #18608a',
+                                        backgroundColor: 'red',
+                                        color: 'black',
+                                        fontSize: '13px',
+                                        marginBottom: '10px',
+                                        fontWeight: 'bold',
+                                        padding: '12px 45px',
+                                    }}
+                                >
+                                    OK
+                                </Button>
+                            </Dialog>
+                        ) : null
+                        }
+
+                        {openDialogRegSuccessfully ?
+                            (
+                                <Dialog open={openDialogRegSuccessfully} onClose={handleCloseDialogRegSuccessfully}>
+                                    <DialogTitle>Registered successfully</DialogTitle>
+                                    <Button
+                                        onClick={handleCloseDialogRegSuccessfully}
+                                        style={{
+                                            alignSelf: 'center',
+                                            width: '30px',
+                                            height: '30px',
+                                            borderRadius: '15px',
+                                            border: '1px solid #18608a',
+                                            backgroundColor: 'green',
+                                            color: '#ffffff',
+                                            fontSize: '13px',
+                                            marginBottom: '10px',
+                                            fontWeight: 'bold',
+                                            padding: '12px 45px',
+                                        }}
+                                    >
+                                        OK
+                                    </Button>
+                                </Dialog>
+                            ) : null}
 
                         <Modal
                             open={openModalVerify}
@@ -548,30 +778,90 @@ const LoginRegister = () => {
                             </Box>
                         </Modal>
 
+                        {/*Snackbar*/}
+                        <Snackbar open={openWrongVerify} autoHideDuration={6000} onClose={handleCloseWrongVerify}>
+                            <Alert onClose={handleCloseWrongVerify} severity="error" sx={{ width: '100%' }}>
+                                Wrong verify code. Please try again.
+                            </Alert>
+                        </Snackbar>
                     </form>
-                </div>
 
 
-                {/* SIGN IN */}
-                <div className="form-container sign-in-container">
-                    <form>
-                        <h1>Sign in</h1>
+                    {/* LOGIN */}
+                    <form action="#" className="sign-in-form">
+                        <h2 className="title">Sign in</h2>
+                        {/*EMAIL*/}
                         <TextField
+                            className='text-field-in-form'
+                            name="email"
+                            variant='standard'
+                            label="Email"
                             type="email"
-                            placeholder="Email"
-                            onChange={(e) => {
-                                setEmailUser(e.target.value);
-                            }} />
-                        <TextField
-                            type="password"
-                            placeholder="Password"
-                            onChange={(e) => {
-                                setPasswordUser(e.target.value);
-                            }} />
+                            fullWidth
+                            value={emailUser}
+                            onFocus={() => setOpenEmailLoginError(false)}
+                            onChange={(e) => setEmailUser(e.target.value)}
+                        />
+                        {openEmailLoginError ? (
+                            <Alert style={{ marginTop: '15px' }} severity="warning">Please type email</Alert>
+                        ) : (
+                            null
+                        )}
+
+                        {/*PASSWORD */}
+                        <div className="password-in-form">
+                            <TextField
+                                style={{
+                                    maxWidth: '380px',
+                                    marginBottom: '50px',
+                                    marginTop: '20px',
+                                    lineHeight: '1',
+                                    fontWeight: '600',
+                                    fontSize: '1.1rem',
+                                    color: '#333',
+                                }}
+                                name="password"
+                                variant='standard'
+                                label="Password"
+                                type={passwordShown ? "text" : "password"}
+                                fullWidth
+                                value={passwordUser}
+                                onFocus={() => setOpenPasswordLoginError(false)}
+                                onChange={(e) => setPasswordUser(e.target.value)}
+                            />
+                            {passwordShown ? (
+                                <IconButton onClick={togglePassword}>
+                                    <VisibilityIcon color="success" />
+                                </IconButton>
+                            ) : (
+                                <IconButton onClick={togglePassword}>
+                                    <VisibilityOffIcon />
+                                </IconButton>
+                            )}
+                        </div>
+                        {openPasswordLoginError ? (
+                            <Alert severity="warning">
+                                Type password
+                            </Alert>
+                        ) : (
+                            null
+                        )}
+
                         <Button
                             onClick={() => handleLogin()}
+                            style={{
+                                marginTop: '25px',
+                                borderRadius: '20px',
+                                border: '1px solid #18608a',
+                                backgroundColor: '#18608a',
+                                color: '#ffffff',
+                                fontSize: '13px',
+                                fontWeight: 'bold',
+                                padding: '12px 45px',
+                                letterSpacing: '1px',
+                            }}
                         >
-                            Sign In
+                            Login
                         </Button>
                         {
                             _loadingUser == true ?
@@ -580,23 +870,35 @@ const LoginRegister = () => {
                         }
                     </form>
                 </div>
+            </div >
 
-                <div className="overlay-container">
-                    <div className="overlay">
-                        <div className="overlay-panel overlay-left">
-                            <button className="ghost" id="signIn" onClick={() => setAddClass("")}>
-                                Had an account ? Go to sign in now
-                            </button>
-                        </div>
-                        <div className="overlay-panel overlay-right">
-                            <button className="ghost" id="signUp" onClick={() => setAddClass("right-panel-active")}>
-                                Create an account
-                            </button>
-                        </div>
+            <div className="panels-container">
+                <div className="panel left-panel">
+                    <div className="content">
+                        <h3>New here ?</h3>
+                        <p>
+                            Getting your best laptop on ComeBuy is always your best choice
+                        </p>
+                        <button className="btn transparent" id="sign-up-btn" onClick={() => setAddClass('sign-up-mode')}>
+                            Sign up
+                        </button>
                     </div>
+                    <Register2SVG className="image" />
+                </div>
+                <div className="panel right-panel">
+                    <div className="content">
+                        <h3>One of us ?</h3>
+                        <p>
+                            Let's log in now. Something perfect is waiting for you
+                        </p>
+                        <button className="btn transparent" id="sign-in-btn" onClick={() => setAddClass('')}>
+                            Sign in
+                        </button>
+                    </div>
+                    <Register1SVG className="image" />
                 </div>
             </div>
-        </div>
+        </div >
     )
 }
 
