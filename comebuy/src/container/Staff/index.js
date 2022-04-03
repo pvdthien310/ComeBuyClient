@@ -2,7 +2,9 @@
 
 const Staff = () => {
     return (
-        <p> Staff</p>
+        <div>
+            <p> Staff</p>
+        </div>
     )
 }
 

@@ -7,21 +7,21 @@ import Staff from '../container/Staff';
 const adminRoutes = [
     {
         name: 'product',
-        path: '/',
+        path: '/product',
         exact: true,
-        page: () => <Product />,
+        page:  <Product />,
     },
     {
         name: 'addProduct',
         path: '/product/add',
         exact: true,
-        page: () => <AddProduct />,
+        page:   <AddProduct />,
     },
     {
         name: 'staff',
         path: '/staff',
         exact: true,
-        page: () => <Staff />,
+        page:  <Staff />,
     },
 
 
@@ -30,18 +30,18 @@ const adminRoutes = [
 const adminMenuItems = {
     path: '/',
     routes: [
-        // {
-        //   path: '/',
-        //   name: 'Dashboard',
+        {
+          path: '/',
+          name: 'product',
         //   icon: <DashboardIcon />,
-        //   component: <Dashboard />,
-        // },
-        // {
-        //   name: 'Courses',
+          component: <Product />,
+        },
+        {
+          name: 'Courses',
         //   icon: <CourseIcon />,
-        //   path: '/course',
-        //   component: <Course />,
-        // },
+          path: '/product/add',
+          component: <AddProduct />,
+        },
     ],
 };
 export { adminRoutes, adminMenuItems };
