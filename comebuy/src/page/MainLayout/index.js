@@ -30,7 +30,7 @@ const MainLayout = props => {
     var result = null;
     if (routes.length > 0) {
       result = routes.map((route, index) => {
-        return <Route key={index} path={route.path} exact={route.exact} element={route.page} />;
+        return <Route key={index} path={route.path} element={route.page} />;
       });
     }
     result.push(<Route key={routes.length} path="*" element={NotFound} />);
@@ -58,6 +58,16 @@ const MainLayout = props => {
       case 'staff':
         {
           navigate("/staff")
+          break
+        }
+      case 'editProduct':
+        {
+          navigate("/product/edit")
+          break
+        }
+      case 'addProduct':
+        {
+          navigate("/product/add")
           break
         }
     }

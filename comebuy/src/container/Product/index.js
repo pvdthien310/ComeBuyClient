@@ -13,73 +13,64 @@ import EditIcon from '@mui/icons-material/Edit';
 import FileCopyIcon from '@mui/icons-material/FileCopy';
 import {
     DataGrid,
-    GridToolbarContainer,
-    GridToolbarColumnsButton,
-    GridToolbarFilterButton,
-    GridToolbarExport,
-    GridToolbarDensitySelector,
     GridActionsCellItem
 } from '@mui/x-data-grid';
-import { useDemoData } from '@mui/x-data-grid-generator';
 import { renderProgress } from './../../GridDataCellTemplate/ProgressBar'
 import { renderStatus } from "../../GridDataCellTemplate/StatusTag";
 import { renderImportantTag } from "../../GridDataCellTemplate/ImportantTag";
-function CustomToolbar() {
-    return (
-        <GridToolbarContainer>
-            <GridToolbarExport />
-        </GridToolbarContainer>
-    );
-}
+import DetailProductModal from "../../components/DetailProductModal/DetailProductModal";
+import Box from '@mui/material/Box';
+import Typography from '@mui/material/Typography';
+import Modal from '@mui/material/Modal';
+import { Grid } from "@material-ui/core";
+
+const style = {
+    position: 'absolute',
+    top: '50%',
+    left: '50%',
+    transform: 'translate(-50%, -50%)',
+    width: 800,
+    height: 'auto',
+    bgcolor: 'background.paper',
+    borderRadius: '5px',
+    boxShadow: 24,
+    p: 4,
+};
 
 const Product = () => {
 
     const _productList = useSelector(productListSelector)  // list get from store
     const dispatch = useDispatch()
     const [productList, setProductList] = useState(_productList)
-    const [pageSize, setPageSize] = React.useState(25);
 
-    const { data, loading } = useDemoData({
-        dataSet: 'Commodity',
-        rowLength: 20,
-        maxColumns: 20,
-    });
-    // console.log(data)
+    /// For modal
+    const [openModal, setOpenModal] = useState(false);
+    const [currentProduct, setCurrentProduct] = useState(null);
+    const handleOpenModal = () => setOpenModal(true);
+    const handleCloseModal = () => setOpenModal(false);
 
+    /// For GridData
+    const [pageSize, setPageSize] = useState(25);
     const deleteProduct = useCallback(
         (id) => () => {
-            // setTimeout(() => {
-            //     setRows((prevRows) => prevRows.filter((row) => row.id !== id));
-            // });
             console.log('a')
         },
         [],
-
     );
 
     const editProduct = useCallback(
-        (id) => () => {
-            // setRows((prevRows) =>
-            //     prevRows.map((row) =>
-            //         row.id === id ? { ...row, isAdmin: !row.isAdmin } : row,
-            //     ),
-            // );
-            console.log('b')
-        },
-        [],
-
+        (value) => () => {
+            console.log(value)
+            setCurrentProduct(value.row)
+            handleOpenModal()
+        }, [],
     );
 
     const duplicateUser = useCallback(
         (id) => () => {
-            // setRows((prevRows) => {
-            //     const rowToDuplicate = prevRows.find((row) => row.id === id);
-            //     return [...prevRows, { ...rowToDuplicate, id: Date.now() }];
-            // });
             console.log('c')
         },
         [],
-
     );
 
     const columns = useMemo(
@@ -109,7 +100,7 @@ const Product = () => {
                     <GridActionsCellItem
                         icon={<EditIcon />}
                         label="Edit"
-                        onClick={editProduct(params.id)}
+                        onClick={editProduct(params)}
                         showInMenu
                     />,
                     <GridActionsCellItem
@@ -135,30 +126,37 @@ const Product = () => {
                     console.log("Error load product")
                 })
         }
-
-
         return () => {
             setProductList({});
         };
     }, [])
 
-    const handleOnCellClick = (e) => {
-        console.log(e);
+    const handleOnCellClick = async (e) => {
+        if (e.value != undefined) {
+            setCurrentProduct(e.row)
+        }
     };
 
+    // useEffect(() => {
+    //     if (currentProduct != null)
+    //         setOpenModal(true)
+        
+    // }, [currentProduct])
+
     return (
-        <div style={{ height: 600, width: '70%' }}>
-            
+        <div style={{
+            height: 600,
+            width: '70%',
+        }}>
+
+            <DetailProductModal open={openModal} onClose={handleCloseModal} product={currentProduct} />
+
             <DataGrid
-                // {...data}
                 pageSize={pageSize}
                 onPageSizeChange={(newPage) => setPageSize(newPage)}
                 pagination
                 columns={columns}
                 rows={productList}
-                // component={{
-                //     Toolbar: CustomToolbar,
-                // }}
                 getRowId={(row) => row.productID}
                 onCellClick={handleOnCellClick}
             />
