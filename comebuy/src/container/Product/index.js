@@ -15,6 +15,7 @@ import {
 import { useDemoData } from '@mui/x-data-grid-generator';
 import { DataGridPro } from '@mui/x-data-grid-pro';
 import { renderProgress } from './../../GridDataCellTemplate/ProgressBar'
+import { renderStatus } from "../../GridDataCellTemplate/StatusTag";
 function CustomToolbar() {
     return (
         <GridToolbarContainer>
@@ -49,7 +50,10 @@ const Product = () => {
         { field: 'memory', headerName: 'Memory', width: 150 },
         { field: 'name', headerName: 'Name', width: 150 },
 
-        { field: 'col2', headerName: 'Column 2', width: 150 },
+    //     { field: 'col2', headerName: 'Column 2', width: 150, renderCell: (params) => (
+    //         renderStatus(params.value)
+    //       )
+    // },
         { field: 'col2', headerName: 'Column 2', width: 150 },
     ];
 
