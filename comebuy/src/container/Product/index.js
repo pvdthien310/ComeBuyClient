@@ -1,7 +1,16 @@
-import React, { useState, useEffect } from "react";
+import React, {
+    useState,
+    useEffect,
+    useMemo,
+    useCallback,
+    memo
+} from "react";
 import { useDispatch, useSelector } from 'react-redux'
 import { productListSelector } from './../../redux/selectors'
 import { getAll } from './../../redux/slices/productSlice'
+import DeleteIcon from '@mui/icons-material/Delete';
+import EditIcon from '@mui/icons-material/Edit';
+import FileCopyIcon from '@mui/icons-material/FileCopy';
 import {
     DataGrid,
     GridToolbarContainer,
@@ -9,19 +18,15 @@ import {
     GridToolbarFilterButton,
     GridToolbarExport,
     GridToolbarDensitySelector,
-    GridRowsProp,
-    GridColDef
+    GridActionsCellItem
 } from '@mui/x-data-grid';
 import { useDemoData } from '@mui/x-data-grid-generator';
-import { DataGridPro } from '@mui/x-data-grid-pro';
 import { renderProgress } from './../../GridDataCellTemplate/ProgressBar'
 import { renderStatus } from "../../GridDataCellTemplate/StatusTag";
+import { renderImportantTag } from "../../GridDataCellTemplate/ImportantTag";
 function CustomToolbar() {
     return (
         <GridToolbarContainer>
-            <GridToolbarColumnsButton />
-            <GridToolbarFilterButton />
-            <GridToolbarDensitySelector />
             <GridToolbarExport />
         </GridToolbarContainer>
     );
@@ -38,37 +43,100 @@ const Product = () => {
         dataSet: 'Commodity',
         rowLength: 20,
         maxColumns: 20,
-      });
-    console.log(data)
-    const columns = [
-        { field: 'id', hidden: true },
-        {
-            field: 'price', headerName: 'Price', width: 150, renderCell: (params) => (
-              renderProgress(params.value)
-            )
-        },
-        { field: 'memory', headerName: 'Memory', width: 150 },
-        { field: 'name', headerName: 'Name', width: 150 },
+    });
+    // console.log(data)
 
-    //     { field: 'col2', headerName: 'Column 2', width: 150, renderCell: (params) => (
-    //         renderStatus(params.value)
-    //       )
-    // },
-        { field: 'col2', headerName: 'Column 2', width: 150 },
-    ];
+    const deleteProduct = useCallback(
+        (id) => () => {
+            // setTimeout(() => {
+            //     setRows((prevRows) => prevRows.filter((row) => row.id !== id));
+            // });
+            console.log('a')
+        },
+        [],
+
+    );
+
+    const editProduct = useCallback(
+        (id) => () => {
+            // setRows((prevRows) =>
+            //     prevRows.map((row) =>
+            //         row.id === id ? { ...row, isAdmin: !row.isAdmin } : row,
+            //     ),
+            // );
+            console.log('b')
+        },
+        [],
+
+    );
+
+    const duplicateUser = useCallback(
+        (id) => () => {
+            // setRows((prevRows) => {
+            //     const rowToDuplicate = prevRows.find((row) => row.id === id);
+            //     return [...prevRows, { ...rowToDuplicate, id: Date.now() }];
+            // });
+            console.log('c')
+        },
+        [],
+
+    );
+
+    const columns = useMemo(
+        () => [
+            { field: 'id', hide: true },
+            { field: 'brand', headerName: 'Brand', width: 120 },
+            { field: 'name', headerName: 'Name', width: 150 },
+            { field: 'memory', headerName: 'Memory', width: 100 },
+            { field: 'gpu', headerName: 'GPU', width: 150 },
+            { field: 'cpu', headerName: 'CPU', width: 200 },
+            { field: 'weight', headerName: 'Weight', width: 100 },
+            {
+                field: 'price', headerName: 'Price', width: 120, renderCell: (params) => (
+                    renderImportantTag(params.value, 300)
+                )
+            },
+            {
+                field: 'actions',
+                type: 'actions',
+                width: 80,
+                getActions: (params) => [
+                    <GridActionsCellItem
+                        icon={<DeleteIcon />}
+                        label="Delete"
+                        onClick={deleteProduct(params.id)}
+                    />,
+                    <GridActionsCellItem
+                        icon={<EditIcon />}
+                        label="Edit"
+                        onClick={editProduct(params.id)}
+                        showInMenu
+                    />,
+                    <GridActionsCellItem
+                        icon={<FileCopyIcon />}
+                        label="Duplicate User"
+                        onClick={duplicateUser(params.id)}
+                        showInMenu
+                    />,
+                ],
+            },
+        ],
+        [deleteProduct, editProduct, duplicateUser]
+    );
 
     useEffect(() => {
         if (_productList.length === 0) {
             dispatch(getAll())
                 .unwrap()
                 .then((originalPromiseResult) => {
-
                     setProductList(originalPromiseResult)
                 })
                 .catch((rejectedValueOrSerializedError) => {
                     console.log("Error load product")
                 })
         }
+
+
         return () => {
             setProductList({});
         };
@@ -79,7 +147,8 @@ const Product = () => {
     };
 
     return (
-        <div style={{ height: 400, width: '100%' }}>
+        <div style={{ height: 600, width: '70%' }}>
+            
             <DataGrid
                 // {...data}
                 pageSize={pageSize}
@@ -87,9 +156,9 @@ const Product = () => {
                 pagination
                 columns={columns}
                 rows={productList}
-                component={{
-                    Toolbar: CustomToolbar,
-                }}
+                // component={{
+                //     Toolbar: CustomToolbar,
+                // }}
                 getRowId={(row) => row.productID}
                 onCellClick={handleOnCellClick}
             />
@@ -97,4 +166,4 @@ const Product = () => {
     );
 }
 
-export default Product;
+export default memo(Product);
