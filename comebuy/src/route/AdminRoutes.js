@@ -7,41 +7,24 @@ import Staff from '../container/Staff';
 const adminRoutes = [
     {
         name: 'product',
-        path: '/',
+        path: '/product',
         exact: true,
-        page: () => <Product />,
+        page:  <Product />,
     },
     {
         name: 'addProduct',
         path: '/product/add',
         exact: true,
-        page: () => <AddProduct />,
+        page:   <AddProduct />,
     },
     {
         name: 'staff',
         path: '/staff',
         exact: true,
-        page: () => <Staff />,
+        page:  <Staff />,
     },
 
 
 ];
 
-const adminMenuItems = {
-    path: '/',
-    routes: [
-        // {
-        //   path: '/',
-        //   name: 'Dashboard',
-        //   icon: <DashboardIcon />,
-        //   component: <Dashboard />,
-        // },
-        // {
-        //   name: 'Courses',
-        //   icon: <CourseIcon />,
-        //   path: '/course',
-        //   component: <Course />,
-        // },
-    ],
-};
-export { adminRoutes, adminMenuItems };
+export { adminRoutes };

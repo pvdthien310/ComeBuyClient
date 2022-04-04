@@ -10,21 +10,4 @@ const customerRoutes = [
  
 ];
 
-const customerMenuItems = {
-  path: '/',
-//   routes: [
-//     {
-//       path: '/',
-//       name: 'Dashboard',
-//       icon: <DashboardIcon />,
-//       component: <Dashboard />,
-//     },
-//     {
-//       name: 'Courses',
-//       icon: <CourseIcon />,
-//       path: '/course',
-//       component: <Course />,
-//     },
-//   ],
-};
-export { customerRoutes, customerMenuItems };
+export { customerRoutes };

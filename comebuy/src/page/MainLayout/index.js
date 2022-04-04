@@ -1,7 +1,6 @@
 import * as React from 'react';
 import Box from '@mui/material/Box';
 import Drawer from '@mui/material/Drawer';
-import Button from '@mui/material/Button';
 import List from '@mui/material/List';
 import Divider from '@mui/material/Divider';
 import ListItem from '@mui/material/ListItem';
@@ -53,12 +52,12 @@ const MainLayout = props => {
         }
       case 'product':
         {
-          navigate('/product/add')
+          navigate("/product")
           break
         }
       case 'staff':
         {
-          navigate('/staff')
+          navigate("/staff")
           break
         }
     }
@@ -117,14 +116,18 @@ const MainLayout = props => {
           {list('left')}
         </Drawer>
       </React.Fragment>
+
       <div >
+
         <Routes>
+
           {showRoutes(props.routes)}
           <Route element={
             <Navigate replace to={{ pathname: '/' }} />
           }>
           </Route>
         </Routes>
+
       </div>
     </div>
   );

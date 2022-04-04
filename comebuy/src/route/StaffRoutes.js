@@ -7,24 +7,7 @@ const staffRoutes = [
     exact: true,
     page: () => <Invoice />,
   },
- 
+
 ];
 
-const staffMenuItems = {
-  path: '/',
-//   routes: [
-//     {
-//       path: '/',
-//       name: 'Dashboard',
-//       icon: <DashboardIcon />,
-//       component: <Dashboard />,
-//     },
-//     {
-//       name: 'Courses',
-//       icon: <CourseIcon />,
-//       path: '/course',
-//       component: <Course />,
-//     },
-//   ],
-};
-export { staffRoutes, staffMenuItems };
+export { staffRoutes };

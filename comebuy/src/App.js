@@ -1,12 +1,13 @@
 import './App.css';
 import LoginRegister from './container/LoginAndRegister/LoginRegister';
-import { Route, Routes,useNavigate } from 'react-router-dom';
+import { Route, Routes, useNavigate } from 'react-router-dom';
 import HomePage from './container/HomePage/HomePage';
 import MainLayout from './page/MainLayout';
 import { adminRoutes, adminMenuItems } from './route/AdminRoutes';
 import { staffMenuItems, staffRoutes } from './route/StaffRoutes';
 import { managerRoutes, managerMenuItems } from './route/ManagerRoutes';
-import { useState,useEffect } from 'react';
+import { useState, useEffect } from 'react';
+import Staff from './container/Staff';
 
 function App() {
   const role = localStorage.getItem('role');
@@ -14,32 +15,32 @@ function App() {
 
   useEffect(() => {
     navigate('/')
-  },[role])
+  }, [role])
 
   const renderRoutes = () => {
-    
+
     const token = localStorage.getItem('accessToken');
 
     if (token) {
       switch (role) {
         case 'manager':
-          return <MainLayout routes={managerRoutes} menuItems={managerMenuItems} />;
+          return <MainLayout routes={managerRoutes} />;
         case 'staff':
-          return <MainLayout routes={staffRoutes} menuItems={staffMenuItems} />;
+          return <MainLayout routes={staffRoutes} />;
         case 'admin':
-          return <MainLayout routes={adminRoutes} menuItems={adminMenuItems} />;
+          return <MainLayout routes={adminRoutes} />;
         default:
-          return <HomePage />;
+          return <HomePage />; // Guest/Customer 
       }
     }
     return <HomePage />
   };
 
- 
+
   return (
     <Routes>
+      <Route path="*" element={renderRoutes()} />
       <Route path="login" element={<LoginRegister />} />
-      <Route path="/" element={renderRoutes()} />
     </Routes>
   );
 }

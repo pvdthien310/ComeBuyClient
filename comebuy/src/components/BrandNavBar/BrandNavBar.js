@@ -71,8 +71,7 @@ const ImageMarked = styled('span')(({ theme }) => ({
 }));
 
 const NavigateBrandLine = (value) => {
-    window.location="#Line_" + value
-    
+    window.location.replace("#Line_" + value)
 }
 function BrandNavBar(props) {
     const brandLine = props.brandLine;

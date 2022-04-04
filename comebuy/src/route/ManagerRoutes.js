@@ -10,8 +10,5 @@ const managerRoutes = [
  
 ];
 
-const managerMenuItems = {
-  path: '/',
- 
-};
-export { managerRoutes, managerMenuItems };
+
+export { managerRoutes };

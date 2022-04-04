@@ -40,7 +40,7 @@ const CustomButton = styled(Button)({
     // },
 })
 
-const Line = styled(Grid)(({theme}) => ({
+const Line = styled(Grid)(({ theme }) => ({
     backgroundColor: 'black'
 }))
 
@@ -51,7 +51,7 @@ function BrandLine(props) {
 
     const as = ['1', '2', '3']
     return (
-        <Line className='BrandLine' container rowSpacing={1} columnSpacing={{ xs: 1, sm: 2, md: 3 }}>
+        <Line id={props.id} className='BrandLine' container rowSpacing={1} columnSpacing={{ xs: 1, sm: 2, md: 3 }}>
             <Grid container justifyContent={'flex-end'} item xs={12} className='BrandLine__ImgBrand'>
                 <CustomButton endIcon={<NavigateNextIcon />} >
                     {brandName}
@@ -69,7 +69,6 @@ function BrandLine(props) {
                             </SwiperSlide>
                         ))
                     }
-
                 </Swiper>
             </Grid>
 
