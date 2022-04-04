@@ -7,6 +7,5 @@ const productAPI = {
         const res = await DatabaseClient.get('/' + baseURL);
         return res.data;
     },
-   
 }
 export default productAPI
