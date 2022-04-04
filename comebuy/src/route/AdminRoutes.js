@@ -27,21 +27,4 @@ const adminRoutes = [
 
 ];
 
-const adminMenuItems = {
-    path: '/',
-    routes: [
-        {
-          path: '/',
-          name: 'product',
-        //   icon: <DashboardIcon />,
-          component: <Product />,
-        },
-        {
-          name: 'Courses',
-        //   icon: <CourseIcon />,
-          path: '/product/add',
-          component: <AddProduct />,
-        },
-    ],
-};
-export { adminRoutes, adminMenuItems };
+export { adminRoutes };

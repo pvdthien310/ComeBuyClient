@@ -24,11 +24,11 @@ function App() {
     if (token) {
       switch (role) {
         case 'manager':
-          return <MainLayout routes={managerRoutes} menuItems={managerMenuItems} />;
+          return <MainLayout routes={managerRoutes} />;
         case 'staff':
-          return <MainLayout routes={staffRoutes} menuItems={staffMenuItems} />;
+          return <MainLayout routes={staffRoutes} />;
         case 'admin':
-          return <MainLayout routes={adminRoutes} menuItems={adminMenuItems} />;
+          return <MainLayout routes={adminRoutes} />;
         default:
           return <HomePage />; // Guest/Customer 
       }

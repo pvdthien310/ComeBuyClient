@@ -55,7 +55,6 @@ const HomePage = () => {
                 {
                     brandList.map((item, i) => {
                         const stringID = 'Line_' + item.title
-
                         return (
                             <BrandLine key={i} id={stringID} brandName={item.title} url={item.url} ></BrandLine>
                         );
