@@ -1,12 +1,12 @@
 import './App.css';
 import LoginRegister from './container/LoginAndRegister/LoginRegister';
-import { Route, Routes,useNavigate } from 'react-router-dom';
+import { Route, Routes, useNavigate } from 'react-router-dom';
 import HomePage from './container/HomePage/HomePage';
 import MainLayout from './page/MainLayout';
 import { adminRoutes, adminMenuItems } from './route/AdminRoutes';
 import { staffMenuItems, staffRoutes } from './route/StaffRoutes';
 import { managerRoutes, managerMenuItems } from './route/ManagerRoutes';
-import { useState,useEffect } from 'react';
+import { useEffect } from 'react';
 
 function App() {
   const role = localStorage.getItem('role');
@@ -14,10 +14,10 @@ function App() {
 
   useEffect(() => {
     navigate('/')
-  },[role])
+  }, [role])
 
   const renderRoutes = () => {
-    
+
     const token = localStorage.getItem('accessToken');
 
     if (token) {
@@ -35,7 +35,7 @@ function App() {
     return <HomePage />
   };
 
- 
+
   return (
     <Routes>
       <Route path="login" element={<LoginRegister />} />
