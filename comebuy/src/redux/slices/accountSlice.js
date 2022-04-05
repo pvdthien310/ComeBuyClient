@@ -35,6 +35,18 @@ export const login = createAsyncThunk(
   }
 );
 
+export const getAccountWithID = createAsyncThunk(
+  'account/findOne',
+  async (id, { rejectedWithValue }) => {
+    const response = await accountApi.getAccountWithID(id)
+    if (!response) {
+      return rejectedWithValue(" Find account failed")
+    } else {
+      return response
+    }
+  }
+)
+
 export const register = createAsyncThunk(
   "account/register",
   async ({ dataForReg }, { rejectWithValue }) => {
@@ -103,6 +115,27 @@ export const accountSlice = createSlice({
       state.loading = false;
       state.errorMessage = action.payload;
       console.log("Rejected -  isSigning = " + state.isSignedIn);
-    }
+    },
+    [getAccountWithID.pending]: (state, action) => {
+      state.loading = true
+      //state.isEmailExisted = false
+      state.isRegSuccess = false
+      console.log("Pending -  isSuccess = " + state.isRegSuccess);
+    },
+    [getAccountWithID.fulfilled]: (state, action) => {
+      state.loading = false;
+      // state.user = action.payload;
+      //state.isEmailExisted = false;
+      state.isRegSuccess = true;
+      console.log("Fulfilled -  isSuccess = " + state.isRegSuccess);
+      console.log("Registered successfully");
+    },
+    [getAccountWithID.rejected]: (state, action) => {
+      state.loading = false;
+      state.error = action.payload.message;
+      //state.isEmailExisted = true;
+      state.isRegSuccess = false;
+      console.log("can not find");
+    },
   }
 })

@@ -7,6 +7,8 @@ import { Provider } from 'react-redux'
 import store from './redux/store.js'
 import { BrowserRouter } from 'react-router-dom';
 
+import Invoice from './container/Invoice/index'
+
 ReactDOM.render(
   // <React.StrictMode>
   //   <Provider store={store}>
@@ -14,11 +16,11 @@ ReactDOM.render(
   //   </Provider>
   // </React.StrictMode>,
 
-   <Provider store={store}>
-     <BrowserRouter>
-     <App />
-     </BrowserRouter>
-   </Provider>,
+  <Provider store={store}>
+    <BrowserRouter>
+      <Invoice />
+    </BrowserRouter>
+  </Provider>,
   document.getElementById('root')
 );
 

@@ -9,7 +9,11 @@ const accountApi = {
     },
     register: async (dataForReg) => {
         const res = DatabaseClient.post('/' + baseURL, dataForReg)
-        return res
+        return res;
+    },
+    getAccountWithID: async (id) => {
+        const res = DatabaseClient.get('/' + baseURL + '/' + id)
+        return res.data;
     }
 }
 export default accountApi
