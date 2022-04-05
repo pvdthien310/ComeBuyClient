@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { DataGrid, GridRowsProp, GridColDef } from '@mui/x-data-grid';
 import { useDispatch, useSelector } from 'react-redux'
-import { getAll } from '../../redux/slices/invoiceSlice';
+import { getAll, updateInvoice } from '../../redux/slices/invoiceSlice';
 import { unwrapResult } from '@reduxjs/toolkit';
 import CusInfo from './CusInfo'
 import ProdInfo from './ProdInfo'
@@ -54,6 +54,63 @@ const Row = (props) => {
     };
     const openProductHover = Boolean(anchorEl2);
 
+    //Execute process of managing invoice
+    const [disablePaid, setDisablePaid] = React.useState(false)
+    const [disableCheck, setDisableCheck] = React.useState(false)
+
+    const [isChecked, setIsChecked] = React.useState(false)
+
+
+    React.useEffect(() => {
+        if (row.isChecked === true) {
+            if (row.isPaid === true) {
+                setDisableCheck(true)
+                setDisablePaid(true)
+            } else {
+                return;
+            }
+        } else {
+            setDisablePaid(true)
+        }
+        return;
+    }, [])
+
+    const [updating, setUpdating] = React.useState(false)
+
+    const [dataForUpdate, setDataForUpdate] = React.useState({
+        isChecked: false,
+        isPaid: false
+    })
+
+    const dispatch = useDispatch()
+
+    React.useEffect(async () => {
+
+        if (updating != false) {
+            if (row.isChecked === false) {
+                setDataForUpdate({
+                    isChecked: true,
+                    ...dataForUpdate
+                })
+                try {
+                    const resultAction = await dispatch(updateInvoice(row.invoiceID, { dataForUpdate }))
+                    const originalPromiseResult = unwrapResult(resultAction)
+                    // handle result here
+                    console.log(originalPromiseResult);
+                } catch (rejectedValueOrSerializedError) {
+                    // handle error here
+                    //setOpenDialogRegFailed(true)
+                    console.log(rejectedValueOrSerializedError.message);
+                }
+            }
+        }
+
+    }, [updating])
+
+    const handleClickCheckInvoice = async () => {
+        setUpdating(true)
+    }
+
     return (
         <React.Fragment>
             <TableRow sx={{ '& > *': { borderBottom: 'unset' } }}>
@@ -97,6 +154,8 @@ const Row = (props) => {
                         <FormControlLabel
                             control={<IOSSwitch sx={{ m: 1 }} defaultChecked={row.isChecked} />}
                             label=""
+                            disabled={disableCheck}
+                            onClick={handleClickCheckInvoice}
                         />
                     </FormGroup>
                 </TableCell>
@@ -106,6 +165,7 @@ const Row = (props) => {
                         <FormControlLabel
                             control={<IOSSwitch sx={{ m: 1 }} defaultChecked={row.isPaid} />}
                             label=""
+                            disabled={disablePaid}
                         />
                     </FormGroup>
                 </TableCell>

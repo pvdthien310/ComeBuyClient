@@ -2,7 +2,6 @@ import * as React from "react"
 import { useDispatch } from 'react-redux'
 import { unwrapResult } from '@reduxjs/toolkit';
 import { getProductWithID } from '../../redux/slices/productSlice';
-import { getProductImageWithID } from '../../redux/slices/productImageSlice';
 import CircularProgress from '@mui/material/CircularProgress';
 import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
@@ -10,8 +9,8 @@ import Typography from '@mui/material/Typography';
 
 
 const ProdInfo = (props) => {
+
     const [product, setProduct] = React.useState([]);
-    const [productImg, setProductImg] = React.useState([]);
 
     const { productID } = props
 
@@ -35,30 +34,6 @@ const ProdInfo = (props) => {
         };
     }, [])
 
-    React.useEffect(async () => {
-        if (productImg.length === 0) {
-            try {
-                const resultAction = await dispatch(getProductImageWithID(productID))
-                const originalPromiseResult = unwrapResult(resultAction)
-                // handle result here
-                setProductImg([...productImg, originalPromiseResult])
-            } catch (rejectedValueOrSerializedError) {
-                // handle error here
-                //setOpenDialogRegFailed(true)
-                console.log(rejectedValueOrSerializedError.message);
-            }
-        }
-        return () => {
-            setProductImg({});
-        };
-    }, [])
-
-    React.useEffect(() => {
-        if (productImg.length != 0) {
-            console.log(productImg);
-        }
-    }, [productImg])
-
     React.useEffect(() => {
         if (product.length != 0) {
             console.log(product);
@@ -71,13 +46,13 @@ const ProdInfo = (props) => {
                 <div style={{
                     width: '100%',
                     height: '100%',
-                    backgroundColor: '#ADF1C8',
+                    backgroundColor: '#D8DFF1',
                     padding: '10px',
                     display: 'flex',
                     flexDirection: 'row',
                 }}>
                     {/* <Avatar alt="" src={product[0].productimage.imageurl} sx={{ width: 100, height: 100 }} /> */}
-                    {/* <img alt="" src={product[0].productimage[0].imageurl} /> */}
+                    <img alt="" src={product[0].productimage[0].imageurl} style={{ width: 150, height: 150 }} />
                     <div style={{ display: 'flex', flexDirection: 'column', padding: '15px' }}>
                         <div style={{ display: 'flex', flexDirection: 'row' }}>
                             <Typography style={{ fontWeight: 'bold' }}>Brand:</Typography>
@@ -96,12 +71,12 @@ const ProdInfo = (props) => {
 
                         <div style={{ display: 'flex', flexDirection: 'row' }}>
                             <Typography style={{ fontWeight: 'bold' }}>RAM/GPU/CPU:</Typography>
-                            <Typography style={{ marginLeft: '5px' }}>{`${product[0].ram} GB/${product[0].gpu}/${product[0].cpu}`}</Typography>
+                            <Typography style={{ marginLeft: '5px' }}>{`${product[0].ram} GB / ${product[0].gpu} / ${product[0].cpu}`}</Typography>
                         </div>
 
                         <div style={{ display: 'flex', flexDirection: 'row' }}>
                             <Typography style={{ fontWeight: 'bold' }}>ROM/Weight/External IO Port:</Typography>
-                            <Typography style={{ marginLeft: '5px' }}>{`${product[0].memory} GB/${product[0].weight} kg/${product[0].externalIOPort}`}</Typography>
+                            <Typography style={{ marginLeft: '5px' }}>{`${product[0].memory} GB / ${product[0].weight} kg / ${product[0].externalIOPort}`}</Typography>
                         </div>
                     </div>
 
