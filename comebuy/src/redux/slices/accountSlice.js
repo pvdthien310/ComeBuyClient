@@ -1,4 +1,4 @@
-import { createSlice, createAsyncThunk, isFulfilled } from "@reduxjs/toolkit";
+import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 
 import JWTApi from "../../api/JWTAPI";
 import accountApi from "../../api/accountAPI";
@@ -37,12 +37,12 @@ export const login = createAsyncThunk(
 
 export const getAccountWithID = createAsyncThunk(
   'account/findOne',
-  async (id, { rejectedWithValue }) => {
-    const response = await accountApi.getAccountWithID(id)
+  async (data, { rejectedWithValue }) => {
+    const response = await accountApi.getAccountWithID(data)
     if (!response) {
       return rejectedWithValue(" Find account failed")
     } else {
-      return response
+      return response.data
     }
   }
 )
