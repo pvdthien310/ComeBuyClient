@@ -1,4 +1,4 @@
-import React, {useState, useEffect } from "react";
+import React, {useState, useEffect, memo } from "react";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { useDispatch, useSelector } from 'react-redux'
 import "swiper/css";
@@ -6,6 +6,8 @@ import "swiper/css/pagination";
 import { Pagination } from "swiper";
 import { getAll } from '../../redux/slices/productSlice'
 import SliderItem from "./SliderItem/SliderItem";
+
+
 function Slider() {
     const dispatch = useDispatch()
     const [productList, setProductList] = useState([])
@@ -29,10 +31,9 @@ function Slider() {
                     </SwiperSlide>
                 ))
             }
-          
         </Swiper>
 
     )
 }
 
-export default Slider;
+export default memo(Slider);

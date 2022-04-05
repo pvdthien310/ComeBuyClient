@@ -71,10 +71,7 @@ const MainLayout = props => {
           break
         }
     }
-
-
   }
-
   const toggleDrawer = (anchor, open) => (event) => {
     if (event.type === 'keydown' && (event.key === 'Tab' || event.key === 'Shift')) {
       return;
@@ -112,8 +109,6 @@ const MainLayout = props => {
       </List>
     </Box>
   );
-
-
   return (
     <div>
       <React.Fragment key={'left'}>
@@ -128,16 +123,13 @@ const MainLayout = props => {
       </React.Fragment>
 
       <div >
-
         <Routes>
-
           {showRoutes(props.routes)}
           <Route element={
             <Navigate replace to={{ pathname: '/' }} />
           }>
           </Route>
         </Routes>
-
       </div>
     </div>
   );

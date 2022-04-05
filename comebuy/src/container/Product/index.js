@@ -6,42 +6,52 @@ import React, {
     memo
 } from "react";
 import { useDispatch, useSelector } from 'react-redux'
-import { productListSelector } from './../../redux/selectors'
-import { getAll } from './../../redux/slices/productSlice'
-import DeleteIcon from '@mui/icons-material/Delete';
-import EditIcon from '@mui/icons-material/Edit';
-import FileCopyIcon from '@mui/icons-material/FileCopy';
+import { styled } from '@mui/material/styles';
 import {
     DataGrid,
     GridActionsCellItem
 } from '@mui/x-data-grid';
-import { renderProgress } from './../../GridDataCellTemplate/ProgressBar'
-import { renderStatus } from "../../GridDataCellTemplate/StatusTag";
-import { renderImportantTag } from "../../GridDataCellTemplate/ImportantTag";
-import DetailProductModal from "../../components/DetailProductModal/DetailProductModal";
-import Box from '@mui/material/Box';
-import Typography from '@mui/material/Typography';
-import Modal from '@mui/material/Modal';
-import { Grid } from "@material-ui/core";
+import { Route, Routes, useNavigate } from 'react-router-dom'
+import { Stack, Grid, Box } from '@mui/material';
+// icons 
+import DeleteIcon from '@mui/icons-material/Delete';
+import EditIcon from '@mui/icons-material/Edit';
+import InfoIcon from '@mui/icons-material/Info';
 
-const style = {
+//components
+import DetailProductModal from "../../components/DetailProductModal/DetailProductModal";
+import { renderImportantTag } from "../../GridDataCellTemplate/ImportantTag";
+
+// variables
+import { productListSelector } from './../../redux/selectors'
+
+//function 
+import { getAll } from './../../redux/slices/productSlice'
+import AddProduct from "./AddProduct";
+import EditProduct from "./EditProduct";
+
+const BGImg = styled('img')({
+    height: '100%',
+    width: '100%',
     position: 'absolute',
-    top: '50%',
-    left: '50%',
-    transform: 'translate(-50%, -50%)',
-    width: 800,
-    height: 'auto',
-    bgcolor: 'background.paper',
-    borderRadius: '5px',
-    boxShadow: 24,
-    p: 4,
-};
+    resize: true,
+})
+const ProductTable = styled(DataGrid)(({ theme }) => ({
+    height: 700,
+    top: '5%',
+    left: '10%',
+    width: 1200,
+    position: 'relative',
+    backgroundColor: 'white',
+    margin: 2
+}));
 
 const Product = () => {
 
     const _productList = useSelector(productListSelector)  // list get from store
     const dispatch = useDispatch()
     const [productList, setProductList] = useState(_productList)
+    const navigate = useNavigate()
 
     /// For modal
     const [openModal, setOpenModal] = useState(false);
@@ -60,17 +70,15 @@ const Product = () => {
 
     const editProduct = useCallback(
         (value) => () => {
-            console.log(value)
-            setCurrentProduct(value.row)
-            handleOpenModal()
+            navigate('/product/edit', { state: value })
         }, [],
     );
 
-    const duplicateUser = useCallback(
-        (id) => () => {
-            console.log('c')
-        },
-        [],
+    const showDetail = useCallback(
+        (value) => () => {
+            setCurrentProduct(value)
+            handleOpenModal()
+        }, [],
     );
 
     const columns = useMemo(
@@ -87,36 +95,40 @@ const Product = () => {
                     renderImportantTag(params.value, 300)
                 )
             },
+            { field: 'origin', headerName: 'Origin', width: 120 },
             {
                 field: 'actions',
                 type: 'actions',
+                headerName: 'Actions',
                 width: 80,
                 getActions: (params) => [
                     <GridActionsCellItem
-                        icon={<DeleteIcon />}
-                        label="Delete"
-                        onClick={deleteProduct(params.id)}
+                        icon={<InfoIcon />}
+                        label="Details"
+                        onClick={showDetail(params.row)}
+                        showInMenu
                     />,
                     <GridActionsCellItem
                         icon={<EditIcon />}
                         label="Edit"
-                        onClick={editProduct(params)}
+                        onClick={editProduct(params.row)}
                         showInMenu
                     />,
                     <GridActionsCellItem
-                        icon={<FileCopyIcon />}
-                        label="Duplicate User"
-                        onClick={duplicateUser(params.id)}
+                        icon={<DeleteIcon />}
+                        label="Delete"
+                        onClick={deleteProduct(params.id)}
                         showInMenu
                     />,
                 ],
             },
         ],
-        [deleteProduct, editProduct, duplicateUser]
+        [editProduct, showDetail, deleteProduct]
     );
 
     useEffect(() => {
         if (_productList.length === 0) {
+
             dispatch(getAll())
                 .unwrap()
                 .then((originalPromiseResult) => {
@@ -126,10 +138,10 @@ const Product = () => {
                     console.log("Error load product")
                 })
         }
-        return () => {
-            setProductList({});
-        };
-    }, [])
+        if (_productList.length > 0)
+            setProductList(_productList)
+        return () => { setProductList({}) }
+    }, [_productList])
 
     const handleOnCellClick = async (e) => {
         if (e.value != undefined) {
@@ -140,18 +152,17 @@ const Product = () => {
     // useEffect(() => {
     //     if (currentProduct != null)
     //         setOpenModal(true)
-        
+
     // }, [currentProduct])
 
     return (
         <div style={{
-            height: 600,
-            width: '70%',
+            width: '100%',
+            height: 800,
         }}>
-
+            <BGImg src='https://images.unsplash.com/photo-1490810194309-344b3661ba39?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1448&q=80' />
             <DetailProductModal open={openModal} onClose={handleCloseModal} product={currentProduct} />
-
-            <DataGrid
+            <ProductTable
                 pageSize={pageSize}
                 onPageSizeChange={(newPage) => setPageSize(newPage)}
                 pagination
@@ -160,6 +171,11 @@ const Product = () => {
                 getRowId={(row) => row.productID}
                 onCellClick={handleOnCellClick}
             />
+            <Box sx={{ height: 100 }}></Box>
+            <Routes>
+                <Route path='add' element={<AddProduct />}></Route>
+                <Route path='edit' element={<EditProduct />}></Route>
+            </Routes>
         </div>
     );
 }

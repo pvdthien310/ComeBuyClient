@@ -8,19 +8,19 @@ import Staff from '../container/Staff';
 const adminRoutes = [
     {
         name: 'product',
-        path: '/product',
+        path: '/product/*',
         page:  <Product />,
     },
-    {
-        name: 'addProduct',
-        path: '/product/add',
-        page:   <AddProduct />,
-    },
-    {
-        name: 'editProduct',
-        path: '/product/edit',
-        page:   <EditProduct />,
-    },
+    // {
+    //     name: 'addProduct',
+    //     path: '/product/add',
+    //     page:   <AddProduct />,
+    // },
+    // {
+    //     name: 'editProduct',
+    //     path: '/product/edit',
+    //     page:   <EditProduct />,
+    // },
     {
         name: 'staff',
         path: '/staff',
