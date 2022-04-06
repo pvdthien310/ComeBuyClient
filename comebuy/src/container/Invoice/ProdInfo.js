@@ -25,7 +25,6 @@ const ProdInfo = (props) => {
                 setProduct([...product, originalPromiseResult])
             } catch (rejectedValueOrSerializedError) {
                 // handle error here
-                //setOpenDialogRegFailed(true)
                 console.log(rejectedValueOrSerializedError.message);
             }
         }
@@ -34,19 +33,13 @@ const ProdInfo = (props) => {
         };
     }, [])
 
-    React.useEffect(() => {
-        if (product.length != 0) {
-            console.log(product);
-        }
-    }, [product])
-
     return (
         <div>
             {product != 0 ? (
                 <div style={{
                     width: '100%',
                     height: '100%',
-                    backgroundColor: '#D8DFF1',
+                    backgroundColor: 'white',
                     padding: '10px',
                     display: 'flex',
                     flexDirection: 'row',
@@ -78,9 +71,6 @@ const ProdInfo = (props) => {
                             <Typography style={{ marginLeft: '5px' }}>{`${product[0].memory} GB / ${product[0].weight} kg / ${product[0].externalIOPort}`}</Typography>
                         </div>
                     </div>
-
-                    {/* <Typography>{customer[0].name}</Typography>
-                    <Typography>{customer[0].phoneNumber}</Typography> */}
                 </div>
             ) : (
                 <Box sx={{ display: 'flex', flex: 1, flexDirection: 'row' }}>

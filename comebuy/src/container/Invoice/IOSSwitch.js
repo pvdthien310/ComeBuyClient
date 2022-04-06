@@ -1,30 +1,6 @@
 import * as React from 'react';
-import { DataGrid, GridRowsProp, GridColDef } from '@mui/x-data-grid';
-import { useDispatch, useSelector } from 'react-redux'
-import { getAll } from '../../redux/slices/invoiceSlice';
-import { unwrapResult } from '@reduxjs/toolkit';
-import Row from './Row'
-
-import Box from '@mui/material/Box';
-import Collapse from '@mui/material/Collapse';
-import IconButton from '@mui/material/IconButton';
-import Table from '@mui/material/Table';
-import TableBody from '@mui/material/TableBody';
-import TableCell from '@mui/material/TableCell';
-import TableContainer from '@mui/material/TableContainer';
-import TableHead from '@mui/material/TableHead';
-import TableRow from '@mui/material/TableRow';
-import Typography from '@mui/material/Typography';
-import TablePagination from '@mui/material/TablePagination';
-import Paper from '@mui/material/Paper';
-import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
-import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp';
-import FormControlLabel from '@mui/material/FormControlLabel';
 import { styled } from '@mui/material/styles';
 import Switch from '@mui/material/Switch';
-import FormGroup from '@mui/material/FormGroup';
-import Popover from '@mui/material/Popover';
-import Button from '@mui/material/Button';
 
 const IOSSwitch = styled((props) => (
     <Switch focusVisibleClassName=".Mui-focusVisible" disableRipple {...props} />

@@ -69,7 +69,6 @@ export const accountSlice = createSlice({
     loading: false,
     errorMessage: 'this is message',
     isSignedIn: false,
-    //isEmailExisted: false,
     isRegSuccess: false
   },
   reducers: {
@@ -81,29 +80,20 @@ export const accountSlice = createSlice({
   extraReducers: {
     [register.pending]: (state, action) => {
       state.loading = true
-      //state.isEmailExisted = false
       state.isRegSuccess = false
-      console.log("Pending -  isSuccess = " + state.isRegSuccess);
     },
     [register.fulfilled]: (state, action) => {
       state.loading = false;
       state.user = action.payload;
-      //state.isEmailExisted = false;
       state.isRegSuccess = true;
-      console.log("Fulfilled -  isSuccess = " + state.isRegSuccess);
-      console.log("Registered successfully");
     },
     [register.rejected]: (state, action) => {
       state.loading = false;
       state.error = action.payload.message;
-      //state.isEmailExisted = true;
       state.isRegSuccess = false;
-      console.log("Rejected -  isSuccess = " + state.isRegSuccess);
-      console.log("Email existed");
     },
     [login.pending]: (state) => {
       state.loading = true;
-      console.log("Pending -  isSigning = " + state.isSignedIn);
     },
     [login.fulfilled]: (state, action) => {
       state.loading = false;
@@ -114,28 +104,19 @@ export const accountSlice = createSlice({
     [login.rejected]: (state, action) => {
       state.loading = false;
       state.errorMessage = action.payload;
-      console.log("Rejected -  isSigning = " + state.isSignedIn);
     },
     [getAccountWithID.pending]: (state, action) => {
       state.loading = true
-      //state.isEmailExisted = false
       state.isRegSuccess = false
-      console.log("Pending -  isSuccess = " + state.isRegSuccess);
     },
     [getAccountWithID.fulfilled]: (state, action) => {
       state.loading = false;
-      // state.user = action.payload;
-      //state.isEmailExisted = false;
       state.isRegSuccess = true;
-      console.log("Fulfilled -  isSuccess = " + state.isRegSuccess);
-      console.log("Registered successfully");
     },
     [getAccountWithID.rejected]: (state, action) => {
       state.loading = false;
       state.error = action.payload.message;
-      //state.isEmailExisted = true;
       state.isRegSuccess = false;
-      console.log("can not find");
     },
   }
 })

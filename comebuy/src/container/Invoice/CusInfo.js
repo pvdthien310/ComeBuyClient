@@ -17,7 +17,6 @@ const CusInfo = (props) => {
     const dispatch = useDispatch()
 
     React.useEffect(async () => {
-        console.log("Beside if");
         if (customer.length === 0) {
             try {
                 const resultAction = await dispatch(getAccountWithID(userID))
@@ -26,7 +25,6 @@ const CusInfo = (props) => {
                 setCustomer([...customer, originalPromiseResult])
             } catch (rejectedValueOrSerializedError) {
                 // handle error here
-                //setOpenDialogRegFailed(true)
                 console.log(rejectedValueOrSerializedError.message);
             }
         }
@@ -47,7 +45,7 @@ const CusInfo = (props) => {
                 <div style={{
                     width: '100%',
                     height: '100%',
-                    backgroundColor: '#ADF3E6',
+                    backgroundColor: '#6FA61C',
                     padding: '10px',
                     display: 'flex',
                     flexDirection: 'row',
@@ -56,27 +54,24 @@ const CusInfo = (props) => {
                     <div style={{ display: 'flex', flexDirection: 'column', padding: '15px' }}>
                         <div style={{ display: 'flex', flexDirection: 'row' }}>
                             <Typography style={{ fontWeight: 'bold' }}>Email:</Typography>
-                            <Typography style={{ marginLeft: '5px' }}>{customer[0].email}</Typography>
+                            <Typography style={{ marginLeft: '5px', color: '#D8E0F2' }}>{customer[0].email}</Typography>
                         </div>
 
                         <div style={{ display: 'flex', flexDirection: 'row' }}>
                             <Typography style={{ fontWeight: 'bold' }}>Name:</Typography>
-                            <Typography style={{ marginLeft: '5px' }}>{customer[0].name}</Typography>
+                            <Typography style={{ marginLeft: '5px', color: '#D8E0F2' }}>{customer[0].name}</Typography>
                         </div>
 
                         <div style={{ display: 'flex', flexDirection: 'row' }}>
                             <Typography style={{ fontWeight: 'bold' }}>Contact:</Typography>
-                            <Typography style={{ marginLeft: '5px' }}>{customer[0].phoneNumber}</Typography>
+                            <Typography style={{ marginLeft: '5px', color: '#D8E0F2' }}>{customer[0].phoneNumber}</Typography>
                         </div>
                     </div>
-
-                    {/* <Typography>{customer[0].name}</Typography>
-                    <Typography>{customer[0].phoneNumber}</Typography> */}
                 </div>
             ) : (
-                <Box sx={{ display: 'flex', flex: 1, flexDirection: 'row' }}>
+                <Box sx={{ display: 'flex', flex: 1, flexDirection: 'row', backgroundColor: '#6FA61C' }}>
                     <CircularProgress style={{ backgroundColor: 'transparent' }} />
-                    <Typography style={{ marginTop: '5px', marginLeft: '5px' }}>Getting info...</Typography>
+                    <Typography style={{ marginTop: '5px', marginLeft: '5px', color: '#D8E0F2' }}>Getting info...</Typography>
                 </Box>
             )}
         </div>

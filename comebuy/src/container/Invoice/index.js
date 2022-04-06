@@ -32,17 +32,20 @@ const Invoice = () => {
         setPage(0);
     };
 
-    React.useEffect(async () => {
-        if (invoiceList.length === 0) {
-            try {
-                const resultAction = await dispatch(getAll())
-                const originalPromiseResult = unwrapResult(resultAction)
-                setInvoiceList(originalPromiseResult)
-                console.log(invoiceList)
-            } catch (rejectedValueOrSerializedError) {
-                console.log(rejectedValueOrSerializedError);
+    React.useEffect(() => {
+        async function fetchInvoice() {
+            if (invoiceList.length === 0) {
+                try {
+                    const resultAction = await dispatch(getAll())
+                    const originalPromiseResult = unwrapResult(resultAction)
+                    setInvoiceList(originalPromiseResult)
+                    console.log(invoiceList)
+                } catch (rejectedValueOrSerializedError) {
+                    console.log(rejectedValueOrSerializedError);
+                }
             }
         }
+        fetchInvoice()
         return () => {
             setInvoiceList({});
         };
@@ -50,20 +53,20 @@ const Invoice = () => {
 
 
     return (
-        <div>
-            <TableContainer style={{ backgroundColor: 'white', padding: '4%', borderRadius: '5%' }} component={Paper}>
-                <Typography style={{ marginLeft: '35%', marginBottom: '2%', fontWeight: 'bold', fontSize: '30px' }}>INVOICE MANAGEMENT</Typography>
+        <div style={{ display: 'flex', justifyContent: 'center', flexDirection: 'column', backgroundColor: '#D8E0F2', height: '100%' }}>
+            <TableContainer style={{ marginTop: '6%', padding: '6%', backgroundColor: '#D8E0F2', height: '100%' }} component={Paper}>
+                <Typography style={{ marginLeft: '35%', marginTop: '0%', marginBottom: '5%', fontWeight: 'bold', fontSize: '30px', color: '#3B4E59' }}>INVOICE MANAGEMENT</Typography>
                 <Table aria-label="collapsible table">
-                    <TableHead style={{ backgroundColor: '#B7C3C7' }}>
+                    <TableHead style={{ backgroundColor: '#0F4001' }}>
                         <TableRow>
                             <TableCell />
-                            <TableCell>Invoice ID</TableCell>
-                            <TableCell align="center">Customer ID</TableCell>
-                            <TableCell align="center">Date</TableCell>
-                            <TableCell align="center">Total&nbsp;(USD)</TableCell>
-                            <TableCell align="center">Is Checked ?</TableCell>
-                            <TableCell align="center">Recieved&nbsp;(USD)</TableCell>
-                            <TableCell align="center">Is Paid ?</TableCell>
+                            <TableCell style={{ color: '#D8E0F2' }}>Invoice ID</TableCell>
+                            <TableCell align="center" style={{ color: '#D8E0F2' }}>Customer ID</TableCell>
+                            <TableCell align="center" style={{ color: '#D8E0F2' }}>Date</TableCell>
+                            <TableCell align="center" style={{ color: '#D8E0F2' }}>Total&nbsp;(USD)</TableCell>
+                            <TableCell align="center" style={{ color: '#D8E0F2' }}>Is Checked ?</TableCell>
+                            <TableCell align="center" style={{ color: '#D8E0F2' }}>Recieved&nbsp;(USD)</TableCell>
+                            <TableCell align="center" style={{ color: '#D8E0F2' }}>Is Paid ?</TableCell>
                         </TableRow>
                     </TableHead>
                     <TableBody>
@@ -84,7 +87,7 @@ const Invoice = () => {
                 onPageChange={handleChangePage}
                 onRowsPerPageChange={handleChangeRowsPerPage}
             />
-        </div>
+        </div >
     )
 }
 export default Invoice;

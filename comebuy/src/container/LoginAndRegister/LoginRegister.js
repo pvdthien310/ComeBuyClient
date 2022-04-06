@@ -228,7 +228,6 @@ const LoginRegister = () => {
         }, 2000);
         setOpenBackdrop(!openBackdrop);
         let temp = generateOTP()
-        console.log(temp);
         setVerifyCode(temp)
     };
 
@@ -241,9 +240,6 @@ const LoginRegister = () => {
 
     //handle login function
     const handleLogin = async () => {
-        // if (emailUser != null && passwordUser != null) {
-        //     dispatch(login({ email: emailUser, password: passwordUser }))
-        // }
         if (emailUser === null) {
             setOpenEmailLoginError(true);
         } else {
@@ -253,11 +249,8 @@ const LoginRegister = () => {
                 try {
                     const resultAction = await dispatch(login({ email: emailUser, password: passwordUser }))
                     const originalPromiseResult = unwrapResult(resultAction)
-                    // handle result here
                     console.log(originalPromiseResult)
                 } catch (rejectedValueOrSerializedError) {
-                    // handle error here
-                    //setOpenDialogRegFailed(true)
                     console.log(rejectedValueOrSerializedError);
                 }
             }
@@ -296,7 +289,6 @@ const LoginRegister = () => {
                         } else {
                             setOpenBackdrop(!openBackdrop);
                             let temp = generateOTP()
-                            console.log(temp);
                             setVerifyCode(temp)
                         }
                     }
@@ -307,7 +299,6 @@ const LoginRegister = () => {
 
     useEffect(() => {
         if (verifyCode != '') {
-            console.log(verifyCode);
             emailApi.sendEmail({
                 to: dataForReg.email,
                 subject: "Please use OTP code below to register ",
@@ -318,7 +309,7 @@ const LoginRegister = () => {
             })
                 .catch(err => console.log(err))
         } else {
-            return;
+            return
         }
     }, [verifyCode])
 
@@ -354,7 +345,6 @@ const LoginRegister = () => {
                 // handle result here
                 console.log(originalPromiseResult)
                 if (originalPromiseResult === true) {
-                    // setOpenDialogRegFailed(false)
                     handleCloseModalVerify()
                     setOpenDialogRegFailed(false)
                     setIsRegistering(1)
@@ -364,7 +354,6 @@ const LoginRegister = () => {
             }
         } catch (rejectedValueOrSerializedError) {
             // handle error here
-            //setOpenDialogRegFailed(true)
             if (rejectedValueOrSerializedError != null) {
                 handleCloseModalVerify()
                 setOpenDialogRegSuccessfully(false)
@@ -400,7 +389,6 @@ const LoginRegister = () => {
 
                         {/*EMAIL*/}
                         <TextField
-                            // className='text-field-in-form'
                             style={{
                                 maxWidth: '380px',
                                 marginBottom: '50px',

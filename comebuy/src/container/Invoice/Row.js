@@ -1,7 +1,6 @@
 import * as React from 'react';
-import { DataGrid, GridRowsProp, GridColDef } from '@mui/x-data-grid';
-import { useDispatch, useSelector } from 'react-redux'
-import { getAll, updateInvoice } from '../../redux/slices/invoiceSlice';
+import { useDispatch } from 'react-redux'
+import { updateInvoice } from '../../redux/slices/invoiceSlice';
 import { unwrapResult } from '@reduxjs/toolkit';
 import CusInfo from './CusInfo'
 import ProdInfo from './ProdInfo'
@@ -15,19 +14,14 @@ import IconButton from '@mui/material/IconButton';
 import Table from '@mui/material/Table';
 import TableBody from '@mui/material/TableBody';
 import TableCell from '@mui/material/TableCell';
-import TableContainer from '@mui/material/TableContainer';
 import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
 import Typography from '@mui/material/Typography';
 import Backdrop from '@mui/material/Backdrop';
 import CircularProgress from '@mui/material/CircularProgress';
-import TablePagination from '@mui/material/TablePagination';
-import Paper from '@mui/material/Paper';
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp';
 import FormControlLabel from '@mui/material/FormControlLabel';
-import { styled } from '@mui/material/styles';
-import Switch from '@mui/material/Switch';
 import FormGroup from '@mui/material/FormGroup';
 import Popover from '@mui/material/Popover';
 import Button from '@mui/material/Button';
@@ -140,7 +134,6 @@ const Row = (props) => {
                 // handle result here
             } catch (rejectedValueOrSerializedError) {
                 // handle error here
-                //setOpenDialogRegFailed(true)
                 console.log(rejectedValueOrSerializedError.message);
             }
             setDataForUpdate(temp)
@@ -164,7 +157,6 @@ const Row = (props) => {
                     console.log(originalPromiseResult);
                 } catch (rejectedValueOrSerializedError) {
                     // handle error here
-                    //setOpenDialogRegFailed(true)
                     console.log(rejectedValueOrSerializedError.message);
                 }
                 setUpdating(false)
@@ -192,7 +184,6 @@ const Row = (props) => {
                     // handle result here
                 } catch (rejectedValueOrSerializedError) {
                     // handle error here
-                    //setOpenDialogRegFailed(true)
                     console.log(rejectedValueOrSerializedError.message);
                 }
                 setUpdating(false)
@@ -212,7 +203,6 @@ const Row = (props) => {
                 console.log(originalPromiseResult);
             } catch (rejectedValueOrSerializedError) {
                 // handle error here
-                //setOpenDialogRegFailed(true)
                 console.log(rejectedValueOrSerializedError.message);
             }
             setUpdating(false)
@@ -230,10 +220,10 @@ const Row = (props) => {
                         size="small"
                         onClick={() => setOpen(!open)}
                     >
-                        {open ? <KeyboardArrowUpIcon color='error' /> : <KeyboardArrowDownIcon />}
+                        {open ? <KeyboardArrowUpIcon color='error' /> : <KeyboardArrowDownIcon style={{ color: '#6FA61C' }} />}
                     </IconButton>
                 </TableCell>
-                <TableCell component="th" scope="row">
+                <TableCell component="th" scope="row" style={{ color: '#0F4001', fontWeight: 'bold' }}>
                     {row.invoiceID}
                 </TableCell>
                 <TableCell align="center">
@@ -249,16 +239,15 @@ const Row = (props) => {
                         anchorEl={anchorEl}
                         onClose={handleClose}
                         anchorOrigin={{
-                            vertical: 'bottom',
-                            horizontal: 'left',
+                            vertical: 'top',
+                            horizontal: 'right',
                         }}
                     >
-                        {/* <Typography sx={{ p: 1 }}>I use Popover.</Typography> */}
                         <CusInfo userID={row.account.userid} />
                     </Popover>
                 </TableCell>
-                <TableCell align="center">{row.date}</TableCell>
-                <TableCell align="center">{row.total}</TableCell>
+                <TableCell align="center" style={{ color: '#3B4E59' }}>{row.date}</TableCell>
+                <TableCell align="center" style={{ color: '#3B4E59', fontWeight: 'bold' }}>{row.total}</TableCell>
                 <TableCell align="center">
                     <FormGroup>
                         <FormControlLabel
@@ -270,7 +259,7 @@ const Row = (props) => {
                         />
                     </FormGroup>
                 </TableCell>
-                <TableCell align="center">{dataForUpdate.moneyReceived}</TableCell>
+                <TableCell align="center" style={{ fontWeight: 'bold', color: '#6FA61C' }}>{dataForUpdate.moneyReceived}</TableCell>
                 <TableCell align="center">
                     <FormGroup>
                         <FormControlLabel
@@ -284,18 +273,18 @@ const Row = (props) => {
                 </TableCell>
             </TableRow>
             <TableRow>
-                <TableCell style={{ paddingBottom: 0, paddingTop: 0, backgroundColor: '#BAD6D6', marginLeft: '10%' }} colSpan={6}>
+                <TableCell style={{ paddingBottom: 0, paddingTop: 0, backgroundColor: '#6C7D8C', marginLeft: '10%' }} colSpan={6}>
                     <Collapse in={open} timeout="auto" unmountOnExit>
                         <Box sx={{ margin: 1 }}>
-                            <Typography variant="h7" style={{ fontWeight: 'bold' }} gutterBottom component="div">
+                            <Typography variant="h7" style={{ fontWeight: 'bold', color: '#D8E0F2' }} gutterBottom component="div">
                                 Details:
                             </Typography>
                             <Table size="small" aria-label="purchases">
                                 <TableHead>
                                     <TableRow>
-                                        <TableCell>Product ID</TableCell>
-                                        <TableCell align="center">Amount</TableCell>
-                                        <TableCell align="center">Total price (USD)</TableCell>
+                                        <TableCell style={{ fontWeight: 'bold', color: '#D8E0F2' }}>Product ID</TableCell>
+                                        <TableCell align="center" style={{ fontWeight: 'bold', color: '#D8E0F2' }}>Amount</TableCell>
+                                        <TableCell align="center" style={{ fontWeight: 'bold', color: '#D8E0F2' }}>Total price (USD)</TableCell>
                                     </TableRow>
                                 </TableHead>
                                 <TableBody>
@@ -307,6 +296,7 @@ const Row = (props) => {
                                                     aria-haspopup="true"
                                                     onMouseEnter={handleProductPopoverOpen}
                                                     onMouseLeave={handleProductPopoverClose}
+                                                    style={{ fontWeight: 'bold', color: '#0F4001' }}
                                                 >
                                                     {detailsRow.productid}
                                                 </Typography>
@@ -331,10 +321,8 @@ const Row = (props) => {
                                                     <ProdInfo productID={detailsRow.productid} />
                                                 </Popover>
                                             </TableCell>
-
-
                                             <TableCell align="center">{detailsRow.amount}</TableCell>
-                                            <TableCell align="center">{detailsRow.total}</TableCell>
+                                            <TableCell align="center" style={{ fontWeight: 'bold', color: 'black' }}>{detailsRow.total}</TableCell>
                                         </TableRow>
                                     ))}
                                 </TableBody>
@@ -355,7 +343,7 @@ const Row = (props) => {
                     Updated successfully !
                 </Alert>
             </Snackbar>
-        </React.Fragment>
+        </React.Fragment >
     );
 }
 
