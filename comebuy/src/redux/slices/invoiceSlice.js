@@ -17,8 +17,9 @@ export const getAll = createAsyncThunk(
 
 export const updateInvoice = createAsyncThunk(
     'invoice/updateInvoice',
-    async (invoiceID, { data }, { rejectedWithValue }) => {
-        const response = await invoiceAPI.updateInvoice(invoiceID, data)
+    async (data, { rejectedWithValue }) => {
+        console.log(data)
+        const response = await invoiceAPI.updateInvoice(data)
         if (!response) {
             return rejectedWithValue("Updated failed !")
         } else {
@@ -59,12 +60,10 @@ export const invoiceSlice = createSlice({
         },
         [updateInvoice.fulfilled]: (state, action) => {
             state.loading = false;
-            state.invoiceList = action.payload;
-            console.log("Complete");
+            //state.invoiceList = action.payload;
         },
         [updateInvoice.rejected]: (state, action) => {
             state.loading = false;
-            console.log("Failed to update");
         }
     }
 })

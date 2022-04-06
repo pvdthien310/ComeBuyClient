@@ -7,6 +7,8 @@ import CusInfo from './CusInfo'
 import ProdInfo from './ProdInfo'
 import IOSSwitch from './IOSSwitch'
 
+import Snackbar from '@mui/material/Snackbar';
+import MuiAlert from '@mui/material/Alert';
 import Box from '@mui/material/Box';
 import Collapse from '@mui/material/Collapse';
 import IconButton from '@mui/material/IconButton';
@@ -17,6 +19,8 @@ import TableContainer from '@mui/material/TableContainer';
 import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
 import Typography from '@mui/material/Typography';
+import Backdrop from '@mui/material/Backdrop';
+import CircularProgress from '@mui/material/CircularProgress';
 import TablePagination from '@mui/material/TablePagination';
 import Paper from '@mui/material/Paper';
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
@@ -28,10 +32,23 @@ import FormGroup from '@mui/material/FormGroup';
 import Popover from '@mui/material/Popover';
 import Button from '@mui/material/Button';
 
+const Alert = React.forwardRef(function Alert(props, ref) {
+    return <MuiAlert elevation={6} ref={ref} variant="filled" {...props} />;
+});
 
 const Row = (props) => {
+
     const { row } = props;
     const [open, setOpen] = React.useState(false);
+
+    //for open backdrop
+    const [openBackdrop, setOpenBackdrop] = React.useState(false);
+    const handleCloseBackdrop = () => {
+        setOpenBackdrop(false);
+    };
+    const handleToggleBackdrop = () => {
+        setOpenBackdrop(!openBackdrop);
+    };
 
     //Get customer information
     const [anchorEl, setAnchorEl] = React.useState(null);
@@ -60,14 +77,33 @@ const Row = (props) => {
 
     const [isChecked, setIsChecked] = React.useState(false)
 
+    const [dataForUpdate, setDataForUpdate] = React.useState({
+        invoiceID: row.invoiceID,
+        moneyReceived: row.moneyReceived,
+        total: row.total,
+        isChecked: false,
+        isPaid: false
+    })
+
+    //for snackbar
+    const [openSnackbar, setOpenSnackbar] = React.useState(false);
+    const handleCloseSnackbar = (event, reason) => {
+        if (reason === 'clickaway') {
+            return;
+        }
+        setOpenSnackbar(false);
+    };
 
     React.useEffect(() => {
         if (row.isChecked === true) {
             if (row.isPaid === true) {
+                setIsChecked(true)
+                setIsPaid(true)
                 setDisableCheck(true)
                 setDisablePaid(true)
             } else {
-                return;
+                setIsChecked(true)
+                setIsPaid(false)
             }
         } else {
             setDisablePaid(true)
@@ -77,23 +113,52 @@ const Row = (props) => {
 
     const [updating, setUpdating] = React.useState(false)
 
-    const [dataForUpdate, setDataForUpdate] = React.useState({
-        isChecked: false,
-        isPaid: false
-    })
+    const [isPaid, setIsPaid] = React.useState(false)
 
     const dispatch = useDispatch()
 
-    React.useEffect(async () => {
+    React.useEffect(() => {
+        if (updating === true) {
+            setOpenBackdrop(true)
+        } else {
+            setOpenBackdrop(false)
+            setOpenSnackbar(true)
+        }
+    }, [updating])
 
-        if (updating != false) {
-            if (row.isChecked === false) {
-                setDataForUpdate({
-                    isChecked: true,
-                    ...dataForUpdate
-                })
+    const handleClickPaidInvoice = async () => {
+        if (isPaid === true) {
+            setUpdating(true)
+            const temp = {
+                ...dataForUpdate,
+                isPaid: false,
+                moneyReceived: '0'
+            }
+            try {
+                const resultAction = await dispatch(updateInvoice(temp))
+                const originalPromiseResult = unwrapResult(resultAction)
+                // handle result here
+            } catch (rejectedValueOrSerializedError) {
+                // handle error here
+                //setOpenDialogRegFailed(true)
+                console.log(rejectedValueOrSerializedError.message);
+            }
+            setDataForUpdate(temp)
+            setIsPaid(false);
+            setUpdating(false)
+            setDisablePaid(false)
+        } else {
+            if (isChecked === false) {
+                console.log("Have to check invoice first");
+            } else {
+                setUpdating(true)
+                const temp = {
+                    ...dataForUpdate,
+                    isPaid: true,
+                    moneyReceived: dataForUpdate.total
+                }
                 try {
-                    const resultAction = await dispatch(updateInvoice(row.invoiceID, { dataForUpdate }))
+                    const resultAction = await dispatch(updateInvoice(temp))
                     const originalPromiseResult = unwrapResult(resultAction)
                     // handle result here
                     console.log(originalPromiseResult);
@@ -102,13 +167,58 @@ const Row = (props) => {
                     //setOpenDialogRegFailed(true)
                     console.log(rejectedValueOrSerializedError.message);
                 }
+                setUpdating(false)
+                setDataForUpdate(temp)
+                setIsPaid(true)
+                setDisablePaid(true)
+                setDisableCheck(true)
             }
         }
-
-    }, [updating])
+    }
 
     const handleClickCheckInvoice = async () => {
-        setUpdating(true)
+        if (isChecked === true) {
+            if (isPaid === true) {
+                console.log("Can not");
+            } else {
+                setUpdating(true)
+                const temp = {
+                    ...dataForUpdate,
+                    isChecked: false,
+                }
+                try {
+                    const resultAction = await dispatch(updateInvoice(temp))
+                    const originalPromiseResult = unwrapResult(resultAction)
+                    // handle result here
+                } catch (rejectedValueOrSerializedError) {
+                    // handle error here
+                    //setOpenDialogRegFailed(true)
+                    console.log(rejectedValueOrSerializedError.message);
+                }
+                setUpdating(false)
+                setIsChecked(false)
+                setDisablePaid(true)
+            }
+        } else {
+            setUpdating(true)
+            const temp = {
+                ...dataForUpdate,
+                isChecked: true,
+            }
+            try {
+                const resultAction = await dispatch(updateInvoice(temp))
+                const originalPromiseResult = unwrapResult(resultAction)
+                // handle result here
+                console.log(originalPromiseResult);
+            } catch (rejectedValueOrSerializedError) {
+                // handle error here
+                //setOpenDialogRegFailed(true)
+                console.log(rejectedValueOrSerializedError.message);
+            }
+            setUpdating(false)
+            setIsChecked(true)
+            setDisablePaid(false)
+        }
     }
 
     return (
@@ -152,26 +262,29 @@ const Row = (props) => {
                 <TableCell align="center">
                     <FormGroup>
                         <FormControlLabel
-                            control={<IOSSwitch sx={{ m: 1 }} defaultChecked={row.isChecked} />}
+                            control={<IOSSwitch sx={{ m: 1 }} />}
                             label=""
+                            checked={isChecked}
                             disabled={disableCheck}
                             onClick={handleClickCheckInvoice}
                         />
                     </FormGroup>
                 </TableCell>
-                <TableCell align="center">{row.moneyReceived}</TableCell>
+                <TableCell align="center">{dataForUpdate.moneyReceived}</TableCell>
                 <TableCell align="center">
                     <FormGroup>
                         <FormControlLabel
-                            control={<IOSSwitch sx={{ m: 1 }} defaultChecked={row.isPaid} />}
+                            control={<IOSSwitch sx={{ m: 1 }} />}
                             label=""
+                            checked={isPaid}
                             disabled={disablePaid}
+                            onClick={handleClickPaidInvoice}
                         />
                     </FormGroup>
                 </TableCell>
             </TableRow>
             <TableRow>
-                <TableCell style={{ paddingBottom: 0, paddingTop: 0, backgroundColor: '#BAD6D6' }} colSpan={6}>
+                <TableCell style={{ paddingBottom: 0, paddingTop: 0, backgroundColor: '#BAD6D6', marginLeft: '10%' }} colSpan={6}>
                     <Collapse in={open} timeout="auto" unmountOnExit>
                         <Box sx={{ margin: 1 }}>
                             <Typography variant="h7" style={{ fontWeight: 'bold' }} gutterBottom component="div">
@@ -230,6 +343,18 @@ const Row = (props) => {
                     </Collapse>
                 </TableCell>
             </TableRow>
+            <Backdrop
+                sx={{ color: '#fff', zIndex: (theme) => theme.zIndex.drawer + 1 }}
+                open={openBackdrop}
+            >
+                <CircularProgress color="inherit" />
+            </Backdrop>
+
+            <Snackbar open={openSnackbar} autoHideDuration={6000} onClose={handleCloseSnackbar}>
+                <Alert onClose={handleCloseSnackbar} severity="success" sx={{ width: '100%' }}>
+                    Updated successfully !
+                </Alert>
+            </Snackbar>
         </React.Fragment>
     );
 }

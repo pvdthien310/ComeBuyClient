@@ -7,8 +7,9 @@ const invoiceAPI = {
         const res = await DatabaseClient.get('/' + baseURL);
         return res.data;
     },
-    updateInvoice: async (invoiceID, data) => {
-        const res = await DatabaseClient.put('/' + baseURL + '/' + invoiceID, data)
+    updateInvoice: async (data) => {
+        const res = await DatabaseClient.put('/' + baseURL + '/' + data.invoiceID, data)
+        console.log(res.data);
         return res.data;
     }
 }
