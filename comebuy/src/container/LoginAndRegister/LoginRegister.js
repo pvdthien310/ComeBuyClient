@@ -229,7 +229,6 @@ const LoginRegister = () => {
         }, 2000);
         setOpenBackdrop(!openBackdrop);
         let temp = generateOTP()
-        console.log(temp);
         setVerifyCode(temp)
     };
 
@@ -255,7 +254,6 @@ const LoginRegister = () => {
                     const resultAction = await dispatch(login({ email: emailUser, password: passwordUser }))
                     const originalPromiseResult = unwrapResult(resultAction)
                     // handle result here
-                    console.log(originalPromiseResult)
                 } catch (rejectedValueOrSerializedError) {
                     // handle error here
                     //setOpenDialogRegFailed(true)
@@ -297,7 +295,6 @@ const LoginRegister = () => {
                         } else {
                             setOpenBackdrop(!openBackdrop);
                             let temp = generateOTP()
-                            console.log(temp);
                             setVerifyCode(temp)
                         }
                     }
@@ -308,7 +305,6 @@ const LoginRegister = () => {
 
     useEffect(() => {
         if (verifyCode != '') {
-            console.log(verifyCode);
             emailApi.sendEmail({
                 to: dataForReg.email,
                 subject: "Please use OTP code below to register ",

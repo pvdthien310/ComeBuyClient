@@ -41,7 +41,6 @@ const MainLayout = props => {
   const [state, setState] = React.useState(false)
 
   const ItemClick = async (e) => {
-    console.log(e.target.innerText)
     switch (e.target.innerText) {
       case 'Log Out':
         {

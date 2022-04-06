@@ -1,22 +1,16 @@
 const style = {
     boxContainer: {
-        position: 'absolute',
-        top: '50%',
-        left: '50%',
-        transform: 'translate(-50%, -50%)',
-        width: 1000,
-        bgcolor: 'background.paper',
-        borderRadius: '10px',
-        boxShadow: 24,
-        p: 4,
-        overflowY: 'scroll',
-        maxHeight: 700,
-        
+        height: 'auto',
+        position: 'relative',
+        padding: '1%',
+        width: '100%',
+        justifyContent: 'center',
+        alignItems: 'center',
     },
     boxInfor: {
         height: 'auto',
-        
-        alignSelf: 'center',
+        flex: 1,
+        width: '80%',
         backgroundColor: 'white',
         marginTop: '10px',
         marginBottom: '20px',
@@ -39,7 +33,6 @@ const style = {
         alignItems: 'center'
     },
     BoxDes_Grid: {
-        display: 'flex',
         alignItems: 'center',
         justifyContent: 'center'
     },

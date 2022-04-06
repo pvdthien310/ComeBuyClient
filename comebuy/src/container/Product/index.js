@@ -38,12 +38,12 @@ const BGImg = styled('img')({
 })
 const ProductTable = styled(DataGrid)(({ theme }) => ({
     height: 700,
-    top: '5%',
+    top: '10%',
     left: '10%',
     width: 1200,
     position: 'relative',
     backgroundColor: 'white',
-    margin: 2
+   
 }));
 
 const Product = () => {
@@ -52,10 +52,11 @@ const Product = () => {
     const dispatch = useDispatch()
     const [productList, setProductList] = useState(_productList)
     const navigate = useNavigate()
+    const initalValue = {index : 0, value: null}
 
     /// For modal
     const [openModal, setOpenModal] = useState(false);
-    const [currentProduct, setCurrentProduct] = useState(null);
+    const [currentProduct, setCurrentProduct] = useState(initalValue);
     const handleOpenModal = () => setOpenModal(true);
     const handleCloseModal = () => setOpenModal(false);
 
@@ -63,7 +64,6 @@ const Product = () => {
     const [pageSize, setPageSize] = useState(25);
     const deleteProduct = useCallback(
         (id) => () => {
-            console.log('a')
         },
         [],
     );
@@ -76,8 +76,8 @@ const Product = () => {
 
     const showDetail = useCallback(
         (value) => () => {
-            setCurrentProduct(value)
-            handleOpenModal()
+            setCurrentProduct({index : Math.random(), value : value})
+            // handleOpenModal()
         }, [],
     );
 
@@ -145,23 +145,22 @@ const Product = () => {
 
     const handleOnCellClick = async (e) => {
         if (e.value != undefined) {
-            setCurrentProduct(e.row)
+            setCurrentProduct({index : Math.random(), value : e.row})
         }
     };
 
-    // useEffect(() => {
-    //     if (currentProduct != null)
-    //         setOpenModal(true)
-
-    // }, [currentProduct])
+    useEffect(() => {
+        if (currentProduct != initalValue)
+            setOpenModal(true)
+    }, [currentProduct])
 
     return (
         <div style={{
             width: '100%',
-            height: 800,
+            height: '100%',
         }}>
             <BGImg src='https://images.unsplash.com/photo-1490810194309-344b3661ba39?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1448&q=80' />
-            <DetailProductModal open={openModal} onClose={handleCloseModal} product={currentProduct} />
+            <DetailProductModal open={openModal} onClose={handleCloseModal} product={currentProduct.value} />
             <ProductTable
                 pageSize={pageSize}
                 onPageSizeChange={(newPage) => setPageSize(newPage)}
@@ -171,7 +170,7 @@ const Product = () => {
                 getRowId={(row) => row.productID}
                 onCellClick={handleOnCellClick}
             />
-            <Box sx={{ height: 100 }}></Box>
+            <Box sx={{ height: 50 }}></Box>
             <Routes>
                 <Route path='add' element={<AddProduct />}></Route>
                 <Route path='edit' element={<EditProduct />}></Route>
