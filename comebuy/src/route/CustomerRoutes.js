@@ -3,7 +3,8 @@ import Product from '../container/Product';
 
 const customerRoutes = [
   {
-    path: '/',
+    name:'Product',
+    path: '/product',
     exact: true,
     page: () => <Product />,
   },

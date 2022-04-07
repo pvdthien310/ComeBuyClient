@@ -32,9 +32,8 @@ function getStyles(name, personName, theme) {
 
 const FeatureSelect = (props) => {
     const theme = useTheme();
-    console.log(props)
     return (
-        <Stack sx={{ marginLeft: 2}}>
+        <Stack  item="true" sx={{ marginLeft: 2}}>
             <FormControl sx={{ m: 1, width: 500 }}>
                 <InputLabel >Feature</InputLabel>
                 <Select

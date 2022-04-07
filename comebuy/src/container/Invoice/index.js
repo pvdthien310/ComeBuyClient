@@ -39,7 +39,6 @@ const Invoice = () => {
                     const resultAction = await dispatch(getAll())
                     const originalPromiseResult = unwrapResult(resultAction)
                     setInvoiceList(originalPromiseResult)
-                    console.log(invoiceList)
                 } catch (rejectedValueOrSerializedError) {
                     console.log(rejectedValueOrSerializedError);
                 }

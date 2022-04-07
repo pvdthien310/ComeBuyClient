@@ -86,7 +86,7 @@ const EditProduct = () => {
     useEffect(() => {
         setCurrentFeature(product.feature.map((item) => item.name))
     }, [product])
-    
+
     return (
         <Stack
             sx={style.boxContainer}>
@@ -117,10 +117,10 @@ const EditProduct = () => {
                 }
                 <Grid container>
                     <Grid xs={12}>
-                        <FeatureSelect features={featureList} currentFeature={currentFeature} handleFeatureChange={handleFeatureChosen} />
+                        <FeatureSelect item="true" features={featureList} currentFeature={currentFeature} handleFeatureChange={handleFeatureChosen} />
                     </Grid>
                     <Grid xs={6} paddingLeft={2}>
-                        <Stack item={true} xs={12} spacing={2} padding={2}>
+                        <Stack item="true" xs={12} spacing={2} padding={2}>
                             <TextFieldForEdit Icon={<DriveFileRenameOutlineIcon />} Text={product.name} Title='Name' />
                             <Box sx={style.boxinfor_Stack_Line}></Box>
                             <TextFieldForEdit Icon={<MemoryIcon />} Text={product.cpu} Title='CPU' />
@@ -138,7 +138,7 @@ const EditProduct = () => {
                         </Stack>
                     </Grid>
                     <Grid xs={6} paddingLeft={2}>
-                        <Stack item={true} xs={12} spacing={2} padding={2}>
+                        <Stack item="true" xs={12} spacing={2} padding={2}>
                             <TextFieldForEdit Icon={<CottageIcon />} Text={product.brand} Title='Brand' />
                             <Box sx={style.boxinfor_Stack_Line}></Box>
                             <TextFieldForEdit Icon={<AutofpsSelectIcon />} Text={product.ram} Title='RAM (GB)' />
@@ -156,7 +156,7 @@ const EditProduct = () => {
                         </Stack>
                     </Grid>
                     <Grid xs={12} paddingLeft={2} paddingTop={2}>
-                        <Stack item={true} xs={12} spacing={1}>
+                        <Stack item="true" xs={12} spacing={1}>
                             <Stack
                                 direction="row"
                                 spacing={1}>
@@ -171,11 +171,9 @@ const EditProduct = () => {
                                 variant="standard"
                             />
                         </Stack>
-                        <Box sx={style.boxinfor_Stack_Line}></Box>
+                        <Box item="true" sx={style.boxinfor_Stack_Line}></Box>
                     </Grid>
                     <Grid xs={12} paddingLeft={2} paddingTop={2}>
-
-
                     </Grid>
                 </Grid>
             </Box>

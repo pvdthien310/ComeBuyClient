@@ -154,7 +154,6 @@ const Row = (props) => {
                     const resultAction = await dispatch(updateInvoice(temp))
                     const originalPromiseResult = unwrapResult(resultAction)
                     // handle result here
-                    console.log(originalPromiseResult);
                 } catch (rejectedValueOrSerializedError) {
                     // handle error here
                     console.log(rejectedValueOrSerializedError.message);
@@ -200,7 +199,6 @@ const Row = (props) => {
                 const resultAction = await dispatch(updateInvoice(temp))
                 const originalPromiseResult = unwrapResult(resultAction)
                 // handle result here
-                console.log(originalPromiseResult);
             } catch (rejectedValueOrSerializedError) {
                 // handle error here
                 console.log(rejectedValueOrSerializedError.message);

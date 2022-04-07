@@ -3,9 +3,10 @@ import Invoice from '../container/Invoice';
 
 const staffRoutes = [
   {
+    name :'Invoice',
     path: '/invoice',
     exact: true,
-    page: () => <Invoice />,
+    page: <Invoice />,
   },
 
 ];

@@ -11,12 +11,10 @@ const productAPI = {
     edit: async (data) => {
         const res = await DatabaseClient.put('/' + baseURL + '/' + data.productID, data)
         return res
-    }  
-
+    },
     getProductWithID: async (id) => {
         const res = DatabaseClient.get('/' + baseURL + `/${id}`)
         return res;
     }
-
 }
 export default productAPI

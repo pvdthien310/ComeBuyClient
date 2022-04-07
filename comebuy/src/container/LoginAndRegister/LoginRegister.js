@@ -250,7 +250,6 @@ const LoginRegister = () => {
                     const resultAction = await dispatch(login({ email: emailUser, password: passwordUser }))
                     const originalPromiseResult = unwrapResult(resultAction)
                     // handle result here
-                    console.log(originalPromiseResult)
                 } catch (rejectedValueOrSerializedError) {
                     console.log(rejectedValueOrSerializedError);
                 }
@@ -344,7 +343,7 @@ const LoginRegister = () => {
                 const resultAction = await dispatch(register({ dataForReg }))
                 const originalPromiseResult = unwrapResult(resultAction)
                 // handle result here
-                console.log(originalPromiseResult)
+
                 if (originalPromiseResult === true) {
                     handleCloseModalVerify()
                     setOpenDialogRegFailed(false)

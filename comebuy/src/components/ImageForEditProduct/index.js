@@ -15,7 +15,7 @@ const DeleteButton = styled(Button)(({ theme }) => ({
     margin: 10,
     backgroundColor: '#F51B06',
     '&:hover': {
-        backgroundColor: '#A81B06', 
+        backgroundColor: '#A81B06',
     }
 }))
 
@@ -37,9 +37,10 @@ const ImageForEditProduct = ({ image }) => {
     };
     return (
         <Grid sx={style.container}>
-            <ProductImage item={true} xs={12} src={image}></ProductImage>
-            <DeleteButton variant="contained" onClick={handleClickOpen} startIcon={<DeleteIcon />}>Delete</DeleteButton>
+            <ProductImage item="true" xs={12} src={image}></ProductImage>
+            <DeleteButton item="true" variant="contained" onClick={handleClickOpen} startIcon={<DeleteIcon />}>Delete</DeleteButton>
             <Dialog
+                item="true"
                 open={open}
                 onClose={handleClose}
                 aria-labelledby="alert-dialog-title"

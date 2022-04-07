@@ -35,7 +35,6 @@ const CusInfo = (props) => {
 
     React.useEffect(() => {
         if (customer.length != 0) {
-            console.log(customer);
         }
     }, [customer])
 

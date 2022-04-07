@@ -34,41 +34,26 @@ const MainLayout = props => {
       });
     }
     result.push(<Route key={routes.length} path="*" element={NotFound} />);
-
     return result;
   };
 
   const [state, setState] = React.useState(false)
 
   const ItemClick = async (e) => {
-    switch (e.target.innerText) {
-      case 'Log Out':
-        {
-          dispatch(accountSlice.actions.logout())
-          await localStorage.setItem('role', null)
-          navigate("/")
-          break
-        }
-      case 'product':
-        {
-          navigate("/product")
-          break
-        }
-      case 'staff':
-        {
-          navigate("/staff")
-          break
-        }
-      case 'editProduct':
-        {
-          navigate("/product/edit")
-          break
-        }
-      case 'addProduct':
-        {
-          navigate("/product/add")
-          break
-        }
+    if (e.target.innerText == 'Log Out') {
+      dispatch(accountSlice.actions.logout())
+      localStorage.setItem('role', null)
+      navigate("/")
+      return
+    }
+    else {
+      let matchPath = null;
+      props.routes.find((element) => {
+        if (element.name == e.target.innerText)
+          matchPath = element.path;
+      });
+      if (matchPath != null) navigate(matchPath.replace('/*',''))
+      else navigate('*')
     }
   }
   const toggleDrawer = (anchor, open) => (event) => {

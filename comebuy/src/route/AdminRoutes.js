@@ -7,7 +7,7 @@ import Staff from '../container/Staff';
 
 const adminRoutes = [
     {
-        name: 'product',
+        name: 'Product',
         path: '/product/*',
         page:  <Product />,
     },
@@ -22,7 +22,7 @@ const adminRoutes = [
     //     page:   <EditProduct />,
     // },
     {
-        name: 'staff',
+        name: 'Staff',
         path: '/staff',
         page:  <Staff />,
     },
