@@ -44,7 +44,7 @@ const CusInfo = (props) => {
                 <div style={{
                     width: '100%',
                     height: '100%',
-                    backgroundColor: '#6FA61C',
+                    backgroundColor: '#F2F2F2',
                     padding: '10px',
                     display: 'flex',
                     flexDirection: 'row',
@@ -53,24 +53,24 @@ const CusInfo = (props) => {
                     <div style={{ display: 'flex', flexDirection: 'column', padding: '15px' }}>
                         <div style={{ display: 'flex', flexDirection: 'row' }}>
                             <Typography style={{ fontWeight: 'bold' }}>Email:</Typography>
-                            <Typography style={{ marginLeft: '5px', color: '#D8E0F2' }}>{customer[0].email}</Typography>
+                            <Typography style={{ marginLeft: '5px', color: '#404040', fontWeight: 'italic', textDecoration: 'underline' }}>{customer[0].email}</Typography>
                         </div>
 
                         <div style={{ display: 'flex', flexDirection: 'row' }}>
                             <Typography style={{ fontWeight: 'bold' }}>Name:</Typography>
-                            <Typography style={{ marginLeft: '5px', color: '#D8E0F2' }}>{customer[0].name}</Typography>
+                            <Typography style={{ marginLeft: '5px', color: '#404040' }}>{customer[0].name}</Typography>
                         </div>
 
                         <div style={{ display: 'flex', flexDirection: 'row' }}>
                             <Typography style={{ fontWeight: 'bold' }}>Contact:</Typography>
-                            <Typography style={{ marginLeft: '5px', color: '#D8E0F2' }}>{customer[0].phoneNumber}</Typography>
+                            <Typography style={{ marginLeft: '5px', color: '#404040' }}>{customer[0].phoneNumber}</Typography>
                         </div>
                     </div>
                 </div>
             ) : (
-                <Box sx={{ display: 'flex', flex: 1, flexDirection: 'row', backgroundColor: '#6FA61C' }}>
+                <Box sx={{ display: 'flex', flex: 1, flexDirection: 'row', backgroundColor: '#F2F2F2' }}>
                     <CircularProgress style={{ backgroundColor: 'transparent' }} />
-                    <Typography style={{ marginTop: '5px', marginLeft: '5px', color: '#D8E0F2' }}>Getting info...</Typography>
+                    <Typography style={{ marginTop: '5px', marginLeft: '5px', color: '#404040' }}>Getting info...</Typography>
                 </Box>
             )}
         </div>

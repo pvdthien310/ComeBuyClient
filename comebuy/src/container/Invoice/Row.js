@@ -69,14 +69,15 @@ const Row = (props) => {
     const [disablePaid, setDisablePaid] = React.useState(false)
     const [disableCheck, setDisableCheck] = React.useState(false)
 
-    const [isChecked, setIsChecked] = React.useState(false)
+    const [isChecked, setIsChecked] = React.useState(row.isChecked)
+    const [isPaid, setIsPaid] = React.useState(row.isPaid)
 
     const [dataForUpdate, setDataForUpdate] = React.useState({
         invoiceID: row.invoiceID,
         moneyReceived: row.moneyReceived,
         total: row.total,
-        isChecked: false,
-        isPaid: false
+        isChecked: row.isChecked,
+        isPaid: row.isPaid
     })
 
     //for snackbar
@@ -88,26 +89,24 @@ const Row = (props) => {
         setOpenSnackbar(false);
     };
 
-    React.useEffect(() => {
-        if (row.isChecked === true) {
-            if (row.isPaid === true) {
-                setIsChecked(true)
-                setIsPaid(true)
-                setDisableCheck(true)
-                setDisablePaid(true)
-            } else {
-                setIsChecked(true)
-                setIsPaid(false)
-            }
-        } else {
-            setDisablePaid(true)
-        }
-        return;
-    }, [])
+    // React.useEffect(() => {
+    //     if (dataForUpdate.isChecked === true) {
+    //         if (dataForUpdate.isPaid === true) {
+    //             setIsChecked(true)
+    //             setIsPaid(true)
+    //             setDisableCheck(true)
+    //             setDisablePaid(true)
+    //         } else {
+    //             setIsChecked(true)
+    //             setIsPaid(false)
+    //         }
+    //     } else {
+    //         setDisablePaid(true)
+    //     }
+    //     return;
+    // }, [])
 
     const [updating, setUpdating] = React.useState(false)
-
-    const [isPaid, setIsPaid] = React.useState(false)
 
     const dispatch = useDispatch()
 
@@ -116,7 +115,6 @@ const Row = (props) => {
             setOpenBackdrop(true)
         } else {
             setOpenBackdrop(false)
-            setOpenSnackbar(true)
         }
     }, [updating])
 
@@ -139,6 +137,7 @@ const Row = (props) => {
             setDataForUpdate(temp)
             setIsPaid(false);
             setUpdating(false)
+            setOpenSnackbar(true)
             setDisablePaid(false)
         } else {
             if (isChecked === false) {
@@ -159,6 +158,7 @@ const Row = (props) => {
                     console.log(rejectedValueOrSerializedError.message);
                 }
                 setUpdating(false)
+                setOpenSnackbar(true)
                 setDataForUpdate(temp)
                 setIsPaid(true)
                 setDisablePaid(true)
@@ -186,6 +186,7 @@ const Row = (props) => {
                     console.log(rejectedValueOrSerializedError.message);
                 }
                 setUpdating(false)
+                setOpenSnackbar(true)
                 setIsChecked(false)
                 setDisablePaid(true)
             }
@@ -204,6 +205,7 @@ const Row = (props) => {
                 console.log(rejectedValueOrSerializedError.message);
             }
             setUpdating(false)
+            setOpenSnackbar(true)
             setIsChecked(true)
             setDisablePaid(false)
         }
@@ -221,7 +223,7 @@ const Row = (props) => {
                         {open ? <KeyboardArrowUpIcon color='error' /> : <KeyboardArrowDownIcon style={{ color: '#6FA61C' }} />}
                     </IconButton>
                 </TableCell>
-                <TableCell component="th" scope="row" style={{ color: '#0F4001', fontWeight: 'bold' }}>
+                <TableCell component="th" scope="row" style={{ color: '#D7F205', fontWeight: 'bold' }}>
                     {row.invoiceID}
                 </TableCell>
                 <TableCell align="center">
@@ -244,12 +246,12 @@ const Row = (props) => {
                         <CusInfo userID={row.account.userid} />
                     </Popover>
                 </TableCell>
-                <TableCell align="center" style={{ color: '#3B4E59' }}>{row.date}</TableCell>
-                <TableCell align="center" style={{ color: '#3B4E59', fontWeight: 'bold' }}>{row.total}</TableCell>
+                <TableCell align="center" style={{ color: '#F2EFE9' }}>{row.date}</TableCell>
+                <TableCell align="center" style={{ color: 'red', fontWeight: 'bold' }}>{row.total}</TableCell>
                 <TableCell align="center">
                     <FormGroup>
                         <FormControlLabel
-                            control={<IOSSwitch sx={{ m: 1 }} />}
+                            control={<IOSSwitch sx={{ m: 1 }} defaultChecked={isChecked} />}
                             label=""
                             checked={isChecked}
                             disabled={disableCheck}
@@ -257,11 +259,11 @@ const Row = (props) => {
                         />
                     </FormGroup>
                 </TableCell>
-                <TableCell align="center" style={{ fontWeight: 'bold', color: '#6FA61C' }}>{dataForUpdate.moneyReceived}</TableCell>
+                <TableCell align="center" style={{ fontWeight: 'bold', color: '#D7F205' }}>{dataForUpdate.moneyReceived}</TableCell>
                 <TableCell align="center">
                     <FormGroup>
                         <FormControlLabel
-                            control={<IOSSwitch sx={{ m: 1 }} />}
+                            control={<IOSSwitch sx={{ m: 1 }} defaultChecked={row.isPaid} />}
                             label=""
                             checked={isPaid}
                             disabled={disablePaid}
@@ -271,18 +273,18 @@ const Row = (props) => {
                 </TableCell>
             </TableRow>
             <TableRow>
-                <TableCell style={{ paddingBottom: 0, paddingTop: 0, backgroundColor: '#6C7D8C', marginLeft: '10%' }} colSpan={6}>
+                <TableCell style={{ paddingBottom: 0, paddingTop: 0, backgroundColor: '#BFBFBF', marginLeft: '10%' }} colSpan={6}>
                     <Collapse in={open} timeout="auto" unmountOnExit>
                         <Box sx={{ margin: 1 }}>
-                            <Typography variant="h7" style={{ fontWeight: 'bold', color: '#D8E0F2' }} gutterBottom component="div">
+                            <Typography variant="h7" style={{ fontWeight: 'bold', color: '#0D0D0D', textDecoration: 'underline' }} gutterBottom component="div">
                                 Details:
                             </Typography>
                             <Table size="small" aria-label="purchases">
                                 <TableHead>
                                     <TableRow>
-                                        <TableCell style={{ fontWeight: 'bold', color: '#D8E0F2' }}>Product ID</TableCell>
-                                        <TableCell align="center" style={{ fontWeight: 'bold', color: '#D8E0F2' }}>Amount</TableCell>
-                                        <TableCell align="center" style={{ fontWeight: 'bold', color: '#D8E0F2' }}>Total price (USD)</TableCell>
+                                        <TableCell style={{ fontWeight: 'bold', color: '#0D0D0D' }}>Product ID</TableCell>
+                                        <TableCell align="center" style={{ fontWeight: 'bold', color: '#0D0D0D' }}>Amount</TableCell>
+                                        <TableCell align="center" style={{ fontWeight: 'bold', color: '#0D0D0D' }}>Total price (USD)</TableCell>
                                     </TableRow>
                                 </TableHead>
                                 <TableBody>
