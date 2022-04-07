@@ -29,6 +29,19 @@ export const editProduct = createAsyncThunk(
   }
 );
 
+
+export const getProductWithID = createAsyncThunk(
+  'product/findOne',
+  async (data, { rejectedWithValue }) => {
+    const response = await productAPI.getProductWithID(data)
+    if (!response) {
+      return rejectedWithValue(" Find product failed")
+    } else {
+      return response.data
+    }
+  }
+)
+
 export const productSlice = createSlice({
   name: 'product',
   initialState: {
@@ -69,6 +82,17 @@ export const productSlice = createSlice({
       });
     },
     [editProduct.rejected]: (state, action) => {
+      state.loading = false;
+    },
+    [getProductWithID.pending]: (state) => {
+      state.loading = true;
+      console.log("Start slice");
+    },
+    [getProductWithID.fulfilled]: (state, action) => {
+      state.loading = false;
+      console.log("Successfully");
+    },
+    [getProductWithID.rejected]: (state, action) => {
       state.loading = false;
     }
   }

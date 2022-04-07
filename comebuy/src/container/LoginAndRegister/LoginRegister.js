@@ -1,5 +1,5 @@
-import { ReactComponent as Register1SVG } from '../../assets/img/register1.svg'
-import { ReactComponent as Register2SVG } from '../../assets/img/register2.svg'
+import { ReactComponent as Register1SVG } from '../../assets/img/register2.svg'
+import { ReactComponent as Register2SVG } from '../../assets/img/register1.svg'
 import './TestUI.css'
 import './LoginRegister.css'
 
@@ -20,7 +20,6 @@ import { Autorenew } from "@material-ui/icons";
 import Backdrop from '@mui/material/Backdrop';
 import CircularProgress from '@mui/material/CircularProgress';
 import Snackbar from '@mui/material/Snackbar';
-import MuiAlert from '@mui/material/Alert';
 
 //From file
 import { currentUser, isSignedIn_user, loading_user, messageError } from '../../redux/selectors'
@@ -241,9 +240,6 @@ const LoginRegister = () => {
 
     //handle login function
     const handleLogin = async () => {
-        // if (emailUser != null && passwordUser != null) {
-        //     dispatch(login({ email: emailUser, password: passwordUser }))
-        // }
         if (emailUser === null) {
             setOpenEmailLoginError(true);
         } else {
@@ -254,9 +250,8 @@ const LoginRegister = () => {
                     const resultAction = await dispatch(login({ email: emailUser, password: passwordUser }))
                     const originalPromiseResult = unwrapResult(resultAction)
                     // handle result here
+                    console.log(originalPromiseResult)
                 } catch (rejectedValueOrSerializedError) {
-                    // handle error here
-                    //setOpenDialogRegFailed(true)
                     console.log(rejectedValueOrSerializedError);
                 }
             }
@@ -315,7 +310,7 @@ const LoginRegister = () => {
             })
                 .catch(err => console.log(err))
         } else {
-            return;
+            return
         }
     }, [verifyCode])
 
@@ -351,7 +346,6 @@ const LoginRegister = () => {
                 // handle result here
                 console.log(originalPromiseResult)
                 if (originalPromiseResult === true) {
-                    // setOpenDialogRegFailed(false)
                     handleCloseModalVerify()
                     setOpenDialogRegFailed(false)
                     setIsRegistering(1)
@@ -361,7 +355,6 @@ const LoginRegister = () => {
             }
         } catch (rejectedValueOrSerializedError) {
             // handle error here
-            //setOpenDialogRegFailed(true)
             if (rejectedValueOrSerializedError != null) {
                 handleCloseModalVerify()
                 setOpenDialogRegSuccessfully(false)
@@ -397,7 +390,6 @@ const LoginRegister = () => {
 
                         {/*EMAIL*/}
                         <TextField
-                            // className='text-field-in-form'
                             style={{
                                 maxWidth: '380px',
                                 marginBottom: '50px',
@@ -569,7 +561,7 @@ const LoginRegister = () => {
                                 marginTop: '25px',
                                 borderRadius: '20px',
                                 border: '1px solid #18608a',
-                                backgroundColor: '#18608a',
+                                backgroundColor: '#000000',
                                 color: '#ffffff',
                                 fontSize: '13px',
                                 fontWeight: 'bold',
@@ -849,7 +841,7 @@ const LoginRegister = () => {
                                 marginTop: '25px',
                                 borderRadius: '20px',
                                 border: '1px solid #18608a',
-                                backgroundColor: '#18608a',
+                                backgroundColor: '#000000',
                                 color: '#ffffff',
                                 fontSize: '13px',
                                 fontWeight: 'bold',
@@ -876,7 +868,7 @@ const LoginRegister = () => {
                             Getting your best laptop on ComeBuy is always your best choice
                         </p>
                         <button className="btn transparent" id="sign-up-btn" onClick={() => setAddClass('sign-up-mode')}>
-                            Sign up
+                            Go to sign up
                         </button>
                     </div>
                     <Register2SVG className="image" />
@@ -888,7 +880,7 @@ const LoginRegister = () => {
                             Let's log in now. Something perfect is waiting for you
                         </p>
                         <button className="btn transparent" id="sign-in-btn" onClick={() => setAddClass('')}>
-                            Sign in
+                            Go to sign in
                         </button>
                     </div>
                     <Register1SVG className="image" />
