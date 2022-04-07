@@ -29,21 +29,21 @@ export const editFeature = createAsyncThunk(
   }
 );
 
-export const FeatureSlice = createSlice({
-  name: 'Feature',
+export const featureSlice = createSlice({
+  name: 'feature',
   initialState: {
     featureList: [],
     loading: false
   },
   reducers: {
     FeatureListChange: (state, action) => {
-      state.FeatureList = action.payload;
+      state.featureList = action.payload;
     },
     FeatureLoadingChange: (state, action) => {
       state.loading = action.payload;
     },
     addFeature: (state, action) => {
-      state.FeatureList.push(action.payload)
+      state.featureList.push(action.payload)
     }
 
   },
@@ -53,7 +53,7 @@ export const FeatureSlice = createSlice({
     },
     [getAll.fulfilled]: (state, action) => {
       state.loading = false;
-      state.FeatureList = action.payload;
+      state.featureList = action.payload;
     },
     [getAll.rejected]: (state, action) => {
       state.loading = false;
@@ -62,7 +62,7 @@ export const FeatureSlice = createSlice({
       /// Nothing
     },
     [editFeature.fulfilled]: (state, action) => {
-      state.FeatureList = state.FeatureList.map(member => {
+      state.featureList = state.FeatureList.map(member => {
         if (member.featureID == action.payload.featureID)
           return action.payload
         else return member
