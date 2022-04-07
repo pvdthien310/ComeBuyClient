@@ -52,20 +52,20 @@ const  Invoice = () => {
 
 
     return (
-        <div style={{ display: 'flex', justifyContent: 'center', flexDirection: 'column', backgroundColor: '#D8E0F2', height: '100%' }}>
-            <TableContainer style={{ marginTop: '6%', padding: '6%', backgroundColor: '#D8E0F2', height: '100%' }} component={Paper}>
-                <Typography style={{ marginLeft: '35%', marginTop: '0%', marginBottom: '5%', fontWeight: 'bold', fontSize: '30px', color: '#3B4E59' }}>INVOICE MANAGEMENT</Typography>
+        <div style={{ top: '0', right: '0', left: '0', right: '0' }}>
+            <TableContainer style={{ backgroundColor: '#0D0D0D', height: 'inherit', width: 'inherit', padding: '5%' }} component={Paper}>
+                <Typography style={{ marginLeft: '35%', marginTop: '0%', marginBottom: '5%', fontWeight: 'bold', fontSize: '30px', color: '#F2F2F2' }}>INVOICE MANAGEMENT</Typography>
                 <Table aria-label="collapsible table">
-                    <TableHead style={{ backgroundColor: '#0F4001' }}>
+                    <TableHead style={{ backgroundColor: '#F2F2F2', borderRadius: '15px' }}>
                         <TableRow>
                             <TableCell />
-                            <TableCell style={{ color: '#D8E0F2' }}>Invoice ID</TableCell>
-                            <TableCell align="center" style={{ color: '#D8E0F2' }}>Customer ID</TableCell>
-                            <TableCell align="center" style={{ color: '#D8E0F2' }}>Date</TableCell>
-                            <TableCell align="center" style={{ color: '#D8E0F2' }}>Total&nbsp;(USD)</TableCell>
-                            <TableCell align="center" style={{ color: '#D8E0F2' }}>Is Checked ?</TableCell>
-                            <TableCell align="center" style={{ color: '#D8E0F2' }}>Recieved&nbsp;(USD)</TableCell>
-                            <TableCell align="center" style={{ color: '#D8E0F2' }}>Is Paid ?</TableCell>
+                            <TableCell style={{ color: '#0D0D0D', fontWeight: 'bold' }}>Invoice ID</TableCell>
+                            <TableCell align="center" style={{ color: '#0D0D0D', fontWeight: 'bold' }}>Customer ID</TableCell>
+                            <TableCell align="center" style={{ color: '#0D0D0D', fontWeight: 'bold' }}>Date</TableCell>
+                            <TableCell align="center" style={{ color: '#0D0D0D', fontWeight: 'bold' }}>Total&nbsp;(USD)</TableCell>
+                            <TableCell align="center" style={{ color: '#0D0D0D', fontWeight: 'bold' }}>Is Checked ?</TableCell>
+                            <TableCell align="center" style={{ color: '#0D0D0D', fontWeight: 'bold' }}>Recieved&nbsp;(USD)</TableCell>
+                            <TableCell align="center" style={{ color: '#0D0D0D', fontWeight: 'bold' }}>Is Paid ?</TableCell>
                         </TableRow>
                     </TableHead>
                     <TableBody>
@@ -76,16 +76,17 @@ const  Invoice = () => {
                             ))}
                     </TableBody>
                 </Table>
+                <TablePagination
+                    rowsPerPageOptions={[10, 25, 50]}
+                    component="div"
+                    style={{ color: '#F2F2F2' }}
+                    count={invoiceList.length}
+                    rowsPerPage={rowsPerPage}
+                    page={page}
+                    onPageChange={handleChangePage}
+                    onRowsPerPageChange={handleChangeRowsPerPage}
+                />
             </TableContainer>
-            <TablePagination
-                rowsPerPageOptions={[10, 25, 50]}
-                component="div"
-                count={invoiceList.length}
-                rowsPerPage={rowsPerPage}
-                page={page}
-                onPageChange={handleChangePage}
-                onRowsPerPageChange={handleChangeRowsPerPage}
-            />
         </div >
     )
 }

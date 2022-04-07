@@ -39,7 +39,7 @@ const ProdInfo = (props) => {
                 <div style={{
                     width: '100%',
                     height: '100%',
-                    backgroundColor: 'white',
+                    backgroundColor: '#BFBFBF',
                     padding: '10px',
                     display: 'flex',
                     flexDirection: 'row',
