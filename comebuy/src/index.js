@@ -18,7 +18,7 @@ ReactDOM.render(
 
   <Provider store={store}>
     <BrowserRouter>
-      <Invoice />
+      <App />
     </BrowserRouter>
   </Provider>,
   document.getElementById('root')
