@@ -5,12 +5,14 @@ import Snackbar from '@mui/material/Snackbar';
 import Alert from '@mui/material/Alert';
 import { useDispatch, useSelector } from "react-redux";
 import { editProduct } from "../../../redux/slices/productSlice";
-import { useEffect, useState } from "react";
+import { memo, useEffect, useState } from "react";
 import style from './style.js'
 import Box from '@mui/material/Box';
 import { Swiper, SwiperSlide } from "swiper/react";
 import { Pagination } from "swiper";
-
+import { featureListSelector } from "../../../redux/selectors";
+import { getAll } from "../../../redux/slices/featureSlice";
+import SnackBarAlert from "../../../components/SnackBarAlert";
 //icon styles
 import BallotIcon from '@mui/icons-material/Ballot';
 import MemoryIcon from '@mui/icons-material/Memory';
@@ -31,8 +33,9 @@ import DriveFileRenameOutlineIcon from '@mui/icons-material/DriveFileRenameOutli
 import CottageIcon from '@mui/icons-material/Cottage';
 import ImageForEditProduct from "../../../components/ImageForEditProduct";
 import FeatureSelect from "../../../components/FeatureSelect.js";
-import { featureListSelector } from "../../../redux/selectors";
-import { getAll } from "../../../redux/slices/featureSlice";
+import AddPhotoAlternateIcon from '@mui/icons-material/AddPhotoAlternate';
+import { color } from "@mui/system";
+import productImageAPI from "../../../api/productImageAPI";
 
 
 
@@ -40,16 +43,99 @@ const EditProduct = () => {
     const location = useLocation()
     const product = location.state
     const _featureList = useSelector(featureListSelector)
-    const [open, setOpen] = useState(false);
+    const [openSuccessAlert, setOpenSuccessAlert] = useState(false);
+    const [openErrorAlert, setOpenErrorAlert] = useState(false);
+    const [messageError, setMessageError] = useState("No Error")
+    const [messageSuccess, setMessageSuccess] = useState("Notification")
     const [featureList, setFeatureList] = useState(_featureList);
     const [currentFeature, setCurrentFeature] = useState(product.feature.map((item) => item.name))
     const navigate = useNavigate()
     const dispatch = useDispatch()
+
     const handleClose = (event, reason) => {
         if (reason === 'clickaway')
             return;
-        setOpen(false);
+        setOpenSuccessAlert(false);
+        setOpenErrorAlert(false);
     };
+
+    // properties for edit product
+    const [name, SetName] = useState(product.name)
+    const [brand, SetBrand] = useState(product.brand)
+    const [cpu, SetCPU] = useState(product.cpu)
+    const [ram, SetRam] = useState(product.ram)
+    const [gpu, SetGPU] = useState(product.gpu)
+    const [memory, SetMemory] = useState(product.memory)
+    const [description, SetDescription] = useState(product.description)
+    const [screenDimension, SetScreenDimension] = useState(product.screenDimension)
+    const [store, SetStore] = useState(product.store)
+    const [battery, SetBattery] = useState(product.battery)
+    const [weight, SetWeight] = useState(product.weight)
+    const [origin, SetOrigin] = useState(product.origin)
+    const [externalIOPort, SetExternalIOPort] = useState(product.externalIOPort)
+    const [colorCoverage, SetColorCoverage] = useState(product.colorCoverage)
+    const [warranty, SetWarranty] = useState(product.warranty)
+    const [price, SetPrice] = useState(product.price)
+    const [productImages, SetProductImages] = useState(product.productimage)
+
+
+    const handleValueChange = (event) => {
+        switch (event.target.name) {
+            case 'Name':
+                SetName(event.target.value)
+                break
+            case 'CPU':
+                SetCPU(event.target.value)
+                break
+            case 'GPU':
+                SetGPU(event.target.value)
+                break
+            case 'Screen Dimension':
+                SetScreenDimension(event.target.value)
+                break
+            case 'Color Coverage':
+                SetColorCoverage(event.target.value)
+                break
+            case 'Store':
+                SetMemory(event.target.value)
+                break
+            case 'External IO Port':
+                SetExternalIOPort(event.target.value)
+                break
+            case 'RAM':
+                SetRam(event.target.value)
+                break
+            case 'Brand':
+                SetBrand(event.target.value)
+                break
+            case 'Price':
+                SetPrice(event.target.value)
+                break
+            case 'Warranty':
+                SetWarranty(event.target.value)
+                break
+            case 'Origin':
+                SetOrigin(event.target.value)
+                break
+            case 'Weight':
+                SetWeight(event.target.value)
+                break
+            case 'Battery':
+                SetBattery(event.target.value)
+                break
+            case 'Description':
+                SetDescription(event.target.value)
+                break
+        }
+    };
+
+    const deleteImage = (image) => {
+        SetProductImages(productImages.filter((img) => {
+            if (img.productImageID != image.productImageID)
+                return img
+        }));
+    }
+
 
     const handleFeatureChosen = (event) => {
         const {
@@ -60,32 +146,112 @@ const EditProduct = () => {
         );
     };
 
-    const SaveChange = () => {
-        dispatch(editProduct(product))
+    const UpdateImages = async () => {
+        const response = await productImageAPI.deleteImagesOfProduct(product.productID)
+        if (response != undefined && response.status == 200) {
+            const response_2 = await productImageAPI.addMany(
+                productImages.map(
+                    (item) => { return Object.assign(item, { productID: product.productID }) })
+            )
+            return response_2.status == 200 ? true : false
+        }
+        else return false;
+    };
+
+    const UpdateSpecifications = () => {
+        const newProduct = {
+            "productID": product.productID,
+            "ram": ram,
+            "memory": memory,
+            "gpu": gpu,
+            "cpu": cpu,
+            "name": name,
+            "brand": brand,
+            "description": description,
+            "weight": weight,
+            "origin": origin,
+            "screenDimension": screenDimension,
+            "colorCoverage": colorCoverage,
+            "price": price,
+            "externalIOPort": externalIOPort,
+            "battery": battery,
+            "warranty": warranty,
+            "promotion": product.promotion,
+        }
+        dispatch(editProduct(newProduct))
             .unwrap()
             .then((originalPromiseResult) => {
-                setOpen(true);
+                setMessageSuccess("Edit Product Successfully")
+                setOpenSuccessAlert(true);
             })
             .catch((rejectedValueOrSerializedError) => {
-                console.log("Error load product")
+                setMessageError("Edit Product Failed")
+                setOpenErrorAlert(true)
             })
+    };
+
+    const SaveChange = () => {
+        let isCheck = true;
+        if (productImages.length == product.productimage.length) {
+            for (let i = 0; i < productImages.length; i++) {
+                if (productImages[i] == product.productimage[i]) {
+                    if (UpdateImages()) {
+                        isCheck = false;
+                        UpdateSpecifications()
+                    }
+                    else {
+                        isCheck = false;
+                        setMessageError("Edit Product Failed")
+                        setOpenErrorAlert(true)
+                    }
+                    break;
+                }
+            }
+            if (isCheck) UpdateSpecifications()
+        }
+        else
+            if (UpdateImages()) UpdateSpecifications()
+            else {
+                setMessageError("Edit Product Failed")
+                setOpenErrorAlert(true)
+            }
     }
 
     useEffect(() => {
         dispatch(getAll())
             .unwrap()
             .then((originalPromiseResult) => {
-                console.log('load feature')
                 setFeatureList(originalPromiseResult)
+                setMessageSuccess("Load Feature Successfully")
+                setOpenSuccessAlert(true)
             })
             .catch((rejectedValueOrSerializedError) => {
-                console.log("Error load feature")
+                setMessageError("Load Feature Failed")
+                setOpenErrorAlert(true)
             })
     }, [])
 
     useEffect(() => {
         setCurrentFeature(product.feature.map((item) => item.name))
+        SetName(product.name)
+        SetBattery(product.battery)
+        SetBrand(product.brand)
+        SetCPU(product.cpu)
+        SetGPU(product.gpu)
+        SetExternalIOPort(product.externalIOPort)
+        SetWeight(product.weight)
+        SetColorCoverage(product.colorCoverage)
+        SetDescription(product.description)
+        SetMemory(product.memory)
+        SetOrigin(product.origin)
+        SetPrice(product.price)
+        SetProductImages(product.productimage)
+        SetRam(product.ram)
+        SetStore(product.store)
+        SetWarranty(product.warranty)
+        SetScreenDimension(product.screenDimension)
     }, [product])
+
 
     return (
         <Stack
@@ -102,60 +268,63 @@ const EditProduct = () => {
                 <Box sx={{ backgroundColor: '#8F8EBF', height: 5, width: '100%' }}></Box>
                 <Typography variant='h6' fontWeight='bold'>Images</Typography>
                 {
-                    product.productimage.length > 0 ?
-                        <Swiper slidesPerView={1} modules={[Pagination]} spaceBetween={30} pagination={true}>
+                    productImages.length > 0 ?
+                        <Swiper sx={{}} slidesPerView={1} modules={[Pagination]} spaceBetween={30} pagination={true}>
                             {
-                                product.productimage.map((item, i) => (
+                                productImages.map((item, i) => (
                                     <SwiperSlide key={i}>
-                                        <ImageForEditProduct image={item.imageurl} />
+                                        <ImageForEditProduct image={item} deleteImage={deleteImage} />
                                     </SwiperSlide>
                                 ))
                             }
                         </Swiper>
                         :
-                        <Typography variant='h6' fontWeight='bold'>No Image</Typography>
+                        <Stack sx={{ backgroundColor: '#5F5DA6', padding: 2, margin: 3, borderRadius: 5 }}>
+                            <Typography sx={{ alignSelf: 'center', color: 'white', margin: 2 }} variant='h6' fontWeight='bold'>No Images</Typography>
+                            <Button sx={style.AddImageButton} endIcon={<AddPhotoAlternateIcon />}>Add Image</Button>
+                        </Stack>
                 }
-                <Grid container>
-                    <Grid xs={12}>
+                <Grid sx={{ marginTop: 5 }} container>
+                    <Grid item xs={12}>
                         <FeatureSelect item="true" features={featureList} currentFeature={currentFeature} handleFeatureChange={handleFeatureChosen} />
                     </Grid>
-                    <Grid xs={6} paddingLeft={2}>
+                    <Grid item xs={6} paddingLeft={2}>
                         <Stack item="true" xs={12} spacing={2} padding={2}>
-                            <TextFieldForEdit Icon={<DriveFileRenameOutlineIcon />} Text={product.name} Title='Name' />
+                            <TextFieldForEdit Icon={<DriveFileRenameOutlineIcon />} Text={name} Title='Name' onChange={handleValueChange} />
                             <Box sx={style.boxinfor_Stack_Line}></Box>
-                            <TextFieldForEdit Icon={<MemoryIcon />} Text={product.cpu} Title='CPU' />
+                            <TextFieldForEdit Icon={<MemoryIcon />} Text={cpu} Title='CPU' onChange={handleValueChange} />
                             <Box sx={style.boxinfor_Stack_Line}></Box>
-                            <TextFieldForEdit Icon={<ScreenshotMonitorIcon />} Text={product.screenDimension} Title='Screen Dimension (icnh)' />
+                            <TextFieldForEdit Icon={<ScreenshotMonitorIcon />} Text={screenDimension} Title='Screen Dimension (inch)' onChange={handleValueChange} />
                             <Box sx={style.boxinfor_Stack_Line}></Box>
-                            <TextFieldForEdit Icon={<InventoryIcon />} Text={product.memory} Title='Store (SSD)' />
+                            <TextFieldForEdit Icon={<InventoryIcon />} Text={memory} Title='Store (SSD)' onChange={handleValueChange} />
                             <Box sx={style.boxinfor_Stack_Line}></Box>
-                            <TextFieldForEdit Icon={<CableIcon />} Text={product.externalIOPort} Title='External IO Port' />
+                            <TextFieldForEdit Icon={<CableIcon />} Text={externalIOPort} Title='External IO Port' onChange={handleValueChange} />
                             <Box sx={style.boxinfor_Stack_Line}></Box>
-                            <TextFieldForEdit Icon={<LanguageIcon />} Text={product.origin} Title='Origin' />
+                            <TextFieldForEdit Icon={<LanguageIcon />} Text={origin} Title='Origin' onChange={handleValueChange} />
                             <Box sx={style.boxinfor_Stack_Line}></Box>
-                            <TextFieldForEdit Icon={<AddModeratorIcon />} Text={product.warranty} Title='Warranty' />
+                            <TextFieldForEdit Icon={<AddModeratorIcon />} Text={warranty} Title='Warranty' onChange={handleValueChange} />
                             <Box sx={style.boxinfor_Stack_Line}></Box>
                         </Stack>
                     </Grid>
-                    <Grid xs={6} paddingLeft={2}>
+                    <Grid item xs={6} paddingLeft={2}>
                         <Stack item="true" xs={12} spacing={2} padding={2}>
-                            <TextFieldForEdit Icon={<CottageIcon />} Text={product.brand} Title='Brand' />
+                            <TextFieldForEdit Icon={<CottageIcon />} Text={brand} Title='Brand' onChange={handleValueChange} />
                             <Box sx={style.boxinfor_Stack_Line}></Box>
-                            <TextFieldForEdit Icon={<AutofpsSelectIcon />} Text={product.ram} Title='RAM (GB)' />
+                            <TextFieldForEdit Icon={<AutofpsSelectIcon />} Text={ram} Title='RAM (GB)' onChange={handleValueChange} />
                             <Box sx={style.boxinfor_Stack_Line}></Box>
-                            <TextFieldForEdit Icon={<ChromeReaderModeIcon />} Text={product.gpu} Title="GPU" />
+                            <TextFieldForEdit Icon={<ChromeReaderModeIcon />} Text={gpu} Title="GPU" onChange={handleValueChange} />
                             <Box sx={style.boxinfor_Stack_Line}></Box>
-                            <TextFieldForEdit Icon={<Battery3BarIcon />} Text={product.battery} Title="Battery (Whr)" />
+                            <TextFieldForEdit Icon={<Battery3BarIcon />} Text={battery} Title="Battery (Whr)" onChange={handleValueChange} />
                             <Box sx={style.boxinfor_Stack_Line}></Box>
-                            <TextFieldForEdit Icon={<ScaleIcon />} Text={product.weight} Title="Weight (kg)" />
+                            <TextFieldForEdit Icon={<ScaleIcon />} Text={weight} Title="Weight (kg)" onChange={handleValueChange} />
                             <Box sx={style.boxinfor_Stack_Line}></Box>
-                            <TextFieldForEdit Icon={<GradientIcon />} Text={product.colorCoverage} Title="Color Coverage (RGBs)" />
+                            <TextFieldForEdit Icon={<GradientIcon />} Text={colorCoverage} Title="Color Coverage (RGBs)" onChange={handleValueChange} />
                             <Box sx={style.boxinfor_Stack_Line}></Box>
-                            <TextFieldForEdit Icon={<PriceChangeIcon />} Text={product.price} Title="Price (USD)" />
+                            <TextFieldForEdit Icon={<PriceChangeIcon />} Text={price} Title="Price (USD)" onChange={handleValueChange} />
                             <Box sx={style.boxinfor_Stack_Line}></Box>
                         </Stack>
                     </Grid>
-                    <Grid xs={12} paddingLeft={2} paddingTop={2}>
+                    <Grid item xs={12} paddingLeft={2} paddingTop={2}>
                         <Stack item="true" xs={12} spacing={1}>
                             <Stack
                                 direction="row"
@@ -173,19 +342,19 @@ const EditProduct = () => {
                         </Stack>
                         <Box item="true" sx={style.boxinfor_Stack_Line}></Box>
                     </Grid>
-                    <Grid xs={12} paddingLeft={2} paddingTop={2}>
+                    <Grid item xs={12} paddingLeft={2} paddingTop={2}>
                     </Grid>
                 </Grid>
             </Box>
-            <Button variant="contained" onClick={() => navigate('/product')}>Back</Button>
-            <Button variant="contained" onClick={SaveChange}>Save</Button>
-            <Snackbar open={open} autoHideDuration={3000} onClose={handleClose}>
-                <Alert onClose={handleClose} severity="success" sx={{ width: '100%' }}>
-                    Update product successfully!
-                </Alert>
-            </Snackbar>
+            <Stack direction='row' spacing={3}>
+                <Button sx={style.BackButton} variant="contained" onClick={() => navigate('/product')}>Back</Button>
+                <Button sx={style.SaveButton} variant="contained" onClick={SaveChange}>Save</Button>
+            </Stack>
+            {/* Alert init */}
+            <SnackBarAlert severity='success' open={openSuccessAlert} handleClose={handleClose} message={messageSuccess} />
+            <SnackBarAlert severity='error' open={openErrorAlert} handleClose={handleClose} message={messageError} />
         </Stack>
     )
 }
 
-export default EditProduct;
+export default memo(EditProduct);

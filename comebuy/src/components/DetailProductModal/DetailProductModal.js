@@ -43,12 +43,12 @@ const DetailProductModal = ({ open, product, onClose }) => {
                     product != null ?
                         <Box sx={style.boxContainer}>
                             <Grid container>
-                                <Grid xs={10}>
+                                <Grid item xs={10}>
                                     <Typography item={true} xs={12} color="#152659" id="modal-modal-title" fontWeight='bold' variant="h6" component="h2">
                                         {product.name}
                                     </Typography>
                                 </Grid>
-                                <Grid xs={2}>
+                                <Grid item xs={2}>
                                     <Typography item={true} xs={12} color="#152659" id="modal-modal-title" fontWeight='bold' variant="h6" component="h2">
                                         {product.price + " USD"}
                                     </Typography>
@@ -68,7 +68,7 @@ const DetailProductModal = ({ open, product, onClose }) => {
                                             product.productimage.map((item, i) => (
                                                 <SwiperSlide key={i}>
                                                     <Button>
-                                                        <ProductImage src={item.imageurl}></ProductImage>
+                                                        <ProductImage src={item.imageURL}></ProductImage>
                                                     </Button>
                                                 </SwiperSlide>
                                             ))
@@ -111,6 +111,7 @@ const DetailProductModal = ({ open, product, onClose }) => {
                             </Box>
                             <Box sx={style.boxInfor}>
                                 <Stack
+                                    item
                                     direction="row"
                                     spacing={1}
                                     padding={1}
@@ -119,8 +120,8 @@ const DetailProductModal = ({ open, product, onClose }) => {
                                     <Typography variant='h6' fontWeight='bold'>Technical Information</Typography>
                                 </Stack>
                                 <Grid container>
-                                    <Grid xs={6} paddingLeft={2}>
-                                        <Stack xs={12} spacing={2} padding={2}>
+                                    <Grid item xs={6} paddingLeft={2}>
+                                        <Stack item xs={12} spacing={2} padding={2}>
                                             <TechInforLine Icon={<MemoryIcon />} Text={product.cpu} Title='CPU' />
                                             <Box sx={style.boxinfor_Stack_Line}></Box>
                                             <TechInforLine Icon={<ScreenshotMonitorIcon />} Text={product.screenDimension + ' inch, ' + product.colorCoverage + ' RGBs'} Title='Screen Dimension' />
@@ -131,8 +132,8 @@ const DetailProductModal = ({ open, product, onClose }) => {
                                             <Box sx={style.boxinfor_Stack_Line}></Box>
                                         </Stack>
                                     </Grid>
-                                    <Grid xs={6} paddingLeft={2}>
-                                        <Stack xs={12} spacing={2} padding={2}>
+                                    <Grid item xs={6} paddingLeft={2}>
+                                        <Stack item xs={12} spacing={2} padding={2}>
                                             <TechInforLine Icon={<AutofpsSelectIcon />} Text={product.ram + " GB"} Title='RAM' />
                                             <Box sx={style.boxinfor_Stack_Line}></Box>
                                             <TechInforLine Icon={<ChromeReaderModeIcon />} Text={product.gpu} Title="GPU" />
@@ -155,10 +156,10 @@ const DetailProductModal = ({ open, product, onClose }) => {
                                     <Typography variant='h6' fontWeight='bold'>Description</Typography>
                                 </Stack>
                                 <Grid sx={style.BoxDes_Grid} paddingLeft={4} paddingRight={4}>
-                                    <Stack xs={12}>
+                                    <Stack item xs={12}>
                                         {
                                             product.productimage.length > 0 &&
-                                            <ProductImage item={true} xs={12} src={product.productimage[0].imageurl}></ProductImage>
+                                            <ProductImage item={true} xs={12} src={product.productimage[0].imageURL}></ProductImage>
                                         }
                                         <Typography item={true} xs={12} sx={{ marginBottom: 2 }} variant='body1'>{product.description}</Typography>
                                     </Stack>
@@ -166,7 +167,7 @@ const DetailProductModal = ({ open, product, onClose }) => {
                             </Box>
                             <Button sx={{
                                 backgroundColor: '#8C0303',
-                                alignItems:'center',
+                                alignItems: 'center',
                                 '&:hover': {
                                     backgroundColor: '#BF0404',
                                 }

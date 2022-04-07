@@ -33,14 +33,14 @@ function getStyles(name, personName, theme) {
 const FeatureSelect = (props) => {
     const theme = useTheme();
     return (
-        <Stack  item="true" sx={{ marginLeft: 2}}>
-            <FormControl sx={{ m: 1, width: 500 }}>
-                <InputLabel >Feature</InputLabel>
+        <Stack item="true" sx={{ marginLeft: 2 }}>
+            <FormControl sx={{ m: 1 }}>
+                <InputLabel >Product's Feature</InputLabel>
                 <Select
                     multiple
                     value={props.currentFeature}
                     onChange={props.handleFeatureChange}
-                    input={<OutlinedInput label="Feature" />}
+                    input={<OutlinedInput label="Product's Feature" />}
                     renderValue={(selected) => (
                         <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 0.5 }}>
                             {selected.map((value) => (
