@@ -1,4 +1,4 @@
-import { createSlice, createAsyncThunk, isFulfilled } from "@reduxjs/toolkit";
+import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 
 import JWTApi from "../../api/JWTAPI";
 import accountApi from "../../api/accountAPI";
@@ -35,6 +35,18 @@ export const login = createAsyncThunk(
   }
 );
 
+export const getAccountWithID = createAsyncThunk(
+  'account/findOne',
+  async (data, { rejectedWithValue }) => {
+    const response = await accountApi.getAccountWithID(data)
+    if (!response) {
+      return rejectedWithValue(" Find account failed")
+    } else {
+      return response.data
+    }
+  }
+)
+
 export const register = createAsyncThunk(
   "account/register",
   async ({ dataForReg }, { rejectWithValue }) => {
@@ -57,7 +69,6 @@ export const accountSlice = createSlice({
     loading: false,
     errorMessage: 'this is message',
     isSignedIn: false,
-    //isEmailExisted: false,
     isRegSuccess: false
   },
   reducers: {
@@ -69,29 +80,20 @@ export const accountSlice = createSlice({
   extraReducers: {
     [register.pending]: (state, action) => {
       state.loading = true
-      //state.isEmailExisted = false
       state.isRegSuccess = false
-      console.log("Pending -  isSuccess = " + state.isRegSuccess);
     },
     [register.fulfilled]: (state, action) => {
       state.loading = false;
       state.user = action.payload;
-      //state.isEmailExisted = false;
       state.isRegSuccess = true;
-      console.log("Fulfilled -  isSuccess = " + state.isRegSuccess);
-      console.log("Registered successfully");
     },
     [register.rejected]: (state, action) => {
       state.loading = false;
       state.error = action.payload.message;
-      //state.isEmailExisted = true;
       state.isRegSuccess = false;
-      console.log("Rejected -  isSuccess = " + state.isRegSuccess);
-      console.log("Email existed");
     },
     [login.pending]: (state) => {
       state.loading = true;
-      console.log("Pending -  isSigning = " + state.isSignedIn);
     },
     [login.fulfilled]: (state, action) => {
       state.loading = false;
@@ -102,7 +104,19 @@ export const accountSlice = createSlice({
     [login.rejected]: (state, action) => {
       state.loading = false;
       state.errorMessage = action.payload;
-      console.log("Rejected -  isSigning = " + state.isSignedIn);
-    }
+    },
+    [getAccountWithID.pending]: (state, action) => {
+      state.loading = true
+      state.isRegSuccess = false
+    },
+    [getAccountWithID.fulfilled]: (state, action) => {
+      state.loading = false;
+      state.isRegSuccess = true;
+    },
+    [getAccountWithID.rejected]: (state, action) => {
+      state.loading = false;
+      state.error = action.payload.message;
+      state.isRegSuccess = false;
+    },
   }
 })
