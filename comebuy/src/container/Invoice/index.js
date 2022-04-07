@@ -59,13 +59,13 @@ const Invoice = () => {
                     <TableHead style={{ backgroundColor: '#F2F2F2', borderRadius: '15px' }}>
                         <TableRow>
                             <TableCell />
-                            <TableCell style={{ color: '#0D0D0D' }}>Invoice ID</TableCell>
-                            <TableCell align="center" style={{ color: '#0D0D0D' }}>Customer ID</TableCell>
-                            <TableCell align="center" style={{ color: '#0D0D0D' }}>Date</TableCell>
-                            <TableCell align="center" style={{ color: '#0D0D0D' }}>Total&nbsp;(USD)</TableCell>
-                            <TableCell align="center" style={{ color: '#0D0D0D' }}>Is Checked ?</TableCell>
-                            <TableCell align="center" style={{ color: '#0D0D0D' }}>Recieved&nbsp;(USD)</TableCell>
-                            <TableCell align="center" style={{ color: '#0D0D0D' }}>Is Paid ?</TableCell>
+                            <TableCell style={{ color: '#0D0D0D', fontWeight: 'bold' }}>Invoice ID</TableCell>
+                            <TableCell align="center" style={{ color: '#0D0D0D', fontWeight: 'bold' }}>Customer ID</TableCell>
+                            <TableCell align="center" style={{ color: '#0D0D0D', fontWeight: 'bold' }}>Date</TableCell>
+                            <TableCell align="center" style={{ color: '#0D0D0D', fontWeight: 'bold' }}>Total&nbsp;(USD)</TableCell>
+                            <TableCell align="center" style={{ color: '#0D0D0D', fontWeight: 'bold' }}>Is Checked ?</TableCell>
+                            <TableCell align="center" style={{ color: '#0D0D0D', fontWeight: 'bold' }}>Recieved&nbsp;(USD)</TableCell>
+                            <TableCell align="center" style={{ color: '#0D0D0D', fontWeight: 'bold' }}>Is Paid ?</TableCell>
                         </TableRow>
                     </TableHead>
                     <TableBody>

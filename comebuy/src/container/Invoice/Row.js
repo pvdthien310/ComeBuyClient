@@ -89,23 +89,6 @@ const Row = (props) => {
         setOpenSnackbar(false);
     };
 
-    // React.useEffect(() => {
-    //     if (dataForUpdate.isChecked === true) {
-    //         if (dataForUpdate.isPaid === true) {
-    //             setIsChecked(true)
-    //             setIsPaid(true)
-    //             setDisableCheck(true)
-    //             setDisablePaid(true)
-    //         } else {
-    //             setIsChecked(true)
-    //             setIsPaid(false)
-    //         }
-    //     } else {
-    //         setDisablePaid(true)
-    //     }
-    //     return;
-    // }, [])
-
     const [updating, setUpdating] = React.useState(false)
 
     const dispatch = useDispatch()
@@ -230,6 +213,7 @@ const Row = (props) => {
                     <Button
                         aria-describedby={id}
                         onClick={handleClick}
+                        style={{ color: '#F2EFE9' }}
                     >
                         {row.account.userid}
                     </Button>
@@ -247,7 +231,7 @@ const Row = (props) => {
                     </Popover>
                 </TableCell>
                 <TableCell align="center" style={{ color: '#F2EFE9' }}>{row.date}</TableCell>
-                <TableCell align="center" style={{ color: 'red', fontWeight: 'bold' }}>{row.total}</TableCell>
+                <TableCell align="center" style={{ color: '#F2EFE9', fontWeight: 'bold' }}>{row.total}</TableCell>
                 <TableCell align="center">
                     <FormGroup>
                         <FormControlLabel
@@ -259,7 +243,7 @@ const Row = (props) => {
                         />
                     </FormGroup>
                 </TableCell>
-                <TableCell align="center" style={{ fontWeight: 'bold', color: '#D7F205' }}>{dataForUpdate.moneyReceived}</TableCell>
+                <TableCell align="center" style={{ fontWeight: 'bold', color: '#F2EFE9' }}>{dataForUpdate.moneyReceived}</TableCell>
                 <TableCell align="center">
                     <FormGroup>
                         <FormControlLabel
