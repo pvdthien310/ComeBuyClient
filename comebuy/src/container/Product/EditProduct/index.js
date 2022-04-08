@@ -36,6 +36,7 @@ import FeatureSelect from "../../../components/FeatureSelect.js";
 import AddPhotoAlternateIcon from '@mui/icons-material/AddPhotoAlternate';
 import { color } from "@mui/system";
 import productImageAPI from "../../../api/productImageAPI";
+import PreviewImagesModal from "../../../components/PreviewImagesModal";
 
 
 
@@ -77,6 +78,26 @@ const EditProduct = () => {
     const [warranty, SetWarranty] = useState(product.warranty)
     const [price, SetPrice] = useState(product.price)
     const [productImages, SetProductImages] = useState(product.productimage)
+    const [selectedFiles, SetSelectedFiles] = useState([]);
+    const [previewSource, SetPreviewSource] = useState([])
+    const [openPreviewModal, SetOpenPreviewModel] = useState(false)
+
+    const handleImageChange = (e) => {
+        SetSelectedFiles(e.target.files)
+        if (e.target.files) {
+            const filesArray = Array.from(e.target.files).map((file) => URL.createObjectURL(file));
+            SetPreviewSource(filesArray);
+            Array.from(e.target.files).map(
+                (file) => URL.revokeObjectURL(file) // avoid memory leak
+            );
+        }
+    };
+    useEffect(() => {
+        if (previewSource.length >= 1) {
+            console.log(selectedFiles)
+            SetOpenPreviewModel(true)
+        }
+    }, [previewSource])
 
 
     const handleValueChange = (event) => {
@@ -265,6 +286,7 @@ const EditProduct = () => {
                     <BallotIcon />
                     <Typography variant='h6' fontWeight='bold'>Edit Technical Specifications</Typography>
                 </Stack>
+                <PreviewImagesModal open={openPreviewModal} onClose={() => SetOpenPreviewModel(false)} images={previewSource}></PreviewImagesModal>
                 <Box sx={{ backgroundColor: '#8F8EBF', height: 5, width: '100%' }}></Box>
                 <Typography variant='h6' fontWeight='bold'>Images</Typography>
                 {
@@ -281,7 +303,10 @@ const EditProduct = () => {
                         :
                         <Stack sx={{ backgroundColor: '#5F5DA6', padding: 2, margin: 3, borderRadius: 5 }}>
                             <Typography sx={{ alignSelf: 'center', color: 'white', margin: 2 }} variant='h6' fontWeight='bold'>No Images</Typography>
-                            <Button sx={style.AddImageButton} endIcon={<AddPhotoAlternateIcon />}>Add Image</Button>
+                            <Button component="label" sx={style.AddImageButton} endIcon={<AddPhotoAlternateIcon />}>
+                                <Typography variant="overline" fontWeight="bold">Upload Image</Typography>
+                                <input multiple accept="image/*" type="file" hidden onChange={handleImageChange} />
+                            </Button>
                         </Stack>
                 }
                 <Grid sx={{ marginTop: 5 }} container>

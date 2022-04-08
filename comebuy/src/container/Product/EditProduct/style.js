@@ -59,6 +59,8 @@ const style = {
         fontWeight: 'bold',
         color: 'black',
         height: '50px',
+        justifyContent:'center',
+        alignItems:'center',
         '&:hover': {
             backgroundColor: '#A6A6A4'
         }
