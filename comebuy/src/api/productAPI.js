@@ -13,7 +13,7 @@ const productAPI = {
         return res
     },
     getProductWithID: async (id) => {
-        const res = DatabaseClient.get('/' + baseURL + `/${id}`)
+        const res = await DatabaseClient.get('/' + baseURL + `/${id}`)
         return res;
     }
 }

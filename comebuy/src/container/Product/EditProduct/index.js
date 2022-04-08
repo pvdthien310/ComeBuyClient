@@ -13,6 +13,7 @@ import { Pagination } from "swiper";
 import { featureListSelector } from "../../../redux/selectors";
 import { getAll } from "../../../redux/slices/featureSlice";
 import SnackBarAlert from "../../../components/SnackBarAlert";
+import cloudinaryApi from "../../../api/cloudinaryAPI"
 //icon styles
 import BallotIcon from '@mui/icons-material/Ballot';
 import MemoryIcon from '@mui/icons-material/Memory';
@@ -34,9 +35,9 @@ import CottageIcon from '@mui/icons-material/Cottage';
 import ImageForEditProduct from "../../../components/ImageForEditProduct";
 import FeatureSelect from "../../../components/FeatureSelect.js";
 import AddPhotoAlternateIcon from '@mui/icons-material/AddPhotoAlternate';
-import { color } from "@mui/system";
 import productImageAPI from "../../../api/productImageAPI";
 import PreviewImagesModal from "../../../components/PreviewImagesModal";
+import ImageNotSupportedIcon from '@mui/icons-material/ImageNotSupported';
 
 
 
@@ -48,8 +49,8 @@ const EditProduct = () => {
     const [openErrorAlert, setOpenErrorAlert] = useState(false);
     const [messageError, setMessageError] = useState("No Error")
     const [messageSuccess, setMessageSuccess] = useState("Notification")
-    const [featureList, setFeatureList] = useState(_featureList);
-    const [currentFeature, setCurrentFeature] = useState(product.feature.map((item) => item.name))
+    const [featureList, setFeatureList] = useState(_featureList);  /// All of features 
+    const [currentFeature, setCurrentFeature] = useState(product.feature.map((item) => item.name))  ///feature of current product
     const navigate = useNavigate()
     const dispatch = useDispatch()
 
@@ -69,7 +70,6 @@ const EditProduct = () => {
     const [memory, SetMemory] = useState(product.memory)
     const [description, SetDescription] = useState(product.description)
     const [screenDimension, SetScreenDimension] = useState(product.screenDimension)
-    const [store, SetStore] = useState(product.store)
     const [battery, SetBattery] = useState(product.battery)
     const [weight, SetWeight] = useState(product.weight)
     const [origin, SetOrigin] = useState(product.origin)
@@ -78,27 +78,57 @@ const EditProduct = () => {
     const [warranty, SetWarranty] = useState(product.warranty)
     const [price, SetPrice] = useState(product.price)
     const [productImages, SetProductImages] = useState(product.productimage)
-    const [selectedFiles, SetSelectedFiles] = useState([]);
     const [previewSource, SetPreviewSource] = useState([])
-    const [openPreviewModal, SetOpenPreviewModel] = useState(false)
+    const [openPreviewModal, SetOpenPreviewModal] = useState(false)
 
-    const handleImageChange = (e) => {
-        SetSelectedFiles(e.target.files)
+    const handleImageChange = async (e) => {
         if (e.target.files) {
-            const filesArray = Array.from(e.target.files).map((file) => URL.createObjectURL(file));
-            SetPreviewSource(filesArray);
-            Array.from(e.target.files).map(
-                (file) => URL.revokeObjectURL(file) // avoid memory leak
-            );
+            const listFile = []
+            for (let i = 0; i < e.target.files.length; i++) {
+                let reader = new FileReader();
+                reader.readAsDataURL(e.target.files[i])
+                reader.onloadend = () => {
+                    listFile.push(reader.result);
+                    if (i == e.target.files.length - 1)
+                        SetPreviewSource(listFile)
+                }
+            }
         }
     };
+
+    const handleUploadImages = async () => {
+        if (!previewSource) return
+        try {
+            const response = await cloudinaryApi.uploadImages(JSON.stringify({ data: previewSource }))
+            if (response) {
+                setMessageSuccess("Upload Images Product To Storage Successfully")
+                setOpenSuccessAlert(true)
+                SetOpenPreviewModal(false)
+                const newImagesList = []
+                response.data.map((imgurl) => {
+                    newImagesList.push({
+                        imageURL: imgurl,
+                        productID: product.productID
+                    })
+                })
+                SetProductImages(productImages.concat(newImagesList))
+            }
+            else {
+                setMessageError("Upload Images Product Failed")
+                setOpenErrorAlert(true)
+            }
+        }
+        catch (err) {
+            setMessageError("Upload Images Product Failed")
+            setOpenErrorAlert(true)
+        }
+    }
+
     useEffect(() => {
         if (previewSource.length >= 1) {
-            console.log(selectedFiles)
-            SetOpenPreviewModel(true)
+            SetOpenPreviewModal(true)
         }
     }, [previewSource])
-
 
     const handleValueChange = (event) => {
         switch (event.target.name) {
@@ -268,7 +298,7 @@ const EditProduct = () => {
         SetPrice(product.price)
         SetProductImages(product.productimage)
         SetRam(product.ram)
-        SetStore(product.store)
+        // SetStore(product.store)
         SetWarranty(product.warranty)
         SetScreenDimension(product.screenDimension)
     }, [product])
@@ -286,12 +316,12 @@ const EditProduct = () => {
                     <BallotIcon />
                     <Typography variant='h6' fontWeight='bold'>Edit Technical Specifications</Typography>
                 </Stack>
-                <PreviewImagesModal open={openPreviewModal} onClose={() => SetOpenPreviewModel(false)} images={previewSource}></PreviewImagesModal>
+                <PreviewImagesModal open={openPreviewModal} onSubmit={handleUploadImages} onClose={() => SetOpenPreviewModal(false)} images={previewSource}></PreviewImagesModal>
                 <Box sx={{ backgroundColor: '#8F8EBF', height: 5, width: '100%' }}></Box>
                 <Typography variant='h6' fontWeight='bold'>Images</Typography>
                 {
                     productImages.length > 0 ?
-                        <Swiper sx={{}} slidesPerView={1} modules={[Pagination]} spaceBetween={30} pagination={true}>
+                        <Swiper slidesPerView={1} modules={[Pagination]} spaceBetween={30} pagination={true}>
                             {
                                 productImages.map((item, i) => (
                                     <SwiperSlide key={i}>
@@ -303,12 +333,12 @@ const EditProduct = () => {
                         :
                         <Stack sx={{ backgroundColor: '#5F5DA6', padding: 2, margin: 3, borderRadius: 5 }}>
                             <Typography sx={{ alignSelf: 'center', color: 'white', margin: 2 }} variant='h6' fontWeight='bold'>No Images</Typography>
-                            <Button component="label" sx={style.AddImageButton} endIcon={<AddPhotoAlternateIcon />}>
-                                <Typography variant="overline" fontWeight="bold">Upload Image</Typography>
-                                <input multiple accept="image/*" type="file" hidden onChange={handleImageChange} />
-                            </Button>
                         </Stack>
                 }
+                <Button component="label" sx={style.AddImageButton} endIcon={<AddPhotoAlternateIcon />}>
+                    <Typography variant="overline" fontWeight="bold">Upload Image</Typography>
+                    <input multiple accept="image/*" type="file" hidden onChange={handleImageChange} />
+                </Button>
                 <Grid sx={{ marginTop: 5 }} container>
                     <Grid item xs={12}>
                         <FeatureSelect item="true" features={featureList} currentFeature={currentFeature} handleFeatureChange={handleFeatureChosen} />
