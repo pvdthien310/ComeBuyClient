@@ -1,23 +1,29 @@
 import { Stack, TextField } from '@mui/material'
 import Typography from '@mui/material/Typography';
+import { memo } from 'react';
 
-const TextFieldForEdit = ({ Icon, Title, Text }) => {
+const TextFieldForEdit = (props) => {
+
     return (
-        <Stack spacing={1}> 
+        /// Set key to re render child component when props change :))))
+        <Stack key={props.Text} spacing={1}>
             <Stack
                 direction="row"
                 spacing={1}>
-                {Icon}
-                <Typography fontWeight='bold'>{Title}</Typography>
+                {props.Icon}
+                <Typography fontWeight='bold'>{props.Title}</Typography>
             </Stack>
             <TextField
-                label={Title }
-                placeholder={Text.toString()}
-                defaultValue={Text}
+                autoFocus
+                name={props.Title.split(' (')[0]}
+                label={props.Title}
+                placeholder={props.Text.toString()}
+                defaultValue={props.Text}
+                onChange={props.onChange}
                 variant="standard"
             />
         </Stack>
     )
 }
 
-export default TextFieldForEdit;
+export default memo(TextFieldForEdit);

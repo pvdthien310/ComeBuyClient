@@ -33,7 +33,7 @@ const MainLayout = props => {
         return <Route key={index} path={route.path} element={route.page} />;
       });
     }
-    result.push(<Route key={routes.length} path="*" element={NotFound} />);
+    result.push(<Route key={routes.length} path="/error" element={<NotFound/>} />);
     return result;
   };
 

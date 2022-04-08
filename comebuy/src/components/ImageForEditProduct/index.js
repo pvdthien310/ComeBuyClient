@@ -26,18 +26,17 @@ const ProductImage = styled('img')(({ theme }) => ({
     height: '100%'
 }))
 
-const ImageForEditProduct = ({ image }) => {
+const ImageForEditProduct = (props) => {
     const [open, setOpen] = React.useState(false);
-    const handleClickOpen = () => {
-        setOpen(true);
-    };
-
-    const handleClose = () => {
-        setOpen(false);
-    };
+    const handleClickOpen = () => setOpen(true)
+    const handleClose = () => setOpen(false)
+    const handleDelete = () => {
+        props.deleteImage(props.image)
+        handleClose()
+    }
     return (
         <Grid sx={style.container}>
-            <ProductImage item="true" xs={12} src={image}></ProductImage>
+            <ProductImage item="true" xs={12} src={props.image.imageURL}></ProductImage>
             <DeleteButton item="true" variant="contained" onClick={handleClickOpen} startIcon={<DeleteIcon />}>Delete</DeleteButton>
             <Dialog
                 item="true"
@@ -47,17 +46,16 @@ const ImageForEditProduct = ({ image }) => {
                 aria-describedby="alert-dialog-description"
             >
                 <DialogTitle id="alert-dialog-title">
-                    {"Use Google's location service?"}
+                    {"Do you really want to delete this photo?"}
                 </DialogTitle>
                 <DialogContent>
                     <DialogContentText id="alert-dialog-description">
-                        Let Google help apps determine location. This means sending anonymous
-                        location data to Google, even when no apps are running.
+                       You have just deleted this photo. Please confirm again for reliability because this action is not allowed to redo?
                     </DialogContentText>
                 </DialogContent>
                 <DialogActions>
                     <Button onClick={handleClose}>Disagree</Button>
-                    <Button onClick={handleClose} autoFocus>
+                    <Button onClick={handleDelete} autoFocus>
                         Agree
                     </Button>
                 </DialogActions>

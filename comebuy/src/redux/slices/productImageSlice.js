@@ -13,6 +13,19 @@ export const getProductImageWithID = createAsyncThunk(
     }
 )
 
+// export const addMany = createAsyncThunk(
+//     'product/addMany',
+//     async (data, { rejectedWithValue }) => {
+//         const response = await productImageAPI.addMany(data)
+//         if (!response) {
+//             return rejectedWithValue(" Add product image failed")
+//         } else {
+//             return response.data
+//         }
+//     }
+// )
+
+
 export const productImageSlice = createSlice({
     name: 'productImage',
     initialState: {
@@ -42,6 +55,7 @@ export const productImageSlice = createSlice({
         },
         [getProductImageWithID.rejected]: (state, action) => {
             state.loading = false;
-        }
+        },
+     
     }
 })

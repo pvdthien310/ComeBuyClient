@@ -53,6 +53,27 @@ const style = {
         backgroundColor: '#012030',
         marginTop: '10px',
         marginBottom: '20px'
+    },
+    AddImageButton: {
+        backgroundColor: 'white',
+        fontWeight: 'bold',
+        color: 'black',
+        height: '50px',
+        '&:hover': {
+            backgroundColor: '#A6A6A4'
+        }
+    },
+    SaveButton:{
+        backgroundColor: "#008080",
+        '&:hover': {
+            backgroundColor: '#027373'
+        }
+    },
+    BackButton:{
+        backgroundColor: "#404040",
+        '&:hover': {
+            backgroundColor: '#323E40'
+        }
     }
 
 };

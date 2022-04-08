@@ -29,6 +29,7 @@ import { productListSelector } from './../../redux/selectors'
 import { getAll } from './../../redux/slices/productSlice'
 import AddProduct from "./AddProduct";
 import EditProduct from "./EditProduct";
+import SnackBarAlert from "../../components/SnackBarAlert";
 
 const BGImg = styled('img')({
     height: '100%',
@@ -43,7 +44,7 @@ const ProductTable = styled(DataGrid)(({ theme }) => ({
     width: 1200,
     position: 'relative',
     backgroundColor: 'white',
-   
+
 }));
 
 const Product = () => {
@@ -52,11 +53,24 @@ const Product = () => {
     const dispatch = useDispatch()
     const [productList, setProductList] = useState(_productList)
     const navigate = useNavigate()
-    const initalValue = {index : 0, value: null}
+    const initalValue = { index: 0, value: null }
+    //For Alert
+    const [openSuccessAlert, setOpenSuccessAlert] = useState(false);
+    const [openErrorAlert, setOpenErrorAlert] = useState(false);
+    const [messageError, setMessageError] = useState("No Error")
+    const [messageSuccess, setMessageSuccess] = useState("Notification")
+
+    const handleClose = (event, reason) => {
+        if (reason === 'clickaway')
+            return;
+        setOpenSuccessAlert(false);
+        setOpenErrorAlert(false);
+    };
 
     /// For modal
     const [openModal, setOpenModal] = useState(false);
     const [currentProduct, setCurrentProduct] = useState(initalValue);
+
     const handleOpenModal = () => setOpenModal(true);
     const handleCloseModal = () => setOpenModal(false);
 
@@ -76,7 +90,7 @@ const Product = () => {
 
     const showDetail = useCallback(
         (value) => () => {
-            setCurrentProduct({index : Math.random(), value : value})
+            setCurrentProduct({ index: Math.random(), value: value })
             // handleOpenModal()
         }, [],
     );
@@ -133,19 +147,26 @@ const Product = () => {
                 .unwrap()
                 .then((originalPromiseResult) => {
                     setProductList(originalPromiseResult)
+                    setMessageSuccess("Load Product Successfully")
+                    setOpenSuccessAlert(true)
                 })
                 .catch((rejectedValueOrSerializedError) => {
                     console.log("Error load product")
+                    setMessageError("Error Load Product List")
+                    setOpenErrorAlert(true)
                 })
         }
-        if (_productList.length > 0)
+        if (_productList.length > 0) {
             setProductList(_productList)
+            setMessageSuccess("Load Product Successfully")
+            setOpenSuccessAlert(true)
+        }
         return () => { setProductList({}) }
     }, [_productList])
 
     const handleOnCellClick = async (e) => {
         if (e.value != undefined) {
-            setCurrentProduct({index : Math.random(), value : e.row})
+            setCurrentProduct({ index: Math.random(), value: e.row })
         }
     };
 
@@ -170,6 +191,9 @@ const Product = () => {
                 getRowId={(row) => row.productID}
                 onCellClick={handleOnCellClick}
             />
+            <SnackBarAlert severity='success' open={openSuccessAlert} handleClose={handleClose} message={messageSuccess} />
+            <SnackBarAlert severity='error' open={openErrorAlert} handleClose={handleClose} message={messageError} />
+
             <Box sx={{ height: 50 }}></Box>
             <Routes>
                 <Route path='add' element={<AddProduct />}></Route>

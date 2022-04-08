@@ -15,7 +15,7 @@ import TablePagination from '@mui/material/TablePagination';
 import Paper from '@mui/material/Paper';
 
 
-const Invoice = () => {
+const  Invoice = () => {
 
     const [invoiceList, setInvoiceList] = React.useState([])
 

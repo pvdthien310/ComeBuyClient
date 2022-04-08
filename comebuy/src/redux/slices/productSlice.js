@@ -24,7 +24,12 @@ export const editProduct = createAsyncThunk(
       return rejectWithValue("Get All Failed");
     }
     else {
-      return data;
+      const response_2 = await productAPI.getProductWithID(data.productID)
+      if (response_2.status != 200) {
+        return rejectWithValue("Get All Failed");
+      }
+      else
+        return response_2.data;
     }
   }
 );
