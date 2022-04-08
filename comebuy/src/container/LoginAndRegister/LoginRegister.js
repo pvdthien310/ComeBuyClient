@@ -204,6 +204,15 @@ const LoginRegister = () => {
         handleCloseModal()
     };
 
+    const [openLoginFailed, setOpenLoginFailed] = React.useState(false);
+    const handleCloseLoginFailed = (event, reason) => {
+        if (reason === 'clickaway') {
+            return;
+        }
+
+        setOpenLoginFailed(false);
+    };
+
     const handleCloseDialogRegFailed = () => {
         setOpenDialogRegFailed(false);
         setCanReg(true);
@@ -251,7 +260,9 @@ const LoginRegister = () => {
                     const originalPromiseResult = unwrapResult(resultAction)
                     // handle result here
                 } catch (rejectedValueOrSerializedError) {
-                    console.log(rejectedValueOrSerializedError);
+                    if (rejectedValueOrSerializedError != null) {
+                        setOpenLoginFailed(true)
+                    }
                 }
             }
         }
@@ -855,6 +866,12 @@ const LoginRegister = () => {
                                 <p>loading.....</p> :
                                 null
                         }
+                        {/*Snackbar*/}
+                        <Snackbar open={openLoginFailed} autoHideDuration={6000} onClose={handleCloseLoginFailed}>
+                            <Alert onClose={handleCloseLoginFailed} severity="error" sx={{ width: '100%' }}>
+                                Wrong verify code. Please try again.
+                            </Alert>
+                        </Snackbar>
                     </form>
                 </div>
             </div >

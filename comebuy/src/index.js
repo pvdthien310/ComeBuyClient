@@ -6,8 +6,7 @@ import reportWebVitals from './reportWebVitals';
 import { Provider } from 'react-redux'
 import store from './redux/store.js'
 import { BrowserRouter } from 'react-router-dom';
-
-import Invoice from './container/Invoice/index'
+import ScrollButton from './components/ScrollButton/ScrollButton';
 
 ReactDOM.render(
   // <React.StrictMode>
@@ -19,6 +18,7 @@ ReactDOM.render(
   <Provider store={store}>
     <BrowserRouter>
       <App />
+      <ScrollButton />
     </BrowserRouter>
   </Provider>,
   document.getElementById('root')
