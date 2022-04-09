@@ -9,6 +9,9 @@ import InputLabel from '@mui/material/InputLabel';
 import MenuItem from '@mui/material/MenuItem';
 import FormControl from '@mui/material/FormControl';
 import Select from '@mui/material/Select';
+import Snackbar from '@mui/material/Snackbar';
+import Alert from '@mui/material/Alert';
+
 
 import DatePicker from 'react-datepicker';
 import "react-datepicker/dist/react-datepicker.css"
@@ -17,7 +20,7 @@ import { useSelector } from 'react-redux';
 
 import NavBar from './../../components/NavBar/NavBar';
 import { currentUser } from '../../redux/selectors';
-import { TrainOutlined } from '@material-ui/icons';
+import * as Validation from '././../LoginAndRegister/ValidationDataForAccount'
 
 
 const ProfileManage = () => {
@@ -30,7 +33,12 @@ const ProfileManage = () => {
     const [isChanged, setIsChanged] = useState(true)
 
     const [openModalChangeName, setOpenModalChangeName] = useState(false)
-    const handleCloseModalChangeName = () => { setOpenModalChangeName(false) }
+    const handleCloseModalChangeName = () => {
+        if (name != _currentUser.name) {
+            setName(_currentUser.name)
+        }
+        setOpenModalChangeName(false)
+    }
 
     const handleOpenModalChangeName = () => {
         setOpenModalChangeName(true)
@@ -47,6 +55,28 @@ const ProfileManage = () => {
     const [toggleSaveBtn, setToggleSaveBtn] = useState(false)
 
     const handleToggleSaveButton = () => setToggleSaveBtn(true)
+
+    // change name
+    const [name, setName] = useState(_currentUser.name)
+    const handleChangeName = () => {
+        if (name.length <= 5 || name === "" || Validation.CheckUsername(name)) {
+            setOpenNameWrong(true);
+            setName(_currentUser.name)
+        } else {
+            console.log("Ready to update name")
+            console.log(name)
+            //Doing with dispatch to update name to server here
+        }
+    }
+
+    const [openNameWrong, setOpenNameWrong] = useState(false);
+
+    const handleCloseNameWrong = (event, reason) => {
+        if (reason === 'clickaway') {
+            return;
+        }
+        setOpenNameWrong(false);
+    };
 
 
 
@@ -73,7 +103,7 @@ const ProfileManage = () => {
                     </IconButton>
                     <Stack direction="column" spacing={0.5}>
                         <Stack direction="row">
-                            <Typography style={{ fontSize: '23px', fontWeight: 'bold', marginTop: '10%', marginLeft: '5%' }}>{_currentUser.name}</Typography>
+                            <Typography style={{ fontSize: '23px', fontWeight: 'bold', marginTop: '10%', marginLeft: '5%' }}>{name}</Typography>
                             <IconButton onClick={handleOpenModalChangeName} style={{ marginTop: '8%', marginLeft: '5%' }}>
                                 <BorderColorSharpIcon />
                             </IconButton>
@@ -194,15 +224,25 @@ const ProfileManage = () => {
                     <TextField
                         style={{ width: '100%', marginTop: '2%' }}
                         label={_currentUser.name}
+                        value={name}
                         onFocus={handleToggleSaveButton}
+                        onChange={e => setName(e.target.value)}
                     />
                     {toggleSaveBtn ? (
-                        <Button style={{ marginLeft: '40%' }}>Save</Button>
+                        <Button onClick={handleChangeName} style={{ marginLeft: '40%' }}>Save</Button>
                     ) : (
                         null
                     )}
                 </Box>
             </Modal>
+
+            {/*Snackbar*/}
+            <Snackbar open={openNameWrong} autoHideDuration={6000} onClose={handleCloseNameWrong}>
+                <Alert onClose={handleCloseNameWrong} severity="error" sx={{ width: '100%' }}>
+                    Username can't have length under 5 and can't have only space or any of these letter /^ *$.,;:@#""''-!`~%&\/(){ }[]/
+                </Alert>
+            </Snackbar>
+
         </div>
     )
 }
