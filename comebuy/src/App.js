@@ -7,11 +7,16 @@ import { adminRoutes, adminMenuItems } from './route/AdminRoutes';
 import { staffMenuItems, staffRoutes } from './route/StaffRoutes';
 import { managerRoutes, managerMenuItems } from './route/ManagerRoutes';
 import { useState, useEffect } from 'react';
-import Staff from './container/Staff';
+import CustomerPlace from './container/CustomerPlace/index';
+import { currentUser } from './redux/selectors';
+import { useSelector } from 'react-redux';
+import Profile from './container/Profile';
 
 function App() {
   const role = localStorage.getItem('role');
   const navigate = useNavigate()
+
+  const _currentUser = useSelector(currentUser)
 
   useEffect(() => {
     navigate('/')
@@ -36,11 +41,14 @@ function App() {
     return <HomePage />
   };
 
+  const pathProfile = "profiles/" + _currentUser.email + "/comebuywith" + _currentUser.name;
 
   return (
     <Routes>
       <Route path="*" element={renderRoutes()} />
       <Route path="login" element={<LoginRegister />} />
+      <Route path="myplace" element={<CustomerPlace />} />
+      <Route path={pathProfile} element={<Profile />} />
     </Routes>
   );
 }
