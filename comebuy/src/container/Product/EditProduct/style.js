@@ -55,10 +55,12 @@ const style = {
         marginBottom: '20px'
     },
     AddImageButton: {
-        backgroundColor: 'white',
+        backgroundColor: 'black',
         fontWeight: 'bold',
-        color: 'black',
+        color: 'white',
         height: '50px',
+        width:'100%',
+        marginTop: 2,
         justifyContent:'center',
         alignItems:'center',
         '&:hover': {

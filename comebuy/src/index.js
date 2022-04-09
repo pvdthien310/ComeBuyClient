@@ -12,7 +12,7 @@ ReactDOM.render(
   <Provider store={store}>
     <BrowserRouter>
       <App />
-      <ScrollButton />
+      {/* <ScrollButton /> */}
     </BrowserRouter>
   </Provider>,
   document.getElementById('root')

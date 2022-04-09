@@ -20,7 +20,6 @@ const ProductImage = styled('img')({
 })
 
 const PreviewImagesModal = (props) => {
-    console.log(props.images)
     return (
         <div>
             <Modal
@@ -45,14 +44,15 @@ const PreviewImagesModal = (props) => {
                     <Swiper slidesPerView={1} modules={[Pagination]} spaceBetween={30} pagination={true}>
                         {
                             props.images.map((item, i) => (
-                                <SwiperSlide SwiperSlide key={i} >
+                                <SwiperSlide key={i} >
                                     <ProductImage src={item} key={item} />
                                 </SwiperSlide>
                             ))
                         }
 
                     </Swiper>
-                    <Button onClick={props.onClose} >sadsadsad</Button>
+                    <Button onClick={props.onClose} >Back</Button>
+                    <Button onClick={props.onSubmit} >Submit</Button>
                 </Box>
 
             </Modal>
