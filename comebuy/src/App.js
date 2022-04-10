@@ -28,7 +28,7 @@ function App() {
         case 'staff':
           return <MainLayout routes={staffRoutes} />;
         case 'admin':
-          return <MainLayout routes={adminRoutes} />;
+          return <MainLayout routes={adminRoutes} itemRoutes={adminMenuItems}/>;
         default:
           return <HomePage />; // Guest/Customer 
       }

@@ -13,7 +13,7 @@ import { Route, Routes, Navigate, useNavigate } from 'react-router-dom';
 import NotFound from '../../container/NotFound';
 import { useDispatch } from 'react-redux';
 import { accountSlice } from '../../redux/slices/accountSlice';
-import { IconButton } from '@mui/material';
+import { IconButton, Stack } from '@mui/material';
 import MenuIcon from '@mui/icons-material/Menu';
 import { styled, alpha } from '@mui/material/styles';
 
@@ -33,7 +33,7 @@ const MainLayout = props => {
         return <Route key={index} path={route.path} element={route.page} />;
       });
     }
-    result.push(<Route key={routes.length} path="/error" element={<NotFound/>} />);
+    result.push(<Route key={routes.length} path="/error" element={<NotFound />} />);
     return result;
   };
 
@@ -52,7 +52,7 @@ const MainLayout = props => {
         if (element.name == e.target.innerText)
           matchPath = element.path;
       });
-      if (matchPath != null) navigate(matchPath.replace('/*',''))
+      if (matchPath != null) navigate(matchPath.replace('/*', ''))
       else navigate('*')
     }
   }
@@ -71,7 +71,7 @@ const MainLayout = props => {
       onKeyDown={toggleDrawer(anchor, false)}
     >
       <List>
-        {(props.routes).map((route, index) => (
+        {(props.itemRoutes).map((route, index) => (
           <ListItem button key={route.name} onClick={ItemClick}>
             <ListItemIcon>
               {index % 2 === 0 ? <InboxIcon /> : <MailIcon />}
@@ -94,9 +94,9 @@ const MainLayout = props => {
     </Box>
   );
   return (
-    <div>
+    <div style={{height: 850}}>
       <React.Fragment key={'left'}>
-        <IconButton size="large" onClick={toggleDrawer('left', true)}><MenuIcon /></IconButton>
+        <IconButton  size="large" onClick={toggleDrawer('left', true)}><MenuIcon /></IconButton>
         <Drawer
           anchor={'left'}
           open={state}
@@ -106,7 +106,7 @@ const MainLayout = props => {
         </Drawer>
       </React.Fragment>
 
-      <div >
+      <div  style={{height: "80%"}}>
         <Routes>
           {showRoutes(props.routes)}
           <Route element={

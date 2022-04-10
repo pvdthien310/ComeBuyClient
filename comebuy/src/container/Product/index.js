@@ -12,7 +12,8 @@ import {
     GridActionsCellItem
 } from '@mui/x-data-grid';
 import { Route, Routes, useNavigate } from 'react-router-dom'
-import { Stack, Grid, Box } from '@mui/material';
+import { Box, Stack } from '@mui/material';
+import { Button } from '@mui/material'
 // icons 
 import DeleteIcon from '@mui/icons-material/Delete';
 import EditIcon from '@mui/icons-material/Edit';
@@ -173,11 +174,13 @@ const Product = () => {
     }, [currentProduct])
 
     return (
-        <div style={{
-            width: '100%',
-            height: '100%',
+        <Stack direction="column" sx={{
+            width: "100%",
+            height: "100%",
+            
         }}>
             <BGImg src='https://images.unsplash.com/photo-1490810194309-344b3661ba39?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1448&q=80' />
+            <Button sx={{ height: 50, width: 100 }} onClick={() => navigate("/product/add")}>Add Product</Button>
             <DetailProductModal open={openModal} onClose={handleCloseModal} product={currentProduct.value} />
             <ProductTable
                 pageSize={pageSize}
@@ -192,11 +195,11 @@ const Product = () => {
             <SnackBarAlert severity='error' open={openErrorAlert} handleClose={handleClose} message={messageError} />
 
             <Box sx={{ height: 50 }}></Box>
-            <Routes>
+            {/* <Routes>
                 <Route path='add' element={<AddProduct />}></Route>
                 <Route path='edit' element={<EditProduct />}></Route>
-            </Routes>
-        </div>
+            </Routes> */}
+        </Stack>
     );
 }
 

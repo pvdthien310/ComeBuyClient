@@ -253,11 +253,10 @@ const EditProduct = () => {
     const UpdateFeature = async () => {
         if (product.feature.length != currentFeature.length) {
             const response = await productAPI.deleteAndUpdate_Feature(product.productID, ConvertToFeatureIDList(currentFeature))
-            if (response.status == 200)
-            {
+            if (response.status == 200) {
                 console.log("Update Feature Successfully")
                 return true;
-            } 
+            }
             else {
                 console.log("Update Feature Failed")
                 return false
@@ -267,8 +266,7 @@ const EditProduct = () => {
             for (let i = 0; i < currentFeature.length; i++) {
                 if (currentFeature[i] != product.feature[i]) {
                     const response = await productAPI.deleteAndUpdate_Feature(product.productID, ConvertToFeatureIDList(currentFeature))
-                    if (response.status == 200) 
-                    {
+                    if (response.status == 200) {
                         console.log("Update Feature Successfully")
                         return true;
                     }
@@ -443,11 +441,12 @@ const EditProduct = () => {
                     <Grid item xs={12} paddingLeft={2} paddingTop={2}>
                     </Grid>
                 </Grid>
+                <Stack sx={{ width:'100%',justifyContent:'center'}} direction='row' spacing={3}>
+                    <Button sx={style.BackButton} variant="contained" onClick={() => navigate('/product')}>Back</Button>
+                    <Button sx={style.SaveButton} variant="contained" onClick={SaveChange}>Save</Button>
+                </Stack>
             </Box>
-            <Stack direction='row' spacing={3}>
-                <Button sx={style.BackButton} variant="contained" onClick={() => navigate('/product')}>Back</Button>
-                <Button sx={style.SaveButton} variant="contained" onClick={SaveChange}>Save</Button>
-            </Stack>
+
             {/* Alert init */}
             <SnackBarAlert severity='success' open={openSuccessAlert} handleClose={handleClose} message={messageSuccess} />
             <SnackBarAlert severity='error' open={openErrorAlert} handleClose={handleClose} message={messageError} />
