@@ -196,8 +196,6 @@ const EditProduct = () => {
         );
     };
 
-    useEffect(() => console.log(currentFeature), [currentFeature])
-
     const UpdateImages = async () => {
         const response = await productImageAPI.deleteImagesOfProduct(product.productID)
         if (response != undefined && response.status == 200) {

@@ -77,7 +77,6 @@ const FeatureChart = (props) => {
                         fullMark: 160,
                     })
         }
-        console.log(res)
         return res
     }
    
