@@ -5,14 +5,13 @@ import Typography from '@mui/material/Typography';
 import Modal from '@mui/material/Modal';
 import { Grid, Stack } from '@mui/material';
 import { Swiper, SwiperSlide } from "swiper/react";
-import { useDispatch, useSelector } from 'react-redux'
 import "swiper/css";
 import "swiper/css/pagination";
 import { Pagination } from "swiper";
 import { styled } from '@mui/material/styles';
 import BallotIcon from '@mui/icons-material/Ballot';
 import style from './style.js'
-import TechInforLine from '../TechInforLine/TechInforLine.js';
+import TechInforLine from '../TechInforLine';
 import MemoryIcon from '@mui/icons-material/Memory';
 import ScreenshotMonitorIcon from '@mui/icons-material/ScreenshotMonitor';
 import InventoryIcon from '@mui/icons-material/Inventory';
@@ -22,6 +21,7 @@ import ChromeReaderModeIcon from '@mui/icons-material/ChromeReaderMode';
 import Battery3BarIcon from '@mui/icons-material/Battery3Bar';
 import ScaleIcon from '@mui/icons-material/Scale';
 import DescriptionIcon from '@mui/icons-material/Description';
+import FeatureChart from '../FeatureChart'
 
 const ProductImage = styled('img')({
     height: 300,
@@ -43,27 +43,27 @@ const DetailProductModal = ({ open, product, onClose }) => {
                     product != null ?
                         <Box sx={style.boxContainer}>
                             <Grid container>
-                                <Grid item xs={10}>
-                                    <Typography item={true} xs={12} color="#152659" id="modal-modal-title" fontWeight='bold' variant="h6" component="h2">
+                                <Grid item xs={11}>
+                                    <Typography item xs={12} color="#152659" id="modal-modal-title" fontWeight='bold' variant="h6" component="h2">
                                         {product.name}
                                     </Typography>
                                 </Grid>
-                                <Grid item xs={2}>
-                                    <Typography item={true} xs={12} color="#152659" id="modal-modal-title" fontWeight='bold' variant="h6" component="h2">
-                                        {product.price + " USD"}
+                                <Grid item xs={1}>
+                                    <Typography item xs={12} color="#152659" id="modal-modal-title" fontWeight='bold' variant="h6" component="h2">
+                                        {"$ " + product.price}
                                     </Typography>
                                 </Grid>
                             </Grid>
                             <Box sx={style.boxInfor_Line}>
                             </Box>
-                            <Grid>
-                                <Typography item={true} xs={12} sx={{ marginBottom: 2 }} color="#152659" id="modal-modal-title" fontWeight='bold' variant="h6" component="h2">
+                            <Grid container>
+                                <Typography item xs={12} sx={{ marginBottom: 2 }} color="#152659" id="modal-modal-title" fontWeight='bold' variant="h6">
                                     Detail Images
                                 </Typography>
                             </Grid>
                             {
                                 product.productimage.length > 0 ?
-                                    <Swiper slidesPerView={2} modules={[Pagination]} spaceBetween={30} pagination={true}>
+                                    <Swiper item slidesPerView={2} modules={[Pagination]} spaceBetween={30} pagination={true}>
                                         {
                                             product.productimage.map((item, i) => (
                                                 <SwiperSlide key={i}>
@@ -75,7 +75,7 @@ const DetailProductModal = ({ open, product, onClose }) => {
                                         }
                                     </Swiper>
                                     :
-                                    <Typography variant='h6' fontWeight='bold'>No Image</Typography>
+                                    <Typography item variant='h6' fontWeight='bold'>No Image</Typography>
                             }
                             <Box sx={{
                                 height: 50,
@@ -109,6 +109,12 @@ const DetailProductModal = ({ open, product, onClose }) => {
                                     </Stack>
                                 </Stack>
                             </Box>
+                            <FeatureChart data={product.feature.map(item => item.name)}/>
+                            <Stack>
+                                <Typography item xs={12} sx={style.buttonFeature} color="white" id="modal-modal-title" fontWeight='bold' variant="body1">
+                                    Feature
+                                </Typography>
+                            </Stack>
                             <Box sx={style.boxInfor}>
                                 <Stack
                                     item
@@ -155,13 +161,13 @@ const DetailProductModal = ({ open, product, onClose }) => {
                                     <DescriptionIcon />
                                     <Typography variant='h6' fontWeight='bold'>Description</Typography>
                                 </Stack>
-                                <Grid sx={style.BoxDes_Grid} paddingLeft={4} paddingRight={4}>
+                                <Grid container sx={style.BoxDes_Grid} paddingLeft={4} paddingRight={4}>
                                     <Stack item xs={12}>
                                         {
                                             product.productimage.length > 0 &&
-                                            <ProductImage item={true} xs={12} src={product.productimage[0].imageURL}></ProductImage>
+                                            <ProductImage item xs={12} src={product.productimage[0].imageURL}></ProductImage>
                                         }
-                                        <Typography item={true} xs={12} sx={{ marginBottom: 2 }} variant='body1'>{product.description}</Typography>
+                                        <Typography item xs={12} sx={{ marginBottom: 2 }} variant='body1'>{product.description}</Typography>
                                     </Stack>
                                 </Grid>
                             </Box>
@@ -173,8 +179,7 @@ const DetailProductModal = ({ open, product, onClose }) => {
                                 }
                             }} onClick={onClose} variant="contained">Close</Button>
                         </Box>
-                        : <Typography variant='h6'>No Data</Typography>
-
+                        : <Typography variant='h6'>No Data</Typography> 
                 }
 
             </Modal>

@@ -17,14 +17,11 @@ import { Stack, Grid, Box } from '@mui/material';
 import DeleteIcon from '@mui/icons-material/Delete';
 import EditIcon from '@mui/icons-material/Edit';
 import InfoIcon from '@mui/icons-material/Info';
-
 //components
-import DetailProductModal from "../../components/DetailProductModal/DetailProductModal";
+import DetailProductModal from "../../components/DetailProductModal";
 import { renderImportantTag } from "../../GridDataCellTemplate/ImportantTag";
-
 // variables
 import { productListSelector } from './../../redux/selectors'
-
 //function 
 import { getAll } from './../../redux/slices/productSlice'
 import AddProduct from "./AddProduct";

@@ -1,8 +1,6 @@
 import { Button, Typography } from "@mui/material";
 import { useLocation, useNavigate } from "react-router-dom";
 import { Grid, Stack, TextField } from '@mui/material'
-import Snackbar from '@mui/material/Snackbar';
-import Alert from '@mui/material/Alert';
 import { useDispatch, useSelector } from "react-redux";
 import { editProduct } from "../../../redux/slices/productSlice";
 import { memo, useEffect, useState } from "react";
@@ -33,11 +31,13 @@ import AddModeratorIcon from '@mui/icons-material/AddModerator';
 import DriveFileRenameOutlineIcon from '@mui/icons-material/DriveFileRenameOutline';
 import CottageIcon from '@mui/icons-material/Cottage';
 import ImageForEditProduct from "../../../components/ImageForEditProduct";
-import FeatureSelect from "../../../components/FeatureSelect.js";
+import FeatureSelect from "../../../components/FeatureSelect/index.js";
 import AddPhotoAlternateIcon from '@mui/icons-material/AddPhotoAlternate';
 import productImageAPI from "../../../api/productImageAPI";
 import PreviewImagesModal from "../../../components/PreviewImagesModal";
 import ImageNotSupportedIcon from '@mui/icons-material/ImageNotSupported';
+import { productAPI } from "../../../api";
+import { ConstructionOutlined } from "@mui/icons-material";
 
 
 
@@ -187,7 +187,6 @@ const EditProduct = () => {
         }));
     }
 
-
     const handleFeatureChosen = (event) => {
         const {
             target: { value },
@@ -196,6 +195,8 @@ const EditProduct = () => {
             typeof value === 'string' ? value.split(',') : value,
         );
     };
+
+    useEffect(() => console.log(currentFeature), [currentFeature])
 
     const UpdateImages = async () => {
         const response = await productImageAPI.deleteImagesOfProduct(product.productID)
@@ -206,7 +207,10 @@ const EditProduct = () => {
             )
             return response_2.status == 200 ? true : false
         }
-        else return false;
+        else {
+            console.log("Error update images")
+            return false;
+        }
     };
 
     const UpdateSpecifications = () => {
@@ -241,12 +245,53 @@ const EditProduct = () => {
             })
     };
 
-    const SaveChange = () => {
+    const ConvertToFeatureIDList = (_featureList) => {
+        const converted_List = currentFeature.map((value) => {
+            return featureList.filter((item) => (item.name == value))[0].featureID
+        })
+        return converted_List;
+    }
+
+    const UpdateFeature = async () => {
+        if (product.feature.length != currentFeature.length) {
+            const response = await productAPI.deleteAndUpdate_Feature(product.productID, ConvertToFeatureIDList(currentFeature))
+            if (response.status == 200)
+            {
+                console.log("Update Feature Successfully")
+                return true;
+            } 
+            else {
+                console.log("Update Feature Failed")
+                return false
+            }
+        }
+        else {
+            for (let i = 0; i < currentFeature.length; i++) {
+                if (currentFeature[i] != product.feature[i]) {
+                    const response = await productAPI.deleteAndUpdate_Feature(product.productID, ConvertToFeatureIDList(currentFeature))
+                    if (response.status == 200) 
+                    {
+                        console.log("Update Feature Successfully")
+                        return true;
+                    }
+                    else {
+                        console.log("Update Feature Failed")
+                        return false
+                    }
+                }
+            }
+            return true;
+        }
+    }
+
+    const SaveChange = async () => {
         let isCheck = true;
-        if (productImages.length == product.productimage.length) {
+        if (productImages.length == product.productimage.length && product.feature.length == currentFeature.length) {
             for (let i = 0; i < productImages.length; i++) {
-                if (productImages[i] == product.productimage[i]) {
-                    if (UpdateImages()) {
+                if (productImages[i] != product.productimage[i]) {
+                    ///// check status of updating images and features successfully or not
+                    //// Flow -> update images -> update feature -> update specification
+                    if (UpdateImages() && await UpdateFeature()) {
                         isCheck = false;
                         UpdateSpecifications()
                     }
@@ -261,7 +306,7 @@ const EditProduct = () => {
             if (isCheck) UpdateSpecifications()
         }
         else
-            if (UpdateImages()) UpdateSpecifications()
+            if (UpdateImages() && await UpdateFeature()) UpdateSpecifications()
             else {
                 setMessageError("Edit Product Failed")
                 setOpenErrorAlert(true)
