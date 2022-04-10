@@ -4,12 +4,18 @@ import Product from '../container/Product';
 const managerRoutes = [
   {
     name: 'Product',
-    path: '/product',
-    exact: true,
-    page: () => <Product />,
+    path: '/product/*',
+    page: <Product />,
   },
  
 ];
 
+const managerMenuItems = [
+  {
+    name:'Product',
+    path: '/product/*',
+    page: <Product />,
+  }]
 
-export { managerRoutes };
+
+export { managerRoutes,managerMenuItems };

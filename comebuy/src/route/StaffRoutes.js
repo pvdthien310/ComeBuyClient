@@ -3,12 +3,22 @@ import Invoice from '../container/Invoice';
 
 const staffRoutes = [
   {
-    name :'Invoice',
-    path: '/invoice',
+    name: 'Invoice',
+    path: '/invoice/*',
     exact: true,
     page: <Invoice />,
   },
 
 ];
 
-export { staffRoutes };
+const staffMenuItems = [
+  {
+    name: 'Invoice',
+    path: '/invoice/*',
+    exact: true,
+    page: <Invoice />,
+  }]
+
+
+
+export { staffRoutes, staffMenuItems };

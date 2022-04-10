@@ -24,9 +24,9 @@ function App() {
     if (token) {
       switch (role) {
         case 'manager':
-          return <MainLayout routes={managerRoutes} />;
+          return <MainLayout routes={managerRoutes} itemRoutes={managerMenuItems}/>;
         case 'staff':
-          return <MainLayout routes={staffRoutes} />;
+          return <MainLayout routes={staffRoutes} itemRoutes={staffMenuItems}/>;
         case 'admin':
           return <MainLayout routes={adminRoutes} itemRoutes={adminMenuItems}/>;
         default:

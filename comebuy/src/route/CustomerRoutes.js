@@ -5,10 +5,16 @@ const customerRoutes = [
   {
     name:'Product',
     path: '/product',
-    exact: true,
-    page: () => <Product />,
+    page: <Product />,
   },
  
 ];
 
-export { customerRoutes };
+const customerMenuItems = [
+  {
+    name:'Product',
+    path: '/product',
+    page: <Product />,
+  }]
+
+export { customerRoutes,customerMenuItems };
