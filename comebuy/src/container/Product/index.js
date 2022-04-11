@@ -24,7 +24,7 @@ import { renderImportantTag } from "../../GridDataCellTemplate/ImportantTag";
 // variables
 import { productListSelector } from './../../redux/selectors'
 //function 
-import { getAll } from './../../redux/slices/productSlice'
+import { deleteProductByID, getAll } from './../../redux/slices/productSlice'
 import AddProduct from "./AddProduct";
 import EditProduct from "./EditProduct";
 import SnackBarAlert from "../../components/SnackBarAlert";
@@ -75,9 +75,18 @@ const Product = () => {
     /// For GridData
     const [pageSize, setPageSize] = useState(25);
     const deleteProduct = useCallback(
-        (id) => () => {
-        },
-        [],
+        (value) => () => {
+            dispatch(deleteProductByID(value))
+            .unwrap()
+            .then((originalPromiseResult) => {
+                setMessageSuccess("Delete Product Successfully")
+                setOpenSuccessAlert(true)
+            })
+            .catch((rejectedValueOrSerializedError) => {
+                setMessageError("Error Delete Product Failed")
+                setOpenErrorAlert(true)
+            })
+        }, [],
     );
 
     const editProduct = useCallback(
@@ -180,7 +189,7 @@ const Product = () => {
             
         }}>
             <BGImg src='https://images.unsplash.com/photo-1490810194309-344b3661ba39?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1448&q=80' />
-            <Button sx={{ height: 50, width: 100 }} onClick={() => navigate("/product/add")}>Add Product</Button>
+            <Button sx={{ height: 50, width: 100}} onClick={() => navigate("/product/add")}>Add Product</Button>
             <DetailProductModal open={openModal} onClose={handleCloseModal} product={currentProduct.value} />
             <ProductTable
                 pageSize={pageSize}

@@ -15,6 +15,8 @@ export { default as SnackBarAlert } from './SnackBarAlert'
 export { default as ImageForEditProduct } from './ImageForEditProduct'
 export { default as TechInforLine } from './TechInforLine'
 export { default as FeatureChart} from './FeatureChart'
+export { default as TextFieldForAdd } from './TextFieldForAdd'
+export { default as ConfirmAddProductDialog} from './ConfirmAddProductDialog'
 
 // export { default as ScrollButton } from './ScrollButton/ScrollButton'
 
