@@ -15,6 +15,14 @@ const productAPI = {
     getProductWithID: async (id) => {
         const res = await DatabaseClient.get('/' + baseURL + `/${id}`)
         return res;
+    },
+    deleteAndUpdate_Feature: async (productID, newFeatures) => {
+        const res = await DatabaseClient.post('/' + baseURL + "/DeleteAndUpdate/Feature",
+            {
+                productID: productID,
+                featureID: newFeatures
+            })
+        return res
     }
 }
 export default productAPI

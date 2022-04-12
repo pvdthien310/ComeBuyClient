@@ -6,6 +6,7 @@ const style = {
         width: '100%',
         justifyContent: 'center',
         alignItems: 'center',
+        backgroundColor: '#011C40'
     },
     boxInfor: {
         height: 'auto',
@@ -68,12 +69,14 @@ const style = {
         }
     },
     SaveButton:{
+        alignSelf: 'center',
         backgroundColor: "#008080",
         '&:hover': {
             backgroundColor: '#027373'
         }
     },
     BackButton:{
+        alignSelf: 'center',
         backgroundColor: "#404040",
         '&:hover': {
             backgroundColor: '#323E40'

@@ -9,25 +9,35 @@ const adminRoutes = [
     {
         name: 'Product',
         path: '/product/*',
-        page:  <Product />,
+        page: <Product />,
     },
-    // {
-    //     name: 'addProduct',
-    //     path: '/product/add',
-    //     page:   <AddProduct />,
-    // },
-    // {
-    //     name: 'editProduct',
-    //     path: '/product/edit',
-    //     page:   <EditProduct />,
-    // },
+    {
+        name: 'addProduct',
+        path: '/product/add',
+        page: <AddProduct />,
+    },
+    {
+        name: 'editProduct',
+        path: '/product/edit',
+        page: <EditProduct />,
+    },
     {
         name: 'Staff',
         path: '/staff',
-        page:  <Staff />,
+        page: <Staff />,
+    }]
+
+const adminMenuItems = [
+    {
+        name: 'Product',
+        path: '/product/*',
+        page: <Product />,
     },
+    {
+        name: 'Staff',
+        path: '/staff',
+        page: <Staff />,
+    }]
 
 
-];
-
-export { adminRoutes };
+export { adminRoutes, adminMenuItems };

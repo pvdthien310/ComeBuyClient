@@ -11,11 +11,11 @@ const style = {
         p: 4,
         overflowY: 'scroll',
         maxHeight: 700,
-        
+
     },
     boxInfor: {
         height: 'auto',
-        
+
         alignSelf: 'center',
         backgroundColor: 'white',
         marginTop: '10px',
@@ -60,6 +60,16 @@ const style = {
         backgroundColor: '#012030',
         marginTop: '10px',
         marginBottom: '20px'
+    },
+    buttonFeature: {
+        marginBottom: 2,
+        alignSelf: 'center',
+        borderRadius: 5,
+        backgroundColor: '#0B2B40',
+        paddingTop : 1,
+        paddingBottom : 1,
+        paddingLeft: 5,
+        paddingRight: 5,
     }
 
 };

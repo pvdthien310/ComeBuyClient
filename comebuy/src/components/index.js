@@ -7,6 +7,24 @@ export { default as FeatureImage } from './FeatureImage/FeatureImage'
 export { default as BrandLineImage } from './BrandLineImage/BrandLineImage'
 export { default as LaptopImageLine } from './LaptopImageLine/LaptopImageLine'
 export { default as ScrollButton } from './ScrollButton/ScrollButton'
+export { default as TextFieldForEdit } from './TextFieldForEdit'
+export { default as FeatureSelect } from './FeatureSelect'
+export { default as PreviewImagesModal } from './PreviewImagesModal'
+export { default as DetailProductModal } from './DetailProductModal'
+export { default as SnackBarAlert } from './SnackBarAlert'
+export { default as ImageForEditProduct } from './ImageForEditProduct'
+export { default as TechInforLine } from './TechInforLine'
+export { default as FeatureChart} from './FeatureChart'
+
+// export { default as ScrollButton } from './ScrollButton/ScrollButton'
+
+
+
+
+
+
+
+
 
 
 
