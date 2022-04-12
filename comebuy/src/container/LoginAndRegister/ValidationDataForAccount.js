@@ -26,3 +26,14 @@ export function CheckEmail(mail) {
     return false
   }
 }
+
+//validation phone number
+export function CheckPhoneNumber(contact) {
+  var phoneno = /^[0-9]{10,11}$/;
+  if (phoneno.test(contact)) {
+    return true;
+  }
+  else {
+    return false;
+  }
+}

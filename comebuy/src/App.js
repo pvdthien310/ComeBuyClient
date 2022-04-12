@@ -29,11 +29,11 @@ function App() {
     if (token) {
       switch (role) {
         case 'manager':
-          return <MainLayout routes={managerRoutes} itemRoutes={managerMenuItems}/>;
+          return <MainLayout routes={managerRoutes} itemRoutes={managerMenuItems} />;
         case 'staff':
-          return <MainLayout routes={staffRoutes} itemRoutes={staffMenuItems}/>;
+          return <MainLayout routes={staffRoutes} itemRoutes={staffMenuItems} />;
         case 'admin':
-          return <MainLayout routes={adminRoutes} itemRoutes={adminMenuItems}/>;
+          return <MainLayout routes={adminRoutes} itemRoutes={adminMenuItems} />;
         default:
           return <HomePage />; // Guest/Customer 
       }
@@ -41,7 +41,7 @@ function App() {
     return <HomePage />
   };
 
-  const pathProfile = "profiles/" + _currentUser.email + "/comebuywith" + _currentUser.name;
+  const pathProfile = "profiles/" + _currentUser.email;
 
   return (
     <Routes>

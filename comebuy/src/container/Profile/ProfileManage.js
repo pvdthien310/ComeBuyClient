@@ -11,6 +11,7 @@ import FormControl from '@mui/material/FormControl';
 import Select from '@mui/material/Select';
 import Snackbar from '@mui/material/Snackbar';
 import Alert from '@mui/material/Alert';
+import CloseIcon from '@mui/icons-material/Close';
 
 
 import DatePicker from 'react-datepicker';
@@ -32,16 +33,39 @@ const ProfileManage = () => {
     const [haveGender, setHaveGender] = useState(false)
     const [isChanged, setIsChanged] = useState(true)
 
+
+    //Modal change name
+    const [name, setName] = useState(_currentUser.name)
     const [openModalChangeName, setOpenModalChangeName] = useState(false)
     const handleCloseModalChangeName = () => {
-        if (name != _currentUser.name) {
-            setName(_currentUser.name)
-        }
         setOpenModalChangeName(false)
     }
 
     const handleOpenModalChangeName = () => {
         setOpenModalChangeName(true)
+        setToggleSaveBtn(false)
+    }
+
+    //modal change contact
+    const [contact, setContact] = useState(_currentUser.phoneNumber)
+    const [openModalChangeContact, setOpenModalChangeContact] = useState(false)
+    const handleCloseModalChangeContact = () => {
+        setOpenModalChangeContact(false)
+    }
+    const handleOpenModalChangeContact = () => {
+        setToggleSaveContactBtn(false)
+        setOpenModalChangeContact(true)
+    }
+
+    //modal change address
+    const [address, setAddress] = useState(_currentUser.address)
+    const [openModalChangeAddress, setOpenModalChangeAddress] = useState(false)
+    const handleCloseModalChangeAddress = () => {
+        setOpenModalChangeAddress(false)
+    }
+    const handleOpenModalChangeAddress = () => {
+        setToggleSaveAddressBtn(false)
+        setOpenModalChangeAddress(true)
     }
 
     const [gender, setGender] = useState('');
@@ -52,12 +76,26 @@ const ProfileManage = () => {
 
     const [selectedDate, setSelectedDate] = useState("")
 
+    //save name button
     const [toggleSaveBtn, setToggleSaveBtn] = useState(false)
 
     const handleToggleSaveButton = () => setToggleSaveBtn(true)
 
+    //save contact button
+    const [toggleSaveContactBtn, setToggleSaveContactBtn] = useState(false)
+
+    const handleToggleSaveContactButton = () => setToggleSaveContactBtn(true)
+
+    //save address button
+    const [toggleSaveAddressBtn, setToggleSaveAddressBtn] = useState(false)
+
+    const handleToggleSaveAddressButton = () => setToggleSaveAddressBtn(true)
+
+    //success snack bar
+    const [openSuccess, setOpenSuccess] = useState(false)
+    const handleCloseSuccess = () => setOpenSuccess(false)
+
     // change name
-    const [name, setName] = useState(_currentUser.name)
     const handleChangeName = () => {
         if (name.length <= 5 || name === "" || Validation.CheckUsername(name)) {
             setOpenNameWrong(true);
@@ -65,10 +103,40 @@ const ProfileManage = () => {
         } else {
             console.log("Ready to update name")
             console.log(name)
+            handleCloseModalChangeName();
+            setOpenSuccess(true)
             //Doing with dispatch to update name to server here
+            //then set name = this value not from _currentUser.name
         }
     }
 
+    // change contact
+    const handleChangeContact = () => {
+        if (Validation.CheckPhoneNumber(contact)) {
+            console.log("Ready to update contact")
+            console.log(contact)
+            handleCloseModalChangeContact();
+            setOpenSuccess(true)
+            //Doing with dispatch to update contact to server here
+            //then set contact = this value not from _currentUser.contact
+        } else {
+            setOpenContactWrong(true);
+            setContact(_currentUser.phoneNumber)
+        }
+    }
+
+    // change address
+    const handleChangeAddress = () => {
+        console.log("Ready to update address")
+        console.log(address)
+        handleCloseModalChangeAddress();
+        //Doing with dispatch to update contact to server here
+        //then set contact = this value not from _currentUser.contact
+        setOpenSuccess(true)
+    }
+
+
+    //wrong name
     const [openNameWrong, setOpenNameWrong] = useState(false);
 
     const handleCloseNameWrong = (event, reason) => {
@@ -76,6 +144,16 @@ const ProfileManage = () => {
             return;
         }
         setOpenNameWrong(false);
+    };
+
+    //wrong contact
+    const [openContactWrong, setOpenContactWrong] = useState(false);
+
+    const handleCloseContactWrong = (event, reason) => {
+        if (reason === 'clickaway') {
+            return;
+        }
+        setOpenContactWrong(false);
     };
 
 
@@ -117,8 +195,8 @@ const ProfileManage = () => {
                     <Typography style={{ fontSize: '18px', fontWeight: 'bold', marginTop: '1%', marginLeft: '5%' }}>Contact Details</Typography>
                     <Typography style={{ color: '#8FA1A6', fontWeight: 'bold', fontSize: '14px', marginLeft: '5%' }}>Receive important alerts for your profile here.</Typography>
                     <Stack direction="row" spacing={2} style={{ justifyContent: 'space-between' }}>
-                        <Typography style={{ color: 'black', fontWeight: 'bold', fontSize: '15px', marginLeft: '5%' }}>0358075274</Typography>
-                        <IconButton style={{ marginTop: '-3%' }}>
+                        <Typography style={{ color: 'black', fontWeight: 'bold', fontSize: '15px', marginLeft: '5%' }}>{contact}</Typography>
+                        <IconButton onClick={handleOpenModalChangeContact} style={{ marginTop: '-3%' }}>
                             <BorderColorSharpIcon />
                         </IconButton>
                     </Stack>
@@ -135,8 +213,8 @@ const ProfileManage = () => {
                     <Typography style={{ fontSize: '18px', fontWeight: 'bold', marginTop: '1%', marginLeft: '5%' }}>Address Details</Typography>
                     <Typography style={{ color: '#8FA1A6', fontWeight: 'bold', fontSize: '14px', marginLeft: '5%' }}>Where do your packages go ?</Typography>
                     <Stack direction="row" spacing={2} style={{ justifyContent: 'space-between' }}>
-                        <Typography style={{ color: 'black', fontWeight: 'bold', fontSize: '15px', marginLeft: '5%' }}>61 ap Tay Minh xa Lang Minh huyen Xuan Loc tinh Dong Nai</Typography>
-                        <IconButton style={{ marginTop: '-3%' }}>
+                        <Typography style={{ color: 'black', fontWeight: 'bold', fontSize: '15px', marginLeft: '5%' }}>{address}</Typography>
+                        <IconButton onClick={handleOpenModalChangeAddress} style={{ marginTop: '-3%' }}>
                             <BorderColorSharpIcon />
                         </IconButton>
                     </Stack>
@@ -198,7 +276,6 @@ const ProfileManage = () => {
             {/* change name modal */}
             <Modal
                 open={openModalChangeName}
-                onClose={handleCloseModalChangeName}
                 aria-labelledby="modal-modal-title"
                 aria-describedby="modal-modal-description"
             >
@@ -229,20 +306,139 @@ const ProfileManage = () => {
                         onChange={e => setName(e.target.value)}
                     />
                     {toggleSaveBtn ? (
-                        <Button onClick={handleChangeName} style={{ marginLeft: '40%' }}>Save</Button>
+                        <Stack direction="row" spacing={3} style={{ justifyContent: 'space-between' }}>
+                            <Button onClick={handleCloseModalChangeName}>
+                                Cancel
+                            </Button>
+                            <Button onClick={handleChangeName} style={{ marginLeft: '40%' }}>Save</Button>
+                        </Stack>
                     ) : (
-                        null
+                        <Button onClick={handleCloseModalChangeName}>
+                            Cancel
+                        </Button>
                     )}
                 </Box>
             </Modal>
 
+            {/* change phone number modal */}
+            <Modal
+                open={openModalChangeContact}
+                onClose={handleCloseModalChangeContact}
+                aria-labelledby="modal-modal-title"
+                aria-describedby="modal-modal-description"
+            >
+                <Box sx={{
+                    position: 'absolute',
+                    top: '55%',
+                    left: '50%',
+                    transform: 'translate(-50%, -50%)',
+                    width: '30%',
+                    height: '20%',
+                    bgcolor: 'background.paper',
+                    borderRadius: '15px',
+                    border: '2px solid #000',
+                    boxShadow: 24,
+                    p: 4,
+                }}>
+                    <Typography id="modal-modal-title" variant="h6" component="h2">
+                        Edit your phone number
+                    </Typography>
+                    <Typography id="modal-modal-description" sx={{ mt: 2, marginTop: '1%', fontSize: '13px' }}>
+                        Changes made to your contact here so we know how to contact you.
+                    </Typography>
+                    <TextField
+                        style={{ width: '100%', marginTop: '2%' }}
+                        label={_currentUser.contact}
+                        value={contact}
+                        onFocus={handleToggleSaveContactButton}
+                        onChange={e => setContact(e.target.value)}
+                    />
+                    {toggleSaveContactBtn ? (
+                        <Stack direction="row" style={{ justifyContent: 'space-between' }}>
+                            <Button onClick={handleCloseModalChangeContact}>
+                                Cancel
+                            </Button>
+                            <Button onClick={handleChangeContact} style={{ marginLeft: '40%' }}>Save</Button>
+                        </Stack>
+                    ) : (
+                        <Button onClick={handleCloseModalChangeContact}>
+                            Cancel
+                        </Button>
+                    )}
+                </Box>
+            </Modal>
+
+            {/* change address modal */}
+            <Modal
+                open={openModalChangeAddress}
+                onClose={handleCloseModalChangeAddress}
+                aria-labelledby="modal-modal-title"
+                aria-describedby="modal-modal-description"
+            >
+                <Box sx={{
+                    position: 'absolute',
+                    top: '55%',
+                    left: '50%',
+                    transform: 'translate(-50%, -50%)',
+                    width: '30%',
+                    height: '20%',
+                    bgcolor: 'background.paper',
+                    borderRadius: '15px',
+                    border: '2px solid #000',
+                    boxShadow: 24,
+                    p: 4,
+                }}>
+                    <Typography id="modal-modal-title" variant="h6" component="h2">
+                        Edit your address
+                    </Typography>
+                    <Typography id="modal-modal-description" sx={{ mt: 2, marginTop: '1%', fontSize: '13px' }}>
+                        Changes made to your address here so we know where to send your packages or voucher gift
+                    </Typography>
+                    <TextField
+                        style={{ width: '100%', marginTop: '2%' }}
+                        label={_currentUser.address}
+                        value={address}
+                        onFocus={handleToggleSaveAddressButton}
+                        onChange={e => setAddress(e.target.value)}
+                    />
+                    {toggleSaveAddressBtn ? (
+                        <Stack direction="row" style={{ justifyContent: 'space-between' }}>
+                            <Button onClick={handleCloseModalChangeAddress}>
+                                Cancel
+                            </Button>
+                            <Button onClick={handleChangeAddress} style={{ marginLeft: '40%' }}>Save</Button>
+                        </Stack>
+                    ) : (
+                        <Button onClick={handleCloseModalChangeAddress}>
+                            Cancel
+                        </Button>
+                    )}
+                </Box>
+            </Modal>
+
+
             {/*Snackbar*/}
+            {/* name wrong */}
             <Snackbar open={openNameWrong} autoHideDuration={6000} onClose={handleCloseNameWrong}>
                 <Alert onClose={handleCloseNameWrong} severity="error" sx={{ width: '100%' }}>
                     Username can't have length under 5 and can't have only space or any of these letter /^ *$.,;:@#""''-!`~%&\/(){ }[]/
                 </Alert>
             </Snackbar>
 
+            {/* contact wrong */}
+            <Snackbar open={openContactWrong} autoHideDuration={6000} onClose={handleCloseContactWrong}>
+                <Alert onClose={handleCloseContactWrong} severity="error" sx={{ width: '100%' }}>
+                    Invalid phone number. Please check it and try again
+                </Alert>
+            </Snackbar>
+
+
+            {/* Snackbar updated successfully */}
+            <Snackbar open={openSuccess} autoHideDuration={6000} onClose={handleCloseSuccess}>
+                <Alert onClose={handleCloseSuccess} severity="success" sx={{ width: '100%' }}>
+                    Updated successfully
+                </Alert>
+            </Snackbar>
         </div>
     )
 }
