@@ -14,6 +14,14 @@ const accountApi = {
     getAccountWithID: async (id) => {
         const res = DatabaseClient.get('/' + baseURL + `/${id}`)
         return res;
+    },
+    getAll: async () => {
+        const res = DatabaseClient.get('/' + baseURL)
+        return res;
+    },
+    updateAccount: async (data) => {
+        const res = DatabaseClient.put("/" + baseURL + "/" + data.userID, data)
+        return res
     }
 }
 export default accountApi

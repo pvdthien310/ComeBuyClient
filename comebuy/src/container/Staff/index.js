@@ -3,112 +3,128 @@ import { DataGrid, GridActionsCellItem } from '@mui/x-data-grid';
 import DeleteIcon from '@mui/icons-material/Delete';
 import SecurityIcon from '@mui/icons-material/Security';
 import FileCopyIcon from '@mui/icons-material/FileCopy';
-import { randomCreatedDate, randomUpdatedDate } from '@mui/x-data-grid-generator';
+import { renderStatus } from '../../GridDataCellTemplate/StatusTag';
+import { renderAvatar } from '../../GridDataCellTemplate/Avatar';
+import { useEffect, useState } from 'react'
+import { useDispatch } from 'react-redux';
+import SnackBarAlert from "../../components/SnackBarAlert";
+import accountApi from '../../api/accountAPI';
+import { Stack, styled } from '@mui/material';
 
-const initialRows = [
-    {
-        id: 1,
-        name: 'Damien',
-        age: 25,
-        dateCreated: randomCreatedDate(),
-        lastLogin: randomUpdatedDate(),
-        isAdmin: true,
-        country: 'Spain',
-        discount: '',
-    },
-    {
-        id: 2,
-        name: 'Nicolas',
-        age: 36,
-        dateCreated: randomCreatedDate(),
-        lastLogin: randomUpdatedDate(),
-        isAdmin: false,
-        country: 'France',
-        discount: '',
-    },
-    {
-        id: 3,
-        name: 'Kate',
-        age: 19,
-        dateCreated: randomCreatedDate(),
-        lastLogin: randomUpdatedDate(),
-        isAdmin: false,
-        country: 'Brazil',
-        discount: 'junior',
-    },
-];
+
+const BGImg = styled('img')({
+    height: '100%',
+    width: '100%',
+    position: 'absolute',
+    resize: true,
+})
+const ProductTable = styled(DataGrid)(({ theme }) => ({
+    marginTop: 30,
+    height: 700,
+    width: 1400,
+    position: 'relative',
+    backgroundColor: 'white',
+    alignSelf: 'center'
+
+}));
+
 
 const Staff = () => {
-    const [rows, setRows] = React.useState(initialRows);
+
+    const dispatch = useDispatch()
+    const [accountList, setAccountList] = useState([])
+    const [openSuccessAlert, setOpenSuccessAlert] = useState(false);
+    const [openErrorAlert, setOpenErrorAlert] = useState(false);
+    const [messageError, setMessageError] = useState("No Error")
+    const [messageSuccess, setMessageSuccess] = useState("Notification")
+
+    const handleClose = (event, reason) => {
+        if (reason === 'clickaway')
+            return;
+        setOpenSuccessAlert(false);
+        setOpenErrorAlert(false);
+    };
+
+    const LoadData = async () => {
+        try {
+            const response = await accountApi.getAll()
+            if (response.status == 200) {
+                setAccountList(response.data)
+                setMessageSuccess("Load Account Successfully")
+                setOpenSuccessAlert(true)
+            }
+            else {
+                setMessageError("Load Account Failed :((")
+                setOpenErrorAlert(true)
+            }
+        }
+        catch (err) {
+            console.log(err)
+        }
+    }
+
+    useEffect(async () => {
+        await LoadData()
+    }, [])
+
+    useEffect(() => {
+        console.log(accountList)
+    },[accountList])
 
     const deleteUser = React.useCallback(
         (id) => () => {
-            setTimeout(() => {
-                setRows((prevRows) => prevRows.filter((row) => row.id !== id));
-            });
+
         },
         [],
     );
 
     const toggleAdmin = React.useCallback(
-        (id) => () => {
-            setRows((prevRows) =>
-                prevRows.map((row) =>
-                    row.id === id ? { ...row, isAdmin: !row.isAdmin } : row,
-                ),
-            );
+        (id) => async () => {
+            const response = await accountApi.updateAccount({
+                userID: id,
+                name: "Vong Minh Huynh"
+            })
+            if (response) {
+                setAccountList((prevList) => prevList.map((item) => {
+                    if (item.userID == response.data.userID)
+                        return response.data
+                    else return item
+                }))
+            }
+            else console.log("error")
         },
         [],
     );
 
     const duplicateUser = React.useCallback(
         (id) => () => {
-            setRows((prevRows) => {
-                const rowToDuplicate = prevRows.find((row) => row.id === id);
-                return [...prevRows, { ...rowToDuplicate, id: Date.now() }];
-            });
+            // setRows((prevRows) => {
+            //     const rowToDuplicate = prevRows.find((row) => row.id === id);
+            //     return [...prevRows, { ...rowToDuplicate, id: Date.now() }];
+            // });
         },
         [],
     );
 
     const columns = React.useMemo(
         () => [
-            { field: 'name', type: 'string' },
-            { field: 'age', type: 'number' },
-            { field: 'dateCreated', type: 'date', width: 130 },
-            { field: 'lastLogin', type: 'dateTime', width: 180 },
-            { field: 'isAdmin', type: 'boolean', width: 120 },
+            { field: 'userID', headerName: 'ID', width: 250 },
             {
-                field: 'country',
-                type: 'singleSelect',
-                width: 120,
-                valueOptions: [
-                    'Bulgaria',
-                    'Netherlands',
-                    'France',
-                    'United Kingdom',
-                    'Spain',
-                    'Brazil',
-                ],
-            },
-            {
-                field: 'discount',
-                type: 'singleSelect',
+                field: 'avatar',
                 width: 120,
                 editable: true,
-                valueOptions: ({ row }) => {
-                    if (row === undefined) {
-                        return ['EU-resident', 'junior'];
-                    }
-                    const options = [];
-                    if (!['United Kingdom', 'Brazil'].includes(row.country)) {
-                        options.push('EU-resident');
-                    }
-                    if (row.age < 27) {
-                        options.push('junior');
-                    }
-                    return options;
-                },
+                renderCell: (params) => (
+                    renderAvatar(params)
+                )
+            },
+            { field: 'name', headerName: 'Name', width: 250 },
+            { field: 'dob', headerName: 'Day of birth', width: 130 },
+            { field: 'sex', headerName: 'Sex', width: 130 },
+            { field: 'email', headerName: 'Email', width: 180 },
+            {
+                field: 'role', headerName: 'Role', width: 150, renderCell: (params) => (
+                    renderStatus(params)
+                )
             },
             {
                 field: 'actions',
@@ -139,9 +155,20 @@ const Staff = () => {
     );
 
     return (
-        <div style={{ height: 500, width: '100%' }}>
-            <DataGrid columns={columns} rows={rows} />
-        </div>
+        <Stack direction="column" sx={{
+            width: "100%",
+            height: "100%",
+        }}>
+            <BGImg src='https://images.unsplash.com/photo-1490810194309-344b3661ba39?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1448&q=80' />
+            <ProductTable
+                rowHeight={100}
+                columns={columns}
+                rows={accountList}
+                pagination
+                getRowId={(row) => row.userID} />
+            <SnackBarAlert severity='success' open={openSuccessAlert} handleClose={handleClose} message={messageSuccess} />
+            <SnackBarAlert severity='error' open={openErrorAlert} handleClose={handleClose} message={messageError} />
+        </Stack>
     );
 }
 

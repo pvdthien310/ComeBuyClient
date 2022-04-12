@@ -23,6 +23,14 @@ const productAPI = {
                 featureID: newFeatures
             })
         return res
+    },
+    createNewProduct: async (newProduct) => {
+        const res = await DatabaseClient.post('/' + baseURL,newProduct)
+        return res
+    },
+    deleteByID: async (productID)=> {
+        const res = await DatabaseClient.delete('/' + baseURL + `/${productID}`)
+        return res;
     }
 }
 export default productAPI

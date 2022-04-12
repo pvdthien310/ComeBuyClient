@@ -34,6 +34,17 @@ export const editProduct = createAsyncThunk(
   }
 );
 
+export const deleteProductByID = createAsyncThunk(
+  'product/deletebyid',
+  // Code async logic, tham số đầu tiên data là dữ liệu truyền vào khi gọi action
+  async (productID, { rejectWithValue }) => {
+    const response = await productAPI.deleteByID(productID)
+    if (response.status != 200)
+      return rejectWithValue("Get All Failed");
+    else return productID
+  }
+);
+
 
 export const getProductWithID = createAsyncThunk(
   'product/findOne',
@@ -98,6 +109,17 @@ export const productSlice = createSlice({
       console.log("Successfully");
     },
     [getProductWithID.rejected]: (state, action) => {
+      state.loading = false;
+    },
+    [deleteProductByID.pending]: (state) => {
+      state.loading = true;
+      console.log("Start slice");
+    },
+    [deleteProductByID.fulfilled]: (state, action) => {
+      state.productList = state.productList.filter(member => (member.productID != action.payload));
+      console.log("Successfully");
+    },
+    [deleteProductByID.rejected]: (state, action) => {
       state.loading = false;
     }
   }
