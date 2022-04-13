@@ -9,7 +9,7 @@ import Box from '@mui/material/Box';
 import { Swiper, SwiperSlide } from "swiper/react";
 import { Pagination } from "swiper";
 import { featureListSelector } from "../../../redux/selectors";
-import { getAll } from "../../../redux/slices/featureSlice";
+import { getAllFeature } from "../../../redux/slices/featureSlice";
 import SnackBarAlert from "../../../components/SnackBarAlert";
 import cloudinaryApi from "../../../api/cloudinaryAPI"
 //icon styles
@@ -38,8 +38,6 @@ import PreviewImagesModal from "../../../components/PreviewImagesModal";
 import ImageNotSupportedIcon from '@mui/icons-material/ImageNotSupported';
 import { productAPI } from "../../../api";
 import { ConstructionOutlined } from "@mui/icons-material";
-
-
 
 const EditProduct = () => {
     const location = useLocation()
@@ -310,7 +308,7 @@ const EditProduct = () => {
     }
 
     useEffect(() => {
-        dispatch(getAll())
+        dispatch(getAllFeature())
             .unwrap()
             .then((originalPromiseResult) => {
                 setFeatureList(originalPromiseResult)

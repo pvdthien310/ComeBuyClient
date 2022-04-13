@@ -4,7 +4,7 @@ import { useDispatch, useSelector } from 'react-redux'
 import "swiper/css";
 import "swiper/css/pagination";
 import { Pagination } from "swiper";
-import { getAll } from '../../redux/slices/productSlice'
+import { getAllProduct } from '../../redux/slices/productSlice'
 import SliderItem from "./SliderItem/SliderItem";
 
 
@@ -12,7 +12,7 @@ const Slider = () => {
     const dispatch = useDispatch()
     const [productList, setProductList] = useState([])
     useEffect(() => {
-        dispatch(getAll())
+        dispatch(getAllProduct())
             .unwrap()
             .then((originalPromiseResult) => {
                 setProductList(originalPromiseResult)

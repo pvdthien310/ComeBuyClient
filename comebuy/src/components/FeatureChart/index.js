@@ -2,7 +2,7 @@ import React from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { Radar, RadarChart, PolarGrid, PolarAngleAxis, PolarRadiusAxis, ResponsiveContainer } from 'recharts';
 import { featureListSelector } from '../../redux/selectors';
-import { getAll } from '../../redux/slices/featureSlice';
+import { getAllFeature } from '../../redux/slices/featureSlice';
 
 const no_feature = [
     {
@@ -52,7 +52,7 @@ const FeatureChart = (props) => {
     const dispatch = useDispatch()
     if (featureList.length == 0)
     {
-        dispatch(getAll())
+        dispatch(getAllFeature())
     }
     const convertData = (featureProduct) => {
         const res = []

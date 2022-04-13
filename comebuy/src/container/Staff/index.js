@@ -6,10 +6,11 @@ import FileCopyIcon from '@mui/icons-material/FileCopy';
 import { renderStatus } from '../../GridDataCellTemplate/StatusTag';
 import { renderAvatar } from '../../GridDataCellTemplate/Avatar';
 import { useEffect, useState } from 'react'
-import { useDispatch } from 'react-redux';
 import SnackBarAlert from "../../components/SnackBarAlert";
 import accountApi from '../../api/accountAPI';
-import { Stack, styled } from '@mui/material';
+import { Button, Stack, styled } from '@mui/material';
+import { ConfirmDialog } from '../../components';
+import { useNavigate } from 'react-router';
 
 
 const BGImg = styled('img')({
@@ -30,22 +31,23 @@ const ProductTable = styled(DataGrid)(({ theme }) => ({
 
 
 const Staff = () => {
-
-    const dispatch = useDispatch()
+    const navigate = useNavigate()
     const [accountList, setAccountList] = useState([])
     const [openSuccessAlert, setOpenSuccessAlert] = useState(false);
     const [openErrorAlert, setOpenErrorAlert] = useState(false);
+    const [openConfirmDialog, setOpenConfirmDialog] = useState(false)
     const [messageError, setMessageError] = useState("No Error")
     const [messageSuccess, setMessageSuccess] = useState("Notification")
+    const [selectedAccount, setSelectedAccount] = useState(null)
 
     const handleClose = (event, reason) => {
         if (reason === 'clickaway')
             return;
         setOpenSuccessAlert(false);
         setOpenErrorAlert(false);
+        setOpenConfirmDialog(false);
     };
-
-    const LoadData = async () => {
+    async function LoadData() {
         try {
             const response = await accountApi.getAll()
             if (response.status == 200) {
@@ -62,22 +64,38 @@ const Staff = () => {
             console.log(err)
         }
     }
-
-    useEffect(async () => {
-        await LoadData()
+    useEffect(() => {
+        LoadData()
     }, [])
 
-    useEffect(() => {
-        console.log(accountList)
-    },[accountList])
+    const handleDeleteUser = async () => {
+        const response = await accountApi.deleteAccount(selectedAccount.id)
+        if (response.status == 200) {
+            /// Type this to set new vlue for state
+            setAccountList((prevList) => prevList.filter((item) => (item.userID != selectedAccount.id)))
+            setMessageSuccess("Delete Account Successfully")
+            setOpenSuccessAlert(true)
+            handleClose()
+        }
+        else {
+            console.log("error")
+            setMessageError("Delete Account Failed :((")
+            setOpenErrorAlert(true)
+            handleClose()
+        }
+    }
 
     const deleteUser = React.useCallback(
-        (id) => () => {
-
+        (value) => async () => {
+            console.log(value)
+            setSelectedAccount(value)
+            setOpenConfirmDialog(true)
         },
         [],
     );
 
+
+    //// Usecall back can get value of state
     const toggleAdmin = React.useCallback(
         (id) => async () => {
             const response = await accountApi.updateAccount({
@@ -85,6 +103,7 @@ const Staff = () => {
                 name: "Vong Minh Huynh"
             })
             if (response) {
+                /// Type this to set new vlue for state
                 setAccountList((prevList) => prevList.map((item) => {
                     if (item.userID == response.data.userID)
                         return response.data
@@ -98,10 +117,7 @@ const Staff = () => {
 
     const duplicateUser = React.useCallback(
         (id) => () => {
-            // setRows((prevRows) => {
-            //     const rowToDuplicate = prevRows.find((row) => row.id === id);
-            //     return [...prevRows, { ...rowToDuplicate, id: Date.now() }];
-            // });
+
         },
         [],
     );
@@ -127,6 +143,16 @@ const Staff = () => {
                 )
             },
             {
+                field: 'branch', headerName: 'Branch', width: 180,
+                valueFormatter: (params) => {
+                    if (params.value == null) {
+                        return "This is not Manager";
+                    }
+                    
+                    return params.value.address;
+                }
+            },
+            {
                 field: 'actions',
                 type: 'actions',
                 width: 80,
@@ -134,7 +160,7 @@ const Staff = () => {
                     <GridActionsCellItem
                         icon={<DeleteIcon />}
                         label="Delete"
-                        onClick={deleteUser(params.id)}
+                        onClick={deleteUser(params)}
                     />,
                     <GridActionsCellItem
                         icon={<SecurityIcon />}
@@ -160,12 +186,17 @@ const Staff = () => {
             height: "100%",
         }}>
             <BGImg src='https://images.unsplash.com/photo-1490810194309-344b3661ba39?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1448&q=80' />
+            <Button sx={{ height: 50, width: 100 }} onClick={() => navigate('/staff/add')}>ZXzxZxZxzx</Button>
             <ProductTable
                 rowHeight={100}
                 columns={columns}
                 rows={accountList}
                 pagination
                 getRowId={(row) => row.userID} />
+            <ConfirmDialog
+                body="Please check the product information again to make sure. This operation cannot be redo. If you are sure, please confirm!"
+                title="Confirm Action?"
+                open={openConfirmDialog} handleClose={handleClose} handleConfirm={handleDeleteUser} />
             <SnackBarAlert severity='success' open={openSuccessAlert} handleClose={handleClose} message={messageSuccess} />
             <SnackBarAlert severity='error' open={openErrorAlert} handleClose={handleClose} message={messageError} />
         </Stack>

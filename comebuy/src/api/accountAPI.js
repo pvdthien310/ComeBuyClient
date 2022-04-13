@@ -22,6 +22,15 @@ const accountApi = {
     updateAccount: async (data) => {
         const res = DatabaseClient.put("/" + baseURL + "/" + data.userID, data)
         return res
+    },
+    deleteAccount: async (accountID) => {
+        const res = DatabaseClient.delete("/" + baseURL + "/" + accountID)
+        return res
+    },
+    createNewAccount: async (data) => {
+        const res = DatabaseClient.post("/" + baseURL, data)
+            .catch(err => { return err.response })
+        return res
     }
 }
 export default accountApi

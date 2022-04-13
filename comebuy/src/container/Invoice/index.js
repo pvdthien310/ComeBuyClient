@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { useDispatch } from 'react-redux'
-import { getAll } from '../../redux/slices/invoiceSlice';
+import { getAllInvoice } from '../../redux/slices/invoiceSlice';
 import { unwrapResult } from '@reduxjs/toolkit';
 import Row from './Row'
 
@@ -36,7 +36,7 @@ const  Invoice = () => {
         async function fetchInvoice() {
             if (invoiceList.length === 0) {
                 try {
-                    const resultAction = await dispatch(getAll())
+                    const resultAction = await dispatch(getAllInvoice())
                     const originalPromiseResult = unwrapResult(resultAction)
                     setInvoiceList(originalPromiseResult)
                 } catch (rejectedValueOrSerializedError) {
