@@ -1,4 +1,6 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
+import { useDispatch } from 'react-redux';
+import { unwrapResult } from '@reduxjs/toolkit';
 
 import { Avatar, Button, IconButton, Link, Modal, Stack, TextField, Typography } from '@mui/material';
 import NavigateNextIcon from '@mui/icons-material/NavigateNext';
@@ -11,8 +13,8 @@ import FormControl from '@mui/material/FormControl';
 import Select from '@mui/material/Select';
 import Snackbar from '@mui/material/Snackbar';
 import Alert from '@mui/material/Alert';
-import CloseIcon from '@mui/icons-material/Close';
-
+import Backdrop from '@mui/material/Backdrop';
+import CircularProgress from '@mui/material/CircularProgress';
 
 import DatePicker from 'react-datepicker';
 import "react-datepicker/dist/react-datepicker.css"
@@ -22,20 +24,56 @@ import { useSelector } from 'react-redux';
 import NavBar from './../../components/NavBar/NavBar';
 import { currentUser } from '../../redux/selectors';
 import * as Validation from '././../LoginAndRegister/ValidationDataForAccount'
+import { updateAccount, getAccountWithID } from '../../redux/slices/accountSlice';
 
 
 const ProfileManage = () => {
 
     const _currentUser = useSelector(currentUser)
+    const [dataForUpdate, setDataForUpdate] = useState(_currentUser)
+    const dispatch = useDispatch();
 
-    const [havePhoneNumber, setHavePhoneNumber] = useState(false)
-    const [haveAddress, setHaveAddress] = useState(false)
-    const [haveGender, setHaveGender] = useState(false)
-    const [isChanged, setIsChanged] = useState(true)
+    const fetchUser = async () => {
+        try {
+            const resultAction = await dispatch(getAccountWithID(_currentUser.userID))
+            const originalPromiseResult = unwrapResult(resultAction)
+            setDataForUpdate(originalPromiseResult)
+            setIsLoading(false)
+        } catch (rejectedValueOrSerializedError) {
+            return
+        }
+    }
+    const [isLoading, setIsLoading] = useState(true)
+    useEffect(() => {
+        if (isLoading === true) {
+            fetchUser()
+        }
+    }, [isLoading])
 
+    const [havePhoneNumber, setHavePhoneNumber] = useState(() => {
+        if (dataForUpdate.phoneNumber != '' || dataForUpdate.phoneNumber != null) {
+            return true;
+        } else {
+            return false
+        }
+    })
+    const [haveAddress, setHaveAddress] = useState(() => {
+        if (dataForUpdate.address != '' || dataForUpdate.address != null) {
+            return true;
+        } else {
+            return false
+        }
+    })
+    const [haveGender, setHaveGender] = useState(() => {
+        if (dataForUpdate.sex != '' || dataForUpdate.sex != null) {
+            return true;
+        } else {
+            return false
+        }
+    })
 
     //Modal change name
-    const [name, setName] = useState(_currentUser.name)
+    const [name, setName] = useState(dataForUpdate.name)
     const [openModalChangeName, setOpenModalChangeName] = useState(false)
     const handleCloseModalChangeName = () => {
         setOpenModalChangeName(false)
@@ -47,7 +85,7 @@ const ProfileManage = () => {
     }
 
     //modal change contact
-    const [contact, setContact] = useState(_currentUser.phoneNumber)
+    const [contact, setContact] = useState(dataForUpdate.phoneNumber)
     const [openModalChangeContact, setOpenModalChangeContact] = useState(false)
     const handleCloseModalChangeContact = () => {
         setOpenModalChangeContact(false)
@@ -58,7 +96,7 @@ const ProfileManage = () => {
     }
 
     //modal change address
-    const [address, setAddress] = useState(_currentUser.address)
+    const [address, setAddress] = useState(dataForUpdate.address)
     const [openModalChangeAddress, setOpenModalChangeAddress] = useState(false)
     const handleCloseModalChangeAddress = () => {
         setOpenModalChangeAddress(false)
@@ -68,13 +106,13 @@ const ProfileManage = () => {
         setOpenModalChangeAddress(true)
     }
 
-    const [gender, setGender] = useState('');
+    const [gender, setGender] = useState(dataForUpdate.sex);
 
-    const handleChangeGender = (event) => {
+    const handleChangeGender = async (event) => {
         setGender(event.target.value);
     };
 
-    const [selectedDate, setSelectedDate] = useState("")
+    const [selectedDate, setSelectedDate] = useState(new Date(dataForUpdate.dob))
 
     //save name button
     const [toggleSaveBtn, setToggleSaveBtn] = useState(false)
@@ -95,30 +133,75 @@ const ProfileManage = () => {
     const [openSuccess, setOpenSuccess] = useState(false)
     const handleCloseSuccess = () => setOpenSuccess(false)
 
+    //failed snack bar
+    const [openFailed, setOpenFailed] = useState(false)
+    const handleCloseFailed = () => setOpenFailed(false)
+
+    //for open backdrop
+    const [openBackdrop, setOpenBackdrop] = React.useState(false);
+    const handleCloseBackdrop = () => {
+        setOpenBackdrop(false);
+    };
+    const handleToggleBackdrop = () => {
+        setOpenBackdrop(!openBackdrop);
+    };
+
+    const [updating, setUpdating] = React.useState(false)
+
+    useEffect(() => {
+        if (updating === true) {
+            setOpenBackdrop(true)
+        } else {
+            setOpenBackdrop(false)
+        }
+    }, [updating])
+
     // change name
-    const handleChangeName = () => {
+    const handleChangeName = async () => {
         if (name.length <= 5 || name === "" || Validation.CheckUsername(name)) {
             setOpenNameWrong(true);
             setName(_currentUser.name)
         } else {
-            console.log("Ready to update name")
-            console.log(name)
-            handleCloseModalChangeName();
-            setOpenSuccess(true)
-            //Doing with dispatch to update name to server here
-            //then set name = this value not from _currentUser.name
+            setUpdating(true)
+            const temp = {
+                ...dataForUpdate,
+                name: name
+            }
+            try {
+                const resultAction = await dispatch(updateAccount(temp))
+                const originalPromiseResult = unwrapResult(resultAction)
+                console.log(originalPromiseResult);
+                handleCloseModalChangeName();
+                setUpdating(false)
+                setOpenSuccess(true)
+                setDataForUpdate(temp)
+            } catch (rejectedValueOrSerializedError) {
+                setUpdating(false)
+                setOpenFailed(true)
+            }
         }
     }
 
     // change contact
-    const handleChangeContact = () => {
+    const handleChangeContact = async () => {
         if (Validation.CheckPhoneNumber(contact)) {
-            console.log("Ready to update contact")
-            console.log(contact)
-            handleCloseModalChangeContact();
-            setOpenSuccess(true)
-            //Doing with dispatch to update contact to server here
-            //then set contact = this value not from _currentUser.contact
+            setUpdating(true)
+            const temp = {
+                ...dataForUpdate,
+                phoneNumber: contact
+            }
+            try {
+                const resultAction = await dispatch(updateAccount(temp))
+                const originalPromiseResult = unwrapResult(resultAction)
+                console.log(originalPromiseResult);
+                handleCloseModalChangeContact();
+                setUpdating(false)
+                setOpenSuccess(true)
+                setDataForUpdate(temp)
+            } catch (rejectedValueOrSerializedError) {
+                setUpdating(false)
+                setOpenFailed(true)
+            }
         } else {
             setOpenContactWrong(true);
             setContact(_currentUser.phoneNumber)
@@ -126,15 +209,46 @@ const ProfileManage = () => {
     }
 
     // change address
-    const handleChangeAddress = () => {
-        console.log("Ready to update address")
-        console.log(address)
-        handleCloseModalChangeAddress();
-        //Doing with dispatch to update contact to server here
-        //then set contact = this value not from _currentUser.contact
-        setOpenSuccess(true)
+    const handleChangeAddress = async () => {
+        setUpdating(true)
+        const temp = {
+            ...dataForUpdate,
+            address: address
+        }
+        try {
+            const resultAction = await dispatch(updateAccount(temp))
+            const originalPromiseResult = unwrapResult(resultAction)
+            console.log(originalPromiseResult);
+            handleCloseModalChangeAddress();
+            setUpdating(false)
+            setOpenSuccess(true)
+            setDataForUpdate(temp)
+        } catch (rejectedValueOrSerializedError) {
+            setUpdating(false)
+            setOpenFailed(true)
+        }
     }
 
+    const handleChangeDobAndSex = async () => {
+        setUpdating(true)
+        const temp = {
+            ...dataForUpdate,
+            sex: gender,
+            dob: selectedDate.toISOString().substring(0, 10)
+        }
+        try {
+            const resultAction = await dispatch(updateAccount(temp))
+            const originalPromiseResult = unwrapResult(resultAction)
+            console.log(originalPromiseResult);
+            handleCloseModalChangeAddress();
+            setUpdating(false)
+            setOpenSuccess(true)
+            setDataForUpdate(temp)
+        } catch (rejectedValueOrSerializedError) {
+            setUpdating(false)
+            setOpenFailed(true)
+        }
+    }
 
     //wrong name
     const [openNameWrong, setOpenNameWrong] = useState(false);
@@ -161,12 +275,24 @@ const ProfileManage = () => {
     return (
         <div style={{ backgroundColor: 'black' }}>
             <NavBar></NavBar>
-            <Stack direction="row" spacing={3} style={{ marginLeft: '20%', marginTop: '1%' }}>
-                <Link style={{ marginRight: '-20px', color: '#A6A6A6', fontWeight: 'bold', fontSize: '14px' }} href="myplace" underline="none">
+            <Stack direction="row"
+                spacing={3}
+                style={{ marginLeft: '20%', marginTop: '1%' }}
+            >
+                <Link style={{
+                    marginRight: '-20px',
+                    color: '#A6A6A6',
+                    fontWeight: 'bold',
+                    fontSize: '14px'
+                }}
+                    href="myplace" underline="none"
+                >
                     {' My place '}
                 </Link>
                 <NavigateNextIcon style={{ marginRight: '-20px', color: '#F2F2F2' }} />
-                <Link style={{ color: '#F2F2F2', fontWeight: 'bold', fontSize: '14px' }} href="#" underline="none">
+                <Link style={{ color: '#F2F2F2', fontWeight: 'bold', fontSize: '14px' }}
+                    href="#" underline="none"
+                >
                     {'Profile management'}
                 </Link>
             </Stack>
@@ -174,28 +300,93 @@ const ProfileManage = () => {
             <Stack direction="column" spacing={3} style={{ paddingBottom: '2%' }}>
 
                 {/* name & avatar */}
-                <Stack direction="row" spacing={3} sx={{ borderRadius: '15px', marginTop: '3%', backgroundColor: '#D7D8D9', width: '45%', alignSelf: 'center', padding: '1%' }}>
-                    <Avatar alt="" src={_currentUser.avatar} sx={{ width: 100, height: 100, marginLeft: '5%' }} />
+                <Stack direction="row" spacing={3}
+                    sx={{
+                        borderRadius: '15px',
+                        marginTop: '3%',
+                        backgroundColor: '#D7D8D9',
+                        width: '45%',
+                        alignSelf: 'center',
+                        padding: '1%'
+                    }}>
+                    <Avatar alt="" src={_currentUser.avatar}
+                        sx={{ width: 100, height: 100, marginLeft: '5%' }}
+                    />
                     <IconButton style={{ marginLeft: '-2%', marginTop: '10%' }}>
                         <CameraSharpIcon />
                     </IconButton>
-                    <Stack direction="column" spacing={0.5}>
-                        <Stack direction="row">
-                            <Typography style={{ fontSize: '23px', fontWeight: 'bold', marginTop: '10%', marginLeft: '5%' }}>{name}</Typography>
-                            <IconButton onClick={handleOpenModalChangeName} style={{ marginTop: '8%', marginLeft: '5%' }}>
+                    <Stack direction="column" spacing={2}>
+                        <Stack direction="row" spacing={2}
+                            style={{ justifyContent: 'space-between' }}>
+                            <Typography style={{
+                                fontSize: '23px',
+                                fontWeight: 'bold',
+                                marginTop: '10%',
+                                marginLeft: '5%',
+
+                            }}
+                            >
+                                {name}
+                            </Typography>
+                            <IconButton onClick={handleOpenModalChangeName}
+                                style={{ marginTop: '8%', marginLeft: '5%' }}
+                            >
                                 <BorderColorSharpIcon />
                             </IconButton>
                         </Stack>
-                        <Typography style={{ color: '#8FA1A6', fontWeight: 'bold', fontSize: '14px', marginLeft: '5%' }}>Account holder</Typography>
+                        <Typography style={{
+                            color: '#8FA1A6',
+                            fontWeight: 'bold',
+                            fontSize: '14px',
+                            marginLeft: '5%'
+                        }}
+                        >
+                            Account holder
+                        </Typography>
                     </Stack>
                 </Stack>
 
                 {/* contact */}
-                <Stack direction="column" spacing={0.75} sx={{ borderRadius: '15px', marginTop: '3%', backgroundColor: '#F2F2F2', width: '45%', alignSelf: 'center', padding: '1%' }}>
-                    <Typography style={{ fontSize: '18px', fontWeight: 'bold', marginTop: '1%', marginLeft: '5%' }}>Contact Details</Typography>
-                    <Typography style={{ color: '#8FA1A6', fontWeight: 'bold', fontSize: '14px', marginLeft: '5%' }}>Receive important alerts for your profile here.</Typography>
-                    <Stack direction="row" spacing={2} style={{ justifyContent: 'space-between' }}>
-                        <Typography style={{ color: 'black', fontWeight: 'bold', fontSize: '15px', marginLeft: '5%' }}>{contact}</Typography>
+                <Stack direction="column" spacing={0.75}
+                    sx={{
+                        borderRadius: '15px',
+                        marginTop: '3%',
+                        backgroundColor: '#F2F2F2',
+                        width: '45%',
+                        alignSelf: 'center',
+                        padding: '1%'
+                    }}
+                >
+                    <Typography style={{
+                        fontSize: '18px',
+                        fontWeight: 'bold',
+                        marginTop: '1%',
+                        marginLeft: '5%'
+                    }}
+                    >
+                        Contact Details
+                    </Typography>
+                    <Typography style={{
+                        color: '#8FA1A6',
+                        fontWeight: 'bold',
+                        fontSize: '14px',
+                        marginLeft: '5%'
+                    }}
+                    >
+                        Receive important alerts for your profile here.
+                    </Typography>
+                    <Stack direction="row" spacing={2}
+                        style={{ justifyContent: 'space-between' }}
+                    >
+                        <Typography style={{
+                            color: 'black',
+                            fontWeight: 'bold',
+                            fontSize: '15px',
+                            marginLeft: '5%'
+                        }}
+                        >
+                            {contact}
+                        </Typography>
                         <IconButton onClick={handleOpenModalChangeContact} style={{ marginTop: '-3%' }}>
                             <BorderColorSharpIcon />
                         </IconButton>
@@ -204,16 +395,57 @@ const ProfileManage = () => {
                     {havePhoneNumber ? (
                         null
                     ) : (
-                        <Typography style={{ color: '#8FA1A6', fontSize: '13px', marginLeft: '5%' }}>Not set</Typography>
+                        <Typography style={{
+                            color: '#8FA1A6',
+                            fontSize: '13px',
+                            marginLeft: '5%'
+                        }}
+                        >
+                            Not set
+                        </Typography>
                     )}
                 </Stack>
 
                 {/* address */}
-                <Stack direction="column" spacing={0.75} sx={{ borderRadius: '15px', marginTop: '3%', backgroundColor: '#F2F2F2', width: '45%', alignSelf: 'center', padding: '1%' }}>
-                    <Typography style={{ fontSize: '18px', fontWeight: 'bold', marginTop: '1%', marginLeft: '5%' }}>Address Details</Typography>
-                    <Typography style={{ color: '#8FA1A6', fontWeight: 'bold', fontSize: '14px', marginLeft: '5%' }}>Where do your packages go ?</Typography>
-                    <Stack direction="row" spacing={2} style={{ justifyContent: 'space-between' }}>
-                        <Typography style={{ color: 'black', fontWeight: 'bold', fontSize: '15px', marginLeft: '5%' }}>{address}</Typography>
+                <Stack direction="column" spacing={0.75}
+                    sx={{
+                        borderRadius: '15px',
+                        marginTop: '3%',
+                        backgroundColor: '#F2F2F2',
+                        width: '45%',
+                        alignSelf: 'center',
+                        padding: '1%'
+                    }}
+                >
+                    <Typography style={{
+                        fontSize: '18px',
+                        fontWeight: 'bold',
+                        marginTop: '1%',
+                        marginLeft: '5%'
+                    }}
+                    >
+                        Address Details
+                    </Typography>
+                    <Typography style={{
+                        color: '#8FA1A6',
+                        fontWeight: 'bold',
+                        fontSize: '14px',
+                        marginLeft: '5%'
+                    }}
+                    >
+                        Where do your packages go ?
+                    </Typography>
+                    <Stack direction="row" spacing={2}
+                        style={{ justifyContent: 'space-between' }}>
+                        <Typography style={{
+                            color: 'black',
+                            fontWeight: 'bold',
+                            fontSize: '15px',
+                            marginLeft: '5%'
+                        }}
+                        >
+                            {address}
+                        </Typography>
                         <IconButton onClick={handleOpenModalChangeAddress} style={{ marginTop: '-3%' }}>
                             <BorderColorSharpIcon />
                         </IconButton>
@@ -222,22 +454,45 @@ const ProfileManage = () => {
                     {haveAddress ? (
                         null
                     ) : (
-                        <Typography style={{ color: '#8FA1A6', fontSize: '13px', marginLeft: '5%' }}>Not set</Typography>
+                        <Typography style={{
+                            color: '#8FA1A6',
+                            fontSize: '13px',
+                            marginLeft: '5%'
+                        }}
+                        >
+                            Not set
+                        </Typography>
                     )}
                 </Stack>
 
                 {/* sex & dob */}
-                <Stack direction="column" spacing={0.75} sx={{ borderRadius: '15px', marginTop: '3%', backgroundColor: '#F2F2F2', width: '45%', alignSelf: 'center', padding: '1%' }}>
-                    <Typography style={{ fontSize: '18px', fontWeight: 'bold', marginTop: '1%', marginLeft: '5%' }}>More Info...</Typography>
-                    <Stack direction="row" spacing={2} style={{ marginTop: '-1%' }}>
+                <Stack direction="column" spacing={0.75}
+                    sx={{
+                        borderRadius: '15px',
+                        marginTop: '3%',
+                        backgroundColor: '#F2F2F2',
+                        width: '45%',
+                        alignSelf: 'center',
+                        padding: '1%'
+                    }}
+                >
+                    <Typography style={{
+                        fontSize: '18px',
+                        fontWeight: 'bold',
+                        marginTop: '1%',
+                        marginLeft: '5%'
+                    }}
+                    >More Info...
+                    </Typography>
+                    <Stack direction="row" spacing={2} style={{ marginTop: '2%' }}>
                         <Box sx={{ minWidth: 120, marginLeft: '5%' }}>
                             <FormControl variant="standard" fullWidth>
-                                <InputLabel id="demo-simple-select-standard-label">Gender</InputLabel>
+                                <Typography id="demo-simple-select-standard-label" style={{ fontWeight: 'bold' }}>Gender:</Typography>
                                 <Select
+                                    style={{ marginTop: '10%' }}
                                     labelId="demo-simple-select-standard-label"
                                     id="demo-simple-select-standard"
                                     value={gender}
-                                    label="Gender"
                                     onChange={handleChangeGender}
                                 >
                                     <MenuItem value={"male"}>Male</MenuItem>
@@ -246,29 +501,42 @@ const ProfileManage = () => {
                             </FormControl>
                         </Box>
 
-                        <Typography style={{ marginLeft: '10%', marginTop: '3%' }}>DOB: </Typography>
-                        <Box style={{ marginTop: '3%' }}>
+                        <Typography style={{ marginLeft: '10%', marginTop: '6%', fontWeight: 'bold' }}>Birthday: </Typography>
+                        <Box style={{ marginTop: '6%' }}>
                             <DatePicker
                                 selected={selectedDate}
                                 onChange={date => setSelectedDate(date)}
-                                dateFormat='yyyy/MM/dd'
+                                dateFormat='yyyy-MM-dd'
                                 showYearDropdown
                                 scrollableMonthYearDropdown
-                                isClearable
                             />
                         </Box>
-
-                        {isChanged ? (
-                            <Button style={{ marginTop: '2.5%' }}>Save</Button>
-                        ) : (
-                            null
-                        )}
-
+                        <Button
+                            onClick={handleChangeDobAndSex}
+                            style={{
+                                marginTop: '25px',
+                                borderRadius: '20px',
+                                border: '1px solid #18608a',
+                                backgroundColor: '#000000',
+                                color: '#ffffff',
+                                fontSize: '13px',
+                                fontWeight: 'bold',
+                                width: '10%',
+                                height: '5%',
+                                padding: '12px 45px',
+                                letterSpacing: '1px',
+                            }}>Save</Button>
                     </Stack>
                     {haveGender ? (
                         null
                     ) : (
-                        <Typography style={{ color: '#8FA1A6', fontSize: '13px', marginLeft: '5%' }}>Not set</Typography>
+                        <Typography style={{
+                            color: '#8FA1A6',
+                            fontSize: '13px',
+                            marginLeft: '5%'
+                        }}
+                        >Not set
+                        </Typography>
                     )}
                 </Stack>
             </Stack>
@@ -295,7 +563,9 @@ const ProfileManage = () => {
                     <Typography id="modal-modal-title" variant="h6" component="h2">
                         Edit your name
                     </Typography>
-                    <Typography id="modal-modal-description" sx={{ mt: 2, marginTop: '1%', fontSize: '13px' }}>
+                    <Typography id="modal-modal-description"
+                        sx={{ mt: 2, marginTop: '1%', fontSize: '13px' }}
+                    >
                         Changes made to your profile name here, will be shown anywhere your profile is used.
                     </Typography>
                     <TextField
@@ -317,13 +587,19 @@ const ProfileManage = () => {
                             Cancel
                         </Button>
                     )}
+                    {/* Backdrop for updating */}
+                    <Backdrop
+                        sx={{ color: '#fff', zIndex: (theme) => theme.zIndex.drawer + 1 }}
+                        open={openBackdrop}
+                    >
+                        <CircularProgress color="inherit" />
+                    </Backdrop>
                 </Box>
             </Modal>
 
             {/* change phone number modal */}
             <Modal
                 open={openModalChangeContact}
-                onClose={handleCloseModalChangeContact}
                 aria-labelledby="modal-modal-title"
                 aria-describedby="modal-modal-description"
             >
@@ -343,7 +619,8 @@ const ProfileManage = () => {
                     <Typography id="modal-modal-title" variant="h6" component="h2">
                         Edit your phone number
                     </Typography>
-                    <Typography id="modal-modal-description" sx={{ mt: 2, marginTop: '1%', fontSize: '13px' }}>
+                    <Typography id="modal-modal-description"
+                        sx={{ mt: 2, marginTop: '1%', fontSize: '13px' }}>
                         Changes made to your contact here so we know how to contact you.
                     </Typography>
                     <TextField
@@ -365,13 +642,19 @@ const ProfileManage = () => {
                             Cancel
                         </Button>
                     )}
+                    {/* Backdrop for updating */}
+                    <Backdrop
+                        sx={{ color: '#fff', zIndex: (theme) => theme.zIndex.drawer + 1 }}
+                        open={openBackdrop}
+                    >
+                        <CircularProgress color="inherit" />
+                    </Backdrop>
                 </Box>
             </Modal>
 
             {/* change address modal */}
             <Modal
                 open={openModalChangeAddress}
-                onClose={handleCloseModalChangeAddress}
                 aria-labelledby="modal-modal-title"
                 aria-describedby="modal-modal-description"
             >
@@ -413,6 +696,13 @@ const ProfileManage = () => {
                             Cancel
                         </Button>
                     )}
+                    {/* Backdrop for updating */}
+                    <Backdrop
+                        sx={{ color: '#fff', zIndex: (theme) => theme.zIndex.drawer + 1 }}
+                        open={openBackdrop}
+                    >
+                        <CircularProgress color="inherit" />
+                    </Backdrop>
                 </Box>
             </Modal>
 
@@ -439,6 +729,21 @@ const ProfileManage = () => {
                     Updated successfully
                 </Alert>
             </Snackbar>
+
+            {/* Snackbar updated failed */}
+            <Snackbar open={openFailed} autoHideDuration={6000} onClose={handleCloseFailed}>
+                <Alert onClose={handleCloseFailed} severity="error" sx={{ width: '100%' }}>
+                    Something went wrong. Please try again
+                </Alert>
+            </Snackbar>
+
+            {/* Backdrop for updating */}
+            <Backdrop
+                sx={{ color: '#fff', zIndex: (theme) => theme.zIndex.drawer + 1 }}
+                open={openBackdrop}
+            >
+                <CircularProgress color="inherit" />
+            </Backdrop>
         </div>
     )
 }
