@@ -24,7 +24,7 @@ import { renderImportantTag } from "../../GridDataCellTemplate/ImportantTag";
 // variables
 import { productListSelector } from './../../redux/selectors'
 //function 
-import { deleteProductByID, getAll } from './../../redux/slices/productSlice'
+import { deleteProductByID, getAllProduct } from './../../redux/slices/productSlice'
 import AddProduct from "./AddProduct";
 import EditProduct from "./EditProduct";
 import SnackBarAlert from "../../components/SnackBarAlert";
@@ -42,6 +42,7 @@ const ProductTable = styled(DataGrid)(({ theme }) => ({
     width: 1200,
     position: 'relative',
     backgroundColor: 'white',
+    // alignSelf: 'center'
 
 }));
 
@@ -150,7 +151,7 @@ const Product = () => {
     useEffect(() => {
         if (_productList.length === 0) {
 
-            dispatch(getAll())
+            dispatch(getAllProduct())
                 .unwrap()
                 .then((originalPromiseResult) => {
                     setProductList(originalPromiseResult)

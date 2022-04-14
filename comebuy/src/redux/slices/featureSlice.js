@@ -1,7 +1,7 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import FeatureAPI from "../../api/featureAPI";
 
-export const getAll = createAsyncThunk(
+export const getAllFeature = createAsyncThunk(
   'feature/getAll',
   // Code async logic, tham số đầu tiên data là dữ liệu truyền vào khi gọi action
   async (data, { rejectWithValue }) => {
@@ -48,14 +48,14 @@ export const featureSlice = createSlice({
 
   },
   extraReducers: {
-    [getAll.pending]: (state) => {
+    [getAllFeature.pending]: (state) => {
       state.loading = true;
     },
-    [getAll.fulfilled]: (state, action) => {
+    [getAllFeature.fulfilled]: (state, action) => {
       state.loading = false;
       state.featureList = action.payload;
     },
-    [getAll.rejected]: (state, action) => {
+    [getAllFeature.rejected]: (state, action) => {
       state.loading = false;
     },
     [editFeature.pending]: (state) => {

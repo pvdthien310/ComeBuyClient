@@ -1,5 +1,5 @@
 import { Button, Typography } from "@mui/material";
-import {  useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { Grid, Stack, TextField } from '@mui/material'
 import { useDispatch, useSelector } from "react-redux";
 import { memo, useEffect, useState } from "react";
@@ -8,7 +8,8 @@ import Box from '@mui/material/Box';
 import { Swiper, SwiperSlide } from "swiper/react";
 import { Pagination } from "swiper";
 import { featureListSelector } from "../../../redux/selectors";
-import { getAll } from "../../../redux/slices/featureSlice";
+import { getAllFeature } from "../../../redux/slices/featureSlice";
+import { getAllProduct } from "../../../redux/slices/productSlice";
 import SnackBarAlert from "../../../components/SnackBarAlert";
 import cloudinaryApi from "../../../api/cloudinaryAPI"
 //icon styles
@@ -35,7 +36,9 @@ import productImageAPI from "../../../api/productImageAPI";
 import PreviewImagesModal from "../../../components/PreviewImagesModal";
 import { productAPI } from "../../../api";
 import TextFieldForAdd from "../../../components/TextFieldForAdd";
-import { ConfirmAddProductDialog } from "../../../components";
+import {ConfirmDialog } from "../../../components";
+import accountApi from "../../../api/accountAPI.js";
+import { accountSlice } from "../../../redux/slices/accountSlice.js";
 
 const AddProduct = () => {
     const dispatch = useDispatch()
@@ -215,14 +218,14 @@ const AddProduct = () => {
     }
 
     const ClearDataAndUpdateStore = () => {
-        dispatch(getAll())
-        .unwrap()
-        .then((originalPromiseResult) => {
-            navigate("/product")
-        })
-        .catch((rejectedValueOrSerializedError) => {
-            console.log("product")
-        })
+        dispatch(getAllProduct())
+            .unwrap()
+            .then((originalPromiseResult) => {
+                navigate("/product")
+            })
+            .catch((rejectedValueOrSerializedError) => {
+                console.log("product")
+            })
     }
 
     const handleAddProduct = async () => {
@@ -250,7 +253,7 @@ const AddProduct = () => {
             const result = await productAPI.createNewProduct(newProduct)
             if (result) {
                 const images = productImages.map((item) => {
-                    return {...item, productID: result.data.productID}
+                    return { ...item, productID: result.data.productID }
                 })
                 if (await AddFeature(result.data.productID)) {
                     if (await AddImages(result.data.productID, images)) {
@@ -283,7 +286,7 @@ const AddProduct = () => {
     }
 
     useEffect(() => {
-        dispatch(getAll())
+        dispatch(getAllFeature())
             .unwrap()
             .then((originalPromiseResult) => {
                 setFeatureList(originalPromiseResult)
@@ -405,7 +408,10 @@ const AddProduct = () => {
             {/* Alert init */}
             <SnackBarAlert severity='success' open={openSuccessAlert} handleClose={handleClose} message={messageSuccess} />
             <SnackBarAlert severity='error' open={openErrorAlert} handleClose={handleClose} message={messageError} />
-            <ConfirmAddProductDialog open={openConfirmDialog} handleClose={handleClose} handleAddProduct={handleAddProduct} />
+            <ConfirmDialog
+                body="Please check the product information again to make sure. This operation cannot be redo. If you are sure, please confirm!"
+                title="Confirm Action?"
+                open={openConfirmDialog} handleClose={handleClose} handleConfirm={handleAddProduct} />
         </Stack>
     )
 }

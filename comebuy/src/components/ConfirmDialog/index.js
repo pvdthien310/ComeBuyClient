@@ -8,7 +8,7 @@ import DialogTitle from '@mui/material/DialogTitle';
 import useMediaQuery from '@mui/material/useMediaQuery';
 import { useTheme } from '@mui/material/styles';
 
-const ConfirmAddProductDialog = (props) => {
+const ConfirmDialog = (props) => {
     const theme = useTheme();
     const fullScreen = useMediaQuery(theme.breakpoints.down('md'));
 
@@ -21,18 +21,18 @@ const ConfirmAddProductDialog = (props) => {
                 aria-labelledby="responsive-dialog-title"
             >
                 <DialogTitle id="responsive-dialog-title">
-                    {"Confirm Action?"}
+                    {props.title}
                 </DialogTitle>
                 <DialogContent>
                     <DialogContentText>
-                        Please check the product information again to make sure. This operation cannot be redo. If you are sure, please confirm!
+                        {props.body}
                     </DialogContentText>
                 </DialogContent>
                 <DialogActions>
                     <Button autoFocus onClick={props.handleClose}>
                         Disagree
                     </Button>
-                    <Button onClick={props.handleAddProduct} autoFocus>
+                    <Button onClick={props.handleConfirm} autoFocus>
                         Agree
                     </Button>
                 </DialogActions>
@@ -40,4 +40,4 @@ const ConfirmAddProductDialog = (props) => {
         </div>
     );
 }
-export default ConfirmAddProductDialog;
+export default ConfirmDialog;

@@ -27,4 +27,6 @@ const TextFieldForAdd = (props) => {
     )
 }
 
-export default memo(TextFieldForAdd);
+export default memo(
+    TextFieldForAdd,
+    (prevProps, nextProps) => (prevProps.Text != nextProps.Text));

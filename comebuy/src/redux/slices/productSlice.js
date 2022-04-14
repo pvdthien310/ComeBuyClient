@@ -1,7 +1,7 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import productAPI from "../../api/productAPI";
 
-export const getAll = createAsyncThunk(
+export const getAllProduct = createAsyncThunk(
   'product/getAll',
   // Code async logic, tham số đầu tiên data là dữ liệu truyền vào khi gọi action
   async (data, { rejectWithValue }) => {
@@ -77,14 +77,14 @@ export const productSlice = createSlice({
 
   },
   extraReducers: {
-    [getAll.pending]: (state) => {
+    [getAllProduct.pending]: (state) => {
       state.loading = true;
     },
-    [getAll.fulfilled]: (state, action) => {
+    [getAllProduct.fulfilled]: (state, action) => {
       state.loading = false;
       state.productList = action.payload;
     },
-    [getAll.rejected]: (state, action) => {
+    [getAllProduct.rejected]: (state, action) => {
       state.loading = false;
     },
     [editProduct.pending]: (state) => {

@@ -35,6 +35,21 @@ export const login = createAsyncThunk(
   }
 );
 
+export const edit = createAsyncThunk(
+  'account/edit',
+  // Code async logic, tham số đầu tiên data là dữ liệu truyền vào khi gọi action
+  async (data, { rejectWithValue }) => {
+    const response = await accountApi.edit(data)
+    if (!response.accessToken) {
+      return rejectWithValue("Login Failed");
+    }
+    else {
+      return response;
+    }
+  }
+);
+
+
 export const getAccountWithID = createAsyncThunk(
   'account/findOne',
   async (data, { rejectedWithValue }) => {
