@@ -3,9 +3,7 @@ import { useDispatch } from 'react-redux';
 import { unwrapResult } from '@reduxjs/toolkit';
 
 import { Avatar, Button, IconButton, Link, Modal, Stack, TextField, Typography } from '@mui/material';
-import NavigateNextIcon from '@mui/icons-material/NavigateNext';
-import BorderColorSharpIcon from '@mui/icons-material/BorderColorSharp';
-import CameraSharpIcon from '@mui/icons-material/CameraSharp';
+import AddPhotoAlternateTwoToneIcon from '@mui/icons-material/AddPhotoAlternateTwoTone';
 import Box from '@mui/material/Box';
 import InputLabel from '@mui/material/InputLabel';
 import MenuItem from '@mui/material/MenuItem';
@@ -17,6 +15,7 @@ import Backdrop from '@mui/material/Backdrop';
 import CircularProgress from '@mui/material/CircularProgress';
 import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 import Breadcrumbs from '@mui/material/Breadcrumbs';
+import EditTwoToneIcon from '@mui/icons-material/EditTwoTone';
 
 import DatePicker from 'react-datepicker';
 import "react-datepicker/dist/react-datepicker.css"
@@ -314,14 +313,34 @@ const ProfileManage = () => {
             setDataForUpdate(temp)
             setStateAvt(imgUrl)
             filesContent.splice(0, filesContent.length)
+            setOpenModalPreview(false)
             setUpdating(false)
         } catch (rejectedValueOrSerializedError) {
             setOpenFailed(true)
             filesContent.splice(0, filesContent.length)
             setStateAvt(dataForUpdate.avatar)
+            setOpenModalPreview(false)
             setUpdating(false)
         }
     }
+
+    const [openPreview, setOpenModalPreview] = useState(false)
+    const openModalPreviewAvatar = () => {
+        setOpenModalPreview(true)
+    }
+    const handleCloseModalPreviewAvt = () => {
+        filesContent.splice(0, filesContent.length)
+        setStateAvt(dataForUpdate.avatar)
+        setOpenModalPreview(false)
+    }
+
+    useEffect(() => {
+        if (filesContent.length != 0) {
+            openModalPreviewAvatar();
+        } else {
+            setOpenModalPreview(false)
+        }
+    }, [filesContent])
 
     const handleChangeAvt = async () => {
         setUpdating(true)
@@ -376,22 +395,6 @@ const ProfileManage = () => {
                 spacing={3}
                 style={{ marginLeft: '20%', marginTop: '1%' }}
             >
-                {/* <Link style={{
-                    marginRight: '-20px',
-                    color: '#A6A6A6',
-                    fontWeight: 'bold',
-                    fontSize: '14px'
-                }}
-                    href="#" underline="none"
-                >
-                    {' My place '}
-                </Link>
-                <NavigateNextIcon style={{ marginRight: '-20px', color: '#F2F2F2' }} />
-                <Link style={{ color: '#F2F2F2', fontWeight: 'bold', fontSize: '14px' }}
-                    href="#" underline="none"
-                >
-                    {'Profile management'}
-                </Link> */}
                 <Breadcrumbs separator="›" style={{ color: 'white' }} aria-label="breadcrumb">
                     {breadcrumbs}
                 </Breadcrumbs>
@@ -425,7 +428,7 @@ const ProfileManage = () => {
                         </IconButton>
                     ) : (
                         <IconButton onClick={() => openFileSelector()} style={{ marginLeft: '-2%', marginTop: '10%' }}>
-                            <CameraSharpIcon />
+                            <AddPhotoAlternateTwoToneIcon />
                         </IconButton>
                     )}
                     <Stack direction="column" spacing={2}>
@@ -444,7 +447,7 @@ const ProfileManage = () => {
                             <IconButton onClick={handleOpenModalChangeName}
                                 style={{ marginTop: '8%', marginLeft: '5%' }}
                             >
-                                <BorderColorSharpIcon />
+                                <EditTwoToneIcon />
                             </IconButton>
                         </Stack>
                         <Typography style={{
@@ -501,7 +504,7 @@ const ProfileManage = () => {
                             {contact}
                         </Typography>
                         <IconButton onClick={handleOpenModalChangeContact} style={{ marginTop: '-3%' }}>
-                            <BorderColorSharpIcon />
+                            <EditTwoToneIcon />
                         </IconButton>
                     </Stack>
 
@@ -560,7 +563,7 @@ const ProfileManage = () => {
                             {address}
                         </Typography>
                         <IconButton onClick={handleOpenModalChangeAddress} style={{ marginTop: '-3%' }}>
-                            <BorderColorSharpIcon />
+                            <EditTwoToneIcon />
                         </IconButton>
                     </Stack>
 
@@ -595,7 +598,7 @@ const ProfileManage = () => {
                         marginTop: '1%',
                         marginLeft: '5%'
                     }}
-                    >More Info...
+                    >More Info
                     </Typography>
                     <Stack direction="row" spacing={2} style={{ marginTop: '2%' }}>
                         <Box sx={{ minWidth: 120, marginLeft: '5%' }}>
@@ -632,9 +635,9 @@ const ProfileManage = () => {
                                 border: '1px solid #18608a',
                                 backgroundColor: '#000000',
                                 color: '#ffffff',
-                                fontSize: '13px',
+                                fontSize: '10px',
                                 fontWeight: 'bold',
-                                width: '10%',
+                                width: '5%',
                                 height: '5%',
                                 padding: '12px 45px',
                                 letterSpacing: '1px',
@@ -809,6 +812,73 @@ const ProfileManage = () => {
                             Cancel
                         </Button>
                     )}
+                    {/* Backdrop for updating */}
+                    <Backdrop
+                        sx={{ color: '#fff', zIndex: (theme) => theme.zIndex.drawer + 1 }}
+                        open={openBackdrop}
+                    >
+                        <CircularProgress color="inherit" />
+                    </Backdrop>
+                </Box>
+            </Modal>
+
+            {/* modal preview avatar */}
+            <Modal
+                open={openPreview}
+            >
+                <Box
+                    sx={{
+                        position: 'absolute',
+                        top: '55%',
+                        left: '50%',
+                        transform: 'translate(-50%, -50%)',
+                        width: '400px',
+                        height: '400px',
+                        bgcolor: 'background.paper',
+                        borderRadius: '15px',
+                        border: '2px solid #000',
+                        boxShadow: 24,
+                        p: 4,
+                    }}
+                >
+                    {filesContent.map((file, index) => (
+                        <Avatar alt={file.name} src={file.content}
+                            sx={{ marginLeft: '5%', width: "90%", height: "90%" }} />
+                    ))}
+                    <Stack direction="row" spacing={2} style={{ justifyContent: 'space-between' }}>
+                        <Button
+                            onClick={handleCloseModalPreviewAvt}
+                            style={{
+                                borderRadius: '20px',
+                                border: '1px',
+                                backgroundColor: 'red',
+                                color: '#ffffff',
+                                fontSize: '10px',
+                                fontWeight: 'bold',
+                                width: '5%',
+                                height: '2%',
+                                letterSpacing: '1px',
+                            }}
+                        >
+                            Cancel
+                        </Button>
+                        <Button
+                            onClick={handleChangeAvt}
+                            style={{
+                                borderRadius: '20px',
+                                border: '1px solid #18608a',
+                                backgroundColor: 'black',
+                                color: '#ffffff',
+                                fontSize: '10px',
+                                fontWeight: 'bold',
+                                width: '5%',
+                                height: '2%',
+                                letterSpacing: '1px',
+                            }}
+                        >
+                            Save
+                        </Button>
+                    </Stack>
                     {/* Backdrop for updating */}
                     <Backdrop
                         sx={{ color: '#fff', zIndex: (theme) => theme.zIndex.drawer + 1 }}
