@@ -866,12 +866,6 @@ const LoginRegister = () => {
                                 <p>loading.....</p> :
                                 null
                         }
-                        {/*Snackbar*/}
-                        <Snackbar open={openLoginFailed} autoHideDuration={6000} onClose={handleCloseLoginFailed}>
-                            <Alert onClose={handleCloseLoginFailed} severity="error" sx={{ width: '100%' }}>
-                                Wrong verify code. Please try again.
-                            </Alert>
-                        </Snackbar>
                     </form>
                 </div>
             </div >
@@ -902,6 +896,12 @@ const LoginRegister = () => {
                     <Register1SVG className="image" />
                 </div>
             </div>
+            {/*Snackbar*/}
+            <Snackbar open={openLoginFailed} autoHideDuration={6000} onClose={handleCloseLoginFailed}>
+                <Alert onClose={handleCloseLoginFailed} severity="error" sx={{ width: '100%' }}>
+                    Something went wrong ! Please check your email and password.
+                </Alert>
+            </Snackbar>
         </div >
     )
 }

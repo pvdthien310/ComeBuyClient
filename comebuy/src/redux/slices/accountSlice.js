@@ -77,6 +77,18 @@ export const register = createAsyncThunk(
     }
   })
 
+export const updateAccount = createAsyncThunk(
+  "account/update",
+  async (data, { rejectedWithValue }) => {
+    const response = await accountApi.updateAccount(data)
+    if (!response) {
+      return rejectedWithValue(false)
+    } else {
+      return response.data
+    }
+  }
+)
+
 export const accountSlice = createSlice({
   name: 'account',
   initialState: {
@@ -132,6 +144,20 @@ export const accountSlice = createSlice({
       state.loading = false;
       state.error = action.payload.message;
       state.isRegSuccess = false;
+    },
+    [updateAccount.pending]: (state) => {
+      state.loading = true;
+      console.log(" pending...");
+    },
+    [updateAccount.fulfilled]: (state, action) => {
+      state.loading = false;
+      state.user = action.payload;
+      console.log(" fulfilled: " + state.user);
+    },
+    [updateAccount.rejected]: (state, action) => {
+      state.loading = false;
+      state.errorMessage = action.payload;
+      console.log("rejected: " + state.errorMessage);
     },
   }
 })

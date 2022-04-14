@@ -74,10 +74,14 @@ export default function NavBar() {
     const isMobileMenuOpen = Boolean(mobileMoreAnchorEl);
 
     const selections_1 = ['Sign In']
-    const selections_2 = ['Profile', 'My Account', 'My Cart', 'Log Out']
+    const selections_2 = ['My place', 'Log Out']
 
     const handleLogin = () => {
         navigate('/login')
+    }
+
+    const handleMyPlace = () => {
+        navigate('/myplace')
     }
 
     const handleProfileMenuOpen = (event) => {
@@ -95,12 +99,13 @@ export default function NavBar() {
 
         if (e.target.innerText === 'Sign In')
             handleLogin();
-        else if (e.target.innerText === 'Log Out')
-            {
-                dispatch(accountSlice.actions.logout());
-                await localStorage.setItem('role',null)
-                navigate("/")
-            }
+        else if (e.target.innerText === 'Log Out') {
+            dispatch(accountSlice.actions.logout());
+            await localStorage.setItem('role', null)
+            navigate("/")
+        } else {
+            handleMyPlace();
+        }
 
     };
 
@@ -112,7 +117,7 @@ export default function NavBar() {
 
     const renderMenu = (
         <Box>
-           
+
             <Menu
                 anchorEl={anchorEl}
                 anchorOrigin={{
@@ -204,7 +209,7 @@ export default function NavBar() {
 
     return (
         <Box sx={{ flexGrow: 1 }}>
-          
+
             <AppBar position="static" style={{ backgroundColor: 'black' }}>
                 <Toolbar>
                     <IconButton

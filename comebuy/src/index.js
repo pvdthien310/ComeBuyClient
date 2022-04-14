@@ -9,12 +9,6 @@ import { BrowserRouter } from 'react-router-dom';
 import ScrollButton from './components/ScrollButton/ScrollButton';
 
 ReactDOM.render(
-  // <React.StrictMode>
-  //   <Provider store={store}>
-  //     <App />
-  //   </Provider>
-  // </React.StrictMode>,
-
   <Provider store={store}>
     <BrowserRouter>
       <App />
