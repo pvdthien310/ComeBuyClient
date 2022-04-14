@@ -132,13 +132,12 @@ const Staff = () => {
     const columns = React.useMemo(
         () => [
             {
-                field: 'userID',
-                headerName: 'ID',
+                field: 'name',
+                headerName: 'Name',
                 width: 250,
                 renderCell: (params) => (
                     <UserInfoPopOver user={params.row}/>
                 )
-
             },
             {
                 field: 'avatar',
@@ -148,17 +147,14 @@ const Staff = () => {
                     renderAvatar(params)
                 )
             },
-            { field: 'name', headerName: 'Name', width: 250 },
             { field: 'dob', headerName: 'Day of birth', width: 130 },
-            { field: 'sex', headerName: 'Sex', width: 130 },
-            { field: 'email', headerName: 'Email', width: 180 },
             {
                 field: 'role', headerName: 'Role', width: 150, renderCell: (params) => (
                     renderStatus(params)
                 )
             },
             {
-                field: 'branch', headerName: 'Branch', width: 180,
+                field: 'branch', headerName: 'Branch', width: 350,
                 valueFormatter: (params) => {
                     if (params.value == null) {
                         return "This is not Manager";
