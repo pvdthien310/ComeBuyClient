@@ -18,6 +18,7 @@ export { default as FeatureChart} from './FeatureChart'
 export { default as TextFieldForAdd } from './TextFieldForAdd'
 export { default as ConfirmDialog} from './ConfirmDialog'
 export { default as RoleSelect} from './RoleSelect'
+export { default as UserInfoPopOver} from './UserInforPopOver'
 
 // export { default as ScrollButton } from './ScrollButton/ScrollButton'
 

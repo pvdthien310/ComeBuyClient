@@ -9,7 +9,7 @@ import { useEffect, useState } from 'react'
 import SnackBarAlert from "../../components/SnackBarAlert";
 import accountApi from '../../api/accountAPI';
 import { Button, Stack, styled } from '@mui/material';
-import { ConfirmDialog } from '../../components';
+import { ConfirmDialog, UserInfoPopOver } from '../../components';
 import { useNavigate } from 'react-router';
 
 
@@ -69,6 +69,13 @@ const Staff = () => {
     }, [])
 
     const handleDeleteUser = async () => {
+        if (selectedAccount.row.role == 'customer' || selectedAccount.row.role == 'admin') {
+            setMessageError("you are not allowed to deleted Customer's account or Admin :((")
+            setOpenErrorAlert(true)
+            handleClose()
+            return
+        }
+
         const response = await accountApi.deleteAccount(selectedAccount.id)
         if (response.status == 200) {
             /// Type this to set new vlue for state
@@ -124,7 +131,15 @@ const Staff = () => {
 
     const columns = React.useMemo(
         () => [
-            { field: 'userID', headerName: 'ID', width: 250 },
+            {
+                field: 'userID',
+                headerName: 'ID',
+                width: 250,
+                renderCell: (params) => (
+                    <UserInfoPopOver user={params.row}/>
+                )
+
+            },
             {
                 field: 'avatar',
                 width: 120,
@@ -148,7 +163,7 @@ const Staff = () => {
                     if (params.value == null) {
                         return "This is not Manager";
                     }
-                    
+
                     return params.value.address;
                 }
             },
