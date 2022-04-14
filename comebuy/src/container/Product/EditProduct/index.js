@@ -441,7 +441,7 @@ const EditProduct = () => {
                     <Grid item xs={12} paddingLeft={2} paddingTop={2}>
                     </Grid>
                 </Grid>
-                <Stack sx={{ width:'100%',justifyContent:'center'}} direction='row' spacing={3}>
+                <Stack sx={{ width: '100%', justifyContent: 'center' }} direction='row' spacing={3}>
                     <Button sx={style.BackButton} variant="contained" onClick={() => navigate('/product')}>Back</Button>
                     <Button sx={style.SaveButton} variant="contained" onClick={SaveChange}>Save</Button>
                 </Stack>

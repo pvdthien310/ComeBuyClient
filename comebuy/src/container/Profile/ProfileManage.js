@@ -15,19 +15,60 @@ import Snackbar from '@mui/material/Snackbar';
 import Alert from '@mui/material/Alert';
 import Backdrop from '@mui/material/Backdrop';
 import CircularProgress from '@mui/material/CircularProgress';
+import CheckCircleIcon from '@mui/icons-material/CheckCircle';
+import Breadcrumbs from '@mui/material/Breadcrumbs';
 
 import DatePicker from 'react-datepicker';
 import "react-datepicker/dist/react-datepicker.css"
 
+import { useFilePicker } from "use-file-picker";
+
 import { useSelector } from 'react-redux';
+
+import { useNavigate } from 'react-router';
 
 import NavBar from './../../components/NavBar/NavBar';
 import { currentUser } from '../../redux/selectors';
 import * as Validation from '././../LoginAndRegister/ValidationDataForAccount'
 import { updateAccount, getAccountWithID } from '../../redux/slices/accountSlice';
-
+import cloudinaryApi from '../../api/cloudinaryAPI';
 
 const ProfileManage = () => {
+
+    const navigate = useNavigate()
+
+    function handleClick(event) {
+        event.preventDefault();
+        navigate('/myplace')
+    }
+
+    function handleClickToHome(event) {
+        event.preventDefault();
+        navigate('/')
+    }
+    const breadcrumbs = [
+        <Link
+            underline="hover"
+            key="2"
+            style={{ color: 'white' }}
+            href="/myplace"
+            onClick={handleClickToHome}
+        >
+            Home
+        </Link>,
+        <Link
+            underline="hover"
+            key="2"
+            style={{ color: 'white' }}
+            href="/myplace"
+            onClick={handleClick}
+        >
+            My place
+        </Link>,
+        <Typography key="3" style={{ color: 'white' }}>
+            Profile Management
+        </Typography>,
+    ];
 
     const _currentUser = useSelector(currentUser)
     const [dataForUpdate, setDataForUpdate] = useState(_currentUser)
@@ -250,6 +291,62 @@ const ProfileManage = () => {
         }
     }
 
+    //change avatar
+    const [stateAvt, setStateAvt] = useState(dataForUpdate.avatar)
+    const [openFileSelector, { filesContent, loading, errors }] = useFilePicker({
+        readAs: "DataURL",
+        accept: "image/*",
+        multiple: false,
+        limitFilesConfig: { max: 2 },
+        // minFileSize: 1,
+        maxFileSize: 50 // in megabytes
+    });
+
+    const updateAvt = async (imgUrl) => {
+        const temp = {
+            ...dataForUpdate,
+            avatar: imgUrl
+        }
+        try {
+            const resultAction = await dispatch(updateAccount(temp))
+            const originalPromiseResult = unwrapResult(resultAction)
+            setOpenSuccess(true)
+            setDataForUpdate(temp)
+            setStateAvt(imgUrl)
+            filesContent.splice(0, filesContent.length)
+            setUpdating(false)
+        } catch (rejectedValueOrSerializedError) {
+            setOpenFailed(true)
+            filesContent.splice(0, filesContent.length)
+            setStateAvt(dataForUpdate.avatar)
+            setUpdating(false)
+        }
+    }
+
+    const handleChangeAvt = async () => {
+        setUpdating(true)
+        const data = [filesContent[0].content]
+        try {
+            const response = await cloudinaryApi.uploadImages(JSON.stringify({ data: data }))
+            if (response) {
+                response.data.map((imgurl) => {
+                    updateAvt(imgurl)
+                })
+            }
+            else {
+                setStateAvt(dataForUpdate.avatar)
+                setUpdating(false)
+                setOpenFailed(true)
+            }
+        }
+        catch (err) {
+            console.log(err);
+            filesContent.splice(0, filesContent.length)
+            setStateAvt(dataForUpdate.avatar)
+            setUpdating(false)
+        }
+    }
+
     //wrong name
     const [openNameWrong, setOpenNameWrong] = useState(false);
 
@@ -279,13 +376,13 @@ const ProfileManage = () => {
                 spacing={3}
                 style={{ marginLeft: '20%', marginTop: '1%' }}
             >
-                <Link style={{
+                {/* <Link style={{
                     marginRight: '-20px',
                     color: '#A6A6A6',
                     fontWeight: 'bold',
                     fontSize: '14px'
                 }}
-                    href="myplace" underline="none"
+                    href="#" underline="none"
                 >
                     {' My place '}
                 </Link>
@@ -294,7 +391,10 @@ const ProfileManage = () => {
                     href="#" underline="none"
                 >
                     {'Profile management'}
-                </Link>
+                </Link> */}
+                <Breadcrumbs separator="›" style={{ color: 'white' }} aria-label="breadcrumb">
+                    {breadcrumbs}
+                </Breadcrumbs>
             </Stack>
 
             <Stack direction="column" spacing={3} style={{ paddingBottom: '2%' }}>
@@ -309,12 +409,25 @@ const ProfileManage = () => {
                         alignSelf: 'center',
                         padding: '1%'
                     }}>
-                    <Avatar alt="" src={_currentUser.avatar}
-                        sx={{ width: 100, height: 100, marginLeft: '5%' }}
-                    />
-                    <IconButton style={{ marginLeft: '-2%', marginTop: '10%' }}>
-                        <CameraSharpIcon />
-                    </IconButton>
+                    {filesContent.length != 0 ? (
+                        filesContent.map((file, index) => (
+                            <Avatar alt={file.name} src={file.content}
+                                sx={{ width: 100, height: 100, marginLeft: '5%' }} />
+                        ))
+                    ) : (
+                        <Avatar alt="" src={stateAvt}
+                            sx={{ width: 100, height: 100, marginLeft: '5%' }}
+                        />
+                    )}
+                    {filesContent.length != 0 ? (
+                        <IconButton onClick={handleChangeAvt} style={{ marginLeft: '-2%', marginTop: '10%' }}>
+                            <CheckCircleIcon />
+                        </IconButton>
+                    ) : (
+                        <IconButton onClick={() => openFileSelector()} style={{ marginLeft: '-2%', marginTop: '10%' }}>
+                            <CameraSharpIcon />
+                        </IconButton>
+                    )}
                     <Stack direction="column" spacing={2}>
                         <Stack direction="row" spacing={2}
                             style={{ justifyContent: 'space-between' }}>
