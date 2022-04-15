@@ -828,7 +828,7 @@ const LoginRegister = () => {
                                 onChange={(e) => setPasswordUser(e.target.value)}
                             />
                             {passwordShown ? (
-                                <IconButton onClick={togglePassword}>
+                                <IconButton style={{ height: '10px' }} onClick={togglePassword}>
                                     <VisibilityIcon color="success" />
                                 </IconButton>
                             ) : (

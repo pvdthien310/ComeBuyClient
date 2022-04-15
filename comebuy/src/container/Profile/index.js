@@ -17,6 +17,7 @@ import { unwrapResult } from '@reduxjs/toolkit'
 
 import { login } from '../../redux/slices/accountSlice';
 import ProfileManage from './ProfileManage';
+import { useNavigate } from 'react-router';
 
 const Profile = () => {
 
@@ -63,6 +64,11 @@ const Profile = () => {
         }
     }
 
+    const navigate = useNavigate();
+    const handleForgotPassword = () => {
+        navigate('/myplace/resetpassword')
+    }
+
     return (
         <div>
             {canAccess ? (
@@ -84,7 +90,7 @@ const Profile = () => {
                             <Typography style={{ marginTop: '13%', fontSize: '20px', fontWeight: 'bold', color: '#F2F1F0' }}>{_currentUser.name}</Typography>
                         </Stack>
                         <Stack flexDirection="flex-start" direction="row" spacing={2}>
-                            <input style={{ backgroundColor: '#F2F1F0', borderRadius: '15px', fontSize: '15px', width: '450px' }}
+                            <input style={{ backgroundColor: '#F2F1F0', borderRadius: '15px', fontSize: '20px', width: '450px' }}
                                 id="outlined-basic"
                                 type={passwordShown ? "text" : "password"}
                                 placeholder="Password"
@@ -103,15 +109,14 @@ const Profile = () => {
                             )}
 
                         </Stack>
-                        <Link style={{ color: '#F2F1F0', fontWeight: '-moz-initial' }} href="login" underline="always">
-                            {'Forgot password ?'}
-                        </Link>
+                        <Button onClick={handleForgotPassword} style={{ fontSize: '12px', color: '#F2F1F0', textDecoration: 'underline', alignSelf: 'flex-start' }}>
+                            Forgot password ?
+                        </Button>
                         <Button
                             onClick={handleLogin}
                             variant='outlined'
                             size="small"
                             style={{
-                                marginTop: '25px',
                                 borderRadius: '20px',
                                 border: '1px solid #18608a',
                                 backgroundColor: '#D9D6D2',
