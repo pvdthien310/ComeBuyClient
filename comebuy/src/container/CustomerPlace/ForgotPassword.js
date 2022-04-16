@@ -155,7 +155,7 @@ const ForgotPassword = () => {
                 if (confirmNewPassword === '' || newPassword != confirmNewPassword) {
                     setOpenPasswordNotMatch(true)
                 } else {
-                    setOpenBackdrop(!openBackdrop);
+                    setOpenBackdrop(true);
                     let temp = generateOTP()
                     setVerifyCode(temp)
                 }

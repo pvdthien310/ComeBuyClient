@@ -418,7 +418,7 @@ const ProfileManage = () => {
                                 sx={{ width: 100, height: 100, marginLeft: '5%' }} />
                         ))
                     ) : (
-                        <Avatar alt="" src={stateAvt}
+                        <Avatar alt="" src={stateAvt === '' ? '' : stateAvt}
                             sx={{ width: 100, height: 100, marginLeft: '5%' }}
                         />
                     )}
@@ -608,7 +608,7 @@ const ProfileManage = () => {
                                     style={{ marginTop: '10%' }}
                                     labelId="demo-simple-select-standard-label"
                                     id="demo-simple-select-standard"
-                                    value={gender}
+                                    value={gender === 'male' ? 'male' : 'female'}
                                     onChange={handleChangeGender}
                                 >
                                     <MenuItem value={"male"}>Male</MenuItem>
