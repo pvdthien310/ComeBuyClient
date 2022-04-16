@@ -11,6 +11,7 @@ import CustomerPlace from './container/CustomerPlace/index';
 import { currentUser } from './redux/selectors';
 import { useSelector } from 'react-redux';
 import Profile from './container/Profile';
+import ForgotPassword from './container/CustomerPlace/ForgotPassword';
 
 function App() {
   const role = localStorage.getItem('role');
@@ -41,14 +42,14 @@ function App() {
     return <HomePage />
   };
 
-  const pathProfile = "profiles/" + _currentUser.email;
 
   return (
     <Routes>
       <Route path="*" element={renderRoutes()} />
       <Route path="login" element={<LoginRegister />} />
       <Route path="myplace" element={<CustomerPlace />} />
-      <Route path={pathProfile} element={<Profile />} />
+      <Route path="profile" element={<Profile />} />
+      <Route path="myplace/resetpassword" element={<ForgotPassword />} />
     </Routes>
   );
 }

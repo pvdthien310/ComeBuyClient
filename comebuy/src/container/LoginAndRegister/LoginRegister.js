@@ -76,17 +76,15 @@ const LoginRegister = () => {
 
     //Data for register
     const [dataForReg, setDataForReg] = useState({
-        userID: "",
+        phoneNumber: "0111111111",
         name: "",
-        dob: "",
-        avatar: "",
-        phoneNumber: "",
+        dob: "1/1/2000",
+        avatar: "https://www.pngitem.com/pimgs/m/150-1503945_transparent-user-png-default-user-image-png-png.png",
         email: "",
         password: "",
-        bio: "",
-        address: "",
-        role: "",
-        sex: ""
+        address: "Viet nam",
+        role: "customer",
+        sex: "male",
     })
 
     //for open error alert password
@@ -187,17 +185,15 @@ const LoginRegister = () => {
         setOpenDialogRegSuccessfully(false);
         setCanReg(true);
         setDataForReg({
-            userID: "",
+            phoneNumber: "0111111111",
             name: "",
-            dob: "",
-            avatar: "",
-            phoneNumber: "",
+            dob: "1/1/2000",
+            avatar: "https://www.pngitem.com/pimgs/m/150-1503945_transparent-user-png-default-user-image-png-png.png",
             email: "",
             password: "",
-            bio: "",
-            address: "",
-            role: "",
-            sex: ""
+            address: "Viet nam",
+            role: "customer",
+            sex: "male",
         });
         setCfPass("")
         setIsChecked(false)
@@ -438,11 +434,11 @@ const LoginRegister = () => {
                                 onChange={(e) => setDataForReg({ ...dataForReg, password: e.target.value })}
                             />
                             {passwordShown ? (
-                                <IconButton onClick={togglePassword}>
+                                <IconButton style={{ backgroundColor: '#a6adaf' }} onClick={togglePassword}>
                                     <VisibilityIcon color="success" />
                                 </IconButton>
                             ) : (
-                                <IconButton onClick={togglePassword}>
+                                <IconButton style={{ backgroundColor: '#a6adaf' }} onClick={togglePassword}>
                                     <VisibilityOffIcon />
                                 </IconButton>
                             )}
@@ -468,11 +464,11 @@ const LoginRegister = () => {
                                 onChange={(e) => setCfPass(e.target.value)}
                             />
                             {cfPasswordShown ? (
-                                <IconButton onClick={toggleCfPassword}>
+                                <IconButton style={{ backgroundColor: '#a6adaf' }} onClick={toggleCfPassword}>
                                     <VisibilityIcon color="success" />
                                 </IconButton>
                             ) : (
-                                <IconButton onClick={toggleCfPassword}>
+                                <IconButton style={{ backgroundColor: '#a6adaf' }} onClick={toggleCfPassword}>
                                     <VisibilityOffIcon />
                                 </IconButton>
                             )}
@@ -828,11 +824,11 @@ const LoginRegister = () => {
                                 onChange={(e) => setPasswordUser(e.target.value)}
                             />
                             {passwordShown ? (
-                                <IconButton onClick={togglePassword}>
+                                <IconButton style={{ backgroundColor: '#a6adaf' }} onClick={togglePassword}>
                                     <VisibilityIcon color="success" />
                                 </IconButton>
                             ) : (
-                                <IconButton onClick={togglePassword}>
+                                <IconButton style={{ backgroundColor: '#a6adaf' }} onClick={togglePassword}>
                                     <VisibilityOffIcon />
                                 </IconButton>
                             )}

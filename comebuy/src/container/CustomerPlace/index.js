@@ -20,7 +20,7 @@ const CustomerPlace = () => {
     const _currentUser = useSelector(currentUser)
     const navigate = useNavigate()
     const gotoProfile = () => {
-        navigate('/profiles' + '/' + _currentUser.email)
+        navigate('/profile')
     }
 
 
