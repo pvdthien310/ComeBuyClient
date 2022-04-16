@@ -136,7 +136,7 @@ const Staff = () => {
                 headerName: 'Name',
                 width: 250,
                 renderCell: (params) => (
-                    <UserInfoPopOver user={params.row}/>
+                    <UserInfoPopOver user={params.row} />
                 )
             },
             {
@@ -175,7 +175,13 @@ const Staff = () => {
                     />,
                     <GridActionsCellItem
                         icon={<SecurityIcon />}
-                        label="Toggle Admin"
+                        label="Toggle Manager"
+                        onClick={toggleAdmin(params.id)}
+                        showInMenu
+                    />,
+                    <GridActionsCellItem
+                        icon={<SecurityIcon />}
+                        label="Toggle Staff"
                         onClick={toggleAdmin(params.id)}
                         showInMenu
                     />,

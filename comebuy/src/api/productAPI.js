@@ -4,16 +4,19 @@ const baseURL = 'product'
 
 const productAPI = {
     getAll: async () => {
-        const res = await DatabaseClient.get('/' + baseURL);
+        const res = await DatabaseClient.get('/' + baseURL)
+            .catch(err => { return err.response })
         return res.data;
     },
 
     edit: async (data) => {
         const res = await DatabaseClient.put('/' + baseURL + '/' + data.productID, data)
+            .catch(err => { return err.response })
         return res
     },
     getProductWithID: async (id) => {
         const res = await DatabaseClient.get('/' + baseURL + `/${id}`)
+            .catch(err => { return err.response })
         return res;
     },
     deleteAndUpdate_Feature: async (productID, newFeatures) => {
@@ -21,15 +24,17 @@ const productAPI = {
             {
                 productID: productID,
                 featureID: newFeatures
-            })
+            }).catch(err => { return err.response })
         return res
     },
     createNewProduct: async (newProduct) => {
-        const res = await DatabaseClient.post('/' + baseURL,newProduct)
+        const res = await DatabaseClient.post('/' + baseURL, newProduct)
+            .catch(err => { return err.response })
         return res
     },
-    deleteByID: async (productID)=> {
+    deleteByID: async (productID) => {
         const res = await DatabaseClient.delete('/' + baseURL + `/${productID}`)
+            .catch(err => { return err.response })
         return res;
     }
 }
