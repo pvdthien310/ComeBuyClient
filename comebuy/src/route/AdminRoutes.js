@@ -4,6 +4,7 @@ import AddProduct from '../container/Product/AddProduct';
 import EditProduct from '../container/Product/EditProduct';
 import Staff from '../container/Staff';
 import AddStaff from '../container/Staff/AddStaff';
+import Stock from '../container/Stock';
 
 
 const adminRoutes = [
@@ -31,6 +32,11 @@ const adminRoutes = [
         name: 'addStaff',
         path: '/staff/add',
         page: <AddStaff />,
+    },
+    {
+        name: 'Stock',
+        path: '/stock',
+        page: <Stock />,
     }
 ]
 
@@ -44,6 +50,11 @@ const adminMenuItems = [
         name: 'Staff',
         path: '/staff',
         page: <Staff />,
+    },
+    {
+        name: 'Stock',
+        path: '/stock',
+        page: <Stock />,
     }]
 
 

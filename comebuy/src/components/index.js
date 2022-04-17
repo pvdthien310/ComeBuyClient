@@ -19,6 +19,10 @@ export { default as TextFieldForAdd } from './TextFieldForAdd'
 export { default as ConfirmDialog} from './ConfirmDialog'
 export { default as RoleSelect} from './RoleSelect'
 export { default as UserInfoPopOver} from './UserInforPopOver'
+export { default as StockInBranch} from './StockInBranch'
+export { default as ProductCardInStock} from './ProductCardInStock'
+export { default as AddProductInStockModal} from './AddProductInStockModal'
+export { default as ProductSelect} from './ProductSelect'
 
 // export { default as ScrollButton } from './ScrollButton/ScrollButton'
 

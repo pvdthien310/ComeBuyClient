@@ -4,7 +4,6 @@ import { styled } from '@mui/material/styles';
 import { Swiper, SwiperSlide } from "swiper/react";
 import BrandItem from "./BrandItem/BrandItem";
 import Button from '@mui/material/Button';
-import './BrandLine.css'
 import NavigateNextIcon from '@mui/icons-material/NavigateNext';
 
 const Img = styled('img')({
