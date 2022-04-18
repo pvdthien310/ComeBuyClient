@@ -17,7 +17,11 @@ import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 import Breadcrumbs from '@mui/material/Breadcrumbs';
 import EditTwoToneIcon from '@mui/icons-material/EditTwoTone';
 
-import DatePicker from 'react-datepicker';
+import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
+import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
+import { DatePicker } from '@mui/x-date-pickers/DatePicker';
+import { MobileDatePicker } from '@mui/x-date-pickers/MobileDatePicker';
+
 import "react-datepicker/dist/react-datepicker.css"
 
 import { useFilePicker } from "use-file-picker";
@@ -97,6 +101,7 @@ const ProfileManage = () => {
             return false
         }
     })
+
     const [haveAddress, setHaveAddress] = useState(() => {
         if (dataForUpdate.address != '' || dataForUpdate.address != null) {
             return true;
@@ -270,6 +275,7 @@ const ProfileManage = () => {
     }
 
     const handleChangeDobAndSex = async () => {
+        console.log(selectedDate.toISOString().substring(0, 10));
         setUpdating(true)
         const temp = {
             ...dataForUpdate,
@@ -389,124 +395,176 @@ const ProfileManage = () => {
 
 
     return (
-        <div style={{ backgroundColor: 'black' }}>
+        <Stack direction="column" style={{
+            flex: 1,
+            display: 'flex',
+            height: '100%',
+            backgroundColor: 'black'
+        }}>
             <NavBar></NavBar>
             <Stack direction="row"
                 spacing={3}
-                style={{ marginLeft: '20%', marginTop: '1%' }}
+                style={{ marginLeft: '15%', marginTop: '1%' }}
             >
                 <Breadcrumbs separator="›" style={{ color: 'white' }} aria-label="breadcrumb">
                     {breadcrumbs}
                 </Breadcrumbs>
             </Stack>
+            <Typography style={{
+                marginLeft: '15%',
+                marginTop: '3%',
+                color: 'white',
+                fontSize: '24px',
+                fontWeight: 'bold'
+            }}>
+                Your information
+            </Typography>
+            <div style={{ marginLeft: '15%', height: '1px', backgroundColor: 'white', width: '60%' }}></div>
 
-            <Stack direction="column" spacing={3} style={{ paddingBottom: '2%' }}>
-
-                {/* name & avatar */}
-                <Stack direction="row" spacing={3}
-                    sx={{
-                        borderRadius: '15px',
-                        marginTop: '3%',
-                        backgroundColor: '#D7D8D9',
-                        width: '45%',
-                        alignSelf: 'center',
-                        padding: '1%'
-                    }}>
+            {/* name & Avatar */}
+            <Stack direction="row" spacing={2}
+                sx={{
+                    backgroundColor: 'black',
+                    paddingLeft: '15%',
+                    marginTop: '2%',
+                    paddingBottom: '1%',
+                    width: '100%'
+                }}>
+                <Stack direction="row" spacing={2}>
                     {filesContent.length != 0 ? (
                         filesContent.map((file, index) => (
                             <Avatar alt={file.name} src={file.content}
-                                sx={{ width: 100, height: 100, marginLeft: '5%' }} />
+                                style={{
+                                    width: 150,
+                                    height: 150,
+                                    marginLeft: '15%',
+                                    borderWidth: '1px',
+                                    borderColor: 'white'
+                                }} />
                         ))
                     ) : (
                         <Avatar alt="" src={stateAvt === '' ? '' : stateAvt}
-                            sx={{ width: 100, height: 100, marginLeft: '5%' }}
+                            sx={{ width: 130, height: 130 }}
                         />
                     )}
                     {filesContent.length != 0 ? (
-                        <IconButton onClick={handleChangeAvt} style={{ marginLeft: '-2%', marginTop: '10%' }}>
-                            <CheckCircleIcon />
+                        <IconButton onClick={handleChangeAvt}
+                            style={{
+                                marginLeft: '-7%',
+                                marginTop: '6%',
+                                backgroundColor: 'black',
+                                height: '30px',
+                                width: '30px',
+                                top: '75%'
+                            }}>
+                            <CheckCircleIcon style={{ color: 'white' }} />
                         </IconButton>
                     ) : (
-                        <IconButton onClick={() => openFileSelector()} style={{ marginLeft: '-2%', marginTop: '10%' }}>
-                            <AddPhotoAlternateTwoToneIcon />
+                        <IconButton onClick={() => openFileSelector()}
+                            style={{
+                                marginLeft: '-7%',
+                                marginTop: '6%',
+                                backgroundColor: 'black',
+                                height: '30px',
+                                width: '30px',
+                                top: '75%'
+                            }}
+                        >
+                            <AddPhotoAlternateTwoToneIcon style={{ color: 'white' }} />
                         </IconButton>
                     )}
-                    <Stack direction="column" spacing={2}>
-                        <Stack direction="row" spacing={2}
-                            style={{ justifyContent: 'space-between' }}>
-                            <Typography style={{
-                                fontSize: '23px',
-                                fontWeight: 'bold',
-                                marginTop: '10%',
-                                marginLeft: '5%',
-
-                            }}
-                            >
-                                {name}
-                            </Typography>
-                            <IconButton onClick={handleOpenModalChangeName}
-                                style={{ marginTop: '8%', marginLeft: '5%' }}
-                            >
-                                <EditTwoToneIcon />
-                            </IconButton>
-                        </Stack>
+                </Stack>
+                <Stack direction="column" spacing={2} style={{ width: '100%', paddingRight: '40%' }}>
+                    <Stack direction="row" spacing={2}
+                        style={{ justifyContent: 'space-between' }}>
                         <Typography style={{
-                            color: '#8FA1A6',
+                            fontSize: '23px',
                             fontWeight: 'bold',
-                            fontSize: '14px',
-                            marginLeft: '5%'
+                            marginTop: '5%',
+                            marginLeft: '5%',
+                            color: 'white'
                         }}
                         >
-                            Account holder
+                            {name}
                         </Typography>
+                        <IconButton onClick={handleOpenModalChangeName}
+                            style={{ marginTop: '8%', marginLeft: '5%', backgroundColor: 'black' }}
+                        >
+                            <EditTwoToneIcon style={{ color: 'white' }} />
+                        </IconButton>
                     </Stack>
-                </Stack>
-
-                {/* contact */}
-                <Stack direction="column" spacing={0.75}
-                    sx={{
-                        borderRadius: '15px',
-                        marginTop: '3%',
-                        backgroundColor: '#F2F2F2',
-                        width: '45%',
-                        alignSelf: 'center',
-                        padding: '1%'
-                    }}
-                >
-                    <Typography style={{
-                        fontSize: '18px',
-                        fontWeight: 'bold',
-                        marginTop: '1%',
-                        marginLeft: '5%'
-                    }}
-                    >
-                        Contact Details
-                    </Typography>
                     <Typography style={{
                         color: '#8FA1A6',
                         fontWeight: 'bold',
                         fontSize: '14px',
-                        marginLeft: '5%'
+                        marginLeft: '5%',
+                        marginTop: '0%',
+                        fontStyle: 'italic'
                     }}
                     >
-                        Receive important alerts for your profile here.
+                        Account holder
                     </Typography>
-                    <Stack direction="row" spacing={2}
-                        style={{ justifyContent: 'space-between' }}
+                </Stack>
+            </Stack>
+
+            {/* contact */}
+            <Stack direction="column" spacing={3}
+                style={{
+                    width: '100%',
+                    backgroundColor: 'black',
+                    paddingLeft: '15%',
+                    marginTop: '0%',
+                    paddingTop: '-1%'
+                }}
+            >
+                <Typography style={{
+                    fontSize: '23px',
+                    fontWeight: 'bold',
+                    marginTop: '1%',
+                    color: 'white'
+                }}
+                >
+                    Contact
+                </Typography>
+                <div style={{
+                    height: '1px',
+                    backgroundColor: 'white',
+                    width: '40%',
+                    marginTop: '0%'
+                }}>
+                </div>
+                <Typography style={{
+                    color: '#8FA1A6',
+                    fontWeight: 'bold',
+                    fontSize: '14px',
+                    marginLeft: '0%',
+                    marginTop: '0.5%',
+                    fontStyle: 'italic'
+                }}
+                >
+                    Receive important alerts for your profile here.
+                </Typography>
+                <Stack direction="row" spacing={2}
+                    style={{ width: '100%' }}
+                >
+                    <Typography style={{
+                        color: 'white',
+                        fontWeight: 'bold',
+                        fontSize: '17px',
+                        marginLeft: '3%',
+                        marginTop: '0%',
+                    }}
                     >
-                        <Typography style={{
-                            color: 'black',
-                            fontWeight: 'bold',
-                            fontSize: '15px',
-                            marginLeft: '5%'
-                        }}
-                        >
-                            {contact}
-                        </Typography>
-                        <IconButton onClick={handleOpenModalChangeContact} style={{ marginTop: '-3%' }}>
-                            <EditTwoToneIcon />
-                        </IconButton>
-                    </Stack>
+                        {contact}
+                    </Typography>
+                    <IconButton onClick={handleOpenModalChangeContact}
+                        style={{
+                            marginTop: '-0.5%',
+                            backgroundColor: 'black',
+                            marginLeft: '7%'
+                        }}>
+                        <EditTwoToneIcon style={{ color: 'white' }} />
+                    </IconButton>
 
                     {havePhoneNumber ? (
                         null
@@ -514,58 +572,75 @@ const ProfileManage = () => {
                         <Typography style={{
                             color: '#8FA1A6',
                             fontSize: '13px',
-                            marginLeft: '5%'
+                            marginLeft: '5%',
+                            fontStyle: 'italic',
+                            marginTop: '0.5%',
                         }}
                         >
                             Not set
                         </Typography>
                     )}
                 </Stack>
+            </Stack>
 
-                {/* address */}
-                <Stack direction="column" spacing={0.75}
-                    sx={{
-                        borderRadius: '15px',
-                        marginTop: '3%',
-                        backgroundColor: '#F2F2F2',
-                        width: '45%',
-                        alignSelf: 'center',
-                        padding: '1%'
-                    }}
+            {/* address */}
+            <Stack direction="column" spacing={3}
+                style={{
+                    width: '100%',
+                    backgroundColor: 'black',
+                    paddingLeft: '15%',
+                    marginTop: '0%',
+                    paddingTop: '-1%'
+                }}
+            >
+                <Typography style={{
+                    fontSize: '23px',
+                    fontWeight: 'bold',
+                    marginTop: '1%',
+                    color: 'white'
+                }}
+                >
+                    Address
+                </Typography>
+                <div style={{
+                    height: '1px',
+                    backgroundColor: 'white',
+                    width: '40%',
+                    marginTop: '0%'
+                }}>
+                </div>
+                <Typography style={{
+                    color: '#8FA1A6',
+                    fontWeight: 'bold',
+                    fontSize: '14px',
+                    marginLeft: '0%',
+                    marginTop: '0.5%',
+                    fontStyle: 'italic'
+                }}
+                >
+                    Where do your packages go ?
+                </Typography>
+                <Stack direction="row" spacing={2}
+                    style={{ width: '100%' }}
                 >
                     <Typography style={{
-                        fontSize: '18px',
+                        color: 'white',
                         fontWeight: 'bold',
-                        marginTop: '1%',
-                        marginLeft: '5%'
+                        fontSize: '17px',
+                        marginLeft: '3%',
+                        marginTop: '0%',
                     }}
                     >
-                        Address Details
+                        {address}
                     </Typography>
-                    <Typography style={{
-                        color: '#8FA1A6',
-                        fontWeight: 'bold',
-                        fontSize: '14px',
-                        marginLeft: '5%'
-                    }}
-                    >
-                        Where do your packages go ?
-                    </Typography>
-                    <Stack direction="row" spacing={2}
-                        style={{ justifyContent: 'space-between' }}>
-                        <Typography style={{
-                            color: 'black',
-                            fontWeight: 'bold',
-                            fontSize: '15px',
-                            marginLeft: '5%'
-                        }}
-                        >
-                            {address}
-                        </Typography>
-                        <IconButton onClick={handleOpenModalChangeAddress} style={{ marginTop: '-3%' }}>
-                            <EditTwoToneIcon />
-                        </IconButton>
-                    </Stack>
+                    <IconButton onClick={handleOpenModalChangeAddress}
+                        style={{
+                            marginTop: '-0.5%',
+                            backgroundColor: 'black',
+                            marginLeft: '7%'
+                        }}>
+                        <EditTwoToneIcon style={{ color: 'white' }} />
+                    </IconButton>
 
                     {haveAddress ? (
                         null
@@ -573,90 +648,98 @@ const ProfileManage = () => {
                         <Typography style={{
                             color: '#8FA1A6',
                             fontSize: '13px',
-                            marginLeft: '5%'
+                            marginLeft: '5%',
+                            fontStyle: 'italic',
+                            marginTop: '0.5%',
                         }}
                         >
                             Not set
                         </Typography>
                     )}
                 </Stack>
-
-                {/* sex & dob */}
-                <Stack direction="column" spacing={0.75}
-                    sx={{
-                        borderRadius: '15px',
-                        marginTop: '3%',
-                        backgroundColor: '#F2F2F2',
-                        width: '45%',
-                        alignSelf: 'center',
-                        padding: '1%'
-                    }}
-                >
-                    <Typography style={{
-                        fontSize: '18px',
-                        fontWeight: 'bold',
-                        marginTop: '1%',
-                        marginLeft: '5%'
-                    }}
-                    >More Info
-                    </Typography>
-                    <Stack direction="row" spacing={2} style={{ marginTop: '2%' }}>
-                        <Box sx={{ minWidth: 120, marginLeft: '5%' }}>
-                            <FormControl variant="standard" fullWidth>
-                                <Typography id="demo-simple-select-standard-label" style={{ fontWeight: 'bold' }}>Gender:</Typography>
-                                <Select
-                                    style={{ marginTop: '10%' }}
-                                    labelId="demo-simple-select-standard-label"
-                                    id="demo-simple-select-standard"
-                                    value={gender === 'male' ? 'male' : 'female'}
-                                    onChange={handleChangeGender}
-                                >
-                                    <MenuItem value={"male"}>Male</MenuItem>
-                                    <MenuItem value={"female"}>Female</MenuItem>
-                                </Select>
-                            </FormControl>
-                        </Box>
-
-                        <Typography style={{ marginLeft: '10%', marginTop: '6%', fontWeight: 'bold' }}>Birthday: </Typography>
-                        <Box style={{ marginTop: '6%' }}>
-                            <DatePicker
-                                selected={selectedDate}
-                                onChange={date => setSelectedDate(date)}
-                                dateFormat='yyyy-MM-dd'
-                                showYearDropdown
-                                scrollableMonthYearDropdown
-                            />
-                        </Box>
-                        <Button
-                            onClick={handleChangeDobAndSex}
-                            style={{
-                                marginTop: '25px',
-                                borderRadius: '20px',
-                                border: '1px solid #18608a',
-                                backgroundColor: '#000000',
-                                color: '#ffffff',
-                                fontSize: '10px',
-                                fontWeight: 'bold',
-                                width: '5%',
-                                height: '5%',
-                                padding: '12px 45px',
-                                letterSpacing: '1px',
-                            }}>Save</Button>
-                    </Stack>
-                    {haveGender ? (
-                        null
-                    ) : (
-                        <Typography style={{
-                            color: '#8FA1A6',
-                            fontSize: '13px',
-                            marginLeft: '5%'
-                        }}
-                        >Not set
-                        </Typography>
-                    )}
-                </Stack>
             </Stack>
 
+            {/* Dob */}
+            <Stack direction="column" spacing={3}
+                style={{
+                    width: '100%',
+                    backgroundColor: 'black',
+                    paddingLeft: '15%',
+                    marginTop: '0%',
+                    paddingTop: '-1%',
+                    paddingBottom: '2%'
+                }}
+            >
+                <Typography style={{
+                    fontSize: '24px',
+                    fontWeight: 'bold',
+                    marginTop: '1%',
+                    color: 'white'
+                }}
+                >
+                    DOB & Gender
+                </Typography>
+                <div style={{
+                    height: '1px',
+                    backgroundColor: 'white',
+                    width: '40%',
+                    marginTop: '0%'
+                }}>
+                </div>
+                <Typography style={{
+                    color: '#8FA1A6',
+                    fontWeight: 'bold',
+                    fontSize: '14px',
+                    marginLeft: '0%',
+                    marginTop: '0.5%',
+                    fontStyle: 'italic'
+                }}
+                >
+                    If you're a regular customer, we will have gift for your birthday
+                </Typography>
+                <Stack direction="row" spacing={2}
+                    style={{ width: '100%' }}
+                >
+                    <Typography style={{ color: 'white', fontWeight: 'bold', marginTop: '1%' }}>Birthday:</Typography>
+                    <LocalizationProvider dateAdapter={AdapterDateFns}>
+                        <MobileDatePicker
+                            value={selectedDate}
+                            onChange={(newValue) => {
+                                setSelectedDate(newValue);
+                            }}
+                            renderInput={(params) => <TextField style={{ height: '5%', backgroundColor: 'white', borderRadius: '15px' }} {...params} />}
+                        />
+                    </LocalizationProvider>
+                    <Typography style={{ color: 'white', fontWeight: 'bold', marginTop: '1%', marginLeft: '3%' }}>Gender:</Typography>
+                    <FormControl variant="standard" width="100" style={{ marginTop: '0.75%' }}>
+                        <Select
+                            labelId="demo-simple-select-standard-label"
+                            id="demo-simple-select-standard"
+                            style={{ color: 'white' }}
+                            value={gender === 'male' ? 'male' : 'female'}
+                            onChange={handleChangeGender}
+                        >
+                            <MenuItem value={"male"}>Male</MenuItem>
+                            <MenuItem value={"female"}>Female</MenuItem>
+                        </Select>
+                    </FormControl>
+                    <Button
+                        onClick={handleChangeDobAndSex}
+                        style={{
+                            marginTop: '0%',
+                            borderRadius: '20px',
+                            border: '1px solid #18608a',
+                            backgroundColor: 'white',
+                            color: 'black',
+                            fontSize: '14px',
+                            fontWeight: 'bold',
+                            width: '5%',
+                            height: '3%',
+                            padding: '12px 45px',
+                            letterSpacing: '1px',
+                        }}>Save</Button>
+                </Stack>
+            </Stack>
             {/* change name modal */}
             <Modal
                 open={openModalChangeName}
@@ -927,7 +1010,7 @@ const ProfileManage = () => {
             >
                 <CircularProgress color="inherit" />
             </Backdrop>
-        </div>
+        </Stack>
     )
 }
 
