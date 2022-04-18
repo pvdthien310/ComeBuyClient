@@ -275,6 +275,7 @@ const ProfileManage = () => {
     }
 
     const handleChangeDobAndSex = async () => {
+        console.log(selectedDate.toISOString().substring(0, 10));
         setUpdating(true)
         const temp = {
             ...dataForUpdate,
@@ -413,7 +414,7 @@ const ProfileManage = () => {
                 marginLeft: '15%',
                 marginTop: '3%',
                 color: 'white',
-                fontSize: '30px',
+                fontSize: '24px',
                 fontWeight: 'bold'
             }}>
                 Your information
@@ -477,7 +478,7 @@ const ProfileManage = () => {
                     <Stack direction="row" spacing={2}
                         style={{ justifyContent: 'space-between' }}>
                         <Typography style={{
-                            fontSize: '30px',
+                            fontSize: '23px',
                             fontWeight: 'bold',
                             marginTop: '5%',
                             marginLeft: '5%',
@@ -517,7 +518,7 @@ const ProfileManage = () => {
                 }}
             >
                 <Typography style={{
-                    fontSize: '28px',
+                    fontSize: '23px',
                     fontWeight: 'bold',
                     marginTop: '1%',
                     color: 'white'
@@ -593,7 +594,7 @@ const ProfileManage = () => {
                 }}
             >
                 <Typography style={{
-                    fontSize: '28px',
+                    fontSize: '23px',
                     fontWeight: 'bold',
                     marginTop: '1%',
                     color: 'white'
@@ -670,7 +671,7 @@ const ProfileManage = () => {
                 }}
             >
                 <Typography style={{
-                    fontSize: '28px',
+                    fontSize: '24px',
                     fontWeight: 'bold',
                     marginTop: '1%',
                     color: 'white'
@@ -706,7 +707,7 @@ const ProfileManage = () => {
                             onChange={(newValue) => {
                                 setSelectedDate(newValue);
                             }}
-                            renderInput={(params) => <TextField style={{ backgroundColor: 'white', borderRadius: '15px' }} {...params} />}
+                            renderInput={(params) => <TextField style={{ height: '5%', backgroundColor: 'white', borderRadius: '15px' }} {...params} />}
                         />
                     </LocalizationProvider>
                     <Typography style={{ color: 'white', fontWeight: 'bold', marginTop: '1%', marginLeft: '3%' }}>Gender:</Typography>
@@ -725,7 +726,7 @@ const ProfileManage = () => {
                     <Button
                         onClick={handleChangeDobAndSex}
                         style={{
-                            marginTop: '0.5%',
+                            marginTop: '0%',
                             borderRadius: '20px',
                             border: '1px solid #18608a',
                             backgroundColor: 'white',

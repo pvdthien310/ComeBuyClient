@@ -578,13 +578,6 @@ const LoginRegister = () => {
                             Register
                         </Button>
 
-                        <Backdrop
-                            sx={{ color: '#fff', zIndex: (theme) => theme.zIndex.drawer + 1 }}
-                            open={openBackdrop}
-                        >
-                            <CircularProgress color="inherit" />
-                        </Backdrop>
-
                         {/*Dialog for having registered successfully or email existed */}
                         {openDialogRegFailed ? (
                             <Dialog open={openDialogRegFailed} onClose={handleCloseDialogRegFailed}>
@@ -898,6 +891,12 @@ const LoginRegister = () => {
                     Something went wrong ! Please check your email and password.
                 </Alert>
             </Snackbar>
+            <Backdrop
+                sx={{ color: '#fff', zIndex: (theme) => theme.zIndex.drawer + 1 }}
+                open={openBackdrop}
+            >
+                <CircularProgress color="inherit" />
+            </Backdrop>
         </div >
     )
 }
