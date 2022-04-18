@@ -7,15 +7,19 @@ import VisibilityOffIcon from '@mui/icons-material/VisibilityOff';
 
 //Beside
 import clsx from "clsx";
-import { unwrapResult } from '@reduxjs/toolkit';
+import { current, unwrapResult } from '@reduxjs/toolkit';
 import { useDispatch } from 'react-redux';
 
 import { makeStyles } from "@material-ui/core";
 import { Autorenew } from "@material-ui/icons";
 
+import { useSelector } from 'react-redux';
+
 import CountDown from '../LoginAndRegister/CountDown';
 import { CheckEmail, CheckPassword } from '../LoginAndRegister/ValidationDataForAccount';
 import emailApi from '../../api/emailAPI';
+import { updatePassword } from '../../redux/slices/accountSlice';
+import { currentUser } from './../../redux/selectors';
 
 //Style for refresh button in verify modal
 const useStyles = makeStyles((theme) => ({
@@ -45,6 +49,8 @@ const useStyles = makeStyles((theme) => ({
 const ForgotPassword = () => {
 
     const [email, setEmail] = useState('')
+
+    const _currentUser = useSelector(currentUser)
 
     const dispatch = useDispatch()
 
@@ -221,21 +227,25 @@ const ForgotPassword = () => {
 
     const handleVerifyAndResetPassword = async () => {
         let here = pin1 + pin2 + pin3 + pin4 + pin5
+        const data = {
+            userID: _currentUser.userID,
+            password: newPassword
+        }
         try {
-            // if (here === verifyCode) {
-            //     setOpenBackdrop(true)
-            //     const resultAction = await dispatch(register({ dataForReg }))
-            //     const originalPromiseResult = unwrapResult(resultAction)
-            //     // handle result here
-
-            //     if (originalPromiseResult === true) {
-            //         handleCloseModalVerify()
-            //         setOpenDialogRegFailed(false)
-            //         setIsRegistering(1)
-            //     }
-            // } else {
-            //     setOpenWrongVerify(true)
-            // }
+            if (here === verifyCode) {
+                setOpenBackdrop(true)
+                const resultAction = await dispatch(updatePassword(data))
+                const originalPromiseResult = unwrapResult(resultAction)
+                // handle result here
+                console.log(originalPromiseResult);
+                if (originalPromiseResult === true) {
+                    handleCloseModalVerify()
+                    setOpenDialogRegFailed(false)
+                    setIsRegistering(1)
+                }
+            } else {
+                setOpenWrongVerify(true)
+            }
         } catch (rejectedValueOrSerializedError) {
             // handle error here
             if (rejectedValueOrSerializedError != null) {

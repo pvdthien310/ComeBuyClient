@@ -17,7 +17,6 @@ const defaultUser = {
   "sex": "kk"
 }
 
-
 export const login = createAsyncThunk(
   'account/login',
   // Code async logic, tham số đầu tiên data là dữ liệu truyền vào khi gọi action
@@ -81,6 +80,19 @@ export const updateAccount = createAsyncThunk(
   "account/update",
   async (data, { rejectedWithValue }) => {
     const response = await accountApi.updateAccount(data)
+    if (!response) {
+      return rejectedWithValue(false)
+    } else {
+      return response.data
+    }
+  }
+)
+
+export const updatePassword = createAsyncThunk(
+  "account/resetPassword",
+  async (data, { rejectedWithValue }) => {
+    console.log(data);
+    const response = await accountApi.updatePasswordForAccount(data.password, data.userID)
     if (!response) {
       return rejectedWithValue(false)
     } else {
@@ -155,6 +167,19 @@ export const accountSlice = createSlice({
       console.log(" fulfilled: " + state.user);
     },
     [updateAccount.rejected]: (state, action) => {
+      state.loading = false;
+      state.errorMessage = action.payload;
+      console.log("rejected: " + state.errorMessage);
+    },
+    [updatePassword.pending]: (state) => {
+      state.loading = true;
+      console.log(" pending...");
+    },
+    [updatePassword.fulfilled]: (state, action) => {
+      state.loading = false;
+      console.log(" fulfilled: " + state.user);
+    },
+    [updatePassword.rejected]: (state, action) => {
       state.loading = false;
       state.errorMessage = action.payload;
       console.log("rejected: " + state.errorMessage);

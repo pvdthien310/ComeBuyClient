@@ -90,7 +90,7 @@ const Profile = () => {
                             <Typography style={{ marginTop: '13%', fontSize: '20px', fontWeight: 'bold', color: '#F2F1F0' }}>{_currentUser.name}</Typography>
                         </Stack>
                         <Stack flexDirection="flex-start" direction="row" spacing={2}>
-                            <input style={{ backgroundColor: '#F2F1F0', borderRadius: '15px', fontSize: '20px', width: '450px' }}
+                            <input style={{ backgroundColor: '#F2F1F0', borderRadius: '15px', fontSize: '17px', width: '450px', paddingLeft: '5%' }}
                                 id="outlined-basic"
                                 type={passwordShown ? "text" : "password"}
                                 placeholder="Password"
