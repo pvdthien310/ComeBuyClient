@@ -64,10 +64,10 @@ const ProductCardInStock = (props) => {
           </Typography>
         </CardContent>
         <Box sx={{ display: 'flex', alignItems: 'center', pl: 1, pb: 1, alignSelf: 'flex-start' }}>
-          <IconButton>
+          <IconButton onClick={() => props.onDelete(props.stock)}>
             <DeleteIcon />
           </IconButton>
-          <IconButton>
+          <IconButton onClick={props.openUpdateModal}>
             <AddShoppingCartIcon/>
           </IconButton>
         </Box>
@@ -76,5 +76,4 @@ const ProductCardInStock = (props) => {
     </Card>
   );
 }
-export default memo(ProductCardInStock,
-  (prevProps, nextProps) => (prevProps.stock != nextProps.stock))
+export default ProductCardInStock

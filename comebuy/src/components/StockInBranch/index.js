@@ -6,21 +6,64 @@ import ProductCardInStock from '../ProductCardInStock'
 import AddShoppingCartIcon from '@mui/icons-material/AddShoppingCart';
 import style from './style.js'
 import AddProductInStockModal from '../AddProductInStockModal'
+import UpdateAmountInStockModal from "../UpdateAmountInStockModel"
 
 const StockInBranch = (props) => {
     const { branch } = props
     const [stockList, setStockList] = useState([])
     const [openSuccessAlert, setOpenSuccessAlert] = useState(false);
     const [openErrorAlert, setOpenErrorAlert] = useState(false);
-    const [openModal, setOpenModal] = useState(false)
+    const [openAddModal, setOpenAddModal] = useState(false)
+    const [openUpdateModal, setOpenUpdateModal] = useState(false)
     const [messageError, setMessageError] = useState("No Error")
     const [messageSuccess, setMessageSuccess] = useState("Notification")
+    const [selectedStock, setSelectedStock] = useState(null)
 
-    const handleCloseModel = () => setOpenModal(false)
+    const handleCloseModal = () => {
+        setOpenAddModal(false)
+        setOpenUpdateModal(false)
+    }
 
-    useEffect(()=> {
+    useEffect(() => {
         console.log(stockList)
-    },[stockList])
+    }, [stockList])
+
+    const handleUpdateAmountProduct = async (number) => {
+        const updatedStock = {
+            ...selectedStock,
+            totalAmount: Number(selectedStock.totalAmount) + Number(number),
+            remaining: Number(selectedStock.remaining) + Number(number)
+        }
+        const response = await stockApi.updateStock(updatedStock)
+        if (response.status == 200) {
+            setSelectedStock(updatedStock)
+            setStockList(prevList => prevList.map(item => {
+                if (item.id == updatedStock.id)
+                    return updatedStock
+                else return item
+            }))
+            setMessageSuccess("Update Quantity Successfully")
+            setOpenSuccessAlert(true)
+        }
+        else {
+            setMessageError("Update Quantity Failed :((")
+            setOpenErrorAlert(true)
+        }
+    }
+
+    const handleDeleteProduct = async (selectedStk) => {
+        const response = await stockApi.deleteStock(selectedStk.id)
+        if (response.status == 200) {
+            const newList = stockList.filter((item) => item.id != selectedStk.id)
+            setStockList(newList)
+            setMessageSuccess("Delete Stock Successfully")
+            setOpenSuccessAlert(true)
+        }
+        else {
+            setMessageError("Delete Stock Failed :((")
+            setOpenErrorAlert(true)
+        }
+    }
 
     const handleAddProduct = async (value) => {
         const newStock = {
@@ -72,13 +115,22 @@ const StockInBranch = (props) => {
     return (
         <Box sx={{ height: '30%', width: '100%' }}>
             <Stack>
-                <Button sx={style.AddProductButton} startIcon={<AddShoppingCartIcon />} onClick={() => setOpenModal(true)}>Add Product</Button>
+                <Button sx={style.AddProductButton} startIcon={<AddShoppingCartIcon />} onClick={() => setOpenAddModal(true)}>Add Product</Button>
                 {
                     stockList != undefined && stockList.length > 0 ?
                         <Stack>
                             {
                                 stockList.map((item) => (
-                                    <ProductCardInStock key={item.id} stock={item} />
+                                    <ProductCardInStock
+                                        key={item.id}
+                                        stock={item}
+                                        open={openUpdateModal}
+                                        onClose={handleCloseModal}
+                                        onDelete={handleDeleteProduct}
+                                        openUpdateModal={() => {
+                                            setOpenUpdateModal(true)
+                                            setSelectedStock(item)
+                                        }} />
                                 ))
                             }
                         </Stack>
@@ -87,7 +139,8 @@ const StockInBranch = (props) => {
                             <CircularProgress />
                         </Box>
                 }
-                <AddProductInStockModal stockList={stockList} open={openModal} onClose={handleCloseModel} onSubmit={handleAddProduct} />
+                <UpdateAmountInStockModal open={openUpdateModal} onClose={handleCloseModal} onSubmit={handleUpdateAmountProduct} />
+                <AddProductInStockModal stockList={stockList} open={openAddModal} onClose={handleCloseModal} onSubmit={handleAddProduct} />
                 <SnackBarAlert severity='success' open={openSuccessAlert} handleClose={handleClose} message={messageSuccess} />
                 <SnackBarAlert severity='error' open={openErrorAlert} handleClose={handleClose} message={messageError} />
             </Stack>

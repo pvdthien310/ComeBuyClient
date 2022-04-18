@@ -23,6 +23,7 @@ export { default as StockInBranch} from './StockInBranch'
 export { default as ProductCardInStock} from './ProductCardInStock'
 export { default as AddProductInStockModal} from './AddProductInStockModal'
 export { default as ProductSelect} from './ProductSelect'
+export {default as UpdateAmountInStockModal} from './UpdateAmountInStockModel'
 
 // export { default as ScrollButton } from './ScrollButton/ScrollButton'
 
