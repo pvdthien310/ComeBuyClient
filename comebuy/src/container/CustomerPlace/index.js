@@ -15,6 +15,7 @@ import NavBar from './../../components/NavBar/NavBar';
 
 import { currentUser } from './../../redux/selectors'
 
+
 const CustomerPlace = () => {
 
     const _currentUser = useSelector(currentUser)
@@ -25,9 +26,9 @@ const CustomerPlace = () => {
 
 
     return (
-        <div style={{ backgroundColor: 'white', height: '100%' }}>
+        <div style={{ height: '100%', width: '100%' }}>
             <NavBar></NavBar>
-            <div>
+            <div style={{ height: '100%', width: '100%' }}>
                 <Stack
                     direction={{ xs: 'column', sm: 'row' }}
                     spacing={{ xs: 12, sm: 12, md: 12 }}

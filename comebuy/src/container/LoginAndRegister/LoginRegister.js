@@ -10,6 +10,7 @@ import { unwrapResult } from '@reduxjs/toolkit'
 import { useNavigate } from 'react-router';
 //M-UI
 import { TextField, Checkbox, Typography, FormControlLabel, Modal, Box, Button, Dialog, DialogTitle } from '@material-ui/core';
+import { Stack } from '@mui/material'
 import IconButton from '@mui/material/IconButton';
 import CheckCircleRoundedIcon from '@mui/icons-material/CheckCircleRounded';
 import VisibilityIcon from '@mui/icons-material/Visibility';
@@ -578,13 +579,6 @@ const LoginRegister = () => {
                             Register
                         </Button>
 
-                        <Backdrop
-                            sx={{ color: '#fff', zIndex: (theme) => theme.zIndex.drawer + 1 }}
-                            open={openBackdrop}
-                        >
-                            <CircularProgress color="inherit" />
-                        </Backdrop>
-
                         {/*Dialog for having registered successfully or email existed */}
                         {openDialogRegFailed ? (
                             <Dialog open={openDialogRegFailed} onClose={handleCloseDialogRegFailed}>
@@ -648,7 +642,7 @@ const LoginRegister = () => {
                                 left: '50%',
                                 transform: 'translate(-50%, -50%)',
                                 width: '40%',
-                                height: '30%',
+                                height: 'auto',
                                 bgcolor: 'background.paper',
                                 border: '2px solid #000',
                                 boxShadow: 24,
@@ -663,7 +657,7 @@ const LoginRegister = () => {
                                         display: 'flex',
                                         justifyContent: 'flex-end',
                                         position: 'absolute',
-                                        marginBottom: '10px'
+                                        marginBottom: '10px',
                                     }}>
                                     Verify
                                 </Typography>
@@ -736,37 +730,54 @@ const LoginRegister = () => {
                                     <div style={{
                                         marginTop: '15px',
                                         display: 'flex',
-                                        flexDirection: 'row',
-                                        justifyContent: 'center'
+                                        justifyContent: 'flex-end'
                                     }}>
                                         {
                                             toggleRefresh ? (
-                                                <Autorenew
-                                                    className={clsx({
-                                                        [classes.refresh]: true,
-                                                        spin: spin
-                                                    })}
-                                                    onClick={() => { refreshCanvas() }}
-                                                    spin={360}
-                                                />) : (
-                                                <CountDown onTimesup={onTimesup} />
+                                                <Stack style={{ flexDirection: "flex-end" }} direction="row">
+                                                    <Autorenew
+                                                        className={clsx({
+                                                            [classes.refresh]: true,
+                                                            spin: spin
+                                                        })}
+                                                        onClick={() => { refreshCanvas() }}
+                                                        spin={360}
+                                                    />
+                                                    <Button
+                                                        onClick={handleVerifyAndReg}
+                                                        style={{
+                                                            width: 'auto',
+                                                            borderRadius: '20px',
+                                                            backgroundColor: '#18608a',
+                                                            color: '#ffffff',
+                                                            fontSize: '13px',
+                                                            fontWeight: 'bold',
+                                                            letterSpacing: '1px',
+                                                        }}
+                                                    >
+                                                        CONFIRM
+                                                    </Button>
+                                                </Stack>) : (
+                                                <Stack direction="row" >
+                                                    <CountDown onTimesup={onTimesup} />
+                                                    <Button
+                                                        onClick={handleVerifyAndReg}
+                                                        style={{
+                                                            width: 'auto',
+                                                            borderRadius: '20px',
+                                                            backgroundColor: '#18608a',
+                                                            color: '#ffffff',
+                                                            fontSize: '13px',
+                                                            fontWeight: 'bold',
+                                                            letterSpacing: '1px',
+                                                        }}
+                                                    >
+                                                        CONFIRM
+                                                    </Button>
+                                                </Stack>
+
                                             )
                                         }
-                                        <Button
-                                            onClick={handleVerifyAndReg}
-                                            style={{
-                                                width: '20%',
-                                                borderRadius: '20px',
-                                                border: '1px solid #18608a',
-                                                backgroundColor: '#18608a',
-                                                color: '#ffffff',
-                                                fontSize: '13px',
-                                                fontWeight: 'bold',
-                                                letterSpacing: '1px',
-                                            }}
-                                        >
-                                            CONFIRM
-                                        </Button>
                                     </div>
                                 </div>
                             </Box>
@@ -898,6 +909,12 @@ const LoginRegister = () => {
                     Something went wrong ! Please check your email and password.
                 </Alert>
             </Snackbar>
+            <Backdrop
+                sx={{ color: '#fff', zIndex: (theme) => theme.zIndex.drawer + 1 }}
+                open={openBackdrop}
+            >
+                <CircularProgress color="inherit" />
+            </Backdrop>
         </div >
     )
 }
