@@ -18,6 +18,8 @@ import BusinessIcon from '@mui/icons-material/Business';
 import WarningIcon from '@mui/icons-material/Warning';
 import { default_avatar } from './../../../constant'
 import accountApi from "../../../api/accountAPI.js";
+import branchApi from "../../../api/branchAPI.js";
+import BranchSelect from "../../../components/BranchSelect/index.js";
 
 const AddStaff = () => {
 
@@ -44,6 +46,35 @@ const AddStaff = () => {
     const [password, SetPassword] = useState("")
     const [confirmPassword, SetConfirmPassword] = useState("")
     const [branchAddress, SetBranchAddress] = useState("")
+    const [existedBranch, setExistedBranch] = useState("")
+    const [branchList, setBranchList] = useState([])
+
+    const handleBranchChange = (event) => {
+        console.log(event.target.value)
+        setExistedBranch(event.target.value);
+      };
+
+
+    async function LoadData() {
+        try {
+            const response = await branchApi.getAll()
+            if (response.status == 200) {
+                setBranchList(response.data)
+                setMessageSuccess("Load Account Successfully")
+                setOpenSuccessAlert(true)
+            }
+            else {
+                setMessageError("Load Account Failed :((")
+                setOpenErrorAlert(true)
+            }
+        }
+        catch (err) {
+            console.log(err)
+        }
+    }
+    useEffect(() => {
+        LoadData()
+    }, [])
 
     const handleValueChange = (event) => {
         switch (event.target.name) {
@@ -85,9 +116,10 @@ const AddStaff = () => {
                 role: role,
                 sex: "male",
                 bio: "",
-                branchAddress: branchAddress
+                branchAddress: branchAddress,
+                branchID: existedBranch
             }
-
+            console.log(newAccount)
             const response = await accountApi.createNewAccount(newAccount)
             switch (response.status) {
                 case 200: {
@@ -119,15 +151,10 @@ const AddStaff = () => {
         }
     }
 
-
-
-
     const handleRoleChange = (event) => {
         SetRole(event.target.value);
         console.log(event.target.value)
     };
-
-
 
     return (
         <Stack
@@ -143,7 +170,7 @@ const AddStaff = () => {
                 </Stack>
                 <Grid container>
                     <Grid item xs={12} paddingLeft={2}>
-                        <Stack item xs={12} spacing={2} padding={2}>
+                        <Stack xs={12} spacing={2} padding={2}>
                             <TextFieldForAdd inputConfig="text" Icon={<DriveFileRenameOutlineIcon />} Text={name} Title='Name' onChange={handleValueChange} />
                             <Box sx={style.boxinfor_Stack_Line}></Box>
                             <TextFieldForAdd inputConfig="email" Icon={<EmailIcon />} Text={email} Title='Email' onChange={handleValueChange} />
@@ -162,20 +189,20 @@ const AddStaff = () => {
                                             border: 'solid 1px #BF0426',
                                             boxShadow: 5
                                         }}>
-                                        <WarningIcon />
+                                        <WarningIcon sx={{color: 'red'}} />
                                         <Typography fontWeight='bold' variant="body1" color='#BF0426'>
-                                            One manager must connect with one branch.
+                                            One manager must connect to one branch.
                                             Confirm to create a manager that means you are creating a branch too.
-                                            So please check carefully before doing this action!</Typography>
+                                            Please check carefully!</Typography>
                                     </Stack>
                                     <TextFieldForAdd inputConfig="text" Icon={<BusinessIcon />} Text={branchAddress} Title='Branch Address' onChange={handleValueChange} />
+                                    <BranchSelect value={existedBranch} branchList={branchList.filter((item) => item.userid == null)} handleChange={handleBranchChange}></BranchSelect>
                                     <Box sx={style.boxinfor_Stack_Line}></Box>
                                 </Stack>
                             }
                         </Stack>
                     </Grid>
-                    <Grid item xs={12} paddingLeft={2} paddingTop={2}>
-                    </Grid>
+                    <Grid item xs={12} paddingLeft={2} paddingTop={2}></Grid>
                 </Grid>
                 <Stack sx={{ width: '100%', justifyContent: 'center' }} direction='row' spacing={3}>
                     <Button sx={style.BackButton} variant="contained" onClick={() => navigate('/staff')}>Back</Button>

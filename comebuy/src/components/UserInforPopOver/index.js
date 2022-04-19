@@ -15,7 +15,7 @@ const UserInfoPopOver = (props) => {
   const handlePopoverClose = () => {
     setAnchorEl(null);
   };
-  console.log(props.user)
+
   const open = Boolean(anchorEl);
 
   return (

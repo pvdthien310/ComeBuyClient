@@ -102,33 +102,6 @@ const Staff = () => {
     );
 
 
-    //// Usecall back can get value of state
-    const toggleAdmin = React.useCallback(
-        (id) => async () => {
-            const response = await accountApi.updateAccount({
-                userID: id,
-                name: "Vong Minh Huynh"
-            })
-            if (response) {
-                /// Type this to set new vlue for state
-                setAccountList((prevList) => prevList.map((item) => {
-                    if (item.userID == response.data.userID)
-                        return response.data
-                    else return item
-                }))
-            }
-            else console.log("error")
-        },
-        [],
-    );
-
-    const duplicateUser = React.useCallback(
-        (id) => () => {
-
-        },
-        [],
-    );
-
     const columns = React.useMemo(
         () => [
             {
@@ -154,10 +127,19 @@ const Staff = () => {
                 )
             },
             {
+                field: 'phoneNumber', headerName: 'Contact', width: 200,
+                valueFormatter: (params) => {
+                    if (params.value == "") {
+                        return "Have not updated yet";
+                    }
+                    return params.value;
+                }
+            },
+            {
                 field: 'branch', headerName: 'Branch', width: 350,
                 valueFormatter: (params) => {
                     if (params.value == null) {
-                        return "This is not Manager";
+                        return "This is not Manager or Not Authorized";
                     }
 
                     return params.value.address;
@@ -166,35 +148,39 @@ const Staff = () => {
             {
                 field: 'actions',
                 type: 'actions',
+                headerName: 'Action',
                 width: 80,
                 getActions: (params) => [
+                    // <GridActionsCellItem
+                    //     icon={<SecurityIcon />}
+                    //     label="Toggle Manager"
+                    //     sx={{ display: params.row.role == "staff" ? 'block' : "none" }}
+                    //     onClick={toggleAdmin(params.id)}
+                    //     showInMenu
+                    // />,
+                    // <GridActionsCellItem
+                    //     icon={<SecurityIcon />}
+                    //     label="Toggle Staff"
+                    //     sx={{ display: params.row.role == "manager" ? 'block' : "none" }}
+                    //     onClick={toggleAdmin(params.id)}
+                    //     showInMenu
+                    // />,
                     <GridActionsCellItem
                         icon={<DeleteIcon />}
                         label="Delete"
                         onClick={deleteUser(params)}
                     />,
-                    <GridActionsCellItem
-                        icon={<SecurityIcon />}
-                        label="Toggle Manager"
-                        onClick={toggleAdmin(params.id)}
-                        showInMenu
-                    />,
-                    <GridActionsCellItem
-                        icon={<SecurityIcon />}
-                        label="Toggle Staff"
-                        onClick={toggleAdmin(params.id)}
-                        showInMenu
-                    />,
-                    <GridActionsCellItem
-                        icon={<FileCopyIcon />}
-                        label="Duplicate User"
-                        onClick={duplicateUser(params.id)}
-                        showInMenu
-                    />,
+
+                    // <GridActionsCellItem
+                    //     icon={<FileCopyIcon />}
+                    //     label="Duplicate User"
+                    //     onClick={duplicateUser(params.id)}
+
+                    // />,
                 ],
             },
         ],
-        [deleteUser, toggleAdmin, duplicateUser],
+        [deleteUser],
     );
 
     return (
