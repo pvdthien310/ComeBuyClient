@@ -26,7 +26,7 @@ import Snackbar from '@mui/material/Snackbar';
 import { currentUser, isSignedIn_user, loading_user, messageError } from '../../redux/selectors'
 //For redux
 import { useDispatch, useSelector } from 'react-redux'
-import { register, login } from '../../redux/slices/accountSlice'
+import { register, login, getAccountWithEmail } from '../../redux/slices/accountSlice'
 import CountDown from './CountDown'
 import * as Validation from './ValidationDataForAccount'
 import emailApi from '../../api/emailAPI';
@@ -275,7 +275,7 @@ const LoginRegister = () => {
         return OTP
     }
 
-    const handleCreateAccount = () => {
+    const handleCreateAccount = async () => {
         //validate username first -> email -> password
         //validate username
         if (dataForReg.name.length <= 5 || dataForReg.name === "" || Validation.CheckUsername(dataForReg.name)) {
@@ -343,6 +343,12 @@ const LoginRegister = () => {
         }
     }, [isRegistering])
 
+
+    const [openEmailExisted, setOpenEmailExisted] = useState(false)
+    const handleOpenEmailExisted = () => {
+        setOpenEmailExisted(true)
+    }
+
     const handleVerifyAndReg = async () => {
         let here = pin1 + pin2 + pin3 + pin4 + pin5
         try {
@@ -351,8 +357,11 @@ const LoginRegister = () => {
                 const resultAction = await dispatch(register({ dataForReg }))
                 const originalPromiseResult = unwrapResult(resultAction)
                 // handle result here
-
-                if (originalPromiseResult === true) {
+                if (originalPromiseResult.status === 409) {
+                    handleCloseModalVerify()
+                    setOpenBackdrop(false)
+                    handleOpenEmailExisted()
+                } else {
                     handleCloseModalVerify()
                     setOpenDialogRegFailed(false)
                     setIsRegistering(1)
@@ -361,7 +370,7 @@ const LoginRegister = () => {
                 setOpenWrongVerify(true)
             }
         } catch (rejectedValueOrSerializedError) {
-            // handle error here
+            //handle error here
             if (rejectedValueOrSerializedError != null) {
                 handleCloseModalVerify()
                 setOpenDialogRegSuccessfully(false)
@@ -389,11 +398,6 @@ const LoginRegister = () => {
                             onFocus={() => setOpenUsernameError(false)}
                             onChange={(e) => setDataForReg({ ...dataForReg, name: e.target.value })}
                         />
-                        {openUsernameError ? (
-                            <Alert style={{ marginTop: '10px' }} severity="warning">Username can't have length under 5 and can't have only space or any of these letter /^ *$.,;:@#""''-!`~%&\/(){ }[]/</Alert>
-                        ) : (
-                            null
-                        )}
 
                         {/*EMAIL*/}
                         <TextField
@@ -412,14 +416,12 @@ const LoginRegister = () => {
                             type="email"
                             fullWidth
                             value={dataForReg.email}
-                            onFocus={() => setOpenEmailError(false)}
+                            onFocus={() => {
+                                setOpenEmailError(false)
+                                setOpenEmailExisted(false)
+                            }}
                             onChange={(e) => setDataForReg({ ...dataForReg, email: e.target.value })}
                         />
-                        {openEmailError ? (
-                            <Alert style={{ marginTop: '-40px' }} severity="warning">Please type email</Alert>
-                        ) : (
-                            null
-                        )}
 
                         {/*PASSWORD */}
                         <div className="password-in-form">
@@ -444,13 +446,6 @@ const LoginRegister = () => {
                                 </IconButton>
                             )}
                         </div>
-                        {openPasswordError ? (
-                            <Alert style={{ marginTop: '-40px' }} severity="warning">
-                                Password has to have at least 8 letters, one number, one lowercase and one uppercase letter
-                            </Alert>
-                        ) : (
-                            null
-                        )}
 
                         {/*Confirm password */}
                         <div className="password-in-form">
@@ -474,11 +469,6 @@ const LoginRegister = () => {
                                 </IconButton>
                             )}
                         </div>
-                        {openCfPasswordError ? (
-                            <Alert style={{ marginTop: '-25px' }} severity="warning">Password is not match</Alert>
-                        ) : (
-                            null
-                        )}
 
 
                         {/*button for opening modal term */}
@@ -855,7 +845,7 @@ const LoginRegister = () => {
                         <Button
                             onClick={() => handleLogin()}
                             style={{
-                                marginTop: '25px',
+                                marginTop: '0%',
                                 borderRadius: '20px',
                                 border: '1px solid #18608a',
                                 backgroundColor: '#000000',
@@ -915,6 +905,42 @@ const LoginRegister = () => {
             >
                 <CircularProgress color="inherit" />
             </Backdrop>
+
+            {/*Snackbar for username error*/}
+            <Snackbar open={openUsernameError} autoHideDuration={3000} >
+                <Alert severity="error" sx={{ width: 'auto' }}>
+                    Username can't have length under 5 and can't have
+                    only space or any of these letter /^ *$.,;:@#""''-!`~%&\/(){ }[]/
+                </Alert>
+            </Snackbar>
+
+            {/*Snackbar for email error*/}
+            <Snackbar open={openEmailError} autoHideDuration={3000} >
+                <Alert severity="error" sx={{ width: 'auto' }}>
+                    Please type email
+                </Alert>
+            </Snackbar>
+
+            {/*Snackbar for password error*/}
+            <Snackbar open={openPasswordError} autoHideDuration={3000} >
+                <Alert severity="error" sx={{ width: 'auto' }}>
+                    Password has to have at least 8 letters, one number, one lowercase and one uppercase letter
+                </Alert>
+            </Snackbar>
+
+            {/*Snackbar for cf password error*/}
+            <Snackbar open={openCfPasswordError} autoHideDuration={3000} >
+                <Alert severity="error" sx={{ width: 'auto' }}>
+                    Password is not match
+                </Alert>
+            </Snackbar>
+
+            {/*Snackbar for cf password error*/}
+            <Snackbar open={openEmailExisted} autoHideDuration={3000} >
+                <Alert severity="warning" sx={{ width: 'auto' }}>
+                    Account with this email was existed
+                </Alert>
+            </Snackbar>
         </div >
     )
 }
