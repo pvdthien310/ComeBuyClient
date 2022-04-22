@@ -50,7 +50,6 @@ const AddStaff = () => {
     const [branchList, setBranchList] = useState([])
 
     const handleBranchChange = (event) => {
-        console.log(event.target.value)
         setExistedBranch(event.target.value);
       };
 
@@ -153,7 +152,6 @@ const AddStaff = () => {
 
     const handleRoleChange = (event) => {
         SetRole(event.target.value);
-        console.log(event.target.value)
     };
 
     return (

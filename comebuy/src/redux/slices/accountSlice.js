@@ -91,7 +91,6 @@ export const updateAccount = createAsyncThunk(
 export const updatePassword = createAsyncThunk(
   "account/resetPassword",
   async (data, { rejectedWithValue }) => {
-    console.log(data);
     const response = await accountApi.updatePasswordForAccount(data.password, data.userID)
     if (!response) {
       return rejectedWithValue(false)

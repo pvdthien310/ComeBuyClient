@@ -24,10 +24,6 @@ const StockInBranch = (props) => {
         setOpenUpdateModal(false)
     }
 
-    useEffect(() => {
-        console.log(stockList)
-    }, [stockList])
-
     const handleUpdateAmountProduct = async (number) => {
         const updatedStock = {
             ...selectedStock,

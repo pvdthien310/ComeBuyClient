@@ -2,6 +2,7 @@ import React from 'react';
 import Product from '../container/Product';
 import AddProduct from '../container/Product/AddProduct';
 import EditProduct from '../container/Product/EditProduct';
+import Revenue from '../container/Revenue';
 import Staff from '../container/Staff';
 import AddStaff from '../container/Staff/AddStaff';
 import Stock from '../container/Stock';
@@ -37,6 +38,11 @@ const adminRoutes = [
         name: 'Stock',
         path: '/stock',
         page: <Stock />,
+    },
+    {
+        name: 'Revenue',
+        path: '/revenue',
+        page: <Revenue />,
     }
 ]
 
@@ -55,7 +61,13 @@ const adminMenuItems = [
         name: 'Stock',
         path: '/stock',
         page: <Stock />,
-    }]
+    },
+    {
+        name: 'Revenue',
+        path: '/revenue',
+        page: <Revenue />,
+    }
+]
 
 
 export { adminRoutes, adminMenuItems };

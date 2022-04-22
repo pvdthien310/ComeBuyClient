@@ -94,7 +94,6 @@ const Staff = () => {
 
     const deleteUser = React.useCallback(
         (value) => async () => {
-            console.log(value)
             setSelectedAccount(value)
             setOpenConfirmDialog(true)
         },

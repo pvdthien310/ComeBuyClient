@@ -224,7 +224,7 @@ const AddProduct = () => {
                 navigate("/product")
             })
             .catch((rejectedValueOrSerializedError) => {
-                console.log("product")
+                
             })
     }
 
