@@ -34,6 +34,7 @@ export const login = createAsyncThunk(
   }
 );
 
+
 export const edit = createAsyncThunk(
   'account/edit',
   // Code async logic, tham số đầu tiên data là dữ liệu truyền vào khi gọi action
@@ -61,15 +62,27 @@ export const getAccountWithID = createAsyncThunk(
   }
 )
 
+export const getAccountWithEmail = createAsyncThunk(
+  'account/findOneWithEmail',
+  async (data, { rejectedWithValue }) => {
+    const response = await accountApi.getAccountbyEmail(data)
+    if (!response) {
+      return false
+    } else {
+      return response.data
+    }
+  }
+)
+
 export const register = createAsyncThunk(
   "account/register",
   async ({ dataForReg }, { rejectWithValue }) => {
     try {
       const response = await accountApi.register(dataForReg);
-      if (response.data === "Account existed!") {
-        return rejectWithValue(false);
+      if (!response) {
+        return rejectWithValue();
       } else {
-        return true;
+        return response;
       }
     } catch (error) {
       console.log(error);
@@ -152,6 +165,19 @@ export const accountSlice = createSlice({
       state.isRegSuccess = true;
     },
     [getAccountWithID.rejected]: (state, action) => {
+      state.loading = false;
+      state.error = action.payload.message;
+      state.isRegSuccess = false;
+    },
+    [getAccountWithEmail.pending]: (state, action) => {
+      state.loading = true
+      state.isRegSuccess = false
+    },
+    [getAccountWithEmail.fulfilled]: (state, action) => {
+      state.loading = false;
+      state.isRegSuccess = true;
+    },
+    [getAccountWithEmail.rejected]: (state, action) => {
       state.loading = false;
       state.error = action.payload.message;
       state.isRegSuccess = false;

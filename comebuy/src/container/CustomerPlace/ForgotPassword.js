@@ -6,7 +6,9 @@ import VisibilityIcon from '@mui/icons-material/Visibility';
 import VisibilityOffIcon from '@mui/icons-material/VisibilityOff';
 import { Backdrop, CircularProgress } from '@mui/material';
 import { styled } from '@mui/material/styles';
+import { Dialog, DialogTitle } from '@mui/material';
 
+import { useNavigate } from 'react-router';
 //Beside
 import clsx from "clsx";
 import { current, unwrapResult } from '@reduxjs/toolkit';
@@ -60,6 +62,8 @@ const ForgotPassword = () => {
     const _currentUser = useSelector(currentUser)
 
     const dispatch = useDispatch()
+
+    const navigate = useNavigate()
 
     const [newPassword, setNewPassword] = useState('')
 
@@ -178,10 +182,21 @@ const ForgotPassword = () => {
 
     //for dialog alert that you reg successfully or not
     const [openDialogRegSuccessfully, setOpenDialogRegSuccessfully] = useState(false);
-
     const [openDialogRegFailed, setOpenDialogRegFailed] = useState(false);
 
-    const handleCloseModalVerify = () => { setOpenModalVerify(false) }
+    const handleCloseDialogRegSuccessfully = () => {
+        setOpenDialogRegSuccessfully(false)
+        navigate('/myplace')
+    }
+    const handleCloseDialogRegFailed = () => {
+        setOpenDialogRegFailed(false);
+        handleCloseModalVerify()
+    };
+
+    const handleCloseModalVerify = () => {
+        setOpenModalVerify(false)
+        setOpenBackdrop(false)
+    }
 
     const [openEmailWrong, setOpenEmailWrong] = useState(false);
 
@@ -243,12 +258,9 @@ const ForgotPassword = () => {
                 setOpenBackdrop(true)
                 const resultAction = await dispatch(updatePassword(data))
                 const originalPromiseResult = unwrapResult(resultAction)
-                console.log(originalPromiseResult);
-                if (originalPromiseResult === true) {
-                    handleCloseModalVerify()
-                    setOpenDialogRegFailed(false)
-                    setIsRegistering(1)
-                }
+                handleCloseModalVerify()
+                setOpenDialogRegFailed(false)
+                setIsRegistering(1)
             } else {
                 setOpenWrongVerify(true)
             }
@@ -527,9 +539,66 @@ const ForgotPassword = () => {
                                 )
                             }
                         </div>
+                        <Backdrop
+                            sx={{ color: '#fff', zIndex: (theme) => theme.zIndex.drawer + 1 }}
+                            open={openBackdrop}
+                        >
+                            <CircularProgress color="inherit" />
+                        </Backdrop>
                     </div>
                 </Box>
             </Modal>
+
+            {/*Dialog for having registered successfully or email existed */}
+            {openDialogRegFailed ? (
+                <Dialog open={openDialogRegFailed} onClose={handleCloseDialogRegFailed}>
+                    <DialogTitle color='error'>Reset password failed</DialogTitle>
+                    <Button
+                        onClick={handleCloseDialogRegFailed}
+                        style={{
+                            alignSelf: 'center',
+                            width: '30px',
+                            height: '30px',
+                            borderRadius: '15px',
+                            border: '1px solid #18608a',
+                            backgroundColor: 'red',
+                            color: 'black',
+                            fontSize: '13px',
+                            marginBottom: '10px',
+                            fontWeight: 'bold',
+                            padding: '12px 45px',
+                        }}
+                    >
+                        OK
+                    </Button>
+                </Dialog>
+            ) : null
+            }
+            {openDialogRegSuccessfully ?
+                (
+                    <Dialog open={openDialogRegSuccessfully} onClose={handleCloseDialogRegSuccessfully}>
+                        <DialogTitle>Reset password successfully</DialogTitle>
+                        <Button
+                            onClick={handleCloseDialogRegSuccessfully}
+                            style={{
+                                alignSelf: 'center',
+                                width: '30px',
+                                height: '30px',
+                                borderRadius: '15px',
+                                border: '1px solid #18608a',
+                                backgroundColor: 'green',
+                                color: '#ffffff',
+                                fontSize: '13px',
+                                marginBottom: '10px',
+                                fontWeight: 'bold',
+                                padding: '12px 45px',
+                            }}
+                        >
+                            OK
+                        </Button>
+                    </Dialog>
+                ) : null}
+
             {/*Snackbar*/}
             <Snackbar open={openEmailWrong} autoHideDuration={6000} onClose={handleCloseEmailWrong}>
                 <Alert onClose={handleCloseEmailWrong} severity="error" sx={{ width: '100%' }}>
@@ -557,6 +626,7 @@ const ForgotPassword = () => {
                     Wrong verify code. Please try again.
                 </Alert>
             </Snackbar>
+
 
             <Backdrop
                 sx={{ color: '#fff', zIndex: (theme) => theme.zIndex.drawer + 1 }}
