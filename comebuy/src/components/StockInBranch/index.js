@@ -11,6 +11,7 @@ import UpdateAmountInStockModal from "../UpdateAmountInStockModel"
 const StockInBranch = (props) => {
     const { branch } = props
     const [stockList, setStockList] = useState([])
+    const [loading, setLoading] = useState(false)
     const [openSuccessAlert, setOpenSuccessAlert] = useState(false);
     const [openErrorAlert, setOpenErrorAlert] = useState(false);
     const [openAddModal, setOpenAddModal] = useState(false)
@@ -91,6 +92,7 @@ const StockInBranch = (props) => {
             const response = await stockApi.getAllStockByBranch(branch.branchID)
             if (response.status == 200) {
                 setStockList(response.data)
+                setLoading(true)
                 setMessageSuccess("Load Stock Successfully")
                 setOpenSuccessAlert(true)
             }
@@ -132,7 +134,11 @@ const StockInBranch = (props) => {
                         </Stack>
                         :
                         <Box sx={{ display: 'flex' }}>
-                            <CircularProgress />
+                            { loading == false ? 
+                                <CircularProgress />
+                                :
+                                <Typography variant='h6'>There is no product to show...</Typography>
+                            }
                         </Box>
                 }
                 <UpdateAmountInStockModal open={openUpdateModal} onClose={handleCloseModal} onSubmit={handleUpdateAmountProduct} />

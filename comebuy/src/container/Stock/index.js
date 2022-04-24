@@ -140,6 +140,7 @@ export default function Stock() {
                         <StockInBranch branch={item} />
                     </TabPanel>
                 ))
+               
             }
             <SnackBarAlert severity='success' open={openSuccessAlert} handleClose={handleClose} message={messageSuccess} />
             <SnackBarAlert severity='error' open={openErrorAlert} handleClose={handleClose} message={messageError} />
