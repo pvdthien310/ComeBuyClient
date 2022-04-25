@@ -130,7 +130,7 @@ const Row = (props) => {
                 const temp = {
                     ...dataForUpdate,
                     isPaid: true,
-                    moneyReceived: dataForUpdate.total
+                    moneyReceived: invoiceTotal
                 }
                 try {
                     const resultAction = await dispatch(updateInvoice(temp))
@@ -149,6 +149,22 @@ const Row = (props) => {
             }
         }
     }
+
+    function Total() {
+        let total = 0;
+        for (let i = 0; i < row.invoiceitem.length; i++) {
+            total = total + Number(row.invoiceitem[i].total)
+        }
+        return total;
+    }
+
+    const [invoiceTotal, setInvoiceTotal] = React.useState(0)
+
+    React.useEffect(() => {
+        if (invoiceTotal === 0) {
+            setInvoiceTotal(Total())
+        }
+    }, [])
 
     const handleClickCheckInvoice = async () => {
         if (isChecked === true) {
@@ -195,25 +211,27 @@ const Row = (props) => {
     }
 
     return (
-        <React.Fragment>
-            <TableRow sx={{ '& > *': { borderBottom: 'unset' } }}>
+        <React.Fragment >
+            <TableRow sx={{ '& > *': { borderBottom: 'set', backgroundColor: '#384D59' } }}>
                 <TableCell>
                     <IconButton
                         aria-label="expand row"
+                        sx={{ backgroundColor: '#141E26' }}
                         size="small"
                         onClick={() => setOpen(!open)}
                     >
                         {open ? <KeyboardArrowUpIcon color='error' /> : <KeyboardArrowDownIcon style={{ color: '#6FA61C' }} />}
                     </IconButton>
                 </TableCell>
-                <TableCell component="th" scope="row" style={{ color: '#D7F205', fontWeight: 'bold' }}>
-                    {row.invoiceID}
+                <TableCell scope="row">
+                    <Box>
+                        <Typography style={{ color: '#52BF04', fontWeight: 'bold' }}>{row.invoiceID}</Typography>
+                    </Box>
                 </TableCell>
                 <TableCell align="center">
                     <Button
                         aria-describedby={id}
                         onClick={handleClick}
-                        style={{ color: '#F2EFE9' }}
                     >
                         {row.account.userid}
                     </Button>
@@ -231,7 +249,7 @@ const Row = (props) => {
                     </Popover>
                 </TableCell>
                 <TableCell align="center" style={{ color: '#F2EFE9' }}>{row.date}</TableCell>
-                <TableCell align="center" style={{ color: '#F2EFE9', fontWeight: 'bold' }}>{row.total}</TableCell>
+                <TableCell align="center" style={{ color: '#F2EFE9', fontWeight: 'bold' }}>{invoiceTotal}</TableCell>
                 <TableCell align="center">
                     <FormGroup>
                         <FormControlLabel
@@ -256,59 +274,64 @@ const Row = (props) => {
                     </FormGroup>
                 </TableCell>
             </TableRow>
-            <TableRow>
-                <TableCell style={{ paddingBottom: 0, paddingTop: 0, backgroundColor: '#BFBFBF', marginLeft: '10%' }} colSpan={6}>
+            <TableRow sx={{ '& > *': { borderBottom: 'set', backgroundColor: '#384D59' } }}>
+                <TableCell style={{ paddingBottom: 0, paddingTop: 0, backgroundColor: '#384D59', marginLeft: '10%' }} colSpan={6}>
                     <Collapse in={open} timeout="auto" unmountOnExit>
                         <Box sx={{ margin: 1 }}>
-                            <Typography variant="h7" style={{ fontWeight: 'bold', color: '#0D0D0D', textDecoration: 'underline' }} gutterBottom component="div">
+                            <Typography variant="h7" style={{ fontWeight: 'bold', color: '#F2EFE9', textDecoration: 'underline' }} gutterBottom component="div">
                                 Details:
                             </Typography>
                             <Table size="small" aria-label="purchases">
                                 <TableHead>
                                     <TableRow>
-                                        <TableCell style={{ fontWeight: 'bold', color: '#0D0D0D' }}>Product ID</TableCell>
-                                        <TableCell align="center" style={{ fontWeight: 'bold', color: '#0D0D0D' }}>Amount</TableCell>
-                                        <TableCell align="center" style={{ fontWeight: 'bold', color: '#0D0D0D' }}>Total price (USD)</TableCell>
+                                        <TableCell style={{ fontWeight: 'bold', color: '#F2EFE9' }}>Product ID</TableCell>
+                                        <TableCell align="center" style={{ color: '#F2EFE9' }}>Amount</TableCell>
+                                        <TableCell align="center" style={{ color: '#F2EFE9' }}>Total price (USD)</TableCell>
                                     </TableRow>
                                 </TableHead>
                                 <TableBody>
                                     {row.invoiceitem.map((detailsRow) => (
-                                        <TableRow key={detailsRow.productid}>
-                                            <TableCell component="th" scope="row">
-                                                <Typography
-                                                    aria-owns={openProductHover ? 'mouse-over-popover' : undefined}
-                                                    aria-haspopup="true"
-                                                    onMouseEnter={handleProductPopoverOpen}
-                                                    onMouseLeave={handleProductPopoverClose}
-                                                    style={{ fontWeight: 'bold', color: '#0F4001' }}
-                                                >
-                                                    {detailsRow.productid}
-                                                </Typography>
-                                                <Popover
-                                                    id="mouse-over-popover"
-                                                    sx={{
-                                                        pointerEvents: 'none',
-                                                    }}
-                                                    open={openProductHover}
-                                                    anchorEl={anchorEl2}
-                                                    anchorOrigin={{
-                                                        vertical: 'bottom',
-                                                        horizontal: 'left',
-                                                    }}
-                                                    transformOrigin={{
-                                                        vertical: 'top',
-                                                        horizontal: 'left',
-                                                    }}
-                                                    onClose={handleProductPopoverClose}
-                                                    disableRestoreFocus
-                                                >
-                                                    <ProdInfo productID={detailsRow.productid} />
-                                                </Popover>
-                                            </TableCell>
-                                            <TableCell align="center">{detailsRow.amount}</TableCell>
-                                            <TableCell align="center" style={{ fontWeight: 'bold', color: 'black' }}>{detailsRow.total}</TableCell>
-                                        </TableRow>
-                                    ))}
+                                        detailsRow.productid != null ? (
+                                            <TableRow key={detailsRow.productid}>
+                                                <TableCell component="th" scope="row">
+                                                    <Typography
+                                                        aria-owns={openProductHover ? 'mouse-over-popover' : undefined}
+                                                        aria-haspopup="true"
+                                                        onMouseEnter={handleProductPopoverOpen}
+                                                        onMouseLeave={handleProductPopoverClose}
+                                                        style={{ fontWeight: 'bold', color: '#52BF04', fontStyle: 'italic' }}
+                                                    >
+                                                        {detailsRow.productid}
+                                                    </Typography>
+                                                    <Popover
+                                                        id="mouse-over-popover"
+                                                        sx={{
+                                                            pointerEvents: 'none',
+                                                        }}
+                                                        open={openProductHover}
+                                                        anchorEl={anchorEl2}
+                                                        anchorOrigin={{
+                                                            vertical: 'bottom',
+                                                            horizontal: 'left',
+                                                        }}
+                                                        transformOrigin={{
+                                                            vertical: 'top',
+                                                            horizontal: 'left',
+                                                        }}
+                                                        onClose={handleProductPopoverClose}
+                                                        disableRestoreFocus
+                                                    >
+                                                        <ProdInfo productID={detailsRow.productid} />
+                                                    </Popover>
+                                                </TableCell>
+                                                <TableCell align="center">{detailsRow.amount}</TableCell>
+                                                <TableCell align="center" style={{ fontWeight: 'bold', color: 'black' }}>{detailsRow.total}</TableCell>
+                                            </TableRow>
+                                        ) : (
+                                            null
+                                        )
+                                    )
+                                    )}
                                 </TableBody>
                             </Table>
                         </Box>

@@ -13,9 +13,17 @@ import TableRow from '@mui/material/TableRow';
 import Typography from '@mui/material/Typography';
 import TablePagination from '@mui/material/TablePagination';
 import Paper from '@mui/material/Paper';
+import { styled } from '@mui/material/styles';
 
 
-const  Invoice = () => {
+const BGImg = styled('img')({
+    height: '100%',
+    width: '100%',
+    position: 'fixed',
+
+})
+
+const Invoice = () => {
 
     const [invoiceList, setInvoiceList] = React.useState([])
 
@@ -52,9 +60,38 @@ const  Invoice = () => {
 
 
     return (
-        <div style={{ top: '0', right: '0', left: '0', right: '0' }}>
-            <TableContainer style={{ backgroundColor: '#0D0D0D', height: 'inherit', width: 'inherit', padding: '5%' }} component={Paper}>
-                <Typography style={{ marginLeft: '35%', marginTop: '0%', marginBottom: '5%', fontWeight: 'bold', fontSize: '30px', color: '#F2F2F2' }}>INVOICE MANAGEMENT</Typography>
+        <div
+            style={{
+                width: '100%',
+                height: '100%',
+                display: 'flex',
+            }}
+        >
+            <BGImg src='https://images.unsplash.com/photo-1490810194309-344b3661ba39?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1448&q=80' />
+            <TableContainer
+                style={{
+                    backgroundColor: 'transparent',
+                    padding: '2%',
+                    zIndex: 0,
+                    width: '100%',
+                    height: '100%',
+                    justifyContent: 'center',
+                    position: 'absolute'
+                }}
+                component={Paper}
+            >
+                <Typography
+                    style={{
+                        marginLeft: '35%',
+                        marginTop: '0%',
+                        marginBottom: '2%',
+                        fontWeight: 'bold',
+                        fontSize: '30px',
+                        color: '#F2F2F2'
+                    }}
+                >
+                    INVOICE MANAGEMENT
+                </Typography>
                 <Table aria-label="collapsible table">
                     <TableHead style={{ backgroundColor: '#F2F2F2', borderRadius: '15px' }}>
                         <TableRow>
