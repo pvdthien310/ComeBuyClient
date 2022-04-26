@@ -11,8 +11,8 @@ const Img = styled('img')((theme) => ({
 
 const _Avatar = (props) => {
     return (
-        <Box sx={{ borderRadius: 5, height: 100, width: 100, justifyContent:'center', alignItems: 'center' }}>
-            <Avatar sx={{height: 70, width: 70, alignSelf: 'center'}} src={props.url}></Avatar>
+        <Box sx={{ borderRadius: 5, height: 100, width: 100}}>
+            <Avatar sx={{height: 70, width: 70, marginTop: 2}} src={props.url}></Avatar>
         </Box>
     )
 }
