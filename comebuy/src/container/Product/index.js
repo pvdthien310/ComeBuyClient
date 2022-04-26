@@ -37,7 +37,7 @@ const BGImg = styled('img')({
 })
 const ProductTable = styled(DataGrid)(({ theme }) => ({
     height: 700,
-    top: '10%',
+    // top: '10%',
     left: '10%',
     width: 1200,
     position: 'relative',

@@ -15,7 +15,6 @@ import { useDispatch } from 'react-redux';
 import { accountSlice } from '../../redux/slices/accountSlice';
 import { IconButton, Stack } from '@mui/material';
 import MenuIcon from '@mui/icons-material/Menu';
-import { styled, alpha } from '@mui/material/styles';
 
 const MainLayout = props => {
   const [pathname, setPathname] = useState(window.location.pathname);
@@ -94,7 +93,7 @@ const MainLayout = props => {
     </Box>
   );
   return (
-    <div style={{height: 850}}>
+    <div style={{height: window.innerHeight}}>
       <React.Fragment key={'left'}>
         <IconButton  size="large" onClick={toggleDrawer('left', true)}><MenuIcon /></IconButton>
         <Drawer
@@ -106,7 +105,7 @@ const MainLayout = props => {
         </Drawer>
       </React.Fragment>
 
-      <div  style={{height: "80%"}}>
+      <div  style={{height: "100%"}}>
         <Routes>
           {showRoutes(props.routes)}
           <Route element={

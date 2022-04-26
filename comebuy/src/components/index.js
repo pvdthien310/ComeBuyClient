@@ -25,6 +25,8 @@ export { default as AddProductInStockModal} from './AddProductInStockModal'
 export { default as ProductSelect} from './ProductSelect'
 export {default as UpdateAmountInStockModal} from './UpdateAmountInStockModel'
 export {default as RevenueChart} from './RevenueChart'
+export {default as ProductItem} from './ProductItem'
+
 
 
 // export { default as ScrollButton } from './ScrollButton/ScrollButton'

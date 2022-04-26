@@ -27,7 +27,7 @@ const Slider = () => {
             {
                 productList.map((item, i) => (
                     <SwiperSlide key={i}>
-                        <SliderItem image={item.productimage[0].imageurl}></SliderItem>
+                        <SliderItem image={item.productimage[0].imageURL}></SliderItem>
                     </SwiperSlide>
                 ))
             }

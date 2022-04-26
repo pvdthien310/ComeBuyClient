@@ -1,17 +1,19 @@
 import './App.css';
 import LoginRegister from './container/LoginAndRegister/LoginRegister';
 import { Route, Routes, useNavigate } from 'react-router-dom';
-import HomePage from './container/HomePage/HomePage';
+import HomePage from './container/HomePage';
 import MainLayout from './page/MainLayout';
 import { adminRoutes, adminMenuItems } from './route/AdminRoutes';
 import { staffMenuItems, staffRoutes } from './route/StaffRoutes';
 import { managerRoutes, managerMenuItems } from './route/ManagerRoutes';
-import { useState, useEffect } from 'react';
+import { useEffect } from 'react';
 import CustomerPlace from './container/CustomerPlace/index';
 import { currentUser } from './redux/selectors';
 import { useSelector } from 'react-redux';
 import Profile from './container/Profile';
 import ForgotPassword from './container/CustomerPlace/ForgotPassword';
+import { customerMenuItems, customerRoutes } from './route/CustomerRoutes';
+import GuestLayout from './page/GuestLayout';
 
 function App() {
   const role = localStorage.getItem('role');
@@ -35,6 +37,8 @@ function App() {
           return <MainLayout routes={staffRoutes} itemRoutes={staffMenuItems} />;
         case 'admin':
           return <MainLayout routes={adminRoutes} itemRoutes={adminMenuItems} />;
+        case 'customer':
+          return <GuestLayout routes={customerRoutes} itemRoutes={customerMenuItems} />;
         default:
           return <HomePage />; // Guest/Customer 
       }
@@ -47,9 +51,6 @@ function App() {
     <Routes>
       <Route path="*" element={renderRoutes()} />
       <Route path="login" element={<LoginRegister />} />
-      <Route path="myplace" element={<CustomerPlace />} />
-      <Route path="profile" element={<Profile />} />
-      <Route path="myplace/resetpassword" element={<ForgotPassword />} />
     </Routes>
   );
 }

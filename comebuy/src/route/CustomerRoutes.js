@@ -1,14 +1,10 @@
 import React from 'react';
-import Product from '../container/Product';
+import HomePage from '../container/HomePage';
+import ProductSpace from '../container/ProductSpace';
 import Profile from '../container/Profile';
 import CustomerPlace from './../container/CustomerPlace/index';
 
 const customerRoutes = [
-  {
-    name: 'Product',
-    path: '/product',
-    page: <Product />,
-  },
   {
     name: 'Customer Place',
     path: '/profiles/myplace',
@@ -19,13 +15,20 @@ const customerRoutes = [
     path: '/profiles/*',
     page: <Profile />,
   },
+  {
+    name: 'Product Space',
+    path: '/productSpace/*',
+    page: <ProductSpace />,
+  },
+  {
+    name: 'Home',
+    path: '/',
+    page: <HomePage />,
+  },
+  
+
 ];
 
-const customerMenuItems = [
-  {
-    name:'Product',
-    path: '/product',
-    page: <Product />,
-  }]
+const customerMenuItems = []
 
 export { customerRoutes,customerMenuItems };

@@ -20,12 +20,12 @@ const BGImg = styled('img')({
     resize: true,
 })
 const ProductTable = styled(DataGrid)(({ theme }) => ({
-    marginTop: 30,
     height: 700,
-    width: 1400,
+    width: 1200,
     position: 'relative',
     backgroundColor: 'white',
-    alignSelf: 'center'
+    alignSelf: 'center',
+    marginBottom: 50
 
 }));
 
@@ -188,7 +188,7 @@ const Staff = () => {
             height: "100%",
         }}>
             <BGImg src='https://images.unsplash.com/photo-1490810194309-344b3661ba39?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1448&q=80' />
-            <Button sx={{ height: 50, width: 100 }} onClick={() => navigate('/staff/add')}>ZXzxZxZxzx</Button>
+            <Button sx={{ height: 50, width: 100, backgroundColor:'white', alignSelf: 'end' }} onClick={() => navigate('/staff/add')}>Add Staff</Button>
             <ProductTable
                 rowHeight={100}
                 columns={columns}

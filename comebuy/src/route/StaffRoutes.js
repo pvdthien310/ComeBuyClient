@@ -1,5 +1,6 @@
 import React from 'react';
 import Invoice from '../container/Invoice';
+import ProductSpace from '../container/ProductSpace';
 
 const staffRoutes = [
   {
@@ -8,6 +9,11 @@ const staffRoutes = [
     exact: true,
     page: <Invoice />,
   },
+  {
+    name: 'Product Space',
+    path: '/productSpace/*',
+    page: <ProductSpace />,
+  },
 
 ];
 
@@ -15,9 +21,13 @@ const staffMenuItems = [
   {
     name: 'Invoice',
     path: '/invoice/*',
-    exact: true,
     page: <Invoice />,
-  }]
+  },
+  {
+    name: 'Product Space',
+    path: '/productSpace/*',
+    page: <ProductSpace />,
+  },]
 
 
 

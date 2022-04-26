@@ -50,7 +50,7 @@ function BrandLine(props) {
 
     const as = ['1', '2', '3']
     return (
-        <Line id={props.id} className='BrandLine' container rowSpacing={1} columnSpacing={{ xs: 1, sm: 2, md: 3 }}>
+        <Line id={props.id} sx={{p: 1}} className='BrandLine' container rowSpacing={1} columnSpacing={{ xs: 1, sm: 2, md: 3 }}>
             <Grid container justifyContent={'flex-end'} item xs={12} className='BrandLine__ImgBrand'>
                 <CustomButton endIcon={<NavigateNextIcon />} >
                     {brandName}
@@ -60,7 +60,7 @@ function BrandLine(props) {
                 <Img style={{}} alt="complex" src={brandurl} />
             </Grid>
             <Grid item xs={10}>
-                <Swiper slidesPerView={3} loop spacing={3}>
+                <Swiper slidesPerView={3} loop spacing={1}>
                     {
                         as.map((item, i) => (
                             <SwiperSlide key={i} >

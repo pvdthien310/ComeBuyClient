@@ -24,7 +24,7 @@ export default function BrandItem() {
       sx={{
         p: 2,
         margin: 'auto',
-        maxWidth: 400,
+        maxWidth: 380,
         flexGrow: 1,
         backgroundColor: (theme) =>
           theme.palette.mode === 'dark' ? '#1A2027' : '#fff',
@@ -33,7 +33,6 @@ export default function BrandItem() {
       <Grid container spacing={2}>
         <Grid item>
           <ButtonBase sx={{ width: 128, height: 128 }}>
-            {/* <Img alt="complex" src="https://store.storeimages.cdn-apple.com/4982/as-images.apple.com/is/macbook-air-space-gray-select-201810?wid=452&hei=420&fmt=jpeg&qlt=95&.v=1633027804000" /> */}
             <Img alt="complex" src="https://store.storeimages.cdn-apple.com/4982/as-images.apple.com/is/mbp-14-digitalmat-gallery-1-202111?wid=364&hei=333&fmt=png-alpha&.v=1635183223000" />
           </ButtonBase>
         </Grid>

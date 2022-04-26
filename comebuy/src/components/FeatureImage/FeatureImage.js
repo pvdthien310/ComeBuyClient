@@ -74,7 +74,7 @@ export default function FeatureImage(props) {
             <ImgFeatureLine src={props.urlImage}></ImgFeatureLine>
             <Text item xs={12} >{props.BigText}</Text>
             <SmallText item xs={12}>{props.SmallText}</SmallText>
-            <CustomButton endIcon={<ArrowRightIcon />}>See More</CustomButton>
+            <CustomButton endIcon={<ArrowRightIcon />} onClick={props.onNavigate}>See More</CustomButton>
         </Container>
     )
 }
