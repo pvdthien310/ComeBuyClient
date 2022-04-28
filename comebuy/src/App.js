@@ -7,11 +7,8 @@ import { adminRoutes, adminMenuItems } from './route/AdminRoutes';
 import { staffMenuItems, staffRoutes } from './route/StaffRoutes';
 import { managerRoutes, managerMenuItems } from './route/ManagerRoutes';
 import { useEffect } from 'react';
-import CustomerPlace from './container/CustomerPlace/index';
 import { currentUser } from './redux/selectors';
 import { useSelector } from 'react-redux';
-import Profile from './container/Profile';
-import ForgotPassword from './container/CustomerPlace/ForgotPassword';
 import { customerMenuItems, customerRoutes } from './route/CustomerRoutes';
 import GuestLayout from './page/GuestLayout';
 
