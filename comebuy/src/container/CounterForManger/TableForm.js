@@ -1,10 +1,15 @@
-import React, { useState, useEffect } from "react"
+import React, { useState, useEffect, useCallback, } from "react"
 import { AiOutlineDelete, AiOutlineEdit } from "react-icons/ai"
 import { v4 as uuidv4 } from "uuid"
 import { Stack, TextField, Button } from "@mui/material"
 import { useSelector } from "react-redux"
 import Autocomplete, { createFilterOptions } from '@mui/material/Autocomplete';
+import Popover from '@mui/material/Popover';
+import Typography from '@mui/material/Typography';
 import { productListSelector } from "../../redux/selectors"
+import ProdInfo from "../Invoice/ProdInfo"
+import { OptionUnstyled } from "@mui/base"
+import { DetailProductModal } from "../../components"
 
 
 const filter = createFilterOptions();
@@ -49,28 +54,33 @@ export default function TableForm({
       setIsEditing(false)
     }
   }
+  const [openModal, setOpenModal] = useState(false);
+  const [currentProduct, setCurrentProduct] = useState(null);
+  const handleCloseModal = () => setOpenModal(false);
+
+  useEffect(() => {
+    if (currentProduct != null)
+      setOpenModal(true)
+  }, [currentProduct])
 
   // Calculate items amount function
   useEffect(() => {
     const calculateAmount = (amount) => {
       setAmount(quantity * price)
     }
-
     calculateAmount(amount)
   }, [amount, price, quantity, setAmount])
 
   // Calculate total amount of items in table
   useEffect(() => {
-    let rows = document.querySelectorAll(".amount")
+    // let rows = document.querySelectorAll("amount")
     let sum = 0
 
-    for (let i = 0; i < rows.length; i++) {
-      if (rows[i].className === "amount") {
-        sum += isNaN(rows[i].innerHTML) ? 0 : parseInt(rows[i].innerHTML)
-        setTotal(sum)
-      }
+    for (let i = 0; i < list.length; i++) {
+      sum += parseInt(list[i].amount)
+      setTotal(sum)
     }
-  })
+  }, [list])
 
   // Edit function
   const editRow = (id) => {
@@ -93,6 +103,7 @@ export default function TableForm({
           onChange={(event, newValue) => {
             setDescription(newValue.name)
             setPrice(Number(newValue.price))
+            setCurrentProduct(newValue)
           }}
           selectOnFocus
           clearOnBlur
@@ -109,6 +120,7 @@ export default function TableForm({
             <TextField {...params} label="Search for product" />
           )}
         />
+        <DetailProductModal open={openModal} onClose={handleCloseModal} product={currentProduct} />
         <TextField
           label="Quantity"
           value={quantity}
@@ -128,7 +140,7 @@ export default function TableForm({
             <td style={{ fontWeight: 'bold', fontFamily: 'serif', fontSize: '18px' }}>Product</td>
             <td style={{ fontWeight: 'bold', fontFamily: 'serif', fontSize: '18px' }}>Quantity</td>
             <td style={{ fontWeight: 'bold', fontFamily: 'serif', fontSize: '18px' }}>Price</td>
-            <td style={{ fontWeight: 'bold', fontFamily: 'serif', fontSize: '18px' }} className="font-bold">Amount</td>
+            <td style={{ fontWeight: 'bold', fontFamily: 'serif', fontSize: '18px' }} className="amount">Amount</td>
           </tr>
         </thead>
         {list.map(({ id, description, quantity, price, amount }) => (
@@ -157,7 +169,9 @@ export default function TableForm({
 
       <div>
         <h2 style={{ fontFamily: 'serif', fontSize: '30px', display: 'flex', justifyContent: 'flex-end' }} >
-          Cost. {total.toLocaleString()} USD
+          Cost. {
+            total
+          } USD
         </h2>
       </div>
     </>

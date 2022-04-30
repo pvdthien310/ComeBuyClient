@@ -1,40 +1,39 @@
+import { Stack, Typography } from "@mui/material";
+
 export default function Footer({
   name,
   email,
-  website,
   phone,
-  bankAccount,
-  bankName,
+  address
 }) {
   return (
     <>
-      <footer className="footer border-t-2 border-gray-300 pt-5">
-        <ul className="flex flex-wrap items-center justify-center">
-          <li>
-            <span className="font-bold">Your name:</span> {name}
-          </li>
-          <li>
-            <span className="font-bold">Your email:</span> {email}
-          </li>
-          <li>
-            <span className="font-bold">Phone number:</span> {phone}
-          </li>
-          <li>
-            <span className="font-bold">Bank:</span> {bankName}
-          </li>
-          <li>
-            <span className="font-bold">Account holder:</span> {name}
-          </li>
-          <li>
-            <span className="font-bold">Account number:</span> {bankAccount}
-          </li>
-          <li>
-            <span className="font-bold">Website:</span>{" "}
-            <a href={website} target="_blank" rel="noopenner noreferrer">
-              {website}
-            </a>
-          </li>
-        </ul>
+      <footer style={{
+        display: 'table-footer-group',
+        borderWidth: '1px',
+        borderColor: 'gray',
+      }}>
+        <Stack direction="column" width="100%" spacing={2} style={{ display: 'flex', justifyContent: 'center', justifyItems: 'center' }}>
+          <Stack width="100%" spacing={3} direction="row">
+            <li style={{ fontFamily: 'serif' }} >
+              <span style={{ fontWeight: 'bold', fontFamily: 'serif' }}>Name:</span> {name}
+            </li>
+
+            <li style={{ fontFamily: 'serif' }} >
+              <span style={{ fontWeight: 'bold', fontFamily: 'serif' }}>Email:</span> {email}
+            </li>
+          </Stack>
+          <Stack width="100%" spacing={3} direction="row">
+            <li style={{ fontFamily: 'serif' }} >
+              <span style={{ fontWeight: 'bold', fontFamily: 'serif' }}>Phone:</span> {phone}
+            </li>
+
+            <li style={{ fontFamily: 'serif' }} >
+              <span style={{ fontWeight: 'bold', fontFamily: 'serif' }}>Store address:</span> {address}
+            </li>
+          </Stack>
+          <Typography style={{ marginTop: '5%', fontFamily: 'serif', fontStyle: 'italic' }}>Thanks for supporting our store. We'll always welcome you to explore ❤️</Typography>
+        </Stack>
       </footer>
     </>
   )

@@ -1,8 +1,8 @@
 export default function Notes({ notes }) {
   return (
     <>
-      <section className="mt-10 mb-5">
-        <p className="lg:w-1/2 text-justify">{notes}</p>
+      <section style={{ marginTop: '0%' }}>
+        <p style={{ fontFamily: 'serif', fontWeight: 'bold' }}>Note: {notes}</p>
       </section>
     </>
   )

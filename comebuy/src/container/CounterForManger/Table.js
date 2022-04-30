@@ -5,21 +5,21 @@ export default function Table({ list, total }) {
     <>
       <table width="100%" className="mb-10">
         <thead>
-          <tr className="bg-gray-100 p-1">
-            <td className="font-bold">Description</td>
-            <td className="font-bold">Quantity</td>
-            <td className="font-bold">Price</td>
-            <td className="font-bold">Amount</td>
+          <tr style={{ backgroundColor: 'gray' }}>
+            <td style={{ fontWeight: 'bold', fontSize: '15px', fontFamily: 'serif' }}>Description</td>
+            <td style={{ fontWeight: 'bold', fontSize: '15px', fontFamily: 'serif' }}>Quantity</td>
+            <td style={{ fontWeight: 'bold', fontSize: '15px', fontFamily: 'serif' }}>Price</td>
+            <td style={{ fontWeight: 'bold', fontSize: '15px', fontFamily: 'serif' }}>Amount</td>
           </tr>
         </thead>
         {list.map(({ id, description, quantity, price, amount }) => (
           <React.Fragment key={id}>
             <tbody>
-              <tr className="h-10">
-                <td>{description}</td>
-                <td>{quantity}</td>
-                <td>{price}</td>
-                <td>{amount}</td>
+              <tr>
+                <td style={{ fontFamily: 'serif' }} >{description}</td>
+                <td style={{ fontFamily: 'serif' }}>{quantity}</td>
+                <td style={{ fontFamily: 'serif' }}>{price}</td>
+                <td style={{ fontFamily: 'serif' }}>{amount}</td>
               </tr>
             </tbody>
           </React.Fragment>
@@ -27,8 +27,8 @@ export default function Table({ list, total }) {
       </table>
 
       <div>
-        <h2 className="flex items-end justify-end text-gray-800 text-4xl font-bold">
-          Kshs. {total.toLocaleString()}
+        <h2 style={{ display: 'flex', justifyContent: 'flex-end', justifyItems: 'flex-end', fontWeight: 'bold', fontFamily: 'serif' }}>
+          Total cost. {total} USD
         </h2>
       </div>
     </>

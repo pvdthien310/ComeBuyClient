@@ -1,16 +1,23 @@
-export default function Dates({ invoiceNumber, invoiceDate, dueDate }) {
+export default function Dates({ invoiceDate, dueDate }) {
   return (
     <>
-      <article className="mt-10 mb-14 flex items-end justify-end">
+      <article style={{
+        display: 'flex',
+        justifyContent: 'flex-end',
+        justifyItems: 'flex-end'
+      }}>
         <ul>
-          <li className="p-1 ">
-            <span className="font-bold">Invoicer number:</span> {invoiceNumber}
+          <li style={{ backgroundColor: 'gray' }}>
+            <span style={{
+              fontFamily: 'serif',
+              fontWeight: 'bold'
+            }}>Invoice date:</span> {invoiceDate}
           </li>
-          <li className="p-1 bg-gray-100">
-            <span className="font-bold">Invoice date:</span> {invoiceDate}
-          </li>
-          <li className="p-1 ">
-            <span className="font-bold">Due date:</span> {dueDate}
+          <li>
+            <span style={{
+              fontFamily: 'serif',
+              fontWeight: 'bold'
+            }}>Due date:</span> {dueDate}
           </li>
         </ul>
       </article>
