@@ -2,11 +2,12 @@ import { Button, Grid, Stack, Typography } from "@mui/material";
 import { Box } from "@mui/system";
 import { useEffect, useState } from "react";
 import { useDispatch } from "react-redux";
-import { FeatureSelect, FilterColumn, ProductItem, SnackBarAlert } from "../../components";
+import { BreadCrumb, FeatureSelect, FilterColumn, NavBar, ProductItem, SnackBarAlert } from "../../components";
 import { getAllProduct } from "../../redux/slices/productSlice";
 import FilterListIcon from '@mui/icons-material/FilterList';
 import { getAllFeature } from "../../redux/slices/featureSlice";
 import { AirbnbSlider, AirbnbThumbComponent, ExampleSlider, PrettoSlider } from "./style";
+import CustomizedBreadcrumbs from "../../components/BreadCrumb";
 const ProductSpace = () => {
     const [productList, setProductList] = useState([])
     const dispatch = useDispatch()
@@ -57,27 +58,33 @@ const ProductSpace = () => {
 
     return (
         <div style={{ width: '100%', height: '100%' }}>
-            <Grid container sx={{ width: '100%', height: '100%' }} spacing={2}>
-                <Grid item xs={3} sx={{ p: 2, backgroundColor: '#C69AD9' }}>
-                    <FilterColumn product={productList}/>
-                </Grid>
-                <Grid item xs={9} sx={{ p: 2 }}>
-                    <Stack>
-                        <Typography variant="h6" fontWeight={'bold'} sx={{ alignSelf: 'center', m: 1 }}>Our Product</Typography>
-                        <Box sx={{ backgroundColor: '#C69AD9', height: 5, width: '100%' }}></Box>
-                        <Stack direction={"row"} flexWrap={"wrap"} item sx={{ alignSelf: 'center', m: 2, justifyContent: 'center', alignItems: 'center' }}>
-                            {
-                                productList.length > 0 &&
-                                productList.map((item, i) => (
-                                    <ProductItem key={i} product={item}></ProductItem>
-                                ))
-                            }
+            <Stack sx={{ width: '100%', height: '100%' }}>
+                <NavBar></NavBar>
+                <Stack sx={{ pt: 2, pl:2 }}>
+                    <CustomizedBreadcrumbs />
+                </Stack>
+                <Grid container sx={{ width: '100%', height: '100%', mt: 2 }} spacing={2}>
+                    <Grid item xs={3} sx={{ p: 2, backgroundColor: '#C69AD9' }}>
+                        <FilterColumn product={productList} />
+                    </Grid>
+                    <Grid item xs={9} sx={{ p: 2 }}>
+                        <Stack>
+                            <Typography variant="h6" fontWeight={'bold'} sx={{ alignSelf: 'center', m: 1 }}>Our Product</Typography>
+                            <Box sx={{ backgroundColor: '#C69AD9', height: 5, width: '100%' }}></Box>
+                            <Stack direction={"row"} flexWrap={"wrap"} item sx={{ alignSelf: 'center', m: 2, justifyContent: 'center', alignItems: 'center' }}>
+                                {
+                                    productList.length > 0 &&
+                                    productList.map((item, i) => (
+                                        <ProductItem key={i} product={item}></ProductItem>
+                                    ))
+                                }
+                            </Stack>
                         </Stack>
-                    </Stack>
+                    </Grid>
+                    <SnackBarAlert severity='success' open={openSuccessAlert} handleClose={handleClose} message={messageSuccess} />
+                    <SnackBarAlert severity='error' open={openErrorAlert} handleClose={handleClose} message={messageError} />
                 </Grid>
-                <SnackBarAlert severity='success' open={openSuccessAlert} handleClose={handleClose} message={messageSuccess} />
-                <SnackBarAlert severity='error' open={openErrorAlert} handleClose={handleClose} message={messageError} />
-            </Grid>
+            </Stack>
         </div >
     )
 }

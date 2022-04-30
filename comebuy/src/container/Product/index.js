@@ -11,7 +11,7 @@ import {
     DataGrid,
     GridActionsCellItem
 } from '@mui/x-data-grid';
-import { Route, Routes, useNavigate } from 'react-router-dom'
+import { useNavigate } from 'react-router-dom'
 import { Box, Stack } from '@mui/material';
 import { Button } from '@mui/material'
 // icons 
@@ -25,8 +25,6 @@ import { renderImportantTag } from "../../GridDataCellTemplate/ImportantTag";
 import { productListSelector } from './../../redux/selectors'
 //function 
 import { deleteProductByID, getAllProduct } from './../../redux/slices/productSlice'
-import AddProduct from "./AddProduct";
-import EditProduct from "./EditProduct";
 import SnackBarAlert from "../../components/SnackBarAlert";
 
 const BGImg = styled('img')({
