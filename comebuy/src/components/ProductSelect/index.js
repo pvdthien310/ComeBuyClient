@@ -42,7 +42,7 @@ const ProductSelect = (props) => {
                 options={options.sort((a, b) => -b.firstLetter.localeCompare(a.firstLetter))}
                 groupBy={(option) => option.firstLetter}
                 getOptionLabel={(option) => option.name}
-                sx={{ width: 300, margin: 3 }}
+                sx={{ width: 300, margin: 3}}
                 renderInput={(params) => <TextField {...params} label="Please select product!" />}
                 onChange={props.onChange}
             />

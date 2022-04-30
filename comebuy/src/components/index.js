@@ -26,6 +26,9 @@ export { default as ProductSelect} from './ProductSelect'
 export {default as UpdateAmountInStockModal} from './UpdateAmountInStockModel'
 export {default as RevenueChart} from './RevenueChart'
 export {default as ProductItem} from './ProductItem'
+export {default as FilterColumn} from './FilterColumn'
+export {default as FilterAccordion} from './FilterAccordion'
+
 
 
 

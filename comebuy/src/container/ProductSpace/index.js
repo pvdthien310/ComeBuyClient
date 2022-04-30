@@ -2,7 +2,7 @@ import { Button, Grid, Stack, Typography } from "@mui/material";
 import { Box } from "@mui/system";
 import { useEffect, useState } from "react";
 import { useDispatch } from "react-redux";
-import { FeatureSelect, ProductItem, SnackBarAlert } from "../../components";
+import { FeatureSelect, FilterColumn, ProductItem, SnackBarAlert } from "../../components";
 import { getAllProduct } from "../../redux/slices/productSlice";
 import FilterListIcon from '@mui/icons-material/FilterList';
 import { getAllFeature } from "../../redux/slices/featureSlice";
@@ -14,8 +14,6 @@ const ProductSpace = () => {
     const [openErrorAlert, setOpenErrorAlert] = useState(false);
     const [messageError, setMessageError] = useState("No Error")
     const [messageSuccess, setMessageSuccess] = useState("Notification")
-    const [currentFeature, setCurrentFeature] = useState([])
-    const [featureList, setFeatureList] = useState([])
 
     const handleClose = (event, reason) => {
         if (reason === 'clickaway')
@@ -23,14 +21,14 @@ const ProductSpace = () => {
         setOpenSuccessAlert(false);
         setOpenErrorAlert(false);
     };
-    const handleFeatureChosen = (event) => {
-        const {
-            target: { value },
-        } = event;
-        setCurrentFeature(
-            typeof value === 'string' ? value.split(',') : value,
-        );
-    };
+    // const handleFeatureChosen = (event) => {
+    //     const {
+    //         target: { value },
+    //     } = event;
+    //     setCurrentFeature(
+    //         typeof value === 'string' ? value.split(',') : value,
+    //     );
+    // };
     useEffect(() => {
         // Load Product
         dispatch(getAllProduct())
@@ -46,18 +44,8 @@ const ProductSpace = () => {
                 setOpenErrorAlert(true)
             })
         // Load Feature
-        dispatch(getAllFeature())
-            .unwrap()
-            .then((_originalPromiseResult) => {
-                setFeatureList(_originalPromiseResult)
-            })
-            .catch((_rejectedValueOrSerializedError) => {
-                console.log("Error load product")
-            })
-
         return () => {
             setProductList({})
-            setFeatureList([])
         }
     }, [])
 
@@ -71,25 +59,7 @@ const ProductSpace = () => {
         <div style={{ width: '100%', height: '100%' }}>
             <Grid container sx={{ width: '100%', height: '100%' }} spacing={2}>
                 <Grid item xs={3} sx={{ p: 2, backgroundColor: '#C69AD9' }}>
-                    <Stack item sx={{ backgroundColor: '#C69AD9' }}>
-                        <Typography variant="h6" sx={{ m: 1, color: 'white' }} fontWeight={'bold'} >Filter</Typography>
-                        <Box sx={{ backgroundColor: 'white', height: 5, width: '100%' }}></Box>
-                        <Stack sx={{ p: 2 }}>
-                            <Typography variant="h6" fontWeight={'bold'} color={'white'} sx={{ pb: 1 }}>Demands</Typography>
-                            <FeatureSelect features={featureList} currentFeature={currentFeature} handleFeatureChange={handleFeatureChosen}></FeatureSelect>
-                            <Box sx={{ backgroundColor: 'white', height: 2, width: '100%' }}></Box>
-                        </Stack>
-                        <Stack sx={{ pr: 2, pl: 2 }}>
-                            <Typography variant="h6" fontWeight={'bold'} color={'white'} sx={{ pb: 1 }}>Prices</Typography>
-                            <AirbnbSlider
-                                 valueLabelDisplay="auto"
-                                components={{ Thumb: AirbnbThumbComponent }}
-                                getAriaLabel={(index) => (index === 0 ? 'Minimum price' : 'Maximum price')}
-                                defaultValue={[200, 3000]}
-                            />
-                            <Box sx={{ backgroundColor: 'grey', width: '100%' }}></Box>
-                        </Stack>
-                    </Stack>
+                    <FilterColumn product={productList}/>
                 </Grid>
                 <Grid item xs={9} sx={{ p: 2 }}>
                     <Stack>
