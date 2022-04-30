@@ -26,6 +26,22 @@ export const updateInvoice = createAsyncThunk(
     }
 );
 
+export const addInvoice = createAsyncThunk(
+    "invoice/addInvoice",
+    async ({ data }, { rejectWithValue }) => {
+        try {
+            const response = await invoiceAPI.addInvoice(data);
+            if (!response) {
+                return rejectWithValue();
+            } else {
+                return response;
+            }
+        } catch (error) {
+            console.log(error);
+        }
+    })
+
+
 export const invoiceSlice = createSlice({
     name: 'invoice',
     initialState: {
@@ -51,6 +67,15 @@ export const invoiceSlice = createSlice({
             state.loading = false;
         },
         [updateInvoice.rejected]: (state, action) => {
+            state.loading = false;
+        },
+        [addInvoice.pending]: (state) => {
+            state.loading = true;
+        },
+        [addInvoice.fulfilled]: (state, action) => {
+            state.loading = false;
+        },
+        [addInvoice.rejected]: (state, action) => {
             state.loading = false;
         }
     }

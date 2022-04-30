@@ -11,16 +11,9 @@ import TableForm from "./TableForm"
 import { currentUser } from "../../redux/selectors"
 import { getAllBranch } from "../../redux/slices/branchSlice"
 
-
 import ReactToPrint from "react-to-print"
-import { Stack, Grid, Box, Typography, TextField, Button } from '@mui/material';
-import Backdrop from '@mui/material/Backdrop';
-import CircularProgress from '@mui/material/CircularProgress';
-import Dialog from '@mui/material/Dialog';
-import DialogActions from '@mui/material/DialogActions';
-import DialogContent from '@mui/material/DialogContent';
-import DialogContentText from '@mui/material/DialogContentText';
-import DialogTitle from '@mui/material/DialogTitle';
+import { Stack, Grid, Box, Typography, TextField, Button, IconButton } from '@mui/material';
+import BackspaceSharpIcon from '@mui/icons-material/BackspaceSharp';
 import TextareaAutosize from '@mui/material/TextareaAutosize';
 import { styled } from '@mui/material/styles';
 import { useSelector, useDispatch } from "react-redux"
@@ -43,13 +36,10 @@ const CounterForManager = () => {
     const [address, setAddress] = useState("")
     const [email, setEmail] = useState(_currentUser.email)
     const [phone, setPhone] = useState(_currentUser.phoneNumber)
-    const [bankName, setBankName] = useState("")
-    const [bankAccount, setBankAccount] = useState("")
-    const [website, setWebsite] = useState("")
     const [clientName, setClientName] = useState("")
     const [clientAddress, setClientAddress] = useState("")
     const [invoiceNumber, setInvoiceNumber] = useState("")
-    const [invoiceDate, setInvoiceDate] = useState(new Date().toLocaleString())
+    const [invoiceDate, setInvoiceDate] = useState(String(new Date().getDate()).padStart(2, '0') + '/' + String(new Date().getMonth() + 1).padStart(2, '0') + '/' + new Date().getFullYear())
     const [dueDate, setDueDate] = useState("")
     const [notes, setNotes] = useState("")
     const [description, setDescription] = useState("")
@@ -59,8 +49,6 @@ const CounterForManager = () => {
     const [list, setList] = useState([])
     const [total, setTotal] = useState(0)
     const [width] = useState(641)
-    const [openConfirmBox, setOpenConfirmBox] = useState(false)
-    const handleCloseConfirmBox = () => setOpenConfirmBox(false)
 
     const componentRef = useRef()
 
@@ -69,35 +57,18 @@ const CounterForManager = () => {
     }
 
     const AfterPrint = () => {
-        setOpenConfirmBox(true)
+        setClientName("")
+        setClientAddress("")
+        setList([])
+        setNotes("")
+        setTotal(0)
     }
-
-    const handleSaveInvoice = () => {
-        console.log("Saving invoice...");
-        setIsAddingInvoice(true)
-        handleCloseConfirmBox()
-        setOpenBackdrop(true)
-    }
-
-    const [isAddingInvoice, setIsAddingInvoice] = useState(false)
-    const [openBackdrop, setOpenBackdrop] = useState(false);
-
-    useEffect(() => {
-        if (isAddingInvoice === true) {
-            //adding invoice
-            console.log("Tao them invoice ne");
-            setIsAddingInvoice(false)
-        } else {
-            setOpenBackdrop(false)
-        }
-    }, [isAddingInvoice])
 
     const getListBranch = async () => {
         try {
             const resultAction = await dispatch(getAllBranch())
             const originalPromiseResult = unwrapResult(resultAction)
             setListBranch(originalPromiseResult)
-            console.log(originalPromiseResult);
         } catch (rejectedValueOrSerializedError) {
             return rejectedValueOrSerializedError
         }
@@ -223,6 +194,7 @@ const CounterForManager = () => {
                                 </Typography>
                                 <TextField
                                     label="Name"
+                                    value={clientName}
                                     onChange={(e) => setClientName(e.target.value)}
                                     sx={{ width: '85%', fontFamily: 'serif' }}
                                 />
@@ -241,6 +213,7 @@ const CounterForManager = () => {
                                 </Typography>
                                 <TextField
                                     label="Address"
+                                    value={clientAddress}
                                     onChange={(e) => setClientAddress(e.target.value)}
                                     sx={{ width: '85%' }}
                                 />
@@ -274,6 +247,7 @@ const CounterForManager = () => {
                         </Typography>
                         <TextareaAutosize
                             minRows={5}
+                            value={notes}
                             placeholder="Additional note to client (paid by...)"
                             onChange={(e) => setNotes(e.target.value)}
                             style={{
@@ -290,6 +264,10 @@ const CounterForManager = () => {
                                 maxHeight: '100px'
                             }}
                         />
+                        <IconButton onClick={AfterPrint} sx={{ backgroundColor: 'transparent', width: '100%', height: "50px", alignSelf: 'center' }}>
+                            <BackspaceSharpIcon color="error" sx={{ backgroundColor: 'transparent' }} />
+                            <Typography sx={{ marginLeft: '1%', fontFamily: 'serif', fontWeight: 'bold' }}>Clear</Typography>
+                        </IconButton>
 
                     </Box>
                 </Stack>
@@ -354,34 +332,6 @@ const CounterForManager = () => {
                     </Box>
                 </Stack>
             </Grid>
-            <Dialog
-                open={openConfirmBox}
-                onClose={handleCloseConfirmBox}
-                aria-labelledby="alert-dialog-title"
-                aria-describedby="alert-dialog-description"
-            >
-                <DialogTitle id="alert-dialog-title">
-                    {"Save this invoice ?"}
-                </DialogTitle>
-                <DialogContent>
-                    <DialogContentText id="alert-dialog-description">
-                        Do you want to save this invoice ?
-                        Once yes, it means these products were sold and this invoice was accepted
-                    </DialogContentText>
-                </DialogContent>
-                <DialogActions>
-                    <Button onClick={handleCloseConfirmBox}>No</Button>
-                    <Button onClick={handleSaveInvoice} autoFocus>
-                        Yes
-                    </Button>
-                </DialogActions>
-            </Dialog>
-            <Backdrop
-                sx={{ color: '#fff', zIndex: (theme) => theme.zIndex.drawer + 1 }}
-                open={openBackdrop}
-            >
-                <CircularProgress color="inherit" />
-            </Backdrop>
         </Grid >
     )
 }
