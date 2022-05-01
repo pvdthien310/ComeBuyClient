@@ -1,4 +1,5 @@
 import React from 'react';
+import CounterForManager from '../container/CounterForManger';
 import Product from '../container/Product';
 
 const managerRoutes = [
@@ -7,7 +8,11 @@ const managerRoutes = [
     path: '/product/*',
     page: <Product />,
   },
-
+  {
+    name: 'Workspace',
+    path: '/workspace/*',
+    page: <CounterForManager />,
+  },
 ];
 
 const managerMenuItems = [
@@ -16,6 +21,11 @@ const managerMenuItems = [
     path: '/product/*',
     page: <Product />,
   },
+  {
+    name: 'Workspace',
+    path: '/workspace/*',
+    page: <CounterForManager />,
+  }
 ]
 
 

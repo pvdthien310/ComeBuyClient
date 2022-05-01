@@ -44,7 +44,7 @@ const ProdInfo = (props) => {
                     display: 'flex',
                     flexDirection: 'row',
                 }}>
-                    <img alt="" src={product[0].productimage[0].imageurl} style={{ width: 'auto', maxWidth: 200 }} />
+                    <img alt="" src={product[0].productimage[0].imageURL} style={{ width: 'auto', maxWidth: 200 }} />
                     <div style={{ display: 'flex', flexDirection: 'column', padding: '15px' }}>
                         <div style={{ display: 'flex', flexDirection: 'row' }}>
                             <Typography style={{ fontWeight: 'bold' }}>Brand:</Typography>
