@@ -9,11 +9,9 @@ import { useNavigate } from 'react-router-dom';
 
 
 const BreadCrumb = () => {
-    const navigate = useNavigate()
     const handleClick = (event) => {
         // event.preventDefault()
         // navigate('/')
-        
     }
     return (
         <div role="presentation"  onClick={handleClick}>

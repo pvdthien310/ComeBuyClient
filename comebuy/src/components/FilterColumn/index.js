@@ -56,7 +56,7 @@ const FilterColumn = (props) => {
             </Stack>
             <Stack sx={{ p:2 }}>
                 <Typography variant="h6" fontWeight={'bold'} color={'white'} sx={{ pb: 1 }}>Choose With Your Option</Typography>
-                <FilterAccordion product={props.product}/>
+                <FilterAccordion product={props.product} handleFilter={props.handleFilter}/>
                 <Box sx={{ backgroundColor: 'white', height: 2, width: '100%' }}></Box>
             </Stack>
 

@@ -18,6 +18,9 @@ const CheckBoxList = (props) => {
         checkedBox.includes(value) ? setCheckedBox(prev => prev.filter(item => item != value)) :
             setCheckedBox(prev => [...prev, value])
     }
+    useEffect(() => {
+        props.handleFilter({name: props.featureName, option: checkedBox})
+    }, [checkedBox])
     return (
         <Box sx={{ display: 'flex', flexDirection: 'column', ml: 3 }}>
             {props.values.length > 0 && props.values.map((item, i) => (
@@ -74,7 +77,7 @@ const FilterAccordion = (props) => {
             { featureName: 'RAM', option: ramOptions },
             { featureName: 'CPU', option: cpuOptions },
             { featureName: 'GPU', option: gpuOptions },
-            { featureName: 'Screen Dimension', option: screenDimensionOptions },
+            { featureName: 'ScreenDimension', option: screenDimensionOptions },
             { featureName: 'Weight', option: weightOptions },
             { featureName: 'Memory', option: memoryOptions },
             { featureName: 'Year', option: yearOptions }
@@ -104,7 +107,7 @@ const FilterAccordion = (props) => {
                         <AccordionDetails>
                             {item.option.loading ?
                                 <Stack sx={{ width: '100%' }}>
-                                    <CheckBoxList values={item.option.option} />
+                                    <CheckBoxList values={item.option.option} featureName={item.featureName} handleFilter={props.handleFilter} />
                                 </Stack> :
                                 <Stack direction={'row'} sx={{ width: '100%', justifyContent: 'center', alignItems: 'center' }} spacing={2}>
                                     <CircularProgress sx={{ width: '100%', alignSelf: 'center' }} color="secondary" />

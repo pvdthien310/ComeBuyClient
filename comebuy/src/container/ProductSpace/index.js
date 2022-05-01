@@ -1,20 +1,63 @@
 import { Button, Grid, Stack, Typography } from "@mui/material";
 import { Box } from "@mui/system";
 import { useEffect, useState } from "react";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { BreadCrumb, FeatureSelect, FilterColumn, NavBar, ProductItem, SnackBarAlert } from "../../components";
 import { getAllProduct } from "../../redux/slices/productSlice";
 import FilterListIcon from '@mui/icons-material/FilterList';
 import { getAllFeature } from "../../redux/slices/featureSlice";
 import { AirbnbSlider, AirbnbThumbComponent, ExampleSlider, PrettoSlider } from "./style";
 import CustomizedBreadcrumbs from "../../components/BreadCrumb";
+import { productListSelector } from "../../redux/selectors";
 const ProductSpace = () => {
+    const _productList = useSelector(productListSelector)
     const [productList, setProductList] = useState([])
     const dispatch = useDispatch()
     const [openSuccessAlert, setOpenSuccessAlert] = useState(false);
     const [openErrorAlert, setOpenErrorAlert] = useState(false);
     const [messageError, setMessageError] = useState("No Error")
     const [messageSuccess, setMessageSuccess] = useState("Notification")
+    const [filterOptions, setFilterOptions] = useState({
+        brand: [],
+        ram: [],
+        cpu: [],
+        gpu: [],
+        screendimension: [],
+        weight: [],
+        memory: [],
+        year: []
+    })
+
+    const Filter = () => {
+        let newProductList = productList
+        let reset = true
+        const props = Object.getOwnPropertyNames(filterOptions)
+        props.forEach((item) => {
+            if (filterOptions[item].length > 0) {
+                newProductList = newProductList.filter((pr) => {
+                    if (item != 'screendimension')
+                        return filterOptions[item].includes(pr[item])
+                    else return filterOptions[item].includes(pr['screenDimension'])
+                })
+                reset = false
+            }
+        })
+        if (reset == true)
+            setProductList(_productList)
+        else
+            setProductList(newProductList)
+
+    }
+
+    const handleFilter = (value) => {
+        let newFilterOptions = Object.assign({}, filterOptions);  // Shallow copy for the reference value as object
+        newFilterOptions[value.name.toLowerCase()] = value.option
+        setFilterOptions(newFilterOptions)
+    }
+
+    useEffect(() => {
+        Filter()
+    }, [filterOptions])
 
     const handleClose = (event, reason) => {
         if (reason === 'clickaway')
@@ -50,22 +93,16 @@ const ProductSpace = () => {
         }
     }, [])
 
-    useEffect(() => {
-        console.log(productList)
-    }, [productList])
-
-
-
     return (
         <div style={{ width: '100%', height: '100%' }}>
             <Stack sx={{ width: '100%', height: '100%' }}>
                 <NavBar></NavBar>
-                <Stack sx={{ pt: 2, pl:2 }}>
+                <Stack sx={{ pt: 2, pl: 2 }}>
                     <CustomizedBreadcrumbs />
                 </Stack>
                 <Grid container sx={{ width: '100%', height: '100%', mt: 2 }} spacing={2}>
                     <Grid item xs={3} sx={{ p: 2, backgroundColor: '#C69AD9' }}>
-                        <FilterColumn product={productList} />
+                        <FilterColumn product={productList} handleFilter={handleFilter} />
                     </Grid>
                     <Grid item xs={9} sx={{ p: 2 }}>
                         <Stack>
