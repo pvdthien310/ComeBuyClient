@@ -1,8 +1,6 @@
 import * as React from 'react';
 import { DataGrid, GridActionsCellItem } from '@mui/x-data-grid';
 import DeleteIcon from '@mui/icons-material/Delete';
-import SecurityIcon from '@mui/icons-material/Security';
-import FileCopyIcon from '@mui/icons-material/FileCopy';
 import { renderStatus } from '../../GridDataCellTemplate/StatusTag';
 import { renderAvatar } from '../../GridDataCellTemplate/Avatar';
 import { useEffect, useState } from 'react'

@@ -18,12 +18,10 @@ import { currentUser } from './../../redux/selectors'
 
 const CustomerPlace = () => {
 
-    const _currentUser = useSelector(currentUser)
     const navigate = useNavigate()
     const gotoProfile = () => {
         navigate('/profile')
     }
-
 
     return (
         <div style={{ height: '100%', width: '100%' }}>

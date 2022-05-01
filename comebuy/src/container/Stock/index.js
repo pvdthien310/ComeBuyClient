@@ -1,14 +1,9 @@
 import * as React from 'react';
-import { styled } from '@mui/material/styles';
-import Tabs from '@mui/material/Tabs';
-import Tab from '@mui/material/Tab';
+
 import Box from '@mui/material/Box';
-import { Typography } from '@mui/material';
-import PropTypes from 'prop-types';
-import StoreIcon from '@mui/icons-material/Store';
 import { useState, useEffect } from 'react'
 import branchApi from '../../api/branchAPI';
-import { ConfirmDialog, SnackBarAlert, StockInBranch } from '../../components';
+import { SnackBarAlert, StockInBranch } from '../../components';
 import {StyledTab, StyledTabs, TabPanel} from './child'
 
 
