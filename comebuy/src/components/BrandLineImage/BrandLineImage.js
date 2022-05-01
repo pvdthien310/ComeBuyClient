@@ -16,6 +16,7 @@ const ImgFeatureLine = styled('img')(({ theme }) => ({
     bottom: 0,
     right: 0,
     position: 'absolute',
+    item: true,
     
 
     [theme.breakpoints.down('sm')]: {
@@ -77,9 +78,9 @@ const CustomButton = styled(Button)(({ theme }) => ({
 export default function BrandLineImage(props) {
     return (
         <Container>
-            <ImgFeatureLine src={props.urlImage}></ImgFeatureLine>
-            <Text item xs={12} >{props.BigText}</Text>
-            <CustomButton endIcon={<ArrowRightIcon />}>See More</CustomButton>
+            <ImgFeatureLine item src={props.urlImage}></ImgFeatureLine>
+            <Text item>{props.BigText}</Text>
+            <CustomButton item endIcon={<ArrowRightIcon />}>See More</CustomButton>
         </Container>
     )
 }

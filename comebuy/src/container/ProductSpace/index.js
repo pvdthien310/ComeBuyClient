@@ -27,10 +27,22 @@ const ProductSpace = () => {
         memory: [],
         year: []
     })
+    const [currentFeature, setCurrentFeature] = useState([])
 
     const Filter = () => {
-        let newProductList = productList
+        let newProductList = _productList
         let reset = true
+        if (currentFeature.length > 0) {
+            reset = false
+            newProductList = _productList.filter((pr) => {
+                const containsAll = pr.feature.every(element => {
+                    return currentFeature.includes(element.name);
+                });
+                if (containsAll) return true
+                else return false
+            })
+            console.log(newProductList)
+        }
         const props = Object.getOwnPropertyNames(filterOptions)
         props.forEach((item) => {
             if (filterOptions[item].length > 0) {
@@ -46,8 +58,20 @@ const ProductSpace = () => {
             setProductList(_productList)
         else
             setProductList(newProductList)
-
     }
+
+    // const FilterByFeatures = (featuresFilter) => {
+    //     if (featuresFilter.length == 0) return
+    //     let newProductList = _productList
+    //     newProductList = _productList.filter((pr) => {
+    //         const containsAll = pr.feature.every(element => {
+    //             return featuresFilter.includes(element);
+    //           });
+    //         if (containsAll) return true
+    //         else return false
+    //     })
+    //     setProductList(newProductList)
+    // }
 
     const handleFilter = (value) => {
         let newFilterOptions = Object.assign({}, filterOptions);  // Shallow copy for the reference value as object
@@ -57,22 +81,16 @@ const ProductSpace = () => {
 
     useEffect(() => {
         Filter()
-    }, [filterOptions])
+    }, [filterOptions, currentFeature])
 
+    
     const handleClose = (event, reason) => {
         if (reason === 'clickaway')
             return;
         setOpenSuccessAlert(false);
         setOpenErrorAlert(false);
     };
-    // const handleFeatureChosen = (event) => {
-    //     const {
-    //         target: { value },
-    //     } = event;
-    //     setCurrentFeature(
-    //         typeof value === 'string' ? value.split(',') : value,
-    //     );
-    // };
+
     useEffect(() => {
         // Load Product
         dispatch(getAllProduct())
@@ -93,6 +111,16 @@ const ProductSpace = () => {
         }
     }, [])
 
+    const handleFeatureChosen = (event) => {
+        const {
+            target: { value },
+        } = event;
+        setCurrentFeature(
+            typeof value === 'string' ? value.split(',') : value,
+        );
+
+    };
+
     return (
         <div style={{ width: '100%', height: '100%' }}>
             <Stack sx={{ width: '100%', height: '100%' }}>
@@ -102,13 +130,13 @@ const ProductSpace = () => {
                 </Stack>
                 <Grid container sx={{ width: '100%', height: '100%', mt: 2 }} spacing={2}>
                     <Grid item xs={3} sx={{ p: 2, backgroundColor: '#C69AD9' }}>
-                        <FilterColumn product={productList} handleFilter={handleFilter} />
+                        <FilterColumn handleFeatureChosen={handleFeatureChosen} product={_productList} handleFilter={handleFilter} />
                     </Grid>
                     <Grid item xs={9} sx={{ p: 2 }}>
                         <Stack>
                             <Typography variant="h6" fontWeight={'bold'} sx={{ alignSelf: 'center', m: 1 }}>Our Product</Typography>
                             <Box sx={{ backgroundColor: '#C69AD9', height: 5, width: '100%' }}></Box>
-                            <Stack direction={"row"} flexWrap={"wrap"} item sx={{ alignSelf: 'center', m: 2, justifyContent: 'center', alignItems: 'center' }}>
+                            <Stack direction={"row"} flexWrap={"wrap"} sx={{ alignSelf: 'center', m: 2, justifyContent: 'center', alignItems: 'center' }}>
                                 {
                                     productList.length > 0 &&
                                     productList.map((item, i) => (
