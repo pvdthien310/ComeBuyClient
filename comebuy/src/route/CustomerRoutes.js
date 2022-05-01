@@ -3,16 +3,17 @@ import HomePage from '../container/HomePage';
 import ProductSpace from '../container/ProductSpace';
 import Profile from '../container/Profile';
 import CustomerPlace from './../container/CustomerPlace/index';
+import ForgotPassword from './../container/CustomerPlace/ForgotPassword';
 
 const customerRoutes = [
   {
     name: 'Customer Place',
-    path: '/profiles/myplace',
+    path: '/myplace',
     page: <CustomerPlace />,
   },
   {
     name: 'Profile',
-    path: '/profiles/*',
+    path: '/profile',
     page: <Profile />,
   },
   {
@@ -25,10 +26,15 @@ const customerRoutes = [
     path: '/',
     page: <HomePage />,
   },
-  
+  {
+    name: 'ForgotPassword',
+    path: '/myplace/resetpassword',
+    page: <ForgotPassword />,
+  },
+
 
 ];
 
 const customerMenuItems = []
 
-export { customerRoutes,customerMenuItems };
+export { customerRoutes, customerMenuItems };
