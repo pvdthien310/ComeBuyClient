@@ -149,8 +149,8 @@ export default function TableForm({
               <tr className="h-10">
                 <td style={{ fontFamily: 'serif', fontSize: '16px' }}>{description}</td>
                 <td style={{ fontFamily: 'serif', fontSize: '16px' }}>{quantity}</td>
-                <td style={{ fontFamily: 'serif', fontSize: '16px' }}>${price}</td>
-                <td style={{ fontFamily: 'serif', fontSize: '16px' }} className="amount">${amount}</td>
+                <td style={{ fontFamily: 'serif', fontSize: '16px' }}>💸{price}</td>
+                <td style={{ fontFamily: 'serif', fontSize: '16px' }} className="amount">💸{amount}</td>
                 <td>
                   <button onClick={() => editRow(id)}>
                     <AiOutlineEdit style={{ color: 'green' }} className="text-green-500 font-bold text-xl" />

@@ -6,7 +6,7 @@ import Footer from "./Footer"
 import Header from "./Header"
 import MainDetails from "./MainDetails"
 import Notes from "./Notes"
-import Table from "./Table"
+import TablePrint from "./TablePrint"
 import TableForm from "./TableForm"
 import { currentUser } from "../../redux/selectors"
 import { getAllBranch } from "../../redux/slices/branchSlice"
@@ -300,7 +300,7 @@ const CounterForManager = () => {
                                 dueDate={dueDate}
                             />
 
-                            <Table
+                            <TablePrint
                                 description={description}
                                 quantity={quantity}
                                 price={price}

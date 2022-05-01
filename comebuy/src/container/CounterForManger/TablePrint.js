@@ -1,6 +1,6 @@
 import React from "react"
 
-export default function Table({ list, total }) {
+export default function TablePrint({ list, total }) {
   return (
     <>
       <table width="100%" className="mb-10">

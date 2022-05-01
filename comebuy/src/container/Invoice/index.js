@@ -103,6 +103,7 @@ const Invoice = () => {
                             <TableCell align="center" style={{ color: '#0D0D0D', fontWeight: 'bold' }}>Is Checked ?</TableCell>
                             <TableCell align="center" style={{ color: '#0D0D0D', fontWeight: 'bold' }}>Recieved&nbsp;(USD)</TableCell>
                             <TableCell align="center" style={{ color: '#0D0D0D', fontWeight: 'bold' }}>Is Paid ?</TableCell>
+                            <TableCell align="center" style={{ color: '#0D0D0D', fontWeight: 'bold' }}>Print out</TableCell>
                         </TableRow>
                     </TableHead>
                     <TableBody>
