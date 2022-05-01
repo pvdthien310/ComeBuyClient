@@ -1,0 +1,179 @@
+import React, { useState, useEffect, useCallback, } from "react"
+import { AiOutlineDelete, AiOutlineEdit } from "react-icons/ai"
+import { v4 as uuidv4 } from "uuid"
+import { Stack, TextField, Button } from "@mui/material"
+import { useSelector } from "react-redux"
+import Autocomplete, { createFilterOptions } from '@mui/material/Autocomplete';
+import Popover from '@mui/material/Popover';
+import Typography from '@mui/material/Typography';
+import { productListSelector } from "../../redux/selectors"
+import ProdInfo from "../Invoice/ProdInfo"
+import { OptionUnstyled } from "@mui/base"
+import { DetailProductModal } from "../../components"
+
+
+const filter = createFilterOptions();
+export default function TableForm({
+  description,
+  setDescription,
+  quantity,
+  setQuantity,
+  price,
+  setPrice,
+  amount,
+  setAmount,
+  list,
+  setList,
+  total,
+  setTotal,
+}) {
+  const [isEditing, setIsEditing] = useState(false)
+
+  const _productList = useSelector(productListSelector)  // list get from store
+  const [listProduct, setListProduct] = useState(_productList)
+
+  // Submit form function
+  const handleSubmit = (e) => {
+    e.preventDefault()
+
+    if (!quantity) {
+      alert("Please fill in quantity")
+    } else {
+      const newItems = {
+        id: uuidv4(),
+        description,
+        quantity,
+        price,
+        amount,
+      }
+      setDescription("")
+      setQuantity("")
+      setPrice("")
+      setAmount("")
+      setList([...list, newItems])
+      setIsEditing(false)
+    }
+  }
+  const [openModal, setOpenModal] = useState(false);
+  const [currentProduct, setCurrentProduct] = useState(null);
+  const handleCloseModal = () => setOpenModal(false);
+
+  useEffect(() => {
+    if (currentProduct != null)
+      setOpenModal(true)
+  }, [currentProduct])
+
+  // Calculate items amount function
+  useEffect(() => {
+    const calculateAmount = (amount) => {
+      setAmount(quantity * price)
+    }
+    calculateAmount(amount)
+  }, [amount, price, quantity, setAmount])
+
+  // Calculate total amount of items in table
+  useEffect(() => {
+    // let rows = document.querySelectorAll("amount")
+    let sum = 0
+
+    for (let i = 0; i < list.length; i++) {
+      sum += parseInt(list[i].amount)
+      setTotal(sum)
+    }
+  }, [list])
+
+  // Edit function
+  const editRow = (id) => {
+    const editingRow = list.find((row) => row.id === id)
+    setList(list.filter((row) => row.id !== id))
+    setIsEditing(true)
+    setDescription(editingRow.description)
+    setQuantity(editingRow.quantity)
+    setPrice(editingRow.price)
+  }
+
+  // Delete function
+  const deleteRow = (id) => setList(list.filter((row) => row.id !== id))
+
+  return (
+    <>
+      <Stack direction="row" padding="2%" spacing={2} sx={{ alignItems: "center" }}>
+        <Autocomplete
+          value={description}
+          onChange={(event, newValue) => {
+            setDescription(newValue.name)
+            setPrice(Number(newValue.price))
+            setCurrentProduct(newValue)
+          }}
+          selectOnFocus
+          clearOnBlur
+          handleHomeEndKeys
+          id="free-solo-with-text-demo"
+          options={listProduct}
+          getOptionLabel={(option) => {
+            return option;
+          }}
+          renderOption={(props, option) => <li {...props}>{option.name}</li>}
+          sx={{ width: 300 }}
+          freeSolo
+          renderInput={(params) => (
+            <TextField {...params} label="Search for product" />
+          )}
+        />
+        <DetailProductModal open={openModal} onClose={handleCloseModal} product={currentProduct} />
+        <TextField
+          label="Quantity"
+          value={quantity}
+          onChange={(e) => setQuantity(e.target.value)}
+          variant="outlined"
+        />
+        <Button variant="contained" color="success" onClick={handleSubmit}>
+          Add  To Table Item
+        </Button>
+      </Stack>
+
+      {/* Table items */}
+
+      <table width="100%">
+        <thead>
+          <tr style={{ backgroundColor: 'grey' }}>
+            <td style={{ fontWeight: 'bold', fontFamily: 'serif', fontSize: '18px' }}>Product</td>
+            <td style={{ fontWeight: 'bold', fontFamily: 'serif', fontSize: '18px' }}>Quantity</td>
+            <td style={{ fontWeight: 'bold', fontFamily: 'serif', fontSize: '18px' }}>Price</td>
+            <td style={{ fontWeight: 'bold', fontFamily: 'serif', fontSize: '18px' }} className="amount">Amount</td>
+          </tr>
+        </thead>
+        {list.map(({ id, description, quantity, price, amount }) => (
+          <React.Fragment key={id}>
+            <tbody>
+              <tr className="h-10">
+                <td style={{ fontFamily: 'serif', fontSize: '16px' }}>{description}</td>
+                <td style={{ fontFamily: 'serif', fontSize: '16px' }}>{quantity}</td>
+                <td style={{ fontFamily: 'serif', fontSize: '16px' }}>💸{price}</td>
+                <td style={{ fontFamily: 'serif', fontSize: '16px' }} className="amount">💸{amount}</td>
+                <td>
+                  <button onClick={() => editRow(id)}>
+                    <AiOutlineEdit style={{ color: 'green' }} className="text-green-500 font-bold text-xl" />
+                  </button>
+                </td>
+                <td>
+                  <button onClick={() => deleteRow(id)}>
+                    <AiOutlineDelete style={{ color: 'red' }} className="text-red-500 font-bold text-xl" />
+                  </button>
+                </td>
+              </tr>
+            </tbody>
+          </React.Fragment>
+        ))}
+      </table>
+
+      <div>
+        <h2 style={{ fontFamily: 'serif', fontSize: '30px', display: 'flex', justifyContent: 'flex-end' }} >
+          Cost. {
+            total
+          } USD
+        </h2>
+      </div>
+    </>
+  )
+}

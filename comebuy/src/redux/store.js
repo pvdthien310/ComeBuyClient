@@ -3,6 +3,7 @@ import { accountSlice } from "./slices/accountSlice";
 import { featureSlice } from "./slices/featureSlice";
 import { productSlice } from "./slices/productSlice";
 import { invoiceSlice } from "./slices/invoiceSlice";
+import { branchSlice } from "./slices/branchSlice";
 import { productImageSlice } from "./slices/productImageSlice";
 
 const store = configureStore({
@@ -11,6 +12,7 @@ const store = configureStore({
         product: productSlice.reducer,
         feature: featureSlice.reducer,
         invoice: invoiceSlice.reducer,
+        branch: branchSlice.reducer,
         productImage: productImageSlice.reducer
     },
 })

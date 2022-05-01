@@ -1,5 +1,5 @@
 import React from 'react';
-import Example from '../components/Example';
+import CounterForManager from '../container/CounterForManger';
 import Product from '../container/Product';
 
 const managerRoutes = [
@@ -9,25 +9,24 @@ const managerRoutes = [
     page: <Product />,
   },
   {
-    name: 'Example',
-    path: '/example/*',
-    page: <Example />,
+    name: 'Workspace',
+    path: '/workspace/*',
+    page: <CounterForManager />,
   },
- 
 ];
 
 const managerMenuItems = [
   {
-    name:'Product',
+    name: 'Product',
     path: '/product/*',
     page: <Product />,
   },
   {
-    name:'Example',
-    path: '/example/*',
-    page: <Example />,
+    name: 'Workspace',
+    path: '/workspace/*',
+    page: <CounterForManager />,
   }
 ]
 
 
-export { managerRoutes,managerMenuItems };
+export { managerRoutes, managerMenuItems };

@@ -17,6 +17,11 @@ const invoiceAPI = {
         const res = await DatabaseClient.get('/' + baseURL + '/revenueByBranchID/' + branchID)
             .catch(err => { return err.response })
         return res;
+    },
+    addInvoice: async (newInvoice) => {
+        const res = await DatabaseClient.post('/' + baseURL, newInvoice)
+            .catch(err => { return err.response })
+        return res
     }
 }
 export default invoiceAPI
