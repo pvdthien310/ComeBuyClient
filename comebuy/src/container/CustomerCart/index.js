@@ -97,16 +97,6 @@ const ProductName = styled.span``;
 const ProductId = styled.span``;
 const ProductBrand = styled.span``;
 
-
-const ProductColor = styled.div`
-  width: 20px;
-  height: 20px;
-  border-radius: 50%;
-  background-color: ${(props) => props.color};
-`;
-
-const ProductSize = styled.span``;
-
 const PriceDetail = styled.div`
   flex: 1;
   display: flex;

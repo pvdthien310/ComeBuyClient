@@ -14,6 +14,7 @@ import { useSelector } from 'react-redux'
 import NavBar from './../../components/NavBar/NavBar';
 
 import { currentUser } from './../../redux/selectors'
+import { BigFooter } from '../../components';
 
 
 const CustomerPlace = () => {
@@ -136,6 +137,7 @@ const CustomerPlace = () => {
                     </Card>
                 </Stack>
             </div>
+            <BigFooter />
         </div>
 
     )

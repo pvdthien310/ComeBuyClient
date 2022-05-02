@@ -35,6 +35,7 @@ import { currentUser } from '../../redux/selectors';
 import * as Validation from '../../container/LoginAndRegister/ValidationDataForAccount'
 import { updateAccount, getAccountWithID } from '../../redux/slices/accountSlice';
 import cloudinaryApi from '../../api/cloudinaryAPI';
+import BigFooter from './../BigFooter/index';
 
 const ProfileManage = () => {
 
@@ -53,7 +54,7 @@ const ProfileManage = () => {
         <Link
             underline="hover"
             key="2"
-            style={{ color: 'white' }}
+            style={{ color: 'black' }}
             href="/myplace"
             onClick={handleClickToHome}
         >
@@ -62,13 +63,13 @@ const ProfileManage = () => {
         <Link
             underline="hover"
             key="2"
-            style={{ color: 'white' }}
+            style={{ color: 'black' }}
             href="/myplace"
             onClick={handleClick}
         >
             My place
         </Link>,
-        <Typography key="3" style={{ color: 'white' }}>
+        <Typography key="3" style={{ color: 'black' }}>
             Profile Management
         </Typography>,
     ];
@@ -399,120 +400,120 @@ const ProfileManage = () => {
             flex: 1,
             display: 'flex',
             height: '100%',
-            backgroundColor: 'black'
+            width: '100%',
+            backgroundColor: '#F2EBDF'
         }}>
             <NavBar></NavBar>
             <Stack direction="row"
                 spacing={3}
                 style={{ marginLeft: '15%', marginTop: '1%' }}
             >
-                <Breadcrumbs separator="›" style={{ color: 'white' }} aria-label="breadcrumb">
+                <Breadcrumbs separator="›" style={{ color: 'black' }} aria-label="breadcrumb">
                     {breadcrumbs}
                 </Breadcrumbs>
             </Stack>
             <Typography style={{
                 marginLeft: '15%',
                 marginTop: '3%',
-                color: 'white',
+                color: 'black',
                 fontSize: '24px',
-                fontWeight: 'bold'
+                fontWeight: 'bold',
+                fontFamily: 'serif'
             }}>
                 Your information
             </Typography>
-            <div style={{ marginLeft: '15%', height: '1px', backgroundColor: 'white', width: '60%' }}></div>
+            <div style={{ marginLeft: '15%', height: '1px', backgroundColor: 'black', width: '60%' }}></div>
 
             {/* name & Avatar */}
-            <Stack direction="row" spacing={2}
+            <Stack direction="row" width='100%' spacing={2}
                 sx={{
-                    backgroundColor: 'black',
-                    paddingLeft: '15%',
+                    backgroundColor: '#F2EBDF',
                     marginTop: '2%',
                     paddingBottom: '1%',
-                    width: '100%'
                 }}>
-                <Stack direction="row" spacing={2}>
-                    {filesContent.length != 0 ? (
-                        filesContent.map((file, index) => (
-                            <Avatar alt={file.name} src={file.content}
-                                style={{
-                                    width: 150,
-                                    height: 150,
-                                    marginLeft: '15%',
-                                    borderWidth: '1px',
-                                    borderColor: 'white'
-                                }} />
-                        ))
-                    ) : (
-                        <Avatar alt="" src={stateAvt === '' ? '' : stateAvt}
-                            sx={{ width: 130, height: 130 }}
-                        />
-                    )}
-                    {filesContent.length != 0 ? (
-                        <IconButton onClick={handleChangeAvt}
+                {filesContent.length != 0 ? (
+                    filesContent.map((file, index) => (
+                        <Avatar alt={file.name} src={file.content}
                             style={{
-                                marginLeft: '-7%',
-                                marginTop: '6%',
-                                backgroundColor: 'black',
-                                height: '30px',
-                                width: '30px',
-                                top: '75%'
-                            }}>
-                            <CheckCircleIcon style={{ color: 'white' }} />
-                        </IconButton>
-                    ) : (
-                        <IconButton onClick={() => openFileSelector()}
-                            style={{
-                                marginLeft: '-7%',
-                                marginTop: '6%',
-                                backgroundColor: 'black',
-                                height: '30px',
-                                width: '30px',
-                                top: '75%'
-                            }}
-                        >
-                            <AddPhotoAlternateTwoToneIcon style={{ color: 'white' }} />
-                        </IconButton>
-                    )}
-                </Stack>
-                <Stack direction="column" spacing={2} style={{ width: '100%', paddingRight: '40%' }}>
-                    <Stack direction="row" spacing={2}
-                        style={{ justifyContent: 'space-between' }}>
-                        <Typography style={{
-                            fontSize: '23px',
-                            fontWeight: 'bold',
-                            marginTop: '5%',
-                            marginLeft: '5%',
-                            color: 'white'
+                                width: '150px',
+                                height: '150px',
+                                marginLeft: '15%',
+                                borderWidth: '1px',
+                                borderColor: 'white'
+                            }} />
+                    ))
+                ) : (
+                    <Avatar alt="" src={stateAvt === '' ? '' : stateAvt}
+                        sx={{
+                            width: '150px',
+                            height: '150px',
+                            marginLeft: '15%',
+                            borderWidth: '1px',
+                            borderColor: 'white'
                         }}
-                        >
-                            {name}
-                        </Typography>
-                        <IconButton onClick={handleOpenModalChangeName}
-                            style={{ marginTop: '8%', marginLeft: '5%', backgroundColor: 'black' }}
-                        >
-                            <EditTwoToneIcon style={{ color: 'white' }} />
-                        </IconButton>
-                    </Stack>
+                    />
+                )}
+                {filesContent.length != 0 ? (
+                    <IconButton onClick={handleChangeAvt}
+                        style={{
+                            marginLeft: '-2%',
+                            marginTop: '8%',
+                            backgroundColor: '#F2EBDF',
+                            height: '30px',
+                            width: '30px',
+                            top: '75%'
+                        }}>
+                        <CheckCircleIcon style={{ color: 'black' }} />
+                    </IconButton>
+                ) : (
+                    <IconButton onClick={() => openFileSelector()}
+                        style={{
+                            marginLeft: '-2%',
+                            marginTop: '8%',
+                            backgroundColor: '#F2EBDF',
+                            height: '30px',
+                            width: '30px',
+                            top: '75%'
+                        }}
+                    >
+                        <AddPhotoAlternateTwoToneIcon style={{ color: 'black' }} />
+                    </IconButton>
+                )}
+                <Stack direction="column" width="auto" spacing={2}>
+                    <Typography style={{
+                        fontSize: '23px',
+                        fontWeight: 'bold',
+                        marginTop: '5%',
+                        marginLeft: '5%',
+                        color: 'black'
+                    }}
+                    >
+                        {name}
+                    </Typography>
                     <Typography style={{
                         color: '#8FA1A6',
                         fontWeight: 'bold',
                         fontSize: '14px',
                         marginLeft: '5%',
-                        marginTop: '0%',
+                        marginTop: '10%',
                         fontStyle: 'italic'
                     }}
                     >
                         Account holder
                     </Typography>
                 </Stack>
+                <IconButton onClick={handleOpenModalChangeName}
+                    style={{ marginTop: '0%', marginLeft: '5%', backgroundColor: '#F2EBDF' }}
+                >
+                    <EditTwoToneIcon style={{ color: 'black' }} />
+                </IconButton>
             </Stack>
 
             {/* contact */}
             <Stack direction="column" spacing={3}
                 style={{
                     width: '100%',
-                    backgroundColor: 'black',
-                    paddingLeft: '15%',
+                    backgroundColor: '#F2EBDF',
                     marginTop: '0%',
                     paddingTop: '-1%'
                 }}
@@ -521,23 +522,25 @@ const ProfileManage = () => {
                     fontSize: '23px',
                     fontWeight: 'bold',
                     marginTop: '1%',
-                    color: 'white'
+                    marginLeft: '15%',
+                    color: 'black'
                 }}
                 >
                     Contact
                 </Typography>
                 <div style={{
                     height: '1px',
-                    backgroundColor: 'white',
+                    backgroundColor: 'black',
                     width: '40%',
-                    marginTop: '0%'
+                    marginTop: '0%',
+                    marginLeft: '15%'
                 }}>
                 </div>
                 <Typography style={{
                     color: '#8FA1A6',
                     fontWeight: 'bold',
                     fontSize: '14px',
-                    marginLeft: '0%',
+                    marginLeft: '15%',
                     marginTop: '0.5%',
                     fontStyle: 'italic'
                 }}
@@ -548,10 +551,10 @@ const ProfileManage = () => {
                     style={{ width: '100%' }}
                 >
                     <Typography style={{
-                        color: 'white',
+                        color: 'black',
                         fontWeight: 'bold',
                         fontSize: '17px',
-                        marginLeft: '3%',
+                        marginLeft: '15%',
                         marginTop: '0%',
                     }}
                     >
@@ -560,10 +563,10 @@ const ProfileManage = () => {
                     <IconButton onClick={handleOpenModalChangeContact}
                         style={{
                             marginTop: '-0.5%',
-                            backgroundColor: 'black',
+                            backgroundColor: '#F2EBDF',
                             marginLeft: '7%'
                         }}>
-                        <EditTwoToneIcon style={{ color: 'white' }} />
+                        <EditTwoToneIcon style={{ color: 'black' }} />
                     </IconButton>
 
                     {havePhoneNumber ? (
@@ -587,8 +590,7 @@ const ProfileManage = () => {
             <Stack direction="column" spacing={3}
                 style={{
                     width: '100%',
-                    backgroundColor: 'black',
-                    paddingLeft: '15%',
+                    backgroundColor: '#F2EBDF',
                     marginTop: '0%',
                     paddingTop: '-1%'
                 }}
@@ -597,23 +599,25 @@ const ProfileManage = () => {
                     fontSize: '23px',
                     fontWeight: 'bold',
                     marginTop: '1%',
-                    color: 'white'
+                    marginLeft: '15%',
+                    color: 'black'
                 }}
                 >
                     Address
                 </Typography>
                 <div style={{
                     height: '1px',
-                    backgroundColor: 'white',
+                    backgroundColor: 'black',
                     width: '40%',
-                    marginTop: '0%'
+                    marginTop: '0%',
+                    marginLeft: '15%'
                 }}>
                 </div>
                 <Typography style={{
                     color: '#8FA1A6',
                     fontWeight: 'bold',
                     fontSize: '14px',
-                    marginLeft: '0%',
+                    marginLeft: '15%',
                     marginTop: '0.5%',
                     fontStyle: 'italic'
                 }}
@@ -624,10 +628,10 @@ const ProfileManage = () => {
                     style={{ width: '100%' }}
                 >
                     <Typography style={{
-                        color: 'white',
+                        color: 'black',
                         fontWeight: 'bold',
                         fontSize: '17px',
-                        marginLeft: '3%',
+                        marginLeft: '15%',
                         marginTop: '0%',
                     }}
                     >
@@ -636,10 +640,10 @@ const ProfileManage = () => {
                     <IconButton onClick={handleOpenModalChangeAddress}
                         style={{
                             marginTop: '-0.5%',
-                            backgroundColor: 'black',
+                            backgroundColor: '#F2EBDF',
                             marginLeft: '7%'
                         }}>
-                        <EditTwoToneIcon style={{ color: 'white' }} />
+                        <EditTwoToneIcon style={{ color: 'black' }} />
                     </IconButton>
 
                     {haveAddress ? (
@@ -663,8 +667,7 @@ const ProfileManage = () => {
             <Stack direction="column" spacing={3}
                 style={{
                     width: '100%',
-                    backgroundColor: 'black',
-                    paddingLeft: '15%',
+                    backgroundColor: '#F2EBDF',
                     marginTop: '0%',
                     paddingTop: '-1%',
                     paddingBottom: '2%'
@@ -674,14 +677,16 @@ const ProfileManage = () => {
                     fontSize: '24px',
                     fontWeight: 'bold',
                     marginTop: '1%',
-                    color: 'white'
+                    color: 'black',
+                    marginLeft: '15%'
                 }}
                 >
                     DOB & Gender
                 </Typography>
                 <div style={{
                     height: '1px',
-                    backgroundColor: 'white',
+                    marginLeft: '15%',
+                    backgroundColor: 'black',
                     width: '40%',
                     marginTop: '0%'
                 }}>
@@ -690,7 +695,7 @@ const ProfileManage = () => {
                     color: '#8FA1A6',
                     fontWeight: 'bold',
                     fontSize: '14px',
-                    marginLeft: '0%',
+                    marginLeft: '15%',
                     marginTop: '0.5%',
                     fontStyle: 'italic'
                 }}
@@ -700,22 +705,22 @@ const ProfileManage = () => {
                 <Stack direction="row" spacing={2}
                     style={{ width: '100%' }}
                 >
-                    <Typography style={{ color: 'white', fontWeight: 'bold', marginTop: '1%' }}>Birthday:</Typography>
+                    <Typography style={{ color: 'black', fontWeight: 'bold', marginTop: '1%', marginLeft: '15%' }}>Birthday:</Typography>
                     <LocalizationProvider dateAdapter={AdapterDateFns}>
                         <MobileDatePicker
                             value={selectedDate}
                             onChange={(newValue) => {
                                 setSelectedDate(newValue);
                             }}
-                            renderInput={(params) => <TextField style={{ height: '5%', backgroundColor: 'white', borderRadius: '15px' }} {...params} />}
+                            renderInput={(params) => <TextField style={{ height: '5%', backgroundColor: '#F2EBDF' }} {...params} />}
                         />
                     </LocalizationProvider>
-                    <Typography style={{ color: 'white', fontWeight: 'bold', marginTop: '1%', marginLeft: '3%' }}>Gender:</Typography>
+                    <Typography style={{ color: 'black', fontWeight: 'bold', marginTop: '1%', marginLeft: '3%' }}>Gender:</Typography>
                     <FormControl variant="standard" width="100" style={{ marginTop: '0.75%' }}>
                         <Select
                             labelId="demo-simple-select-standard-label"
                             id="demo-simple-select-standard"
-                            style={{ color: 'white' }}
+                            style={{ color: 'black' }}
                             value={gender === 'male' ? 'male' : 'female'}
                             onChange={handleChangeGender}
                         >
@@ -729,8 +734,8 @@ const ProfileManage = () => {
                             marginTop: '0%',
                             borderRadius: '20px',
                             border: '1px solid #18608a',
-                            backgroundColor: 'white',
-                            color: 'black',
+                            backgroundColor: '#127361',
+                            color: 'white',
                             fontSize: '14px',
                             fontWeight: 'bold',
                             width: '5%',
@@ -1010,7 +1015,8 @@ const ProfileManage = () => {
             >
                 <CircularProgress color="inherit" />
             </Backdrop>
-        </Stack>
+            <BigFooter />
+        </Stack >
     )
 }
 
