@@ -4,6 +4,7 @@ import ProductSpace from '../container/ProductSpace';
 import Profile from '../container/Profile';
 import CustomerPlace from './../container/CustomerPlace/index';
 import { ForgotPassword } from '../components';
+import CustomerCart from '../container/CustomerCart';
 
 const customerRoutes = [
   {
@@ -30,6 +31,11 @@ const customerRoutes = [
     name: 'ForgotPassword',
     path: '/myplace/resetpassword',
     page: <ForgotPassword />,
+  },
+  {
+    name: 'My Cart',
+    path: '/myplace/mycart',
+    page: <CustomerCart />,
   },
 
 

@@ -22,6 +22,9 @@ const CustomerPlace = () => {
     const gotoProfile = () => {
         navigate('/profile')
     }
+    const gotoCart = () => {
+        navigate('/myplace/mycart')
+    }
 
     return (
         <div style={{ height: '100%', width: '100%' }}>
@@ -76,7 +79,7 @@ const CustomerPlace = () => {
                             </CardContent>
                         </CardActionArea>
                         <CardActions style={{ justifyContent: 'flex-end' }}>
-                            <Button style={{ color: 'white', fontWeight: 'bold' }} endIcon={<NavigateNextIcon />}>
+                            <Button onClick={gotoCart} style={{ color: 'white', fontWeight: 'bold' }} endIcon={<NavigateNextIcon />}>
                                 Go to
                             </Button>
                         </CardActions>
