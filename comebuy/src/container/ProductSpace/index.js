@@ -7,7 +7,7 @@ import { getAllProduct } from "../../redux/slices/productSlice";
 import FilterListIcon from '@mui/icons-material/FilterList';
 import { getAllFeature } from "../../redux/slices/featureSlice";
 import { AirbnbSlider, AirbnbThumbComponent, ExampleSlider, PrettoSlider } from "./style";
-import CustomizedBreadcrumbs from "../../components/BreadCrumb";
+
 import { productListSelector } from "../../redux/selectors";
 const ProductSpace = () => {
     const _productList = useSelector(productListSelector)
@@ -59,19 +59,6 @@ const ProductSpace = () => {
         else
             setProductList(newProductList)
     }
-
-    // const FilterByFeatures = (featuresFilter) => {
-    //     if (featuresFilter.length == 0) return
-    //     let newProductList = _productList
-    //     newProductList = _productList.filter((pr) => {
-    //         const containsAll = pr.feature.every(element => {
-    //             return featuresFilter.includes(element);
-    //           });
-    //         if (containsAll) return true
-    //         else return false
-    //     })
-    //     setProductList(newProductList)
-    // }
 
     const handleFilter = (value) => {
         let newFilterOptions = Object.assign({}, filterOptions);  // Shallow copy for the reference value as object
@@ -126,7 +113,7 @@ const ProductSpace = () => {
             <Stack sx={{ width: '100%', height: '100%' }}>
                 <NavBar></NavBar>
                 <Stack sx={{ pt: 2, pl: 2 }}>
-                    <CustomizedBreadcrumbs />
+                    <BreadCrumb />
                 </Stack>
                 <Grid container sx={{ width: '100%', height: '100%', mt: 2 }} spacing={2}>
                     <Grid item xs={3} sx={{ p: 2, backgroundColor: '#C69AD9' }}>
@@ -140,7 +127,7 @@ const ProductSpace = () => {
                                 {
                                     productList.length > 0 &&
                                     productList.map((item, i) => (
-                                        <ProductItem key={i} product={item}></ProductItem>
+                                        <ProductItem key={i} product={item} ></ProductItem>
                                     ))
                                 }
                             </Stack>

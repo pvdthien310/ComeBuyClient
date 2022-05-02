@@ -37,7 +37,7 @@ function App() {
         case 'customer':
           return <GuestLayout routes={customerRoutes} itemRoutes={customerMenuItems} />;
         default:
-          return <HomePage />; // Guest/Customer 
+          return <GuestLayout routes={customerRoutes} itemRoutes={customerMenuItems} />; // Guest/Customer 
       }
     }
     return <HomePage />
