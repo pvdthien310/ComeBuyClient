@@ -7,7 +7,8 @@ import {
     FeatureBar,
     FeatureImage,
     BrandLineImage,
-    LaptopImageLine
+    LaptopImageLine,
+    BigFooter
 } from '../../components'
 
 const HomePage = () => {
@@ -66,6 +67,7 @@ const HomePage = () => {
                 }
             </div>
             <LaptopImageLine></LaptopImageLine>
+            <BigFooter />
         </div>
     )
 

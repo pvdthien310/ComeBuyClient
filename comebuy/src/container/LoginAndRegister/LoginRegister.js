@@ -182,6 +182,11 @@ const LoginRegister = () => {
     const handleOpenModalVerify = () => { setOpenModalVerify(true); setToggleRefresh(false) };
     const handleCloseModalVerify = () => { setOpenModalVerify(false) }
 
+
+    const handleForgotPassword = () => {
+        navigate('/forgetpasswordinlogin')
+    }
+
     const handleCloseDialogRegSuccessfully = () => {
         setOpenDialogRegSuccessfully(false);
         setCanReg(true);
@@ -384,191 +389,207 @@ const LoginRegister = () => {
             <div className="forms-container">
                 <div className="signin-signup">
                     <form className='sign-up-form'>
-                        <h2 className="title">Sign up</h2>
-
-                        {/*USERNAME*/}
-                        <TextField
-                            className='text-field-in-form'
-                            name="username"
-                            variant='standard'
-                            label="User name"
-                            type="text"
-                            fullWidth
-                            value={dataForReg.name}
-                            onFocus={() => setOpenUsernameError(false)}
-                            onChange={(e) => setDataForReg({ ...dataForReg, name: e.target.value })}
-                        />
-
-                        {/*EMAIL*/}
-                        <TextField
-                            style={{
-                                maxWidth: '380px',
-                                marginBottom: '50px',
-                                marginTop: '20px',
-                                lineHeight: '1',
-                                fontWeight: '600',
-                                fontSize: '1.1rem',
-                                color: '#333',
-                            }}
-                            name="email"
-                            variant='standard'
-                            label="Email"
-                            type="email"
-                            fullWidth
-                            value={dataForReg.email}
-                            onFocus={() => {
-                                setOpenEmailError(false)
-                                setOpenEmailExisted(false)
-                            }}
-                            onChange={(e) => setDataForReg({ ...dataForReg, email: e.target.value })}
-                        />
-
-                        {/*PASSWORD */}
-                        <div className="password-in-form">
+                        <Stack width="70%" justifyItems="center" direction="column" spacing={2}>
+                            <h2 className="title">Sign up</h2>
+                            {/*USERNAME*/}
                             <TextField
                                 className='text-field-in-form'
-                                name="password"
-                                variant='standard'
-                                label="Password"
-                                type={passwordShown ? "text" : "password"}
-                                fullWidth
-                                value={dataForReg.password}
-                                onFocus={() => setOpenPasswordError(false)}
-                                onChange={(e) => setDataForReg({ ...dataForReg, password: e.target.value })}
-                            />
-                            {passwordShown ? (
-                                <IconButton style={{ backgroundColor: '#a6adaf' }} onClick={togglePassword}>
-                                    <VisibilityIcon color="success" />
-                                </IconButton>
-                            ) : (
-                                <IconButton style={{ backgroundColor: '#a6adaf' }} onClick={togglePassword}>
-                                    <VisibilityOffIcon />
-                                </IconButton>
-                            )}
-                        </div>
-
-                        {/*Confirm password */}
-                        <div className="password-in-form">
-                            <TextField
-                                name="password"
-                                variant='standard'
-                                label="Confirm Password"
-                                type={cfPasswordShown ? "text" : "password"}
-                                fullWidth
-                                value={cfPass}
-                                onFocus={() => setOpenCfPasswordError(false)}
-                                onChange={(e) => setCfPass(e.target.value)}
-                            />
-                            {cfPasswordShown ? (
-                                <IconButton style={{ backgroundColor: '#a6adaf' }} onClick={toggleCfPassword}>
-                                    <VisibilityIcon color="success" />
-                                </IconButton>
-                            ) : (
-                                <IconButton style={{ backgroundColor: '#a6adaf' }} onClick={toggleCfPassword}>
-                                    <VisibilityOffIcon />
-                                </IconButton>
-                            )}
-                        </div>
-
-
-                        {/*button for opening modal term */}
-                        {(!openModal && isChecked) ? (
-                            <div style={{ display: 'flex', flexDirection: 'row', marginTop: '10px' }}>
-                                <CheckCircleRoundedIcon
-                                    style={{
-                                        color: 'green',
-                                        width: '50px',
-                                        height: '50px',
-                                        marginBottom: '-10px',
-                                        paddingTop: '5px'
-                                    }}
-                                />
-                                <p style={{ fontWeight: 'bold', marginTop: '15px' }}>
-                                    Accepted all the terms in this web.
-                                </p>
-                            </div>
-                        ) : (
-                            <Button
-                                onClick={handleOpenModal}
+                                name="username"
                                 variant='outlined'
-                                size="small"
+                                label="User name"
+                                type="text"
+                                fullWidth
+                                value={dataForReg.name}
+                                onFocus={() => setOpenUsernameError(false)}
+                                onChange={(e) => setDataForReg({ ...dataForReg, name: e.target.value })}
+                            />
+
+                            {/*EMAIL*/}
+                            <TextField
                                 style={{
-                                    maxWidth: '400px',
-                                    height: '10%',
-                                    borderRadius: '15px',
-                                    color: 'black',
-                                    marginTop: '10px',
-                                    marginBottom: '10px'
+                                    maxWidth: '380px',
+                                    lineHeight: '1',
+                                    fontWeight: '600',
+                                    fontSize: '1.1rem',
+                                    color: '#333',
                                 }}
-                            >
-                                View Term for signing up
-                            </Button>
-                        )}
-                        <Modal
-                            open={openModal}
-                            onClose={handleCloseModal}
-                            aria-labelledby="modal-modal-title"
-                            aria-describedby="modal-modal-description"
-                        >
-                            <Box sx={{
-                                position: 'absolute',
-                                top: '50%',
-                                left: '50%',
-                                transform: 'translate(-50%, -50%)',
-                                width: '40%',
-                                height: '50%',
-                                bgcolor: 'background.paper',
-                                border: '2px solid #000',
-                                boxShadow: 24,
-                                p: 4,
-                            }}>
-                                <Typography id="modal-modal-title" variant="h6" component="h2">
-                                    Terms in ComeBuy
-                                </Typography>
-                                <Typography id="modal-modal-description" sx={{ mt: 2 }}>
-                                    Here is place where you input your term
-                                </Typography>
-                                <FormControlLabel
-                                    control={
-                                        <Checkbox
-                                            size="large"
-                                            color='success'
-                                            onChange={() => {
-                                                if (isChecked) {
-                                                    setIsChecked(false)
-                                                    setCanReg(true)
-                                                } else {
-                                                    setIsChecked(true)
-                                                    setCanReg(false)
-                                                }
-                                            }} checked={isChecked}
-                                        />}
-                                    style={{ fontFamily: '-moz-initial' }}
-                                    label="I accept all terms"
+                                name="email"
+                                variant='outlined'
+                                label="Email"
+                                type="email"
+                                fullWidth
+                                value={dataForReg.email}
+                                onFocus={() => {
+                                    setOpenEmailError(false)
+                                    setOpenEmailExisted(false)
+                                }}
+                                onChange={(e) => setDataForReg({ ...dataForReg, email: e.target.value })}
+                            />
+
+                            {/*PASSWORD */}
+                            <Stack direction="row" width="100%" spacing={1.5}>
+                                <TextField
+                                    name="password"
+                                    variant='outlined'
+                                    label="Password"
+                                    style={{
+                                        maxWidth: '380px',
+                                        lineHeight: '1',
+                                        fontWeight: '600',
+                                        fontSize: '1.1rem',
+                                        color: '#333',
+                                    }}
+                                    type={passwordShown ? "text" : "password"}
+                                    fullWidth
+                                    value={dataForReg.password}
+                                    onFocus={() => setOpenPasswordError(false)}
+                                    onChange={(e) => setDataForReg({ ...dataForReg, password: e.target.value })}
                                 />
-                                <br></br>
-                                <Button onClick={handleCloseModal}>Continue</Button>
-                            </Box>
-                        </Modal>
+                                {passwordShown ? (
+                                    <IconButton style={{ backgroundColor: '#a6adaf' }} onClick={togglePassword}>
+                                        <VisibilityIcon color="success" />
+                                    </IconButton>
+                                ) : (
+                                    <IconButton style={{ backgroundColor: '#a6adaf' }} onClick={togglePassword}>
+                                        <VisibilityOffIcon />
+                                    </IconButton>
+                                )}
+                            </Stack>
 
-                        <Button
-                            onClick={() => handleCreateAccount()}
-                            disabled={canReg}
-                            style={{
-                                marginTop: '25px',
-                                borderRadius: '20px',
-                                border: '1px solid #18608a',
-                                backgroundColor: '#000000',
-                                color: '#ffffff',
-                                fontSize: '13px',
-                                fontWeight: 'bold',
-                                padding: '12px 45px',
-                                letterSpacing: '1px',
-                            }}
-                        >
-                            Register
-                        </Button>
+                            {/*Confirm password */}
+                            <Stack direction="row" spacing={1.5}>
+                                <TextField
+                                    name="password"
+                                    variant='outlined'
+                                    label="Confirm Password"
+                                    style={{
+                                        maxWidth: '380px',
+                                        lineHeight: '1',
+                                        fontWeight: '600',
+                                        fontSize: '1.1rem',
+                                        color: '#333',
+                                    }}
+                                    type={cfPasswordShown ? "text" : "password"}
+                                    fullWidth
+                                    value={cfPass}
+                                    onFocus={() => setOpenCfPasswordError(false)}
+                                    onChange={(e) => setCfPass(e.target.value)}
+                                />
+                                {cfPasswordShown ? (
+                                    <IconButton style={{ backgroundColor: '#a6adaf' }} onClick={toggleCfPassword}>
+                                        <VisibilityIcon color="success" />
+                                    </IconButton>
+                                ) : (
+                                    <IconButton style={{ backgroundColor: '#a6adaf' }} onClick={toggleCfPassword}>
+                                        <VisibilityOffIcon />
+                                    </IconButton>
+                                )}
+                            </Stack>
 
+
+                            {/*button for opening modal term */}
+                            {(!openModal && isChecked) ? (
+                                <div style={{ display: 'flex', flexDirection: 'row', marginTop: '10px' }}>
+                                    <CheckCircleRoundedIcon
+                                        style={{
+                                            color: 'green',
+                                            width: '50px',
+                                            height: '50px',
+                                            marginBottom: '-10px',
+                                            paddingTop: '5px'
+                                        }}
+                                    />
+                                    <p style={{ fontWeight: 'bold', marginTop: '15px' }}>
+                                        Accepted all the terms in this web.
+                                    </p>
+                                </div>
+                            ) : (
+                                <Button
+                                    onClick={handleOpenModal}
+                                    variant='outlined'
+                                    size="small"
+                                    style={{
+                                        maxWidth: '400px',
+                                        height: '10%',
+                                        borderRadius: '15px',
+                                        color: 'black',
+                                        marginTop: '10px',
+                                        marginBottom: '10px'
+                                    }}
+                                >
+                                    View Term for signing up
+                                </Button>
+                            )}
+                            <div style={{
+                                width: '100%',
+                                paddingLeft: '25%',
+                                paddingRight: '60%'
+                            }}>
+                                <Button
+                                    onClick={() => handleCreateAccount()}
+                                    disabled={canReg}
+                                    style={{
+                                        marginTop: '10px',
+                                        borderRadius: '20px',
+                                        border: '1px solid #18608a',
+                                        backgroundColor: '#000000',
+                                        color: '#ffffff',
+                                        fontSize: '13px',
+                                        fontWeight: 'bold',
+                                        padding: '12px 45px',
+                                        letterSpacing: '1px',
+                                    }}
+                                >
+                                    Register
+                                </Button>
+                            </div>
+                            <Modal
+                                open={openModal}
+                                onClose={handleCloseModal}
+                                aria-labelledby="modal-modal-title"
+                                aria-describedby="modal-modal-description"
+                            >
+                                <Box sx={{
+                                    position: 'absolute',
+                                    top: '50%',
+                                    left: '50%',
+                                    transform: 'translate(-50%, -50%)',
+                                    width: '40%',
+                                    height: '50%',
+                                    bgcolor: 'background.paper',
+                                    border: '2px solid #000',
+                                    boxShadow: 24,
+                                    p: 4,
+                                }}>
+                                    <Typography id="modal-modal-title" variant="h6" component="h2">
+                                        Terms in ComeBuy
+                                    </Typography>
+                                    <Typography id="modal-modal-description" sx={{ mt: 2 }}>
+                                        Here is place where you input your term
+                                    </Typography>
+                                    <FormControlLabel
+                                        control={
+                                            <Checkbox
+                                                size="large"
+                                                color='success'
+                                                onChange={() => {
+                                                    if (isChecked) {
+                                                        setIsChecked(false)
+                                                        setCanReg(true)
+                                                    } else {
+                                                        setIsChecked(true)
+                                                        setCanReg(false)
+                                                    }
+                                                }} checked={isChecked}
+                                            />}
+                                        style={{ fontFamily: '-moz-initial' }}
+                                        label="I accept all terms"
+                                    />
+                                    <br></br>
+                                    <Button onClick={handleCloseModal}>Continue</Button>
+                                </Box>
+                            </Modal>
+                        </Stack>
                         {/*Dialog for having registered successfully or email existed */}
                         {openDialogRegFailed ? (
                             <Dialog open={openDialogRegFailed} onClose={handleCloseDialogRegFailed}>
@@ -784,56 +805,60 @@ const LoginRegister = () => {
 
                     {/* LOGIN */}
                     <form action="#" className="sign-in-form">
-                        <h2 className="title">Sign in</h2>
-                        {/*EMAIL*/}
-                        <TextField
-                            className='text-field-in-form'
-                            name="email"
-                            variant='standard'
-                            label="Email"
-                            type="email"
-                            fullWidth
-                            value={emailUser}
-                            onFocus={() => setOpenEmailLoginError(false)}
-                            onChange={(e) => setEmailUser(e.target.value)}
-                        />
-                        {openEmailLoginError ? (
-                            <Alert style={{ marginTop: '15px' }} severity="warning">Please type email</Alert>
-                        ) : (
-                            null
-                        )}
-
                         {/*PASSWORD */}
-                        <div className="password-in-form">
+                        <Stack direction="column" width='100%' spacing={2}>
+                            <h2 className="title">Sign in</h2>
+                            {/*EMAIL*/}
                             <TextField
-                                style={{
-                                    maxWidth: '380px',
-                                    marginBottom: '50px',
-                                    marginTop: '20px',
-                                    lineHeight: '1',
-                                    fontWeight: '600',
-                                    fontSize: '1.1rem',
-                                    color: '#333',
-                                }}
-                                name="password"
-                                variant='standard'
-                                label="Password"
-                                type={passwordShown ? "text" : "password"}
+                                name="email"
+                                variant='outlined'
+                                label="Email"
+                                type="email"
                                 fullWidth
-                                value={passwordUser}
-                                onFocus={() => setOpenPasswordLoginError(false)}
-                                onChange={(e) => setPasswordUser(e.target.value)}
+                                value={emailUser}
+                                onFocus={() => setOpenEmailLoginError(false)}
+                                onChange={(e) => setEmailUser(e.target.value)}
                             />
-                            {passwordShown ? (
-                                <IconButton style={{ backgroundColor: '#a6adaf' }} onClick={togglePassword}>
-                                    <VisibilityIcon color="success" />
-                                </IconButton>
+                            {openEmailLoginError ? (
+                                <Alert style={{ marginTop: '15px' }} severity="warning">Please type email</Alert>
                             ) : (
-                                <IconButton style={{ backgroundColor: '#a6adaf' }} onClick={togglePassword}>
-                                    <VisibilityOffIcon />
-                                </IconButton>
+                                null
                             )}
-                        </div>
+                            <Stack direction="row" width="100%" spacing={2}>
+                                <TextField
+                                    style={{
+                                        maxWidth: '380px',
+                                        lineHeight: '1',
+                                        fontWeight: '600',
+                                        fontSize: '1.1rem',
+                                        color: '#333',
+                                    }}
+                                    name="password"
+                                    variant='outlined'
+                                    label="Password"
+                                    type={passwordShown ? "text" : "password"}
+                                    fullWidth
+                                    value={passwordUser}
+                                    onFocus={() => setOpenPasswordLoginError(false)}
+                                    onChange={(e) => setPasswordUser(e.target.value)}
+                                />
+                                {passwordShown ? (
+                                    <IconButton style={{ backgroundColor: '#a6adaf' }} onClick={togglePassword}>
+                                        <VisibilityIcon color="success" />
+                                    </IconButton>
+                                ) : (
+                                    <IconButton style={{ backgroundColor: '#a6adaf' }} onClick={togglePassword}>
+                                        <VisibilityOffIcon />
+                                    </IconButton>
+                                )}
+                            </Stack>
+                            <Button
+                                onClick={handleForgotPassword}
+                                sx={{
+                                    maxWidth: '60px'
+                                }}
+                            >Forgot Password ?</Button>
+                        </Stack>
                         {openPasswordLoginError ? (
                             <Alert severity="warning">
                                 Type password
@@ -845,7 +870,7 @@ const LoginRegister = () => {
                         <Button
                             onClick={() => handleLogin()}
                             style={{
-                                marginTop: '0%',
+                                marginTop: '2%',
                                 borderRadius: '20px',
                                 border: '1px solid #18608a',
                                 backgroundColor: '#000000',

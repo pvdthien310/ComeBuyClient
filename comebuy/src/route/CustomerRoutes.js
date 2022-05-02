@@ -6,6 +6,7 @@ import CustomerPlace from './../container/CustomerPlace/index';
 // import ForgotPassword from './../container/CustomerPlace/ForgotPassword';
 import DetailProduct from '../container/Product/DetailProduct';
 import { ForgotPassword } from '../components';
+import CustomerCart from '../container/CustomerCart';
 
 const customerRoutes = [
   {
@@ -36,7 +37,12 @@ const customerRoutes = [
   {
     name: 'DetailProduct',
     path: '/productSpace/:id',
-    page: <DetailProduct />,
+    page: <DetailProduct />
+  },
+  {
+    name: 'My Cart',
+    path: '/myplace/mycart',
+    page: <CustomerCart />,
   },
 
 

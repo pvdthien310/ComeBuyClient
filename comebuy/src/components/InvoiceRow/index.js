@@ -193,7 +193,7 @@ const Row = (props) => {
     const handleClickCheckInvoice = async () => {
         if (isChecked === true) {
             if (isPaid === true) {
-                console.log("Can not");
+                alert("Can not accept this action")
             } else {
                 setUpdating(true)
                 const temp = {
@@ -237,13 +237,6 @@ const Row = (props) => {
     const closeModalBill = () => {
         setOpenModalBill(false)
     }
-
-    const [description, setDescription] = React.useState("")
-    const [quantity, setQuantity] = React.useState("")
-    const [price, setPrice] = React.useState("")
-    const [amount, setAmount] = React.useState("")
-    const [list, setList] = React.useState([])
-    const [total, setTotal] = React.useState(0)
 
     return (
         <React.Fragment >
