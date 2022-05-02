@@ -1,6 +1,6 @@
 import React from "react"
 
-export default function TablePrint({ list, total }) {
+const TablePrint = ({ list, total }) => {
   return (
     <>
       <table width="100%" className="mb-10">
@@ -34,3 +34,5 @@ export default function TablePrint({ list, total }) {
     </>
   )
 }
+
+export default TablePrint

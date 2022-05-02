@@ -1,4 +1,4 @@
-export default function Notes({ notes }) {
+const Notes = ({ notes }) => {
   return (
     <>
       <section style={{ marginTop: '0%' }}>
@@ -7,3 +7,5 @@ export default function Notes({ notes }) {
     </>
   )
 }
+
+export default Notes

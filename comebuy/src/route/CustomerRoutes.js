@@ -3,8 +3,9 @@ import HomePage from '../container/HomePage';
 import ProductSpace from '../container/ProductSpace';
 import Profile from '../container/Profile';
 import CustomerPlace from './../container/CustomerPlace/index';
-import ForgotPassword from './../container/CustomerPlace/ForgotPassword';
+// import ForgotPassword from './../container/CustomerPlace/ForgotPassword';
 import DetailProduct from '../container/Product/DetailProduct';
+import { ForgotPassword } from '../components';
 
 const customerRoutes = [
   {

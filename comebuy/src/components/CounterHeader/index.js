@@ -1,4 +1,4 @@
-export default function Header({ handlePrint }) {
+const Header = ({ handlePrint }) => {
   return (
     <>
       <header style={{ display: 'flex', justifyContent: 'center' }}>
@@ -15,3 +15,4 @@ export default function Header({ handlePrint }) {
     </>
   )
 }
+export default Header

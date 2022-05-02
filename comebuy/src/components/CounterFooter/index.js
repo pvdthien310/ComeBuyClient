@@ -1,11 +1,11 @@
 import { Stack, Typography } from "@mui/material";
 
-export default function Footer({
+const Footer = ({
   name,
   email,
   phone,
   address
-}) {
+}) => {
   return (
     <>
       <footer style={{
@@ -38,3 +38,4 @@ export default function Footer({
     </>
   )
 }
+export default Footer
