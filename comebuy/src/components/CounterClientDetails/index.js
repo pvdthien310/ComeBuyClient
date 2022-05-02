@@ -1,11 +1,9 @@
-import { Stack, Typography } from "@mui/material";
-
-export default function MainDetails({ name, address }) {
+import { Typography } from "@mui/material"
+const ClientDetails = ({ clientName, clientAddress }) => {
   return (
     <div style={{
       width: '100%',
       display: 'flex',
-      justifyContent: 'flex-end',
       flexDirection: 'column'
     }}>
       <Typography
@@ -13,21 +11,20 @@ export default function MainDetails({ name, address }) {
           fontSize: '20px',
           fontWeight: 'bold',
           fontFamily: 'serif',
-          alignSelf: 'flex-end'
         }}
       >
-        {name} - at ComeBuy branch
+        {clientName}
       </Typography>
       <Typography
         style={{
           fontSize: '16px',
           fontFamily: 'serif',
           fontStyle: 'italic',
-          alignSelf: 'flex-end'
         }}
       >
-        {address}
+        {clientAddress}
       </Typography>
     </div>
   )
 }
+export default ClientDetails;

@@ -30,9 +30,9 @@ import { useSelector } from 'react-redux';
 
 import { useNavigate } from 'react-router';
 
-import NavBar from './../../components/NavBar/NavBar';
+import NavBar from '../NavBar/NavBar';
 import { currentUser } from '../../redux/selectors';
-import * as Validation from '././../LoginAndRegister/ValidationDataForAccount'
+import * as Validation from '../../container/LoginAndRegister/ValidationDataForAccount'
 import { updateAccount, getAccountWithID } from '../../redux/slices/accountSlice';
 import cloudinaryApi from '../../api/cloudinaryAPI';
 

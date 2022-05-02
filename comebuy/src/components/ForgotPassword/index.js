@@ -19,11 +19,11 @@ import { Autorenew } from "@material-ui/icons";
 
 import { useSelector } from 'react-redux';
 
-import CountDown from '../LoginAndRegister/CountDown';
-import { CheckEmail, CheckPassword } from '../LoginAndRegister/ValidationDataForAccount';
+import CountDown from '../../container/LoginAndRegister/CountDown';
+import { CheckEmail, CheckPassword } from '../../container/LoginAndRegister/ValidationDataForAccount';
 import emailApi from '../../api/emailAPI';
 import { updatePassword } from '../../redux/slices/accountSlice';
-import { currentUser } from './../../redux/selectors';
+import { currentUser } from '../../redux/selectors';
 
 //Style for refresh button in verify modal
 const useStyles = makeStyles((theme) => ({

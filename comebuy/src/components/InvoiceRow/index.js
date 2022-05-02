@@ -5,16 +5,15 @@ import { updateInvoice } from '../../redux/slices/invoiceSlice';
 import { unwrapResult } from '@reduxjs/toolkit';
 import { useSelector } from 'react-redux';
 
-import CusInfo from './CusInfo'
-import ProdInfo from './ProdInfo'
-import IOSSwitch from './IOSSwitch'
-import Header from '../CounterForManger/Header';
-import MainDetails from '../CounterForManger/MainDetails';
-import ClientDetails from '../CounterForManger/ClientDetails';
-import Dates from '../CounterForManger/Dates';
-import TablePrint from '../CounterForManger/TablePrint';
-import Notes from '../CounterForManger/Notes';
-import Footer from '../CounterForManger/Footer';
+import CusInfo from './../InvoiceCusInfo/index';
+
+import Header from '../CounterHeader';
+import MainDetails from '../CounterMainDetails';
+import ClientDetails from '../CounterClientDetails';
+import Dates from '../CounterDates';
+import TablePrint from '../CounterTablePrint';
+import Notes from '../CounterNotes';
+import Footer from '../CounterFooter';
 
 import Snackbar from '@mui/material/Snackbar';
 import MuiAlert from '@mui/material/Alert';
@@ -37,8 +36,10 @@ import Popover from '@mui/material/Popover';
 import Button from '@mui/material/Button';
 import { Modal } from '@mui/material';
 import { Stack } from '@mui/material';
-import TableInvoiceItem from './TableIInvoiceItem';
+import TableInvoiceItem from '../InvoiceTableInvoiceItem';
 import { currentUser } from '../../redux/selectors';
+import ProdInfo from './../InvoiceProdInfo/index';
+import IOSSwitch from './../InvoiceIOSSwitch/index';
 const Alert = React.forwardRef(function Alert(props, ref) {
     return <MuiAlert elevation={6} ref={ref} variant="filled" {...props} />;
 });
@@ -390,16 +391,6 @@ const Row = (props) => {
 
             >
                 <Box sx={{
-                    // backgroundColor: '#F2F2F2', p: 2,
-                    // height: 'auto',
-                    // width: '45%',
-                    // boxShadow: 5,
-                    // borderRadius: 10,
-                    // marginTop: '3%',
-                    // display: 'flex',
-                    // flexDirection: 'column',
-                    // justifyContent: 'center',
-                    // alignSelf: 'center'
                     position: 'absolute',
                     top: '50%',
                     left: '50%',
@@ -435,10 +426,6 @@ const Row = (props) => {
                         <Notes notes="Online" />
                         <div style={{ height: '1px', width: '100%', backgroundColor: 'black' }}></div>
                         <Footer
-                            // name={name}
-                            // address={address}
-                            // email={email}
-                            // phone={phone}
                             name={"Printed by " + _currentUser.name}
                             address={"ComeBuy Store"}
                             email={"Printer Email: " + _currentUser.email}
@@ -455,49 +442,6 @@ const Row = (props) => {
                     // onAfterPrint={() => AfterPrint()}
                     />
                 </Box>
-                {/* <Box>
-                    <Stack ref={componentRef} direction="column" width="100%">
-                        <Header handlePrint={handlePrint} />
-                        <MainDetails name={"Online"} address={"Online"} />
-                        <ClientDetails
-                            clientName={row.account.name}
-                            clientAddress={"Online"}
-                        />
-
-                        <Dates
-                            invoiceDate={row.date}
-                            dueDate={row.date}
-                        />
-
-                        <TablePrint
-                            // description={description}
-                            // quantity={quantity}
-                            // price={price}
-                            // amount={amount}
-                            list={row.invoiceitem}
-                            // setList={setList}
-                            total={invoiceTotal}
-                        // setTotal={setTotal}
-                        />
-
-                        <Notes notes={"Online"} />
-                        <div style={{ height: '1px', width: '100%', backgroundColor: 'black' }}></div>
-                        <Footer
-                            name={"Online"}
-                            address={"Online"}
-                            email={"Online"}
-                            phone={"Online"}
-                        />
-                    </Stack>
-                    <ReactToPrint
-                        trigger={() => (
-                            <Button style={{ marginTop: '5%' }} variant="outlined">
-                                Print / Download
-                            </Button>
-                        )}
-                        content={() => componentRef.current}
-                    />
-                </Box> */}
             </Modal>
         </React.Fragment >
     );

@@ -2,7 +2,7 @@ import * as React from 'react';
 import { useDispatch } from 'react-redux'
 import { getAllInvoice } from '../../redux/slices/invoiceSlice';
 import { unwrapResult } from '@reduxjs/toolkit';
-import Row from './Row'
+import Row from '../../components/InvoiceRow';
 
 import Table from '@mui/material/Table';
 import TableBody from '@mui/material/TableBody';

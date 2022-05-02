@@ -19,8 +19,8 @@ import { unwrapResult } from '@reduxjs/toolkit'
 
 
 import { login } from '../../redux/slices/accountSlice';
-import ProfileManage from './ProfileManage';
 import { useNavigate } from 'react-router';
+import ProfileManage from './../../components/ProfileManage/index';
 
 const BGImg = styled('img')({
     height: '100%',
