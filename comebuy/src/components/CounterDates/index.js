@@ -1,4 +1,4 @@
-export default function Dates({ invoiceDate, dueDate }) {
+const Dates = ({ invoiceDate, dueDate }) => {
   return (
     <>
       <article style={{
@@ -24,3 +24,4 @@ export default function Dates({ invoiceDate, dueDate }) {
     </>
   )
 }
+export default Dates

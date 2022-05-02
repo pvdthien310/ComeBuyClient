@@ -7,13 +7,13 @@ import Autocomplete, { createFilterOptions } from '@mui/material/Autocomplete';
 import Popover from '@mui/material/Popover';
 import Typography from '@mui/material/Typography';
 import { productListSelector } from "../../redux/selectors"
-import ProdInfo from "../Invoice/ProdInfo"
+import ProdInfo from "../InvoiceProdInfo"
 import { OptionUnstyled } from "@mui/base"
-import { DetailProductModal } from "../../components"
+import { DetailProductModal } from ".."
 
 
 const filter = createFilterOptions();
-export default function TableForm({
+const TableForm = ({
   description,
   setDescription,
   quantity,
@@ -26,7 +26,7 @@ export default function TableForm({
   setList,
   total,
   setTotal,
-}) {
+}) => {
   const [isEditing, setIsEditing] = useState(false)
 
   const _productList = useSelector(productListSelector)  // list get from store
@@ -177,3 +177,5 @@ export default function TableForm({
     </>
   )
 }
+
+export default TableForm
