@@ -46,8 +46,8 @@ const style = {
         boxShadow: 10,
     },
     boxShopInfo: {
-        height: '30%',
-        width: '90%',
+        height: 'auto',
+        width: '70%',
         padding: 4,
         alignSelf: 'center',
         backgroundColor: 'white',

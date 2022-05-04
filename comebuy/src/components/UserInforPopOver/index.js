@@ -46,7 +46,7 @@ const UserInfoPopOver = (props) => {
         <Box sx={{ height: 350, width: 700, padding: 5 }}>
           <Grid direction='row' container spacing={1}>
           <Grid item xs={12} marginBottom={1}>
-            <Box sx={{height:5, width:'100%', backgroundColor: 'teal', borderRadius: 5}}></Box>
+            <Box sx={{height:5, width:'100%', backgroundColor: '#2E1534', borderRadius: 5}}></Box>
             </Grid>
             <Grid item xs={6}>
               <Stack spacing={2}>

@@ -103,7 +103,7 @@ const RevenueChart = (props) => {
         <Box sx={{ width: '100%' }}>
           {
             loading == true ?
-              <Typography>Nothing to Show</Typography> :
+              <Typography variant='h6'>There is nothing to show...</Typography> :
               <Box sx={{ width: '100%' }}>
                 <LinearProgress />
                 <Typography variant='h6' sx={{ alignSelf: 'center', margin: 5 }}>Loading....</Typography>

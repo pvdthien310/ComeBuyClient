@@ -15,7 +15,6 @@ const style = {
     },
     boxInfor: {
         height: 'auto',
-
         alignSelf: 'center',
         backgroundColor: 'white',
         marginTop: '10px',
@@ -49,7 +48,7 @@ const style = {
     boxInfor_Line: {
         height: 5,
         width: '100%',
-        backgroundColor: '#233059',
+        backgroundColor: '#2E1534',
         marginTop: '10px',
         marginBottom: '10px'
 
@@ -57,7 +56,7 @@ const style = {
     boxinfor_Stack_Line: {
         height: 3,
         width: '100%',
-        backgroundColor: '#012030',
+        backgroundColor: '#2E1534',
         marginTop: '10px',
         marginBottom: '20px'
     },
@@ -65,7 +64,7 @@ const style = {
         marginBottom: 2,
         alignSelf: 'center',
         borderRadius: 5,
-        backgroundColor: '#0B2B40',
+        backgroundColor: '#2E1534',
         paddingTop : 1,
         paddingBottom : 1,
         paddingLeft: 5,

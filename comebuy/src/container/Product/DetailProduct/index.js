@@ -23,7 +23,7 @@ import DescriptionIcon from '@mui/icons-material/Description';
 import { useParams } from 'react-router';
 import { useEffect, useState } from "react";
 import productAPI from '../../../api/productAPI';
-import { FeatureChart, NavBar, TechInforLine, BreadCrumb } from '../../../components';
+import { FeatureChart, NavBar, TechInforLine, BreadCrumb, BoxShopInfo } from '../../../components';
 import DoneIcon from '@mui/icons-material/Done';
 import ChangeCircleIcon from '@mui/icons-material/ChangeCircle';
 import AddTaskIcon from '@mui/icons-material/AddTask';
@@ -255,7 +255,7 @@ const DetailProduct = () => {
                                     <Button variant="filled" sx={{ color: 'white', backgroundColor: '#D92365', p: 1, mt: 2 }} startIcon={<AddTaskIcon />}>
                                         Add To Cart
                                     </Button>
-                                    <Button variant="filled" sx={{ p: 1, mt: 2, backgroundColor: '#10454F',color: 'white' }} startIcon={<LocalPhoneIcon />}>
+                                    <Button variant="filled" sx={{ p: 1, mt: 2, backgroundColor: 'black',color: 'white' }} startIcon={<LocalPhoneIcon />}>
                                         Hotline 0834344655
                                     </Button>
                                 </Stack>
@@ -266,6 +266,15 @@ const DetailProduct = () => {
                         }
                     </Box>
                 </Grid>
+                {/* <Grid container item xs={12} sx={style.boxShopInfo}>
+                    <Grid container item xs={8} >
+                        <Stack>
+                            <Typography variant='h6' fontWeight={'bold'}>Shop with confidence with Comebuy</Typography>
+                        </Stack>
+                    </Grid>
+                    <Grid container item xs={4}></Grid>  
+                </Grid> */}
+                <BoxShopInfo></BoxShopInfo>
             </Grid>
         </Stack>
     )

@@ -20,11 +20,6 @@ const customerRoutes = [
     page: <Profile />,
   },
   {
-    name: 'Product Space',
-    path: '/productSpace',
-    page: <ProductSpace />,
-  },
-  {
     name: 'Home',
     path: '/',
     page: <HomePage />,

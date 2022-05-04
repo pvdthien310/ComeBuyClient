@@ -9,7 +9,7 @@ const MainDetails = ({ name, address }) => {
       flexDirection: 'column'
     }}>
       <Typography
-        style={{
+        sx={{
           fontSize: '20px',
           fontWeight: 'bold',
           fontFamily: 'serif',
@@ -19,7 +19,7 @@ const MainDetails = ({ name, address }) => {
         {name} - at ComeBuy branch
       </Typography>
       <Typography
-        style={{
+        sx={{
           fontSize: '16px',
           fontFamily: 'serif',
           fontStyle: 'italic',

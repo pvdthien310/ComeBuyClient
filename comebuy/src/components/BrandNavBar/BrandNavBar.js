@@ -21,7 +21,7 @@ const ImageButton = styled(ButtonBase)(({ theme }) => ({
             opacity: 0,
         },
         '& .MuiTypography-root': {
-            border: '3px solid currentColor',
+            border: '3px currentColor',
             height: '80%'
         },
     },

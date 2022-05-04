@@ -103,7 +103,7 @@ export default function NavBar() {
             dispatch(accountSlice.actions.logout());
             await localStorage.setItem('role', null)
             navigate("/")
-        } else {
+        } else if (e.target.innerText === 'My place') {
             handleMyPlace();
         }
 

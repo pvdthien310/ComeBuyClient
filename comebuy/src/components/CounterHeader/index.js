@@ -6,7 +6,7 @@ const Header = ({ handlePrint }) => {
           <h1 style={{
             fontWeight: 'bold',
             fontSize: '35px',
-            fontFamily: 'serif'
+            // fontFamily: 'serif'
           }}>
             ComeBuy Invoicer
           </h1>
