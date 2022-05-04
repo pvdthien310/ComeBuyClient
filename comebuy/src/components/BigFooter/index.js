@@ -16,80 +16,8 @@ import { Link } from "@material-ui/core";
 
 import { accountSlice } from "../../redux/slices/accountSlice";
 // import { styled } from "@mui/material";
+import { Typography } from '@mui/material';
 
-const Container = styled.div`
-  display: flex;
-  ${mobile({ flexDirection: "column" })}
-`;
-
-const Left = styled.div`
-  flex: 1;
-  display: flex;
-  flex-direction: column;
-  padding: 20px;
-`;
-
-const Logo = styled.h1``;
-
-const Desc = styled.p`
-  margin: 20px 0px;
-`;
-
-const SocialContainer = styled.div`
-  display: flex;
-`;
-
-const SocialIcon = styled.div`
-  width: 40px;
-  height: 40px;
-  border-radius: 50%;
-  color: white;
-  background-color: #${(props) => props.color};
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  margin-right: 20px;
-`;
-
-const Center = styled.div`
-  flex: 1;
-  padding: 20px;
-  ${mobile({ display: "none" })}
-`;
-
-const Title = styled.h3`
-  margin-bottom: 30px;
-`;
-
-const List = styled.ul`
-  margin: 0;
-  padding: 0;
-  list-style: none;
-  display: flex;
-  flex-wrap: wrap;
-`;
-
-const ListItem = styled.li`
-  width: 50%;
-  margin-bottom: 10px;
-`;
-
-const Right = styled.div`
-  flex: 1;
-  padding: 20px;
-  ${mobile({ backgroundColor: "#fff8f8" })}
-
-`;
-
-const ContactItem = styled.div`
-  margin-bottom: 20px;
-  display: flex;
-  align-items: center;
-`;
-
-const Payment = styled.img`
-    width: 50%;
-`;
 
 const BigFooter = () => {
 
@@ -109,37 +37,100 @@ const BigFooter = () => {
   }
 
   return (
-    <Container>
-      <Left>
-        <Logo>COMEBUY.</Logo>
-        <Desc>
+    <div style={{ display: 'flex' }}>
+      <div
+        style={{
+          flex: 1,
+          display: 'flex',
+          flexDirection: 'column',
+          padding: '20px'
+        }}
+      >
+        <h1>COMEBUY.</h1>
+        <p style={{ margin: '20px 0px' }}>
           ComeBuy is a web store which includes a lot of the best laptop in the world.
           Come with us, you will never be confused about choosing, type, proper price of Laptop you want
-        </Desc>
-        <SocialContainer>
-          <SocialIcon color="3B5999">
+        </p>
+        <div style={{ display: 'flex' }}>
+          <div
+            style={{
+              width: '40px',
+              height: '40px',
+              borderRadius: '50%',
+              color: 'white',
+              backgroundColor: '#3B5999',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              marginRight: '20px'
+            }}
+          >
             <Facebook />
-          </SocialIcon>
-          <SocialIcon color="E4405F">
+          </div>
+          <div
+            style={{
+              width: '40px',
+              height: '40px',
+              borderRadius: '50%',
+              color: 'white',
+              backgroundColor: '#E4405F',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              marginRight: '20px'
+            }}
+          >
             <Instagram />
-          </SocialIcon>
-          <SocialIcon color="55ACEE">
+          </div>
+          <div
+            style={{
+              width: '40px',
+              height: '40px',
+              borderRadius: '50%',
+              color: 'white',
+              backgroundColor: '#55ACEE',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              marginRight: '20px'
+            }}
+          >
             <Twitter />
-          </SocialIcon>
-          <SocialIcon color="E60023">
+          </div>
+          <div
+            style={{
+              width: '40px',
+              height: '40px',
+              borderRadius: '50%',
+              color: 'white',
+              backgroundColor: '#E60023',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              marginRight: '20px'
+            }}
+          >
             <Pinterest />
-          </SocialIcon>
-        </SocialContainer>
-      </Left>
-      <Center>
-        <Title>Useful Links</Title>
-        <List>
-          {/* <ListItem onClick={gotoHome} style={{
-            textDecoration: 'underline',
+          </div>
+        </div>
+      </div>
+      <div style={{
+        flex: 1,
+        padding: '20px'
+      }}
+      >
+        <h3 style={{ marginBottom: '30px' }}>Useful Links</h3>
+        <ul style={{
+          margin: 0,
+          padding: 0,
+          listStyle: 'none',
+          display: 'flex',
+          flexWrap: 'wrap'
+        }}>
+          <li style={{
+            width: '50%',
+            marginBottom: '10px'
           }}>
-            Home
-          </ListItem> */}
-          <ListItem>
             <Link
               underline="hover"
               key="2"
@@ -148,8 +139,11 @@ const BigFooter = () => {
             >
               Home
             </Link>
-          </ListItem>
-          <ListItem>
+          </li>
+          <li style={{
+            width: '50%',
+            marginBottom: '10px'
+          }}>
             <Link
               underline="hover"
               key="2"
@@ -158,8 +152,11 @@ const BigFooter = () => {
             >
               Your cart
             </Link>
-          </ListItem>
-          <ListItem>
+          </li>
+          <li style={{
+            width: '50%',
+            marginBottom: '10px'
+          }}>
             <Link
               underline="hover"
               key="2"
@@ -168,8 +165,11 @@ const BigFooter = () => {
             >
               Your place
             </Link>
-          </ListItem>
-          <ListItem>
+          </li>
+          <li style={{
+            width: '50%',
+            marginBottom: '10px'
+          }}>
             <Link
               underline="hover"
               key="2"
@@ -178,8 +178,11 @@ const BigFooter = () => {
             >
               Your favorite
             </Link>
-          </ListItem>
-          <ListItem>
+          </li>
+          <li style={{
+            width: '50%',
+            marginBottom: '10px'
+          }}>
             <Link
               underline="hover"
               key="2"
@@ -188,8 +191,11 @@ const BigFooter = () => {
             >
               Your orders
             </Link>
-          </ListItem>
-          <ListItem>
+          </li>
+          <li style={{
+            width: '50%',
+            marginBottom: '10px'
+          }}>
             <Link
               underline="hover"
               key="2"
@@ -198,23 +204,38 @@ const BigFooter = () => {
             >
               Log out
             </Link>
-          </ListItem>
-        </List>
-      </Center>
-      <Right>
-        <Title>Contact</Title>
-        <ContactItem>
+          </li>
+        </ul>
+      </div>
+      <div style={{
+        flex: 1,
+        padding: '20px'
+      }}>
+        <h3 style={{ marginBottom: '30px' }}>Contact</h3>
+        <div style={{
+          marginBottom: '20px',
+          display: 'flex',
+          alignItems: 'center'
+        }}>
           <Room style={{ marginRight: "10px" }} /> KTPM2019, Software engineering team 89, UIT
-        </ContactItem>
-        <ContactItem>
+        </div>
+        <div style={{
+          marginBottom: '20px',
+          display: 'flex',
+          alignItems: 'center'
+        }}>
           <Phone style={{ marginRight: "10px" }} /> +84 358075274
-        </ContactItem>
-        <ContactItem>
+        </div>
+        <div style={{
+          marginBottom: '20px',
+          display: 'flex',
+          alignItems: 'center'
+        }}>
           <MailOutline style={{ marginRight: "10px" }} /> comebuyproject@gmail.com
-        </ContactItem>
-        <Payment src="https://i.ibb.co/Qfvn4z6/payment.png" />
-      </Right>
-    </Container>
+        </div>
+        <img style={{ width: '50%' }} src="https://i.ibb.co/Qfvn4z6/payment.png" />
+      </div>
+    </div>
   );
 };
 
