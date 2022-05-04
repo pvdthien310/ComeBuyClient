@@ -18,6 +18,7 @@ import TextareaAutosize from '@mui/material/TextareaAutosize';
 import { styled } from '@mui/material/styles';
 import { useSelector, useDispatch } from "react-redux"
 import { unwrapResult } from "@reduxjs/toolkit"
+import { BigFooter } from "../../components"
 
 const BGImg = styled('img')({
     height: '100%',
@@ -42,7 +43,7 @@ const CounterForManager = () => {
     const [invoiceDate, setInvoiceDate] = useState(String(new Date().getDate()).padStart(2, '0') + '/' + String(new Date().getMonth() + 1).padStart(2, '0') + '/' + new Date().getFullYear())
     const [dueDate, setDueDate] = useState("")
     const [notes, setNotes] = useState("")
-    const [description, setDescription] = useState("")
+    const [description, setDescription] = useState(null)
     const [quantity, setQuantity] = useState("")
     const [price, setPrice] = useState("")
     const [amount, setAmount] = useState("")
@@ -273,12 +274,13 @@ const CounterForManager = () => {
                 </Stack>
             </Grid>
 
-            <Grid item xs={5} padding="3%">
+            <Grid item xs={5} sx={{ padding: "5%" }}>
                 <Stack sx={{ height: '105%', width: '100%' }} >
                     <Box sx={{
                         backgroundColor: '#F2F2F2', p: 2,
                         height: '100%',
                         width: '100%',
+                        padding: "5%",
                         boxShadow: 5,
                         borderRadius: 10,
                         marginTop: '3%',
@@ -332,6 +334,7 @@ const CounterForManager = () => {
                     </Box>
                 </Stack>
             </Grid>
+            {/* <BigFooter /> */}
         </Grid >
     )
 }

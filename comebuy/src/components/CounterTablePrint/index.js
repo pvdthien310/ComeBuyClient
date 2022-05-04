@@ -3,6 +3,7 @@ import React from "react"
 const TablePrint = ({ list, total }) => {
   return (
     <>
+      {console.log(list)}
       <table width="100%" className="mb-10">
         <thead>
           <tr style={{ backgroundColor: 'gray' }}>

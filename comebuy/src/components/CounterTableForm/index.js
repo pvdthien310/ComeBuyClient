@@ -41,12 +41,12 @@ const TableForm = ({
     } else {
       const newItems = {
         id: uuidv4(),
-        description,
+        description: description.name,
         quantity,
         price,
         amount,
       }
-      setDescription("")
+      setDescription(null)
       setQuantity("")
       setPrice("")
       setAmount("")
@@ -101,9 +101,33 @@ const TableForm = ({
         <Autocomplete
           value={description}
           onChange={(event, newValue) => {
-            setDescription(newValue.name)
-            setPrice(Number(newValue.price))
-            setCurrentProduct(newValue)
+            if (typeof newValue === 'string') {
+              setDescription({
+                name: newValue,
+              });
+            } else if (newValue && newValue.inputValue) {
+              // Create a new value from the user input
+              setDescription({
+                name: newValue.inputValue,
+              });
+            } else {
+              setDescription(newValue);
+              setPrice(newValue.price)
+            }
+          }}
+          filterOptions={(options, params) => {
+            const filtered = filter(options, params);
+
+            const { inputValue } = params;
+            // Suggest the creation of a new value
+            const isExisting = options.some((option) => inputValue === option.name);
+            if (inputValue !== '' && !isExisting) {
+              filtered.push({
+                inputValue,
+                name: `Add "${inputValue}"`,
+              });
+            }
+            return filtered;
           }}
           selectOnFocus
           clearOnBlur
@@ -111,7 +135,16 @@ const TableForm = ({
           id="free-solo-with-text-demo"
           options={listProduct}
           getOptionLabel={(option) => {
-            return option;
+            // Value selected with enter, right from the input
+            if (typeof option === 'string') {
+              return option;
+            }
+            // Add "xxx" option created dynamically
+            if (option.inputValue) {
+              return option.inputValue;
+            }
+            // Regular option
+            return option.name;
           }}
           renderOption={(props, option) => <li {...props}>{option.name}</li>}
           sx={{ width: 300 }}
