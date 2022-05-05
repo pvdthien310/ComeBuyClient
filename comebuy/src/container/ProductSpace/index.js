@@ -8,8 +8,9 @@ import FilterListIcon from '@mui/icons-material/FilterList';
 import { getAllFeature } from "../../redux/slices/featureSlice";
 import { AirbnbSlider, AirbnbThumbComponent, ExampleSlider, PrettoSlider } from "./style";
 
-import { productListSelector } from "../../redux/selectors";
+import { cartListSelector, productListSelector } from "../../redux/selectors";
 const ProductSpace = () => {
+    const _cart = useSelector(cartListSelector)
     const _productList = useSelector(productListSelector)
     const [productList, setProductList] = useState([])
     const dispatch = useDispatch()
@@ -111,7 +112,7 @@ const ProductSpace = () => {
     return (
         <div style={{ width: '100%', height: '100%' }}>
             <Stack sx={{ width: '100%', height: '100%' }}>
-                <NavBar></NavBar>
+                <NavBar numberCart={_cart.length}></NavBar>
                 <Stack sx={{ pt: 2, pl: 2 }}>
                     <BreadCrumb />
                 </Stack>

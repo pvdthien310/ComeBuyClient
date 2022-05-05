@@ -5,7 +5,7 @@ import NavBar from "../../components/NavBar/NavBar";
 import { BigFooter } from '../../components';
 import { mobile } from "./responsive";
 
-import { Typography, Link } from '@material-ui/core';
+import { Typography, Link } from '@mui/material';
 import { Stack, Breadcrumbs } from '@mui/material';
 import Backdrop from '@mui/material/Backdrop';
 import CircularProgress from '@mui/material/CircularProgress';
@@ -131,10 +131,11 @@ const Hr = styled.hr`
 
 const Summary = styled.div`
   flex: 1;
-  border: 0.5px solid lightgray;
+  border: 0.5px solid lightslategrey;
   border-radius: 10px;
   padding: 20px;
   height: 50vh;
+  box-shadow: 10px;
 `;
 
 const SummaryTitle = styled.h1`
@@ -241,7 +242,7 @@ const CustomerCart = () => {
   return (
 
     <Container>
-      <NavBar />
+      <NavBar numberCart={JSON.parse(localStorage.getItem('cart')).length}/>
       <Stack direction="row"
         spacing={3}
         style={{ marginLeft: '15%', marginTop: '1%' }}

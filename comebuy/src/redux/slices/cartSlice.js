@@ -15,7 +15,7 @@ export const getAllCart = createAsyncThunk(
     }
 );
 
-export const branchSlice = createSlice({
+export const cartSlice = createSlice({
     name: 'cart',
     initialState: {
         cartList: [],

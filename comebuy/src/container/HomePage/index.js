@@ -1,4 +1,7 @@
+import { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
+import { useDispatch } from 'react-redux'
+import { getAccountWithID } from '../../redux/slices/accountSlice'
 import {
     BrandNavBar,
     Slider,
@@ -10,12 +13,37 @@ import {
     LaptopImageLine,
     BigFooter
 } from '../../components'
+import { unwrapResult } from '@reduxjs/toolkit'
+import { cartSlice } from './../../redux/slices/cartSlice'
 
 const HomePage = () => {
 
     const navigate = useNavigate()
+    const dispatch = useDispatch()
+    const [numberItemsInCart, setNumberItemsInCart] = useState(JSON.parse(localStorage.getItem('cart')).length)
 
     const navigateToProductSpace = () => navigate('/productSpace')
+
+    useEffect(async () => {
+        if (localStorage.getItem('idUser') != "") {
+            try {
+                const resultAction = await dispatch(getAccountWithID(localStorage.getItem('idUser')))
+                const originalPromiseResult = unwrapResult(resultAction)
+                console.log(originalPromiseResult)
+                setNumberItemsInCart(originalPromiseResult.cart.length)
+                dispatch(cartSlice.actions.cartListChange(originalPromiseResult))
+                // handle result here
+            } catch (rejectedValueOrSerializedError) {
+                if (rejectedValueOrSerializedError != null) {
+                    console.log("Load User Failed")
+                }
+            }
+        }
+        else {
+            dispatch(JSON.parse(localStorage.getItem('cart')).length)
+            setNumberItemsInCart(JSON.parse(localStorage.getItem('cart')).length)
+        }
+    }, [])
 
     const brandList = [
         {
@@ -41,7 +69,7 @@ const HomePage = () => {
     ]
     return (
         <div >
-            <NavBar ></NavBar>
+            <NavBar numberCart={numberItemsInCart}></NavBar>
             <BrandNavBar brandLine={brandList} ></BrandNavBar>
             <Slider></Slider>
             <FeatureImage

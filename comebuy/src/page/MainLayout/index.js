@@ -41,7 +41,9 @@ const MainLayout = props => {
   const ItemClick = async (e) => {
     if (e.target.innerText == 'Log Out') {
       dispatch(accountSlice.actions.logout())
-      localStorage.setItem('role', null)
+      localStorage.setItem('role', '')
+      localStorage.setItem('idUser', '')
+      localStorage.setItem('cart', JSON.stringify([]));
       navigate("/")
       return
     }

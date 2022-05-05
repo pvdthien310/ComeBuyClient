@@ -29,7 +29,7 @@ const CustomerPlace = () => {
 
     return (
         <div style={{ height: '100%', width: '100%' }}>
-            <NavBar></NavBar>
+            <NavBar numberCart={JSON.parse(localStorage.getItem('cart')).length} ></NavBar>
             <div style={{ height: '100%', width: '100%' }}>
                 <Stack
                     direction={{ xs: 'column', sm: 'row' }}

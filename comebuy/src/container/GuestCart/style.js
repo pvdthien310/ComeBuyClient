@@ -46,14 +46,13 @@ const style = {
         boxShadow: 10,
     },
     boxShopInfo: {
-        height: 'auto',
-        width: '70%',
+        height: '30%',
+        width: '90%',
         padding: 4,
         alignSelf: 'center',
         backgroundColor: 'white',
         borderRadius: '10px',
         m:4,
-        
         boxShadow: 10,
     },
     boxDes: {
