@@ -2,7 +2,7 @@ import { Button, Grid, Stack, Typography } from "@mui/material";
 import { Box } from "@mui/system";
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { BreadCrumb, FeatureSelect, FilterColumn, NavBar, ProductItem, SnackBarAlert } from "../../components";
+import { BreadCrumb, FeatureSelect, FilterColumn, NavBar, ProductItem, SearchBar, SnackBarAlert } from "../../components";
 import { getAllProduct } from "../../redux/slices/productSlice";
 import FilterListIcon from '@mui/icons-material/FilterList';
 import { getAllFeature } from "../../redux/slices/featureSlice";
@@ -70,7 +70,7 @@ const ProductSpace = () => {
         Filter()
     }, [filterOptions, currentFeature])
 
-    
+
     const handleClose = (event, reason) => {
         if (reason === 'clickaway')
             return;
@@ -121,6 +121,12 @@ const ProductSpace = () => {
                     </Grid>
                     <Grid item xs={9} sx={{ p: 2 }}>
                         <Stack>
+                            {
+                                productList.length > 0 &&
+                                <Stack SX={{width:'100%'}}>
+                                    <SearchBar productList={productList} />
+                                </Stack>
+                            }
                             <Typography variant="h6" fontWeight={'bold'} sx={{ alignSelf: 'center', m: 1 }}>Our Product</Typography>
                             <Box sx={{ backgroundColor: '#C69AD9', height: 5, width: '100%' }}></Box>
                             <Stack direction={"row"} flexWrap={"wrap"} sx={{ alignSelf: 'center', m: 2, justifyContent: 'center', alignItems: 'center' }}>
