@@ -24,6 +24,7 @@ export const cartSlice = createSlice({
     reducers: {
         cartListChange: (state, action) => {
             state.cartList = action.payload;
+            localStorage.setItem('cart',JSON.stringify(action.payload))
         },
         cartLoadingChange: (state, action) => {
             state.loading = action.payload;

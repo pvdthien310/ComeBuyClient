@@ -242,7 +242,7 @@ const CustomerCart = () => {
   return (
 
     <Container>
-      <NavBar numberCart={JSON.parse(localStorage.getItem('cart')).length}/>
+      <NavBar />
       <Stack direction="row"
         spacing={3}
         style={{ marginLeft: '15%', marginTop: '1%' }}

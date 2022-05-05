@@ -24,13 +24,13 @@ const ProductImage = styled('img')({
 
 const GuestCart = () => {
     const _cart = useSelector(cartListSelector)
-    const { id } = useParams()
     const [cart, setCart] = useState(_cart)
     const [error, setError] = useState(null)
+    console.log(cart)
 
     return (
         <Stack sx={{ width: '100%', height: '100%' }}>
-            <NavBar numberCart={_cart.length}></NavBar>
+            <NavBar></NavBar>
             <Stack sx={{ pt: 2, pl: 2 }}>
                 <BreadCrumb />
             </Stack>
@@ -40,7 +40,7 @@ const GuestCart = () => {
                     {
                         cart.length > 0 ?
                             cart.map((item) => (
-                                <Typography>{item.name}</Typography>
+                                <Typography variant='h6'>{item.productid}</Typography>
                             )) :
                             <Stack sx={{height: '100%', width: '100%'}}>
                                 <Typography variant='h6'>There is nothing product in your cart!</Typography>

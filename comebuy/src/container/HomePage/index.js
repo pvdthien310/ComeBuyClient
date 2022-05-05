@@ -17,10 +17,9 @@ import { unwrapResult } from '@reduxjs/toolkit'
 import { cartSlice } from './../../redux/slices/cartSlice'
 
 const HomePage = () => {
-
     const navigate = useNavigate()
     const dispatch = useDispatch()
-    const [numberItemsInCart, setNumberItemsInCart] = useState(JSON.parse(localStorage.getItem('cart')).length)
+    // const [numberItemsInCart, setNumberItemsInCart] = useState(JSON.parse(localStorage.getItem('cart')).length)
 
     const navigateToProductSpace = () => navigate('/productSpace')
 
@@ -29,9 +28,7 @@ const HomePage = () => {
             try {
                 const resultAction = await dispatch(getAccountWithID(localStorage.getItem('idUser')))
                 const originalPromiseResult = unwrapResult(resultAction)
-                console.log(originalPromiseResult)
-                setNumberItemsInCart(originalPromiseResult.cart.length)
-                dispatch(cartSlice.actions.cartListChange(originalPromiseResult))
+                dispatch(cartSlice.actions.cartListChange(originalPromiseResult.cart))
                 // handle result here
             } catch (rejectedValueOrSerializedError) {
                 if (rejectedValueOrSerializedError != null) {
@@ -40,8 +37,8 @@ const HomePage = () => {
             }
         }
         else {
-            dispatch(JSON.parse(localStorage.getItem('cart')).length)
-            setNumberItemsInCart(JSON.parse(localStorage.getItem('cart')).length)
+            const value = JSON.parse(localStorage.getItem('cart'))
+            dispatch(cartSlice.actions.cartListChange(value))
         }
     }, [])
 
@@ -68,8 +65,8 @@ const HomePage = () => {
         }
     ]
     return (
-        <div >
-            <NavBar numberCart={numberItemsInCart}></NavBar>
+        <div>
+            <NavBar></NavBar>
             <BrandNavBar brandLine={brandList} ></BrandNavBar>
             <Slider></Slider>
             <FeatureImage

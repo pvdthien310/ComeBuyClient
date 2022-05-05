@@ -17,7 +17,7 @@ import MoreIcon from '@mui/icons-material/MoreVert';
 import logo from './../../assets/img/logo.png';
 import { useNavigate } from 'react-router-dom'
 import { useSelector, useDispatch } from 'react-redux'
-import { currentUser, isSignedIn_user } from './../../redux/selectors'
+import { cartListSelector, currentUser, isSignedIn_user } from './../../redux/selectors'
 import { accountSlice } from './../../redux/slices/accountSlice'
 import ShoppingCartIcon from '@mui/icons-material/ShoppingCart';
 import { Button } from "@mui/material";
@@ -76,10 +76,12 @@ export default function NavBar(props) {
     // const _isSignedIn = useSelector(isSignedIn_user)
     const _currentUser = useSelector(currentUser)
     let isSignedIn = (localStorage.getItem('role') !== '') ? true : false
+    const _cart = useSelector(cartListSelector)
 
     const navigate = useNavigate()
     const dispatch = useDispatch()
 
+    const [numberCart, setNumberCart] = useState(JSON.parse(localStorage.getItem('cart')).length)
     const [anchorEl, setAnchorEl] = useState(null);
     const [mobileMoreAnchorEl, setMobileMoreAnchorEl] = useState(null);
 
@@ -88,6 +90,10 @@ export default function NavBar(props) {
 
     const selections_1 = ['Sign In']
     const selections_2 = ['My place', 'Log Out']
+
+    useEffect(() => {
+        setNumberCart(_cart.length)
+    })
 
     const handleLogin = () => {
         navigate('/login')
@@ -238,7 +244,7 @@ export default function NavBar(props) {
                     {
                         (localStorage.getItem('role') == 'customer' || localStorage.getItem('role') == '') &&
                         <CartButton onClick={()=> navigate('/guestCart')} variant="contained" endIcon={<ShoppingCartIcon />}>
-                            {props.numberCart}
+                            {numberCart}
                         </CartButton>
                     }
                     <Box sx={{ display: { xs: 'none', md: 'flex' } }}>

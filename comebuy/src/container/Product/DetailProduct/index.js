@@ -29,6 +29,9 @@ import ChangeCircleIcon from '@mui/icons-material/ChangeCircle';
 import AddTaskIcon from '@mui/icons-material/AddTask';
 import InfoIcon from '@mui/icons-material/Info';
 import LocalPhoneIcon from '@mui/icons-material/LocalPhone';
+import { cartListSelector } from '../../../redux/selectors.js';
+import { useDispatch, useSelector } from 'react-redux';
+import { cartSlice } from '../../../redux/slices/cartSlice.js';
 
 
 const ProductImage = styled('img')({
@@ -41,6 +44,8 @@ const ProductImage = styled('img')({
 
 
 const DetailProduct = () => {
+    const dispatch = useDispatch()
+    const _cart = useSelector(cartListSelector)
     const { id } = useParams()
     const [product, setProduct] = useState(null)
     const [error, setError] = useState(null)
@@ -56,6 +61,38 @@ const DetailProduct = () => {
 
     }
 
+    const handleAddToCart = () => {
+        let isExisted = false
+        let newCart = [..._cart]
+        if (localStorage.getItem('idUser') == '') {
+            newCart = newCart.map((item) => {
+                console.log(item)
+                console.log(product)
+                if (item.productid == product.productID) {
+                    console.log(item.amount)
+                    isExisted = true
+                    return {
+                        "productid": product.productID,
+                        "amount": item['amount'] + 1
+                    }
+                }
+                else return item
+            })
+            dispatch(cartSlice.actions.cartListChange(newCart))
+        }
+        if (!isExisted) {
+           
+            newCart = [...newCart, {
+                "productid": product.productID,
+                "amount": 1
+            }]
+            console.log(newCart)
+            dispatch(cartSlice.actions.cartListChange(newCart))
+        }
+        
+    }
+
+
     useEffect(() => {
         LoadData()
         return () => setProduct({})
@@ -63,7 +100,7 @@ const DetailProduct = () => {
 
     return (
         <Stack sx={{ width: '100%', height: '100%' }}>
-            <NavBar></NavBar>
+            <NavBar ></NavBar>
             <Stack sx={{ pt: 2, pl: 2 }}>
                 <BreadCrumb />
             </Stack>
@@ -252,10 +289,10 @@ const DetailProduct = () => {
                                             <Chip label="New Seal" color="success" variant="outlined" />
                                         </Stack>
                                     </Box>
-                                    <Button variant="filled" sx={{ color: 'white', backgroundColor: '#D92365', p: 1, mt: 2 }} startIcon={<AddTaskIcon />}>
+                                    <Button onClick={handleAddToCart} variant="filled" sx={{ color: 'white', backgroundColor: '#D92365', p: 1, mt: 2 }} startIcon={<AddTaskIcon />}>
                                         Add To Cart
                                     </Button>
-                                    <Button variant="filled" sx={{ p: 1, mt: 2, backgroundColor: 'black',color: 'white' }} startIcon={<LocalPhoneIcon />}>
+                                    <Button variant="filled" sx={{ p: 1, mt: 2, backgroundColor: 'black', color: 'white' }} startIcon={<LocalPhoneIcon />}>
                                         Hotline 0834344655
                                     </Button>
                                 </Stack>

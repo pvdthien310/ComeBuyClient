@@ -112,7 +112,7 @@ const ProductSpace = () => {
     return (
         <div style={{ width: '100%', height: '100%' }}>
             <Stack sx={{ width: '100%', height: '100%' }}>
-                <NavBar numberCart={_cart.length}></NavBar>
+                <NavBar ></NavBar>
                 <Stack sx={{ pt: 2, pl: 2 }}>
                     <BreadCrumb />
                 </Stack>
