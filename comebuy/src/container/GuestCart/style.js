@@ -35,13 +35,13 @@ const style = {
         position: 'sticky',
         top: '10%',
         bottom: '10%',
-        height: '30%',
+        height: 'auto',
         width: '100%',
         padding: 4,
-        // alignSelf: 'center',
+        alignSelf: 'center',
         backgroundColor: 'white',
         marginBottom: '20px',
-        marginRight: '5%',
+        marginRight: '7%',
         borderRadius: '10px',
         boxShadow: 10,
     },
@@ -100,6 +100,14 @@ const style = {
         paddingBottom : 1,
         paddingLeft: 5,
         paddingRight: 5,
+    },
+    buttonCheckout : {
+        backgroundColor:'#B360A0',
+        color : 'white',
+        '&:hover': {
+            backgroundColor:'#B360F0',
+            color : 'white',
+        }
     }
 
 };

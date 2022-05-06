@@ -44,7 +44,7 @@ const CartButton = styled(Button)(({ theme }) => ({
     backgroundColor: '#B360E6',
     color: 'white',
     '&:hover': {
-        backgroundColor: '#BF0404',
+        backgroundColor: '#B360A0',
     }
 }));
 
@@ -74,6 +74,7 @@ const StyledInputBase = styled(InputBase)(({ theme }) => ({
 
 export default function NavBar(props) {
     // const _isSignedIn = useSelector(isSignedIn_user)
+    console.log(props.hiddenCartLabel)
     const _currentUser = useSelector(currentUser)
     let isSignedIn = (localStorage.getItem('role') !== '') ? true : false
     const _cart = useSelector(cartListSelector)
@@ -242,8 +243,8 @@ export default function NavBar(props) {
                     </Search>
                     <Box sx={{ flexGrow: 1 }} />
                     {
-                        (localStorage.getItem('role') == 'customer' || localStorage.getItem('role') == '') &&
-                        <CartButton onClick={()=> navigate('/guestCart')} variant="contained" endIcon={<ShoppingCartIcon />}>
+                        (localStorage.getItem('role') == 'customer' || localStorage.getItem('role') == '' && props.hiddenCartLabel != false) &&
+                        <CartButton onClick={() => navigate('/guestCart')} variant="contained" endIcon={<ShoppingCartIcon />}>
                             {numberCart}
                         </CartButton>
                     }

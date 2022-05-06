@@ -14,7 +14,7 @@ const CustomButton = styled(Button)({
     width: '100%',
     borderRadius: '5px',
     borderWidth: '3px',
-    marginBottom: '5px',
+    marginBottom: '20px',
     paddingLeft: 20,
     paddingRight: 20,
 
@@ -56,7 +56,7 @@ const BoxShopInfo = () => {
                             <Stack sx={{ width: '100%', p: 4 }} spacing={2}>
                                 <InfoIcon />
                                 <Typography variant="h6" fontWeight={'bold'}>Useful Information</Typography>
-                                <Grid container xs={12}>
+                                <Grid container item xs={12}>
                                     <Grid container item xs={6} sx={{ p: 2 }}>
                                         <Stack spacing={2} >
                                             <CustomButton startIcon={<LocalPhoneIcon />}>Hotline : 0939.888</CustomButton>
@@ -82,7 +82,7 @@ const BoxShopInfo = () => {
                             <Stack sx={{ width: '100%', p: 4 }} spacing={2}>
                                 <InfoIcon />
                                 <Typography variant="h6" fontWeight={'bold'}>Contact Information</Typography>
-                                <Grid container xs={12}>
+                                <Grid container item xs={12}>
                                     <Grid container item xs={6} sx={{ p: 2 }}>
                                         <Stack spacing={2} >
                                             <CustomButton startIcon={<LocalPhoneIcon />}>Hotline : 0939.888</CustomButton>
