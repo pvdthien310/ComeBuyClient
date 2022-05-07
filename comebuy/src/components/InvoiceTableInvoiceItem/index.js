@@ -39,24 +39,24 @@ export default function TableInvoiceItem({ list, total }) {
 
     return (
         <>
-            <table width="100%" className="mb-10">
+            <table width="100%" style={{ marginLeft: '1.5rem', marginTop: '1.5rem' }}>
                 <thead>
-                    <tr style={{ backgroundColor: 'gray' }}>
-                        <td style={{ fontWeight: 'bold', fontSize: '15px', fontFamily: 'serif' }}>Description</td>
-                        <td style={{ fontWeight: 'bold', fontSize: '15px', fontFamily: 'serif' }}>Quantity</td>
-                        <td style={{ fontWeight: 'bold', fontSize: '15px', fontFamily: 'serif' }}>Price</td>
-                        <td style={{ fontWeight: 'bold', fontSize: '15px', fontFamily: 'serif' }}>Amount</td>
+                    <tr style={{ marginRight: '2rem' }}>
+                        <td style={{ letterSpacing: '0.1rem', fontSize: '14px', color: 'grey' }}>Description</td>
+                        <td style={{ letterSpacing: '0.1rem', fontSize: '14px', color: 'grey' }}>Quantity</td>
+                        <td style={{ letterSpacing: '0.1rem', fontSize: '14px', color: 'grey' }}>Price</td>
+                        <td style={{ letterSpacing: '0.1rem', fontSize: '14px', color: 'grey' }}>Amount</td>
                     </tr>
                 </thead>
                 {listProduct.map((p) => (
                     <React.Fragment>
                         <tbody>
                             <tr>
-                                <td style={{ fontFamily: 'serif' }}>{p.name}</td>
+                                <td style={{ fontSize: '13px' }}>{p.name}</td>
                                 {
                                     list.map((i) => (
                                         p.productID === i.productid ? (
-                                            <td style={{ fontFamily: 'serif' }}>{i.amount}</td>
+                                            <td style={{ fontFamily: 'serif', display: 'flex', justifyContent: 'center', fontSize: '13px' }}>{i.amount}</td>
                                         ) : (
                                             null
                                         )

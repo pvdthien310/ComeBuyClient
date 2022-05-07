@@ -162,7 +162,7 @@ const TableForm = ({
           onChange={(e) => setQuantity(e.target.value)}
           variant="outlined"
         />
-        <Button variant="contained" color="success" onClick={handleSubmit}>
+        <Button variant="contained" sx={{ backgroundColor: '#0ABF04' }} onClick={handleSubmit}>
           Add  To Table Item
         </Button>
       </Stack>
@@ -171,21 +171,21 @@ const TableForm = ({
 
       <table width="100%">
         <thead>
-          <tr style={{ backgroundColor: 'grey' }}>
-            <td style={{ fontWeight: 'bold', fontFamily: 'serif', fontSize: '18px' }}>Product</td>
-            <td style={{ fontWeight: 'bold', fontFamily: 'serif', fontSize: '18px' }}>Quantity</td>
-            <td style={{ fontWeight: 'bold', fontFamily: 'serif', fontSize: '18px' }}>Price</td>
-            <td style={{ fontWeight: 'bold', fontFamily: 'serif', fontSize: '18px' }} className="amount">Amount</td>
+          <tr style={{ backgroundColor: '#F2F2F2' }}>
+            <td style={{ fontWeight: 'bold', fontSize: '17px' }}>Product</td>
+            <td style={{ fontWeight: 'bold', fontSize: '17px' }}>Quantity</td>
+            <td style={{ fontWeight: 'bold', fontSize: '17px' }}>Price</td>
+            <td style={{ fontWeight: 'bold', fontSize: '17px' }} className="amount">Amount</td>
           </tr>
         </thead>
         {list.map(({ id, description, quantity, price, amount }) => (
           <React.Fragment key={id}>
             <tbody>
               <tr className="h-10">
-                <td style={{ fontFamily: 'serif', fontSize: '16px' }}>{description}</td>
-                <td style={{ fontFamily: 'serif', fontSize: '16px' }}>{quantity}</td>
-                <td style={{ fontFamily: 'serif', fontSize: '16px' }}>💸{price}</td>
-                <td style={{ fontFamily: 'serif', fontSize: '16px' }} className="amount">💸{amount}</td>
+                <td style={{ fontSize: '16px' }}>{description}</td>
+                <td style={{ fontSize: '16px' }}>{quantity}</td>
+                <td style={{ fontSize: '16px' }}>💸{price}</td>
+                <td style={{ fontSize: '16px' }} className="amount">💸{amount}</td>
                 <td>
                   <button onClick={() => editRow(id)}>
                     <AiOutlineEdit style={{ color: 'green' }} className="text-green-500 font-bold text-xl" />
@@ -203,7 +203,7 @@ const TableForm = ({
       </table>
 
       <div>
-        <h2 style={{ fontFamily: 'serif', fontSize: '30px', display: 'flex', justifyContent: 'flex-end' }} >
+        <h2 style={{ fontSize: '30px', display: 'flex', justifyContent: 'flex-end' }} >
           Cost. {
             total
           } USD

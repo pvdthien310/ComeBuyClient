@@ -1,26 +1,9 @@
+import { Typography } from "@mui/material"
+
 const Dates = ({ invoiceDate, dueDate }) => {
   return (
     <>
-      <article style={{
-        display: 'flex',
-        justifyContent: 'flex-end',
-        justifyItems: 'flex-end'
-      }}>
-        <ul>
-          <li style={{ backgroundColor: 'gray' }}>
-            <span style={{
-              fontFamily: 'serif',
-              fontWeight: 'bold'
-            }}>Invoice date:</span> {invoiceDate}
-          </li>
-          <li>
-            <span style={{
-              fontFamily: 'serif',
-              fontWeight: 'bold'
-            }}>Due date:</span> {dueDate}
-          </li>
-        </ul>
-      </article>
+      <Typography sx={{ marginTop: '-7%', fontSize: '13px', marginLeft: '3.5rem', color: 'grey' }}>{invoiceDate}</Typography>
     </>
   )
 }

@@ -1,27 +1,32 @@
 import { Stack, Typography } from "@mui/material";
 
-const MainDetails = ({ name, address }) => {
+const MainDetails = ({ name, address, contact }) => {
   return (
     <div style={{
       width: '100%',
-      display: 'flex',
-      justifyContent: 'flex-end',
-      flexDirection: 'column'
+      marginRight: '2rem',
     }}>
       <Typography
         style={{
-          fontSize: '20px',
+          fontSize: '14px',
           fontWeight: 'bold',
-          fontFamily: 'serif',
           alignSelf: 'flex-end'
         }}
       >
-        {name} - at ComeBuy branch
+        Staff: {name}
       </Typography>
       <Typography
         style={{
-          fontSize: '16px',
-          fontFamily: 'serif',
+          fontSize: '14px',
+          fontWeight: 'bold',
+          alignSelf: 'flex-end'
+        }}
+      >
+        Staff phone: {contact}
+      </Typography>
+      <Typography
+        style={{
+          fontSize: '14px',
           fontStyle: 'italic',
           alignSelf: 'flex-end'
         }}

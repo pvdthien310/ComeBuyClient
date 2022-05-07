@@ -1,9 +1,7 @@
 const Notes = ({ notes }) => {
   return (
     <>
-      <section style={{ marginTop: '0%' }}>
-        <p style={{ fontFamily: 'serif', fontWeight: 'bold' }}>Note: {notes}</p>
-      </section>
+      <p style={{ marginLeft: '3rem', color: 'grey', fontSize: '14px', fontWeight: 'bold' }}>Note: {notes}</p>
     </>
   )
 }
