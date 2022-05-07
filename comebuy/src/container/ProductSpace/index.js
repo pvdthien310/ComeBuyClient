@@ -66,6 +66,13 @@ const ProductSpace = () => {
         setFilterOptions(newFilterOptions)
     }
 
+    const FilterByPrice = (prices) => {
+        let newProductList = productList.filter(ite => (ite.price >= Number(prices[0]) && ite.price <= Number(prices[1])))
+        setProductList(newProductList)
+        setMessageSuccess("Filter Product Successfully")
+        setOpenSuccessAlert(true)
+    }
+
     useEffect(() => {
         Filter()
     }, [filterOptions, currentFeature])
@@ -105,7 +112,6 @@ const ProductSpace = () => {
         setCurrentFeature(
             typeof value === 'string' ? value.split(',') : value,
         );
-
     };
 
     return (
@@ -117,13 +123,13 @@ const ProductSpace = () => {
                 </Stack>
                 <Grid container sx={{ width: '100%', height: '100%', mt: 2 }} spacing={2}>
                     <Grid item xs={3} sx={{ p: 2, backgroundColor: '#C69AD9' }}>
-                        <FilterColumn handleFeatureChosen={handleFeatureChosen} product={_productList} handleFilter={handleFilter} />
+                        <FilterColumn FilterByPrice={FilterByPrice} handleFeatureChosen={handleFeatureChosen} product={_productList} handleFilter={handleFilter} />
                     </Grid>
                     <Grid item xs={9} sx={{ p: 2 }}>
                         <Stack>
                             {
                                 productList.length > 0 &&
-                                <Stack sx={{width:'100%'}}>
+                                <Stack sx={{ width: '100%' }}>
                                     <SearchBar productList={productList} />
                                 </Stack>
                             }

@@ -103,6 +103,14 @@ export default function NavBar(props) {
         navigate('/myplace')
     }
 
+    const navigateToCart = () => {
+        if (localStorage.getItem('role') == '')
+            navigate('/guestCart')
+        else if (localStorage.getItem('role') == 'customer') {
+            navigate('/myplace/mycart')
+        }
+    }
+
     const handleProfileMenuOpen = (event) => {
         setAnchorEl(event.currentTarget);
     };
@@ -243,7 +251,7 @@ export default function NavBar(props) {
                     <Box sx={{ flexGrow: 1 }} />
                     {
                         (localStorage.getItem('role') == 'customer' || localStorage.getItem('role') == '' && props.hiddenCartLabel != false) &&
-                        <CartButton onClick={() => navigate('/guestCart')} variant="contained" endIcon={<ShoppingCartIcon />}>
+                        <CartButton onClick={navigateToCart} variant="contained" endIcon={<ShoppingCartIcon />}>
                             {numberCart}
                         </CartButton>
                     }

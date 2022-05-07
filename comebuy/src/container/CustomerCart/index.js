@@ -242,7 +242,7 @@ const CustomerCart = () => {
   return (
 
     <Container>
-      <NavBar />
+      <NavBar hiddenCartLabel={false} />
       <Stack direction="row"
         spacing={3}
         style={{ marginLeft: '15%', marginTop: '1%' }}
