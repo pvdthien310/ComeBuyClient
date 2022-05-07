@@ -14,16 +14,18 @@ import { useSelector } from 'react-redux'
 import NavBar from './../../components/NavBar/NavBar';
 
 import { currentUser } from './../../redux/selectors'
+import { BigFooter } from '../../components';
 
 
 const CustomerPlace = () => {
 
-    const _currentUser = useSelector(currentUser)
     const navigate = useNavigate()
     const gotoProfile = () => {
         navigate('/profile')
     }
-
+    const gotoCart = () => {
+        navigate('/myplace/mycart')
+    }
 
     return (
         <div style={{ height: '100%', width: '100%' }}>
@@ -78,7 +80,7 @@ const CustomerPlace = () => {
                             </CardContent>
                         </CardActionArea>
                         <CardActions style={{ justifyContent: 'flex-end' }}>
-                            <Button style={{ color: 'white', fontWeight: 'bold' }} endIcon={<NavigateNextIcon />}>
+                            <Button onClick={gotoCart} style={{ color: 'white', fontWeight: 'bold' }} endIcon={<NavigateNextIcon />}>
                                 Go to
                             </Button>
                         </CardActions>
@@ -135,6 +137,7 @@ const CustomerPlace = () => {
                     </Card>
                 </Stack>
             </div>
+            <BigFooter />
         </div>
 
     )

@@ -19,7 +19,7 @@ const ImgFeatureLine = styled('img')(({ theme }) => ({
     bottom: 0,
     right: 0,
     position: 'absolute',
-    
+
 
     [theme.breakpoints.down('sm')]: {
         display: 'none',
@@ -34,7 +34,7 @@ const Container = styled(Grid)(({ theme }) => ({
     justifyContent: 'top',
     alignItems: 'center',
     flexDirection: 'column',
-    backgroundColor:'white'
+    backgroundColor: 'white'
 }))
 
 const Text = styled(Typography)(({ theme }) => ({
@@ -47,13 +47,13 @@ const Text = styled(Typography)(({ theme }) => ({
     display: 'flex',
 }))
 const SmallText = styled(Typography)(({ theme }) => ({
-    
+
     color: 'darkgrey',
     zIndex: '3',
     height: 100,
     fontSize: '20px',
     fontWeight: 'bold',
-    
+
 }))
 
 const CustomButton = styled(Button)(({ theme }) => ({
@@ -72,8 +72,8 @@ export default function FeatureImage(props) {
     return (
         <Container>
             <ImgFeatureLine src={props.urlImage}></ImgFeatureLine>
-            <Text item xs={12} >{props.BigText}</Text>
-            <SmallText item xs={12}>{props.SmallText}</SmallText>
+            <Text xs={12} >{props.BigText}</Text>
+            <SmallText xs={12}>{props.SmallText}</SmallText>
             <CustomButton endIcon={<ArrowRightIcon />} onClick={props.onNavigate}>See More</CustomButton>
         </Container>
     )

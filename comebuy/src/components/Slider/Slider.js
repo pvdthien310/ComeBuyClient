@@ -20,6 +20,9 @@ const Slider = () => {
             .catch((rejectedValueOrSerializedError) => {
                 console.log("Error load product")
             })
+            return () => {
+                setProductList({})
+            }
     }, [])
 
     return (

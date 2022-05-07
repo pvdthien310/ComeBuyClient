@@ -69,7 +69,7 @@ export const getAccountWithEmail = createAsyncThunk(
     if (!response) {
       return false
     } else {
-      return response.data
+      return response
     }
   }
 )
@@ -171,16 +171,12 @@ export const accountSlice = createSlice({
     },
     [getAccountWithEmail.pending]: (state, action) => {
       state.loading = true
-      state.isRegSuccess = false
     },
     [getAccountWithEmail.fulfilled]: (state, action) => {
       state.loading = false;
-      state.isRegSuccess = true;
     },
     [getAccountWithEmail.rejected]: (state, action) => {
       state.loading = false;
-      state.error = action.payload.message;
-      state.isRegSuccess = false;
     },
     [updateAccount.pending]: (state) => {
       state.loading = true;

@@ -44,6 +44,8 @@ export { default as ProdInfo } from './InvoiceProdInfo'
 export { default as Row } from './InvoiceRow'
 export { default as TableInvoiceItem } from './InvoiceTableInvoiceItem'
 export { default as ProfileManage } from './ProfileManage'
+export { default as ForgotPasswordInLogin } from './ForgotPasswordInLogin'
+export { default as BigFooter } from './BigFooter'
 
 
 

@@ -34,6 +34,7 @@ const FilterColumn = (props) => {
         setCurrentFeature(
             typeof value === 'string' ? value.split(',') : value,
         );
+        props.handleFeatureChosen(event)
     };
     return (
         <Stack sx={{ backgroundColor: '#C69AD9', justifyContent:'center' }}>

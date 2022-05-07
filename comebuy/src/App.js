@@ -11,6 +11,7 @@ import { currentUser } from './redux/selectors';
 import { useSelector } from 'react-redux';
 import { customerMenuItems, customerRoutes } from './route/CustomerRoutes';
 import GuestLayout from './page/GuestLayout';
+import { ForgotPasswordInLogin } from './components';
 
 function App() {
   const role = localStorage.getItem('role');
@@ -48,6 +49,7 @@ function App() {
     <Routes>
       <Route path="*" element={renderRoutes()} />
       <Route path="login" element={<LoginRegister />} />
+      <Route path="/forgetpasswordinlogin" element={<ForgotPasswordInLogin />} />
     </Routes>
   );
 }

@@ -21,6 +21,7 @@ import { unwrapResult } from '@reduxjs/toolkit'
 import { login } from '../../redux/slices/accountSlice';
 import { useNavigate } from 'react-router';
 import ProfileManage from './../../components/ProfileManage/index';
+import { BigFooter } from '../../components';
 
 const BGImg = styled('img')({
     height: '100%',
