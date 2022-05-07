@@ -113,6 +113,8 @@ const TableForm = ({
             } else {
               setDescription(newValue);
               setPrice(newValue.price)
+              setCurrentProduct(newValue)
+              setOpenModal(true)
             }
           }}
           filterOptions={(options, params) => {
