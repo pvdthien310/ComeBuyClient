@@ -42,7 +42,6 @@ const ProductSpace = () => {
                 if (containsAll) return true
                 else return false
             })
-            console.log(newProductList)
         }
         const props = Object.getOwnPropertyNames(filterOptions)
         props.forEach((item) => {
@@ -124,7 +123,7 @@ const ProductSpace = () => {
                         <Stack>
                             {
                                 productList.length > 0 &&
-                                <Stack SX={{width:'100%'}}>
+                                <Stack sx={{width:'100%'}}>
                                     <SearchBar productList={productList} />
                                 </Stack>
                             }

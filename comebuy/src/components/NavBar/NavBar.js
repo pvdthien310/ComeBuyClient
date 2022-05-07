@@ -74,7 +74,6 @@ const StyledInputBase = styled(InputBase)(({ theme }) => ({
 
 export default function NavBar(props) {
     // const _isSignedIn = useSelector(isSignedIn_user)
-    console.log(props.hiddenCartLabel)
     const _currentUser = useSelector(currentUser)
     let isSignedIn = (localStorage.getItem('role') !== '') ? true : false
     const _cart = useSelector(cartListSelector)

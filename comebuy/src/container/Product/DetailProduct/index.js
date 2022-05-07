@@ -66,10 +66,7 @@ const DetailProduct = () => {
         let newCart = [..._cart]
         if (localStorage.getItem('idUser') == '') {
             newCart = newCart.map((item) => {
-                console.log(item)
-                console.log(product)
                 if (item.productid == product.productID) {
-                    console.log(item.amount)
                     isExisted = true
                     return {
                         "productid": product.productID,
@@ -86,7 +83,6 @@ const DetailProduct = () => {
                 "productid": product.productID,
                 "amount": 1
             }]
-            console.log(newCart)
             dispatch(cartSlice.actions.cartListChange(newCart))
         }
         

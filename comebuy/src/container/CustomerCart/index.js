@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react'
 import { Add, Remove } from "@material-ui/icons";
 import styled from "styled-components";
 import NavBar from "../../components/NavBar/NavBar";
-import { BigFooter } from '../../components';
+import { BigFooter, ProductInCart } from '../../components';
 import { mobile } from "./responsive";
 
 import { Typography, Link } from '@mui/material';
@@ -18,7 +18,7 @@ import { currentUser } from '../../redux/selectors';
 import { getProductWithID } from '../../redux/slices/productSlice';
 
 const Container = styled.div`
-    background-color: #F2EBDF
+    background-color: white
 `;
 
 const Wrapper = styled.div`
@@ -30,7 +30,7 @@ const Wrapper = styled.div`
 const Title = styled.h1`
   font-weight: 300;
   text-align: center;
-  font-family: serif
+  // font-family: serif
 `;
 
 const Top = styled.div`
@@ -67,7 +67,7 @@ const Bottom = styled.div`
 `;
 
 const Info = styled.div`
-  flex: 3;
+  
 `;
 
 const Product = styled.div`
@@ -131,11 +131,11 @@ const Hr = styled.hr`
 
 const Summary = styled.div`
   flex: 1;
-  border: 0.5px solid lightslategrey;
+  // border: 0.5px solid lightslategrey;
   border-radius: 10px;
   padding: 20px;
   height: 50vh;
-  box-shadow: 10px;
+  box-shadow: 2px 2px 2px 2px;
 `;
 
 const SummaryTitle = styled.h1`
@@ -262,7 +262,7 @@ const CustomerCart = () => {
           <TopButton type="filled">CHECKOUT NOW</TopButton>
         </Top>
         <Bottom>
-          <Info>
+          {/* <Info>
             {cartList.map((p) => (
               <div>
                 <Product>
@@ -313,7 +313,14 @@ const CustomerCart = () => {
                 <Hr />
               </div>
             ))}
-          </Info>
+          </Info> */}
+          <Stack sx={{ m: 2, p: 2 }}>
+            {
+              cartList.map((item, i) => (
+                <ProductInCart key={i} productInCart={item} handleChangeAmount={() => { console.log(item) }}></ProductInCart>
+              ))
+            }
+          </Stack>
           <Summary>
             <SummaryTitle>ORDER SUMMARY</SummaryTitle>
             <SummaryItem>

@@ -15,6 +15,7 @@ import style from './style.js'
 import AddShoppingCartIcon from '@mui/icons-material/AddShoppingCart';
 import { getAllProduct } from '../../redux/slices/productSlice';
 import PaymentsIcon from '@mui/icons-material/Payments';
+import { cartSlice } from '../../redux/slices/cartSlice';
 
 const ProductImage = styled('img')({
     height: 300,
@@ -36,12 +37,43 @@ const GuestCart = () => {
 
     const CountTotal = async (prList) => {
         let newTotal = 0;
-        await cart.map((item) => {
+        await _cart.map((item) => {
             let rs = prList.find((ite) => ite.productID == item.productid)
             if (rs != undefined)
                 newTotal = newTotal + Number(Number(rs.price) * Number(item.amount))
         })
         setTotal(newTotal)
+    }
+
+    const handleChangeAmount = (value, actionType) => {
+        let newCart = [...cart];
+        if (actionType == "increase") {
+            newCart = cart.map((element) => {
+                if (element.productid == value.productID) {
+                    return {
+                        "productid": element.productid,
+                        "amount": Number(element.amount) + 1
+                    }
+                }
+                else return element
+            });
+            dispatch(cartSlice.actions.cartListChange(newCart.filter(item => item != null)))
+
+        }
+        else if (actionType == "decrease") {
+            newCart = cart.map((element) => {
+                if (element.productid == value.productID) {
+                    let rs = Number(element.amount) - 1
+                    if (rs > 0)
+                        return {
+                            "productid": element.productid,
+                            "amount": Number(element.amount) - 1
+                        }
+                }
+                else return element
+            });
+            dispatch(cartSlice.actions.cartListChange(newCart.filter(item => item != null)))
+        }
     }
 
     useEffect(async () => {
@@ -68,7 +100,6 @@ const GuestCart = () => {
         }
     }, [_cart])
 
-
     return (
         <Stack sx={{ width: '100%', height: '100%' }}>
             <NavBar hiddenCartLabel={false}></NavBar>
@@ -86,14 +117,14 @@ const GuestCart = () => {
                                     padding={1}
                                     sx={{ alignItems: 'center', ml: 2, mb: 2 }}>
                                     <AddShoppingCartIcon />
-                                    <Typography  variant='h6' fontWeight='bold'>
+                                    <Typography variant='h6' fontWeight='bold'>
                                         Cart ({cart.length})
                                     </Typography>
                                 </Stack>
                                 {
                                     cart.length > 0 ?
                                         cart.map((item, i) => (
-                                            <ProductInCart key={i} productInCart={item}></ProductInCart>
+                                            <ProductInCart key={i} productInCart={item} handleChangeAmount={handleChangeAmount}></ProductInCart>
                                         )) :
                                         <Stack sx={{ height: '100%', width: '100%' }}>
                                             <Typography variant='h6'>There is nothing product in your cart!</Typography>
