@@ -15,7 +15,7 @@ export const getAllCart = createAsyncThunk(
     }
 );
 
-export const branchSlice = createSlice({
+export const cartSlice = createSlice({
     name: 'cart',
     initialState: {
         cartList: [],
@@ -24,6 +24,7 @@ export const branchSlice = createSlice({
     reducers: {
         cartListChange: (state, action) => {
             state.cartList = action.payload;
+            localStorage.setItem('cart',JSON.stringify(action.payload))
         },
         cartLoadingChange: (state, action) => {
             state.loading = action.payload;

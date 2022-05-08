@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { styled, alpha } from '@mui/material/styles';
 import AppBar from '@mui/material/AppBar';
 import Box from '@mui/material/Box';
@@ -17,8 +17,10 @@ import MoreIcon from '@mui/icons-material/MoreVert';
 import logo from './../../assets/img/logo.png';
 import { useNavigate } from 'react-router-dom'
 import { useSelector, useDispatch } from 'react-redux'
-import { isSignedIn_user } from './../../redux/selectors'
+import { cartListSelector, currentUser, isSignedIn_user } from './../../redux/selectors'
 import { accountSlice } from './../../redux/slices/accountSlice'
+import ShoppingCartIcon from '@mui/icons-material/ShoppingCart';
+import { Button } from "@mui/material";
 
 
 const Search = styled('div')(({ theme }) => ({
@@ -35,6 +37,15 @@ const Search = styled('div')(({ theme }) => ({
         marginLeft: theme.spacing(3),
         width: 'auto',
     },
+}));
+
+const CartButton = styled(Button)(({ theme }) => ({
+    borderRadius: 20,
+    backgroundColor: '#B360E6',
+    color: 'white',
+    '&:hover': {
+        backgroundColor: '#B360A0',
+    }
 }));
 
 const SearchIconWrapper = styled('div')(({ theme }) => ({
@@ -61,12 +72,16 @@ const StyledInputBase = styled(InputBase)(({ theme }) => ({
     },
 }));
 
-export default function NavBar() {
+export default function NavBar(props) {
+    // const _isSignedIn = useSelector(isSignedIn_user)
+    const _currentUser = useSelector(currentUser)
+    let isSignedIn = (localStorage.getItem('role') !== '') ? true : false
+    const _cart = useSelector(cartListSelector)
 
-    const _isSignedIn = useSelector(isSignedIn_user)
     const navigate = useNavigate()
     const dispatch = useDispatch()
 
+    const [numberCart, setNumberCart] = useState(JSON.parse(localStorage.getItem('cart')).length)
     const [anchorEl, setAnchorEl] = useState(null);
     const [mobileMoreAnchorEl, setMobileMoreAnchorEl] = useState(null);
 
@@ -76,6 +91,10 @@ export default function NavBar() {
     const selections_1 = ['Sign In']
     const selections_2 = ['My place', 'Log Out']
 
+    useEffect(() => {
+        setNumberCart(_cart.length)
+    })
+
     const handleLogin = () => {
         navigate('/login')
     }
@@ -84,10 +103,17 @@ export default function NavBar() {
         navigate('/myplace')
     }
 
+    const navigateToCart = () => {
+        if (localStorage.getItem('role') == '')
+            navigate('/guestCart')
+        else if (localStorage.getItem('role') == 'customer') {
+            navigate('/myplace/mycart')
+        }
+    }
+
     const handleProfileMenuOpen = (event) => {
         setAnchorEl(event.currentTarget);
     };
-
 
     const handleMobileMenuClose = () => {
         setMobileMoreAnchorEl(null);
@@ -101,12 +127,13 @@ export default function NavBar() {
             handleLogin();
         else if (e.target.innerText === 'Log Out') {
             dispatch(accountSlice.actions.logout());
-            await localStorage.setItem('role', null)
-            navigate("/")
-        } else {
+            localStorage.setItem('role', '')
+            localStorage.setItem('idUser', '')
+            localStorage.setItem('cart', JSON.stringify([]));
+            navigate(0)
+        } else if (e.target.innerText === 'My place') {
             handleMyPlace();
         }
-
     };
 
     const handleMobileMenuOpen = (event) => {
@@ -117,7 +144,6 @@ export default function NavBar() {
 
     const renderMenu = (
         <Box>
-
             <Menu
                 anchorEl={anchorEl}
                 anchorOrigin={{
@@ -134,7 +160,7 @@ export default function NavBar() {
                 onClose={handleMenuClose}
             >
                 {
-                    !_isSignedIn ?
+                    !isSignedIn ?
                         <div>
                             {selections_1.map((sel) => (
                                 <MenuItem key={sel} onClick={handleMenuClose}>
@@ -209,18 +235,9 @@ export default function NavBar() {
 
     return (
         <Box sx={{ flexGrow: 1 }}>
-
             <AppBar position="static" style={{ backgroundColor: 'black' }}>
                 <Toolbar>
-                    <IconButton
-                        size="large"
-                        edge="start"
-                        color="inherit"
-                        aria-label="open drawer"
-                        sx={{ mr: 2 }}
-                    >
-                        <MenuIcon />
-                    </IconButton>
+
                     <img style={{ height: 50, alignItems: 'center', alignSelf: 'center', top: 50 }} src={logo} alt="logo" />
                     <Search>
                         <SearchIconWrapper>
@@ -232,6 +249,12 @@ export default function NavBar() {
                         />
                     </Search>
                     <Box sx={{ flexGrow: 1 }} />
+                    {
+                        (localStorage.getItem('role') == 'customer' || localStorage.getItem('role') == '' && props.hiddenCartLabel != false) &&
+                        <CartButton onClick={navigateToCart} variant="contained" endIcon={<ShoppingCartIcon />}>
+                            {numberCart}
+                        </CartButton>
+                    }
                     <Box sx={{ display: { xs: 'none', md: 'flex' } }}>
                         <IconButton size="large" aria-label="show 4 new mails" color="inherit">
                             <Badge badgeContent={4} color="error">

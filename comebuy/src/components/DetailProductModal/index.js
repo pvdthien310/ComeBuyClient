@@ -44,12 +44,12 @@ const DetailProductModal = ({ open, product, onClose }) => {
                         <Box sx={style.boxContainer}>
                             <Grid container>
                                 <Grid item xs={11}>
-                                    <Typography item xs={12} color="#152659" id="modal-modal-title" fontWeight='bold' variant="h6" component="h2">
+                                    <Typography item xs={12} color="#2E1534" id="modal-modal-title" fontWeight='bold' variant="h6" component="h2">
                                         {product.name}
                                     </Typography>
                                 </Grid>
                                 <Grid item xs={1}>
-                                    <Typography item xs={12} color="#152659" id="modal-modal-title" fontWeight='bold' variant="h6" component="h2">
+                                    <Typography item xs={12} color="#2E1534" id="modal-modal-title" fontWeight='bold' variant="h6" component="h2">
                                         {"$ " + product.price}
                                     </Typography>
                                 </Grid>
@@ -79,7 +79,7 @@ const DetailProductModal = ({ open, product, onClose }) => {
                             }
                             <Box sx={{
                                 height: 50,
-                                backgroundColor: '#45488C',
+                                backgroundColor: '#2E1534',
                                 width: '100%',
                                 borderRadius: '10px',
                                 boxShadow: 10,

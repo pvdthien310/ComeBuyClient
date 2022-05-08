@@ -29,7 +29,8 @@ const BigFooter = () => {
 
   const logOut = async () => {
     dispatch(accountSlice.actions.logout());
-    await localStorage.setItem('role', null)
+    localStorage.setItem('role', '')
+    localStorage.setItem('cart', JSON.stringify([]));
     navigate("/")
   }
 

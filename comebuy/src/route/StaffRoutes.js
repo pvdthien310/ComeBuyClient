@@ -9,11 +9,6 @@ const staffRoutes = [
     exact: true,
     page: <Invoice />,
   },
-  {
-    name: 'Product Space',
-    path: '/productSpace/*',
-    page: <ProductSpace />,
-  },
 
 ];
 
@@ -22,12 +17,7 @@ const staffMenuItems = [
     name: 'Invoice',
     path: '/invoice/*',
     page: <Invoice />,
-  },
-  {
-    name: 'Product Space',
-    path: '/productSpace/*',
-    page: <ProductSpace />,
-  },]
+  }]
 
 
 

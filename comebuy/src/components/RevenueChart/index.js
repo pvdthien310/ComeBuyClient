@@ -38,11 +38,10 @@ const RevenueChart = (props) => {
     try {
       const response = await invoiceAPI.RevenueByBranch(props.branchID)
       if (response.status == 200) {
-        console.log(response)
         await UpdateProductForData(response.data)
       }
       else
-        console.log(response)
+        console.log("error")
     }
     catch (err) {
       console.log(err)
@@ -52,7 +51,7 @@ const RevenueChart = (props) => {
     try {
       const response = await productAPI.getAll()
       if (response) {
-        console.log(response)
+        
         for (var i = 0; i < data.length; i++) {
           for (var j = 0; j < response.length; j++) {
             if (data[i].name == response[j].productID) {
@@ -65,7 +64,7 @@ const RevenueChart = (props) => {
         setLoading(true)
       }
       else
-        console.log(response.data)
+        console.log("Error")
     }
     catch (err) {
       console.log(err)
@@ -103,7 +102,7 @@ const RevenueChart = (props) => {
         <Box sx={{ width: '100%' }}>
           {
             loading == true ?
-              <Typography>Nothing to Show</Typography> :
+              <Typography variant='h6'>There is nothing to show...</Typography> :
               <Box sx={{ width: '100%' }}>
                 <LinearProgress />
                 <Typography variant='h6' sx={{ alignSelf: 'center', margin: 5 }}>Loading....</Typography>

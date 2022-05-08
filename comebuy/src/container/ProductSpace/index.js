@@ -2,14 +2,15 @@ import { Button, Grid, Stack, Typography } from "@mui/material";
 import { Box } from "@mui/system";
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { BreadCrumb, FeatureSelect, FilterColumn, NavBar, ProductItem, SnackBarAlert } from "../../components";
+import { BreadCrumb, FeatureSelect, FilterColumn, NavBar, ProductItem, SearchBar, SnackBarAlert } from "../../components";
 import { getAllProduct } from "../../redux/slices/productSlice";
 import FilterListIcon from '@mui/icons-material/FilterList';
 import { getAllFeature } from "../../redux/slices/featureSlice";
 import { AirbnbSlider, AirbnbThumbComponent, ExampleSlider, PrettoSlider } from "./style";
-import CustomizedBreadcrumbs from "../../components/BreadCrumb";
-import { productListSelector } from "../../redux/selectors";
+
+import { cartListSelector, productListSelector } from "../../redux/selectors";
 const ProductSpace = () => {
+    const _cart = useSelector(cartListSelector)
     const _productList = useSelector(productListSelector)
     const [productList, setProductList] = useState([])
     const dispatch = useDispatch()
@@ -41,7 +42,6 @@ const ProductSpace = () => {
                 if (containsAll) return true
                 else return false
             })
-            console.log(newProductList)
         }
         const props = Object.getOwnPropertyNames(filterOptions)
         props.forEach((item) => {
@@ -60,30 +60,24 @@ const ProductSpace = () => {
             setProductList(newProductList)
     }
 
-    // const FilterByFeatures = (featuresFilter) => {
-    //     if (featuresFilter.length == 0) return
-    //     let newProductList = _productList
-    //     newProductList = _productList.filter((pr) => {
-    //         const containsAll = pr.feature.every(element => {
-    //             return featuresFilter.includes(element);
-    //           });
-    //         if (containsAll) return true
-    //         else return false
-    //     })
-    //     setProductList(newProductList)
-    // }
-
     const handleFilter = (value) => {
         let newFilterOptions = Object.assign({}, filterOptions);  // Shallow copy for the reference value as object
         newFilterOptions[value.name.toLowerCase()] = value.option
         setFilterOptions(newFilterOptions)
     }
 
+    const FilterByPrice = (prices) => {
+        let newProductList = productList.filter(ite => (ite.price >= Number(prices[0]) && ite.price <= Number(prices[1])))
+        setProductList(newProductList)
+        setMessageSuccess("Filter Product Successfully")
+        setOpenSuccessAlert(true)
+    }
+
     useEffect(() => {
         Filter()
     }, [filterOptions, currentFeature])
 
-    
+
     const handleClose = (event, reason) => {
         if (reason === 'clickaway')
             return;
@@ -118,29 +112,34 @@ const ProductSpace = () => {
         setCurrentFeature(
             typeof value === 'string' ? value.split(',') : value,
         );
-
     };
 
     return (
         <div style={{ width: '100%', height: '100%' }}>
             <Stack sx={{ width: '100%', height: '100%' }}>
-                <NavBar></NavBar>
+                <NavBar ></NavBar>
                 <Stack sx={{ pt: 2, pl: 2 }}>
-                    <CustomizedBreadcrumbs />
+                    <BreadCrumb />
                 </Stack>
                 <Grid container sx={{ width: '100%', height: '100%', mt: 2 }} spacing={2}>
                     <Grid item xs={3} sx={{ p: 2, backgroundColor: '#C69AD9' }}>
-                        <FilterColumn handleFeatureChosen={handleFeatureChosen} product={_productList} handleFilter={handleFilter} />
+                        <FilterColumn FilterByPrice={FilterByPrice} handleFeatureChosen={handleFeatureChosen} product={_productList} handleFilter={handleFilter} />
                     </Grid>
                     <Grid item xs={9} sx={{ p: 2 }}>
                         <Stack>
+                            {
+                                productList.length > 0 &&
+                                <Stack sx={{ width: '100%' }}>
+                                    <SearchBar productList={productList} />
+                                </Stack>
+                            }
                             <Typography variant="h6" fontWeight={'bold'} sx={{ alignSelf: 'center', m: 1 }}>Our Product</Typography>
                             <Box sx={{ backgroundColor: '#C69AD9', height: 5, width: '100%' }}></Box>
                             <Stack direction={"row"} flexWrap={"wrap"} sx={{ alignSelf: 'center', m: 2, justifyContent: 'center', alignItems: 'center' }}>
                                 {
                                     productList.length > 0 &&
                                     productList.map((item, i) => (
-                                        <ProductItem key={i} product={item}></ProductItem>
+                                        <ProductItem key={i} product={item} ></ProductItem>
                                     ))
                                 }
                             </Stack>

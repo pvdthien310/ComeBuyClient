@@ -31,10 +31,10 @@ const GuestLayout = props => {
       <div style={{ height: "80%", width: '100%' }}>
         <Routes>
           {showRoutes(props.routes)}
-          <Route element={
+          {/* <Route element={
             <Navigate replace to={{ pathname: '/' }} />
           }>
-          </Route>
+          </Route> */}
         </Routes>
       </div>
     </div>

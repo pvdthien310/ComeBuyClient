@@ -6,6 +6,7 @@ import CardMedia from '@mui/material/CardMedia';
 import Button from '@mui/material/Button';
 import Typography from '@mui/material/Typography';
 import { Box, CardActionArea, Stack, styled } from '@mui/material';
+import { useNavigate } from "react-router-dom";
 
 const Img = styled('img')({
   margin: 'auto',
@@ -15,9 +16,12 @@ const Img = styled('img')({
 });
 
 const ProductItem = (props) => {
+  const navigate = useNavigate()
+  const handleNavigateToDetail = () => navigate('/productSpace/' + props.product.productID)
+
   return (
     <Card sx={{ width: 300, height: 380, p: 2, m:1, boxShadow: 5 }}>
-      <CardActionArea sx={{height: '100%'}}>
+      <CardActionArea sx={{height: '100%'}} onClick={handleNavigateToDetail}>
         <Img alt="complex"
           src={props.product.productimage[0].imageURL} />
         <CardContent>

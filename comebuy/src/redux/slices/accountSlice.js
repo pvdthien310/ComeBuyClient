@@ -14,7 +14,8 @@ const defaultUser = {
   "bio": "kkk",
   "address": "kk",
   "role": "kk",
-  "sex": "kk"
+  "sex": "kk",
+  "cart": []
 }
 
 export const login = createAsyncThunk(
@@ -29,6 +30,7 @@ export const login = createAsyncThunk(
       const jsonData = await accountApi.getAccountbyEmail(data.email)
       localStorage.setItem('idUser', jsonData.userID);
       localStorage.setItem('role', jsonData.role);
+      localStorage.setItem('cart', JSON.stringify(jsonData.cart));
       return jsonData;
     }
   }
@@ -54,7 +56,7 @@ export const getAccountWithID = createAsyncThunk(
   'account/findOne',
   async (data, { rejectedWithValue }) => {
     const response = await accountApi.getAccountWithID(data)
-    if (!response) {
+    if (response.status != 200) {
       return rejectedWithValue(" Find account failed")
     } else {
       return response.data
@@ -157,10 +159,11 @@ export const accountSlice = createSlice({
       state.errorMessage = action.payload;
     },
     [getAccountWithID.pending]: (state, action) => {
-      state.loading = true
-      state.isRegSuccess = false
+      state.loading = true;
+      state.isRegSuccess = false;
     },
     [getAccountWithID.fulfilled]: (state, action) => {
+      state.user = action.payload;
       state.loading = false;
       state.isRegSuccess = true;
     },

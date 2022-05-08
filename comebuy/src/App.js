@@ -12,6 +12,7 @@ import { useSelector } from 'react-redux';
 import { customerMenuItems, customerRoutes } from './route/CustomerRoutes';
 import GuestLayout from './page/GuestLayout';
 import { ForgotPasswordInLogin } from './components';
+import { guestMenuItems, guestRoutes } from './route/GuestRoutes';
 
 function App() {
   const role = localStorage.getItem('role');
@@ -38,7 +39,7 @@ function App() {
         case 'customer':
           return <GuestLayout routes={customerRoutes} itemRoutes={customerMenuItems} />;
         default:
-          return <HomePage />; // Guest/Customer 
+          return <GuestLayout routes={guestRoutes} itemRoutes={guestMenuItems} />; // Guest/Customer 
       }
     }
     return <HomePage />

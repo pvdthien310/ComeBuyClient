@@ -2,7 +2,7 @@
 import { BrandNavBar, Slider, NavBar, BrandLine, FeatureBar } from '../../components'
 import { styled } from '@mui/material/styles';
 import { Grid } from '@mui/material';
-import Typography from '@mui/material/Typography';
+import {Typography} from '@mui/material';
 import Button from '@mui/material/Button';
 import ArrowRightIcon from '@mui/icons-material/ArrowRight';
 

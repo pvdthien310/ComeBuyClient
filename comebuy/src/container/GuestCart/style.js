@@ -1,16 +1,23 @@
+import { StickyNote2 } from "@mui/icons-material";
+
 const style = {
     boxContainer: {
-        position: 'absolute',
-        top: '50%',
-        left: '50%',
-        transform: 'translate(-50%, -50%)',
-        width: 1000,
+        // transform: 'translate(-50%, -50%)',
+        width: '95%',
         bgcolor: 'background.paper',
+        padding: 4,
+        maxHeight: '100%',
+        height: 'auto'
+    },
+    boxInfor1: {
+        height: 'auto',
+        alignSelf: 'center',
+        backgroundColor: 'white',
+        marginTop: '10px',
+        marginBottom: '20px',
         borderRadius: '10px',
-        boxShadow: 24,
-        p: 4,
-        overflowY: 'scroll',
-        maxHeight: 700,
+        boxShadow: 10,
+        padding: 2,
 
     },
     boxInfor: {
@@ -23,6 +30,30 @@ const style = {
         boxShadow: 10,
         padding: 2,
 
+    },
+    boxHandle: {
+        position: 'sticky',
+        top: '10%',
+        bottom: '10%',
+        height: 'auto',
+        width: '100%',
+        padding: 4,
+        alignSelf: 'center',
+        backgroundColor: 'white',
+        marginBottom: '20px',
+        marginRight: '7%',
+        borderRadius: '10px',
+        boxShadow: 10,
+    },
+    boxShopInfo: {
+        height: '30%',
+        width: '90%',
+        padding: 4,
+        alignSelf: 'center',
+        backgroundColor: 'white',
+        borderRadius: '10px',
+        m:4,
+        boxShadow: 10,
     },
     boxDes: {
         height: 'auto',
@@ -48,7 +79,7 @@ const style = {
     boxInfor_Line: {
         height: 5,
         width: '100%',
-        backgroundColor: '#2E1534',
+        backgroundColor: '#B360E6',
         marginTop: '10px',
         marginBottom: '10px'
 
@@ -56,7 +87,7 @@ const style = {
     boxinfor_Stack_Line: {
         height: 3,
         width: '100%',
-        backgroundColor: '#2E1534',
+        backgroundColor: '#B360E6',
         marginTop: '10px',
         marginBottom: '20px'
     },
@@ -64,11 +95,19 @@ const style = {
         marginBottom: 2,
         alignSelf: 'center',
         borderRadius: 5,
-        backgroundColor: '#2E1534',
+        backgroundColor: '#9D4DE8',
         paddingTop : 1,
         paddingBottom : 1,
         paddingLeft: 5,
         paddingRight: 5,
+    },
+    buttonCheckout : {
+        backgroundColor:'#B360A0',
+        color : 'white',
+        '&:hover': {
+            backgroundColor:'#B360F0',
+            color : 'white',
+        }
     }
 
 };

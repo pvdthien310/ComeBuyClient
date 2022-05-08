@@ -46,6 +46,11 @@ export { default as TableInvoiceItem } from './InvoiceTableInvoiceItem'
 export { default as ProfileManage } from './ProfileManage'
 export { default as ForgotPasswordInLogin } from './ForgotPasswordInLogin'
 export { default as BigFooter } from './BigFooter'
+export { default as BoxShopInfo } from './BoxShopInfo'
+export { default as SearchBar } from './SearchBar'
+export { default as ProductInCart } from './ProductInCart'
+
+
 
 
 

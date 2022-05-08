@@ -23,23 +23,15 @@ const BreadCrumb = () => {
                     href="/"
                 >
                     <HomeIcon sx={{ mr: 0.5 }} fontSize="inherit" />
-                    MUI
+                    Home
                 </Link>
-                <Link
-                    underline="hover"
-                    sx={{ display: 'flex', alignItems: 'center' }}
-                    color="secondary"
-                    href="/"
-                >
-                    <WhatshotIcon sx={{ mr: 0.5 }} fontSize="inherit" />
-                    Core
-                </Link>
+               
                 <Typography
                     sx={{ display: 'flex', alignItems: 'center' }}
                     color="secondary"
                 >
                     <GrainIcon sx={{ mr: 0.5 }} fontSize="inherit" />
-                    Breadcrumb
+                    Product Place
                 </Typography>
             </Breadcrumbs>
         </div>
