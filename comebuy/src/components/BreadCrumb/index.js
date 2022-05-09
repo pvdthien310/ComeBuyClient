@@ -14,7 +14,7 @@ const BreadCrumb = () => {
         // navigate('/')
     }
     return (
-        <div role="presentation"  onClick={handleClick}>
+        <div role="presentation" onClick={handleClick}>
             <Breadcrumbs aria-label="breadcrumb">
                 <Link
                     underline="hover"
@@ -25,7 +25,6 @@ const BreadCrumb = () => {
                     <HomeIcon sx={{ mr: 0.5 }} fontSize="inherit" />
                     Home
                 </Link>
-               
                 <Typography
                     sx={{ display: 'flex', alignItems: 'center' }}
                     color="secondary"
