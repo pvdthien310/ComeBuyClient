@@ -2,23 +2,29 @@ import { Typography } from "@mui/material"
 const ClientDetails = ({ clientName, clientAddress }) => {
   return (
     <div style={{
-      width: '100%',
-      display: 'flex',
-      flexDirection: 'column'
+      marginLeft: '3rem',
+      maxWidth: '100%'
     }}>
       <Typography
         style={{
-          fontSize: '20px',
+          fontSize: '13px',
+          color: 'grey',
+          letterSpacing: '1px'
+        }}
+      >
+        BILL TO
+      </Typography>
+      <Typography
+        style={{
+          fontSize: '14px',
           fontWeight: 'bold',
-          fontFamily: 'serif',
         }}
       >
         {clientName}
       </Typography>
       <Typography
         style={{
-          fontSize: '16px',
-          fontFamily: 'serif',
+          fontSize: '14px',
           fontStyle: 'italic',
         }}
       >

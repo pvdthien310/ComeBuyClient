@@ -1,17 +1,13 @@
 const Header = ({ handlePrint }) => {
   return (
     <>
-      <header style={{ display: 'flex', justifyContent: 'center' }}>
-        <div>
-          <h1 style={{
-            fontWeight: 'bold',
-            fontSize: '35px',
-            // fontFamily: 'serif'
-          }}>
-            ComeBuy Invoicer
-          </h1>
-        </div>
-      </header>
+      <h1 style={{
+        fontWeight: 'bold',
+        fontSize: '30px',
+        marginLeft: '3rem'
+      }}>
+        INVOICE
+      </h1>
     </>
   )
 }

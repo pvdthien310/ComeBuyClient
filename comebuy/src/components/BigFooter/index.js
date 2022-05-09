@@ -9,14 +9,11 @@ import {
 } from "@material-ui/icons";
 
 import styled from "styled-components";
-import { mobile } from "../../container/CustomerCart/responsive";
 import { useNavigate } from "react-router";
 import { useDispatch } from 'react-redux';
-import { Link } from "@material-ui/core";
 
 import { accountSlice } from "../../redux/slices/accountSlice";
-// import { styled } from "@mui/material";
-import { Typography } from '@mui/material';
+import { Typography, Link } from '@mui/material';
 
 
 const BigFooter = () => {

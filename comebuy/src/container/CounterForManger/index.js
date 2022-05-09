@@ -10,6 +10,7 @@ import TablePrint from "../../components/CounterTablePrint"
 import TableForm from "../../components/CounterTableForm"
 import { currentUser } from "../../redux/selectors"
 import { getAllBranch } from "../../redux/slices/branchSlice"
+import logo from '../../assets/img/logo.png'
 
 import ReactToPrint from "react-to-print"
 import { Stack, Grid, Box, Typography, TextField, Button, IconButton } from '@mui/material';
@@ -18,6 +19,7 @@ import TextareaAutosize from '@mui/material/TextareaAutosize';
 import { styled } from '@mui/material/styles';
 import { useSelector, useDispatch } from "react-redux"
 import { unwrapResult } from "@reduxjs/toolkit"
+import { BigFooter } from "../../components"
 
 const BGImg = styled('img')({
     height: '100%',
@@ -41,7 +43,7 @@ const CounterForManager = () => {
     const [invoiceDate, setInvoiceDate] = useState(String(new Date().getDate()).padStart(2, '0') + '/' + String(new Date().getMonth() + 1).padStart(2, '0') + '/' + new Date().getFullYear())
     const [dueDate, setDueDate] = useState("")
     const [notes, setNotes] = useState("")
-    const [description, setDescription] = useState("")
+    const [description, setDescription] = useState(null)
     const [quantity, setQuantity] = useState("")
     const [price, setPrice] = useState("")
     const [amount, setAmount] = useState("")
@@ -89,18 +91,19 @@ const CounterForManager = () => {
             sx={{
                 width: '100%',
                 height: '100%',
-                p: 2
+                p: 2,
+                position: 'relative'
             }}
             spacing={1}
         >
             <BGImg style={{ zIndex: -1 }} src='https://images.unsplash.com/photo-1490810194309-344b3661ba39?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1448&q=80' />
             <Grid item xs={7}
                 sx={{
-                    height: '100%',
+                    height: 'auto',
                     width: '100%'
                 }}
             >
-                <Stack sx={{ height: '107%', width: '92%' }} >
+                <Stack sx={{ height: 'auto', width: '92%' }} >
                     <Box flexDirection="column" sx={{
                         backgroundColor: 'white',
                         p: 2, height: '100%',
@@ -114,19 +117,16 @@ const CounterForManager = () => {
                         <Stack direction="row" padding="2%" width='100%' spacing={2}>
                             <Typography
                                 sx={{
-                                    fontSize: '20px',
-                                    fontWeight: 'bold',
-                                    fontFamily: 'serif'
+                                    fontSize: '18px',
+                                    fontWeight: 'bold'
                                 }}
                             >
                                 {name}
                             </Typography>
                             <Typography
                                 sx={{
-                                    fontSize: '20px',
+                                    fontSize: '18px',
                                     fontStyle: 'italic',
-                                    textDecoration: 'underline',
-                                    fontFamily: 'serif'
                                 }}
                             >
                                 at ComeBuy store:
@@ -141,8 +141,7 @@ const CounterForManager = () => {
                             <Typography
                                 sx={{
                                     fontWeight: 'bold',
-                                    fontSize: '20px',
-                                    fontFamily: 'serif',
+                                    fontSize: '18px',
                                     textDecoration: 'underline'
                                 }}
                             >
@@ -150,8 +149,7 @@ const CounterForManager = () => {
                             </Typography>
                             <Typography
                                 sx={{
-                                    fontSize: '20px',
-                                    fontFamily: 'serif',
+                                    fontSize: '18px',
                                     fontStyle: 'italic'
                                 }}
                             >
@@ -160,8 +158,7 @@ const CounterForManager = () => {
                             <Typography
                                 sx={{
                                     fontWeight: 'bold',
-                                    fontSize: '20px',
-                                    fontFamily: 'serif',
+                                    fontSize: '18px',
                                     textDecoration: 'underline'
                                 }}
                             >
@@ -169,8 +166,7 @@ const CounterForManager = () => {
                             </Typography>
                             <Typography
                                 sx={{
-                                    fontSize: '20px',
-                                    fontFamily: 'serif',
+                                    fontSize: '18px',
                                     fontStyle: 'italic'
                                 }}
                             >
@@ -183,8 +179,7 @@ const CounterForManager = () => {
                                 <Typography
                                     sx={{
                                         fontWeight: 'bold',
-                                        fontSize: '20px',
-                                        fontFamily: 'serif',
+                                        fontSize: '18px',
                                         textDecoration: 'underline'
                                     }}
                                 >
@@ -194,7 +189,7 @@ const CounterForManager = () => {
                                     label="Name"
                                     value={clientName}
                                     onChange={(e) => setClientName(e.target.value)}
-                                    sx={{ width: '85%', fontFamily: 'serif' }}
+                                    sx={{ width: '85%' }}
                                 />
                             </Stack>
 
@@ -202,8 +197,7 @@ const CounterForManager = () => {
                                 <Typography
                                     sx={{
                                         fontWeight: 'bold',
-                                        fontSize: '20px',
-                                        fontFamily: 'serif',
+                                        fontSize: '18px',
                                         textDecoration: 'underline'
                                     }}
                                 >
@@ -236,9 +230,8 @@ const CounterForManager = () => {
                         />
                         <Typography
                             style={{
-                                fontSize: '20px',
+                                fontSize: '18px',
                                 fontWeight: 'bold',
-                                fontFamily: 'serif',
                             }}
                         >
                             Additional notes
@@ -254,7 +247,6 @@ const CounterForManager = () => {
                                 maxWidth: "90%",
                                 width: '90%',
                                 alignSelf: 'center',
-                                fontFamily: 'serif',
                                 fontSize: '18px',
                                 marginTop: '2%',
                                 borderRadius: '15px',
@@ -262,21 +254,27 @@ const CounterForManager = () => {
                                 maxHeight: '100px'
                             }}
                         />
-                        <IconButton onClick={AfterPrint} sx={{ backgroundColor: 'transparent', width: '100%', height: "50px", alignSelf: 'center' }}>
+                        <IconButton onClick={AfterPrint}
+                            sx={{
+                                backgroundColor: 'transparent',
+                                width: '15%',
+                                height: "auto",
+                                marginLeft: '45%'
+                            }}>
                             <BackspaceSharpIcon color="error" sx={{ backgroundColor: 'transparent' }} />
-                            <Typography sx={{ marginLeft: '1%', fontFamily: 'serif', fontWeight: 'bold' }}>Clear</Typography>
+                            <Typography sx={{ marginLeft: '1%', fontWeight: 'bold' }}>Clear</Typography>
                         </IconButton>
-
                     </Box>
-                </Stack>
-            </Grid>
+                </Stack >
+            </Grid >
 
-            <Grid item xs={5} padding="3%">
-                <Stack sx={{ height: '105%', width: '100%' }} >
+            <Grid item xs={5} sx={{ padding: "5%" }}>
+                <Stack sx={{ height: 'auto', width: '100%' }} >
                     <Box sx={{
-                        backgroundColor: '#F2F2F2', p: 2,
+                        backgroundColor: 'white', p: 2,
                         height: '100%',
                         width: '100%',
+                        padding: "5%",
                         boxShadow: 5,
                         borderRadius: 10,
                         marginTop: '3%',
@@ -285,18 +283,50 @@ const CounterForManager = () => {
                         justifyContent: 'center',
                     }}
                     >
-                        <Stack ref={componentRef} direction="column" width="100%">
-                            <Header handlePrint={handlePrint} />
-                            <MainDetails name={name} address={_currentUser.branch.address} />
-                            <ClientDetails
-                                clientName={clientName}
-                                clientAddress={clientAddress}
-                            />
-
-                            <Dates
-                                invoiceDate={invoiceDate}
-                                dueDate={dueDate}
-                            />
+                        <Stack ref={componentRef} sx={{ paddingTop: '3rem' }} direction="column" width="100%">
+                            <Stack direction="row" width="100%" sx={{ marginRight: '2rem', backgroundColor: 'grey' }}>
+                                <Stack direction="column" width="100%">
+                                    <Header handlePrint={handlePrint} />
+                                    <Dates
+                                        invoiceDate={invoiceDate}
+                                        dueDate={dueDate}
+                                    />
+                                </Stack>
+                                <Stack direction="column" width="100%">
+                                    <h1
+                                        style={{
+                                            fontSize: '30px',
+                                            fontWeight: 'bold',
+                                            letterSpacing: '0.1rem',
+                                            marginTop: '1.2rem'
+                                        }}
+                                    >
+                                        ComeBuy
+                                    </h1>
+                                    <Typography
+                                        sx={{
+                                            marginTop: '-7%',
+                                            fontSize: '13px',
+                                            color: 'grey',
+                                            marginLeft: '2rem'
+                                        }}
+                                    >
+                                        invoice at branch
+                                    </Typography>
+                                </Stack>
+                            </Stack>
+                            {/* <div style={{ height: '0.5px', backgroundColor: 'grey', marginLeft: '3rem', marginRight: '3rem' }}> </div> */}
+                            <Stack direction="row" width="100%" sx={{ marginRight: '2rem', marginTop: '1.5rem', backgroundColor: 'grey' }}>
+                                <Stack width="50%">
+                                    <ClientDetails
+                                        clientName={clientName}
+                                        clientAddress={clientAddress}
+                                    />
+                                </Stack>
+                                <Stack>
+                                    <MainDetails contact={phone} name={name} address={_currentUser.branch.address} />
+                                </Stack>
+                            </Stack>
 
                             <TablePrint
                                 description={description}
@@ -310,7 +340,7 @@ const CounterForManager = () => {
                             />
 
                             <Notes notes={notes} />
-                            <div style={{ height: '1px', width: '100%', backgroundColor: 'black' }}></div>
+                            <div style={{ marginLeft: '2rem', marginRight: '2rem', height: '1px', backgroundColor: 'grey' }}></div>
                             <Footer
                                 name={name}
                                 address={_currentUser.branch.address}
@@ -320,7 +350,7 @@ const CounterForManager = () => {
                         </Stack>
                         <ReactToPrint
                             trigger={() => (
-                                <Button style={{ marginTop: '5%' }} variant="outlined">
+                                <Button style={{ marginLeft: '30%', marginTop: '5%', width: '40%' }} variant="outlined">
                                     Print / Download
                                 </Button>
                             )}
@@ -330,6 +360,7 @@ const CounterForManager = () => {
                     </Box>
                 </Stack>
             </Grid>
+            <BigFooter />
         </Grid >
     )
 }

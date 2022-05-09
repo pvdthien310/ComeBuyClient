@@ -397,7 +397,7 @@ const Row = (props) => {
                     borderRadius: 10,
                 }}
                 >
-                    <Stack ref={componentRef} direction="column" width="100%">
+                    {/* <Stack ref={componentRef} direction="column" width="100%">
                         <Header handlePrint={handlePrint} />
                         <MainDetails name={"Printed by " + _currentUser.name}
                             address={"ComeBuy Store"} />
@@ -418,6 +418,64 @@ const Row = (props) => {
 
                         <Notes notes="Online" />
                         <div style={{ height: '1px', width: '100%', backgroundColor: 'black' }}></div>
+                        <Footer
+                            name={"Printed by " + _currentUser.name}
+                            address={"ComeBuy Store"}
+                            email={"Printer Email: " + _currentUser.email}
+                            phone={"Printer phone: " + _currentUser.phoneNumber}
+                        />
+                    </Stack> */}
+                    <Stack ref={componentRef} sx={{ paddingTop: '3rem' }} direction="column" width="100%">
+                        <Stack direction="row" width="100%" sx={{ marginRight: '2rem', backgroundColor: 'grey' }}>
+                            <Stack direction="column" width="100%">
+                                <Header handlePrint={handlePrint} />
+                                <Dates
+                                    invoiceDate={row.date}
+                                />
+                            </Stack>
+                            <Stack direction="column" width="100%">
+                                <h1
+                                    style={{
+                                        fontSize: '30px',
+                                        fontWeight: 'bold',
+                                        letterSpacing: '0.1rem',
+                                        marginTop: '1.2rem'
+                                    }}
+                                >
+                                    ComeBuy
+                                </h1>
+                                <Typography
+                                    sx={{
+                                        marginTop: '-7%',
+                                        fontSize: '13px',
+                                        color: 'grey',
+                                        marginLeft: '2rem'
+                                    }}
+                                >
+                                    invoice at branch
+                                </Typography>
+                            </Stack>
+                        </Stack>
+                        {/* <div style={{ height: '0.5px', backgroundColor: 'grey', marginLeft: '3rem', marginRight: '3rem' }}> </div> */}
+                        <Stack direction="row" width="100%" sx={{ marginRight: '2rem', marginTop: '1.5rem', backgroundColor: 'grey' }}>
+                            <Stack width="50%">
+                                <ClientDetails
+                                    clientName={row.account.name}
+                                    clientAddress={row.account.address}
+                                />
+                            </Stack>
+                            <Stack>
+                                <MainDetails contact={_currentUser.phoneNumber} name={"Printed by " + _currentUser.name}
+                                    address={"ComeBuy Store"} />
+                            </Stack>
+                        </Stack>
+
+                        <TableInvoiceItem
+                            list={row.invoiceitem}
+                            total={invoiceTotal}
+                        />
+                        <Notes notes="Online" />
+                        <div style={{ marginLeft: '2rem', marginRight: '2rem', height: '1px', backgroundColor: 'grey' }}></div>
                         <Footer
                             name={"Printed by " + _currentUser.name}
                             address={"ComeBuy Store"}
