@@ -35,7 +35,6 @@ const CounterForManager = () => {
     const [listBranch, setListBranch] = useState([])
 
     const [name, setName] = useState(_currentUser.name)
-    const [address, setAddress] = useState("")
     const [email, setEmail] = useState(_currentUser.email)
     const [phone, setPhone] = useState(_currentUser.phoneNumber)
     const [clientName, setClientName] = useState("")
@@ -132,11 +131,10 @@ const CounterForManager = () => {
                             >
                                 at ComeBuy store:
                             </Typography>
-                            <TextField
-                                label="Branch address"
-                                onChange={(e) => setAddress(e.target.value)}
-                                sx={{ width: 'auto', height: 'auto' }}
-                            />
+                            <Typography 
+                                variant='h6'
+                                sx={{ width: 'auto', fontFamily: 'serif', height: 'auto' }}
+                            >{_currentUser.branch.address}</Typography>
                         </Stack>
 
                         <Stack direction="row" paddingLeft="2%" width='100%' spacing={2} sx={{ marginTop: '-2%' }}>
@@ -326,7 +324,7 @@ const CounterForManager = () => {
                                     />
                                 </Stack>
                                 <Stack>
-                                    <MainDetails contact={phone} name={name} address={address} />
+                                    <MainDetails contact={phone} name={name} address={_currentUser.branch.address} />
                                 </Stack>
                             </Stack>
 
@@ -345,7 +343,7 @@ const CounterForManager = () => {
                             <div style={{ marginLeft: '2rem', marginRight: '2rem', height: '1px', backgroundColor: 'grey' }}></div>
                             <Footer
                                 name={name}
-                                address={address}
+                                address={_currentUser.branch.address}
                                 email={email}
                                 phone={phone}
                             />
