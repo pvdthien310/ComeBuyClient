@@ -15,7 +15,11 @@ const defaultUser = {
   "address": "kk",
   "role": "kk",
   "sex": "kk",
-  "cart": []
+  "cart": [],
+  'branch': {
+    "branchid" : '123455',
+    "address": "Loading...."
+  }
 }
 
 export const login = createAsyncThunk(

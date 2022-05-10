@@ -23,7 +23,7 @@ import DescriptionIcon from '@mui/icons-material/Description';
 import { useParams } from 'react-router';
 import { useEffect, useState } from "react";
 import productAPI from '../../../api/productAPI';
-import { FeatureChart, NavBar, TechInforLine, BreadCrumb, BoxShopInfo } from '../../../components';
+import { FeatureChart, NavBar, TechInforLine, BreadCrumb, BoxShopInfo, BigFooter } from '../../../components';
 import DoneIcon from '@mui/icons-material/Done';
 import ChangeCircleIcon from '@mui/icons-material/ChangeCircle';
 import AddTaskIcon from '@mui/icons-material/AddTask';
@@ -32,6 +32,7 @@ import LocalPhoneIcon from '@mui/icons-material/LocalPhone';
 import { cartListSelector } from '../../../redux/selectors.js';
 import { useDispatch, useSelector } from 'react-redux';
 import { cartSlice } from '../../../redux/slices/cartSlice.js';
+import ProductComment from '../../../components/ProductComment/index.js';
 
 
 const ProductImage = styled('img')({
@@ -299,15 +300,9 @@ const DetailProduct = () => {
                         }
                     </Box>
                 </Grid>
-                {/* <Grid container item xs={12} sx={style.boxShopInfo}>
-                    <Grid container item xs={8} >
-                        <Stack>
-                            <Typography variant='h6' fontWeight={'bold'}>Shop with confidence with Comebuy</Typography>
-                        </Stack>
-                    </Grid>
-                    <Grid container item xs={4}></Grid>  
-                </Grid> */}
                 <BoxShopInfo></BoxShopInfo>
+                <ProductComment productID={id}></ProductComment>
+                <BigFooter/>
             </Grid>
         </Stack>
     )

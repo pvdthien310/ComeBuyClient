@@ -14,7 +14,6 @@ const CustomButton = styled(Button)({
     width: '100%',
     borderRadius: '5px',
     borderWidth: '3px',
-    marginBottom: '20px',
     paddingLeft: 20,
     paddingRight: 20,
 
@@ -69,32 +68,6 @@ const BoxShopInfo = () => {
                                         <Stack spacing={2}>
                                             <CustomButton startIcon={<LocalShippingIcon />}>Delivery and Payment</CustomButton>
                                             <CustomButton startIcon={<AttachMoneyIcon />}>Service Cost</CustomButton>
-                                            <CustomButton startIcon={<LocalPhoneIcon />}>Hotline : 0939.888</CustomButton>
-                                        </Stack>
-                                    </Grid>
-                                </Grid>
-                            </Stack>
-                        </Grid>
-                        <Grid container xs={12} item>
-                            <Box sx={{ height: 3, width: '90%', backgroundColor: 'black', mt: 4, ml: 4, mr: 4 }}></Box>
-                        </Grid>
-                        <Grid container xs={12} item>
-                            <Stack sx={{ width: '100%', p: 4 }} spacing={2}>
-                                <InfoIcon />
-                                <Typography variant="h6" fontWeight={'bold'}>Contact Information</Typography>
-                                <Grid container item xs={12}>
-                                    <Grid container item xs={6} sx={{ p: 2 }}>
-                                        <Stack spacing={2} >
-                                            <CustomButton startIcon={<LocalPhoneIcon />}>Hotline : 0939.888</CustomButton>
-                                            <CustomButton startIcon={<StoreMallDirectoryIcon />}>Chain Stores</CustomButton>
-                                            <CustomButton startIcon={<LocalPhoneIcon />}>Hotline : 0939.888</CustomButton>
-                                        </Stack>
-
-                                    </Grid>
-                                    <Grid container item xs={6} sx={{ p: 2 }}>
-                                        <Stack spacing={2}>
-                                            <CustomButton startIcon={<LocalShippingIcon />}>Delivery and Payment</CustomButton>
-                                            <CustomButton startIcon={<LocalPhoneIcon />}></CustomButton>
                                             <CustomButton startIcon={<LocalPhoneIcon />}>Hotline : 0939.888</CustomButton>
                                         </Stack>
                                     </Grid>

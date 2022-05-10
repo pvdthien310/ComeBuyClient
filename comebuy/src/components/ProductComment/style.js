@@ -52,7 +52,7 @@ const style = {
         alignSelf: 'center',
         backgroundColor: 'white',
         borderRadius: '10px',
-        m:4,
+        m: 4,
         boxShadow: 10,
     },
     boxComment: {
@@ -62,8 +62,9 @@ const style = {
         alignSelf: 'center',
         backgroundColor: 'white',
         borderRadius: '10px',
-        m:4,
+        m: 4,
         boxShadow: 10,
+       
     },
     boxDes: {
         height: 'auto',
@@ -106,10 +107,21 @@ const style = {
         alignSelf: 'center',
         borderRadius: 5,
         backgroundColor: '#9D4DE8',
-        paddingTop : 1,
-        paddingBottom : 1,
+        paddingTop: 1,
+        paddingBottom: 1,
         paddingLeft: 5,
         paddingRight: 5,
+    },
+    modal: {
+        position: 'absolute',
+        top: '50%',
+        left: '50%',
+        transform: 'translate(-50%, -50%)',
+        width: 700,
+        bgcolor: 'background.paper',
+        borderRadius: 5,
+        boxShadow: 24,
+        p: 4,
     }
 
 };
