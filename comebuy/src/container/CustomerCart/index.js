@@ -136,6 +136,7 @@ const Summary = styled.div`
   padding: 20px;
   height: 50vh;
   box-shadow: 2px 2px 2px 2px;
+  margin-top: 3%
 `;
 
 const SummaryTitle = styled.h1`
