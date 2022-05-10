@@ -20,6 +20,7 @@ import { styled } from '@mui/material/styles';
 import { useSelector, useDispatch } from "react-redux"
 import { unwrapResult } from "@reduxjs/toolkit"
 import { BigFooter } from "../../components"
+import { getAccountWithID } from '../../redux/slices/accountSlice';
 
 const BGImg = styled('img')({
     height: '100%',
@@ -50,6 +51,25 @@ const CounterForManager = () => {
     const [list, setList] = useState([])
     const [total, setTotal] = useState(0)
     const [width] = useState(641)
+
+
+    const LoadData = async () => {
+        try {
+            const resultAction = await dispatch(getAccountWithID(localStorage.getItem('idUser')))
+            const originalPromiseResult = unwrapResult(resultAction)
+            setName(originalPromiseResult.name)
+            setEmail(originalPromiseResult.email)
+            setPhone(originalPromiseResult.phoneNumber)
+        } catch (rejectedValueOrSerializedError) {
+            console.log("Load user Failed")
+        }   
+    }
+
+    useEffect(() => {
+        if (_currentUser.userID == "00000000-0000-0000-0000-000000000000")
+            LoadData()
+    }, [])
+ 
 
     const componentRef = useRef()
 
@@ -92,11 +112,12 @@ const CounterForManager = () => {
                 width: '100%',
                 height: '100%',
                 p: 2,
-                position: 'relative'
+                position: 'relative',
+                backgroundColor: '#9D4DE8'
             }}
             spacing={1}
         >
-            <BGImg style={{ zIndex: -1 }} src='https://images.unsplash.com/photo-1490810194309-344b3661ba39?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1448&q=80' />
+            {/* <BGImg style={{ zIndex: -1 }} src='https://images.unsplash.com/photo-1490810194309-344b3661ba39?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1448&q=80' /> */}
             <Grid item xs={7}
                 sx={{
                     height: 'auto',
@@ -131,7 +152,7 @@ const CounterForManager = () => {
                             >
                                 at ComeBuy store:
                             </Typography>
-                            <Typography 
+                            <Typography
                                 variant='h6'
                                 sx={{ width: 'auto', fontFamily: 'serif', height: 'auto' }}
                             >{_currentUser.branch.address}</Typography>

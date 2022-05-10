@@ -25,6 +25,16 @@ const BreadCrumb = () => {
                     <HomeIcon sx={{ mr: 0.5 }} fontSize="inherit" />
                     Home
                 </Link>
+                <Link
+                    underline="hover"
+                    sx={{ display: 'flex', alignItems: 'center' }}
+                    color="secondary"
+                    href="/productSpace"
+                >
+                    <HomeIcon sx={{ mr: 0.5 }} fontSize="inherit" />
+                    ProductSpace
+                </Link>
+               
                 <Typography
                     sx={{ display: 'flex', alignItems: 'center' }}
                     color="secondary"
