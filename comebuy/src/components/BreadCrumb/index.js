@@ -14,7 +14,7 @@ const BreadCrumb = () => {
         // navigate('/')
     }
     return (
-        <div role="presentation"  onClick={handleClick}>
+        <div role="presentation" onClick={handleClick}>
             <Breadcrumbs aria-label="breadcrumb">
                 <Link
                     underline="hover"

@@ -503,9 +503,9 @@ const ProfileManage = () => {
                     </Typography>
                 </Stack>
                 <IconButton onClick={handleOpenModalChangeName}
-                    style={{ marginTop: '0%', marginLeft: '5%', backgroundColor: '#F2EBDF' }}
+                    sx={{ marginLeft: '5%', backgroundColor: '#F2EBDF', height: 'auto' }}
                 >
-                    <EditTwoToneIcon style={{ color: 'black' }} />
+                    <EditTwoToneIcon sx={{ color: 'black' }} />
                 </IconButton>
             </Stack>
 

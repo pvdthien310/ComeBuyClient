@@ -15,6 +15,9 @@ import { ForgotPasswordInLogin } from './components';
 import { guestMenuItems, guestRoutes } from './route/GuestRoutes';
 
 function App() {
+  // if (localStorage.getItem('cart') === 'undefined') {
+  //   localStorage.setItem('cart', JSON.stringify([]))
+  // }
   const role = localStorage.getItem('role');
   const navigate = useNavigate()
 

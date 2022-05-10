@@ -81,6 +81,7 @@ export default function NavBar(props) {
     const navigate = useNavigate()
     const dispatch = useDispatch()
 
+
     const [numberCart, setNumberCart] = useState(JSON.parse(localStorage.getItem('cart')).length)
     const [anchorEl, setAnchorEl] = useState(null);
     const [mobileMoreAnchorEl, setMobileMoreAnchorEl] = useState(null);
