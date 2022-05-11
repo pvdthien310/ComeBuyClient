@@ -7,6 +7,7 @@ import CustomerPlace from './../container/CustomerPlace/index';
 import DetailProduct from '../container/Product/DetailProduct';
 import { ForgotPassword } from '../components';
 import CustomerCart from '../container/CustomerCart';
+import { CheckoutPage } from '../container/Checkout';
 
 const customerRoutes = [
   {
@@ -44,6 +45,11 @@ const customerRoutes = [
     path: '/myplace/mycart',
     page: <CustomerCart />,
   },
+  {
+    name: 'Check out cart',
+    path: '/myplace/mycart/checkout',
+    page: <CheckoutPage />
+  }
 ];
 
 const customerMenuItems = []

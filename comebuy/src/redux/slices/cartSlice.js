@@ -15,6 +15,30 @@ export const getAllCart = createAsyncThunk(
     }
 );
 
+export const updateCart = createAsyncThunk(
+    'cart/updateCart',
+    async (data, { rejectedWithValue }) => {
+        const response = await cartApi.updateCart(data)
+        if (!response) {
+            return rejectedWithValue("Updated failed !")
+        } else {
+            return response
+        }
+    }
+);
+
+export const deleteCartById = createAsyncThunk(
+    'cart/deleteCartById',
+    async (data, { rejectedWithValue }) => {
+        const response = await cartApi.deleteCartById(data)
+        if (!response) {
+            return rejectedWithValue("Deleted failed !")
+        } else {
+            return response
+        }
+    }
+);
+
 export const cartSlice = createSlice({
     name: 'cart',
     initialState: {
@@ -24,7 +48,7 @@ export const cartSlice = createSlice({
     reducers: {
         cartListChange: (state, action) => {
             state.cartList = action.payload;
-            localStorage.setItem('cart',JSON.stringify(action.payload))
+            localStorage.setItem('cart', JSON.stringify(action.payload))
         },
         cartLoadingChange: (state, action) => {
             state.loading = action.payload;
@@ -44,6 +68,32 @@ export const cartSlice = createSlice({
         },
         [getAllCart.rejected]: (state, action) => {
             state.loading = false;
+        },
+        [updateCart.pending]: (state) => {
+            state.loading = true;
+            console.log(" pending...");
+        },
+        [updateCart.fulfilled]: (state, action) => {
+            state.loading = false;
+            console.log("fulfilled...");
+        },
+        [updateCart.rejected]: (state, action) => {
+            state.loading = false;
+            state.errorMessage = action.payload;
+            console.log("rejected: " + state.errorMessage);
+        },
+        [deleteCartById.pending]: (state) => {
+            state.loading = true;
+            console.log(" pending...");
+        },
+        [deleteCartById.fulfilled]: (state, action) => {
+            state.loading = false;
+            console.log("fulfilled...");
+        },
+        [deleteCartById.rejected]: (state, action) => {
+            state.loading = false;
+            state.errorMessage = action.payload;
+            console.log("rejected: " + state.errorMessage);
         },
     }
 })

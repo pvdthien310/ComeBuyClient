@@ -11,7 +11,7 @@ import Backdrop from '@mui/material/Backdrop';
 import CircularProgress from '@mui/material/CircularProgress';
 
 import { useNavigate } from 'react-router';
-import { getAllCart } from './../../redux/slices/cartSlice';
+import { getAllCart, updateCart, deleteCartById } from './../../redux/slices/cartSlice';
 import { useDispatch, useSelector } from 'react-redux';
 import { unwrapResult } from '@reduxjs/toolkit';
 import { currentUser } from '../../redux/selectors';
@@ -66,69 +66,6 @@ const Bottom = styled.div`
 
 `;
 
-const Info = styled.div`
-  
-`;
-
-const Product = styled.div`
-  display: flex;
-  justify-content: space-between;
-  ${mobile({ flexDirection: "column" })}
-`;
-
-const ProductDetail = styled.div`
-  flex: 2;
-  display: flex;
-`;
-
-const Image = styled.img`
-  width: 200px;
-`;
-
-const Details = styled.div`
-  padding: 20px;
-  display: flex;
-  flex-direction: column;
-  justify-content: space-around;
-`;
-
-const ProductName = styled.span``;
-
-const ProductId = styled.span``;
-const ProductBrand = styled.span``;
-
-const PriceDetail = styled.div`
-  flex: 1;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-`;
-
-const ProductAmountContainer = styled.div`
-  display: flex;
-  align-items: center;
-  margin-bottom: 20px;
-`;
-
-const ProductAmount = styled.div`
-  font-size: 24px;
-  margin: 5px;
-  ${mobile({ margin: "5px 15px" })}
-`;
-
-const ProductPrice = styled.div`
-  font-size: 30px;
-  font-weight: 200;
-  ${mobile({ marginBottom: "20px" })}
-`;
-
-const Hr = styled.hr`
-  background-color: #254031;
-  border: none;
-  height: 1px;
-`;
-
 const Summary = styled.div`
   flex: 1;
   // border: 0.5px solid lightslategrey;
@@ -159,6 +96,7 @@ const Button = styled.button`
   width: 100%;
   padding: 10px;
   background-color: black;
+  cursor: pointer;
   color: white;
   font-weight: 600;
 `;
@@ -167,10 +105,12 @@ const CustomerCart = () => {
 
   const dispatch = useDispatch()
   const _currentUser = useSelector(currentUser)
+  const navigate = useNavigate()
 
   const [isLoading, setIsLoading] = useState(true)
   const [cartList, setCartList] = useState([])
   const [prodList, setProdList] = useState([])
+  const [subTotal, setSubTotal] = useState(0)
 
   const fetchYourCart = async (listCart, listProduct) => {
     let temp = []
@@ -187,20 +127,103 @@ const CustomerCart = () => {
         }
       }
       setIsLoading(false)
+      await CountTotal(listCart, listProduct)
     } catch (rejectedValueOrSerializedError) {
       return rejectedValueOrSerializedError
     }
+  }
+
+  const CountTotal = async (_cart, prList) => {
+    let newTotal = 0
+    await _cart.map((item) => {
+      let rs = prList.find((ite) => ite.productID == item.productid)
+      if (rs != undefined)
+        newTotal = newTotal + Number(Number(rs.price) * Number(item.amount))
+    })
+    setSubTotal(newTotal)
   }
 
   useEffect(() => {
     if (isLoading === true) {
       let listCart = []
       let listProduct = []
+      let tempSubTotal = 0
       fetchYourCart(listCart, listProduct)
       setCartList(listCart)
       setProdList(listProduct)
     }
   }, [])
+
+  //handling change amount 
+  const handleChangeAmount = async (value, actionType) => {
+    let newListCart = cartList
+
+    if (actionType == "increase") {
+      newListCart = newListCart.map((element) => {
+        // let dataForUpdate = { ...element }
+        if (element.productid == value.productID) {
+          return {
+            ...element,
+            "productid": element.productid,
+            "amount": Number(element.amount) + 1
+          }
+        }
+        else return element
+      });
+      newListCart.map(async (item) => {
+        if (item.productid == value.productID) {
+          try {
+            const resultAction = await dispatch(updateCart(item))
+            const originalPromiseResult = unwrapResult(resultAction)
+          } catch (rejectedValueOrSerializedError) {
+            alert(rejectedValueOrSerializedError);
+          }
+        }
+      })
+      setCartList(newListCart)
+      await CountTotal(newListCart, prodList)
+    } else if (actionType === "decrease") {
+      let sign = 1
+      //sign 1: run updateCart when amount not = 0
+      //sign 0: don't run anything
+      newListCart = newListCart.map((element) => {
+        if (element.productid == value.productID) {
+          if (element.amount === 0) {
+            sign = 0
+            alert("Can not decrease more. Please click close for dis-cart")
+          } else {
+            sign = 1
+            return {
+              ...element,
+              "productid": element.productid,
+              "amount": Number(element.amount) - 1
+            }
+          }
+        }
+        else return element
+      });
+      if (sign === 1) {
+        newListCart.map(async (item) => {
+          if (item.productid == value.productID) {
+            try {
+              const resultAction = await dispatch(updateCart(item))
+              const originalPromiseResult = unwrapResult(resultAction)
+            } catch (rejectedValueOrSerializedError) {
+              alert(rejectedValueOrSerializedError);
+            }
+          }
+        })
+        setCartList(newListCart)
+        await CountTotal(newListCart, prodList)
+      } else {
+        return
+      }
+    }
+  }
+
+  const handleCheckout = () => {
+    navigate('/myplace/mycart/checkout')
+  }
 
   function handleClick(event) {
     event.preventDefault();
@@ -212,7 +235,6 @@ const CustomerCart = () => {
     navigate('/')
   }
 
-  const navigate = useNavigate()
   const breadcrumbs = [
     <Link
       underline="hover"
@@ -244,6 +266,9 @@ const CustomerCart = () => {
 
     <Container>
       <NavBar hiddenCartLabel={false} />
+      {console.log(cartList)}
+      {/* {console.log(prodList)} */}
+      {/* {console.log(subTotal)} */}
       <Stack direction="row"
         spacing={3}
         style={{ marginLeft: '15%', marginTop: '1%' }}
@@ -260,65 +285,13 @@ const CustomerCart = () => {
             <TopText>Shopping Bag({cartList.length})</TopText>
             <TopText>Your Favorite (0)</TopText>
           </TopTexts>
-          <TopButton type="filled">CHECKOUT NOW</TopButton>
+          <TopButton onClick={handleCheckout} type="filled">CHECKOUT NOW</TopButton>
         </Top>
         <Bottom>
-          {/* <Info>
-            {cartList.map((p) => (
-              <div>
-                <Product>
-                  <ProductDetail>
-                    {prodList.map((i) => (
-                      i.productID === p.productid ? (
-                        <Image src={i.productimage[0].imageURL} />
-                      ) : (
-                        null
-                      )
-                    ))}
-                    <Details>
-                      <ProductName>
-                        <b>Prod:</b> {p.product.name}
-                      </ProductName>
-                      <ProductId>
-                        <b>ID:</b> {p.productid}
-                      </ProductId>
-                      {prodList.map((i) => (
-                        i.productID === p.productid ? (
-                          <div style={{
-                            display: 'flex',
-                            flexDirection: 'column'
-                          }}>
-                            <ProductBrand>
-                              <b>Brand:</b> {i.brand}
-                            </ProductBrand>
-                            <ProductBrand>
-                              <b>Memory/RAM/Weight:</b> {`${i.memory} GB/${i.ram} GB/${i.weight} kg`}
-                            </ProductBrand>
-                          </div>
-                        ) : (
-                          null
-                        )
-                      ))}
-                    </Details>
-                    {console.log(cartList)}
-                  </ProductDetail>
-                  <PriceDetail>
-                    <ProductAmountContainer>
-                      <Add />
-                      <ProductAmount>{p.amount}</ProductAmount>
-                      <Remove />
-                    </ProductAmountContainer>
-                    <ProductPrice></ProductPrice>
-                  </PriceDetail>
-                </Product>
-                <Hr />
-              </div>
-            ))}
-          </Info> */}
           <Stack sx={{ m: 2, p: 2 }}>
             {
               cartList.map((item, i) => (
-                <ProductInCart key={i} productInCart={item} handleChangeAmount={() => { console.log(item) }}></ProductInCart>
+                <ProductInCart key={i} productInCart={item} handleChangeAmount={handleChangeAmount}></ProductInCart>
               ))
             }
           </Stack>
@@ -326,21 +299,22 @@ const CustomerCart = () => {
             <SummaryTitle>ORDER SUMMARY</SummaryTitle>
             <SummaryItem>
               <SummaryItemText>Subtotal</SummaryItemText>
-              <SummaryItemPrice>$ 80</SummaryItemPrice>
+              <SummaryItemPrice>${subTotal}</SummaryItemPrice>
             </SummaryItem>
             <SummaryItem>
-              <SummaryItemText>Estimated Shipping</SummaryItemText>
-              <SummaryItemPrice>$ 5.90</SummaryItemPrice>
+              <SummaryItemText>Estimated Shipping (Temporary)</SummaryItemText>
+              <SummaryItemPrice>$ 2</SummaryItemPrice>
             </SummaryItem>
             <SummaryItem>
-              <SummaryItemText>Shipping Discount</SummaryItemText>
-              <SummaryItemPrice>$ -5.90</SummaryItemPrice>
+              <SummaryItemText>Shipping Discount (Temporary)</SummaryItemText>
+              <SummaryItemPrice>$ -2</SummaryItemPrice>
             </SummaryItem>
+            <div style={{ height: '1px', width: '100%', backgroundColor: 'black' }}></div>
             <SummaryItem type="total">
               <SummaryItemText>Total</SummaryItemText>
-              <SummaryItemPrice>$ 80</SummaryItemPrice>
+              <SummaryItemPrice>${subTotal}</SummaryItemPrice>
             </SummaryItem>
-            <Button>CHECKOUT NOW</Button>
+            <Button onClick>CHECKOUT NOW</Button>
           </Summary>
         </Bottom>
       </Wrapper>
