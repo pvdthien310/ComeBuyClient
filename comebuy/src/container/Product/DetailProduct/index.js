@@ -33,6 +33,7 @@ import { cartListSelector } from '../../../redux/selectors.js';
 import { useDispatch, useSelector } from 'react-redux';
 import { cartSlice } from '../../../redux/slices/cartSlice.js';
 import ProductComment from '../../../components/ProductComment/index.js';
+import RecommendedProductLine from '../../../components/RecommendedProductLine/index.js';
 
 
 const ProductImage = styled('img')({
@@ -300,6 +301,7 @@ const DetailProduct = () => {
                         }
                     </Box>
                 </Grid>
+                <RecommendedProductLine/>
                 <BoxShopInfo></BoxShopInfo>
                 <ProductComment productID={id}></ProductComment>
                 <BigFooter/>
