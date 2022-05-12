@@ -9,6 +9,13 @@ import { Typography, Link } from '@mui/material';
 import { Stack, Breadcrumbs } from '@mui/material';
 import Backdrop from '@mui/material/Backdrop';
 import CircularProgress from '@mui/material/CircularProgress';
+import Dialog from '@mui/material/Dialog';
+import DialogActions from '@mui/material/DialogActions';
+import DialogContent from '@mui/material/DialogContent';
+import DialogContentText from '@mui/material/DialogContentText';
+import DialogTitle from '@mui/material/DialogTitle';
+import Slide from '@mui/material/Slide';
+import { Button } from '@mui/material';
 
 import { useNavigate } from 'react-router';
 import { getAllCart, updateCart, deleteCartById } from './../../redux/slices/cartSlice';
@@ -92,14 +99,9 @@ const SummaryItemText = styled.span``;
 
 const SummaryItemPrice = styled.span``;
 
-const Button = styled.button`
-  width: 100%;
-  padding: 10px;
-  background-color: black;
-  cursor: pointer;
-  color: white;
-  font-weight: 600;
-`;
+const Transition = React.forwardRef(function Transition(props, ref) {
+  return <Slide direction='d' ref={ref} {...props} />;
+});
 
 const CustomerCart = () => {
 
@@ -154,6 +156,12 @@ const CustomerCart = () => {
     }
   }, [])
 
+  const [open, setOpen] = useState(false);
+
+  const handleClose = () => {
+    setOpen(false);
+  };
+
   //handling change amount 
   const handleChangeAmount = async (value, actionType) => {
     let newListCart = cartList
@@ -190,7 +198,7 @@ const CustomerCart = () => {
         if (element.productid == value.productID) {
           if (element.amount === 0) {
             sign = 0
-            alert("Can not decrease more. Please click close for dis-cart")
+            setOpen(true)
           } else {
             sign = 1
             return {
@@ -218,6 +226,23 @@ const CustomerCart = () => {
       } else {
         return
       }
+    }
+  }
+
+  //handle agree dis-cart
+  const handleAgree = async (item) => {
+    try {
+      const resultAction = await dispatch(deleteCartById(item))
+      const originalPromiseResult = unwrapResult(resultAction)
+      console.log(originalPromiseResult)
+      for (let i = 0; i < cartList.length; i++) {
+        if (cartList[i].cartID === item.cartID) {
+          cartList.splice(i, 1)
+        }
+      }
+      handleClose()
+    } catch (rejectedValueOrSerializedError) {
+      alert(rejectedValueOrSerializedError);
     }
   }
 
@@ -266,9 +291,6 @@ const CustomerCart = () => {
 
     <Container>
       <NavBar hiddenCartLabel={false} />
-      {console.log(cartList)}
-      {/* {console.log(prodList)} */}
-      {/* {console.log(subTotal)} */}
       <Stack direction="row"
         spacing={3}
         style={{ marginLeft: '15%', marginTop: '1%' }}
@@ -291,7 +313,26 @@ const CustomerCart = () => {
           <Stack sx={{ m: 2, p: 2 }}>
             {
               cartList.map((item, i) => (
-                <ProductInCart key={i} productInCart={item} handleChangeAmount={handleChangeAmount}></ProductInCart>
+                <>
+                  <ProductInCart key={i} productInCart={item} handleChangeAmount={handleChangeAmount}></ProductInCart>
+                  <Dialog
+                    open={open}
+                    TransitionComponent={Transition}
+                    keepMounted
+                    aria-describedby="alert-dialog-slide-description"
+                  >
+                    <DialogTitle>{"Discart"}</DialogTitle>
+                    <DialogContent>
+                      <DialogContentText id="alert-dialog-slide-description">
+                        Are you sure want discart this product ?
+                      </DialogContentText>
+                    </DialogContent>
+                    <DialogActions>
+                      <Button onClick={handleClose}>Cancel</Button>
+                      <Button onClick={() => handleAgree(item)}>Ok</Button>
+                    </DialogActions>
+                  </Dialog>
+                </>
               ))
             }
           </Stack>
@@ -314,7 +355,19 @@ const CustomerCart = () => {
               <SummaryItemText>Total</SummaryItemText>
               <SummaryItemPrice>${subTotal}</SummaryItemPrice>
             </SummaryItem>
-            <Button onClick>CHECKOUT NOW</Button>
+            <Button sx={{
+              width: '100%',
+              padding: '10px',
+              backgroundColor: 'black',
+              cursor: 'pointer',
+              color: 'white',
+              fontWeight: 600,
+            }}
+              variant="contained"
+              onClick={handleCheckout}
+            >
+              CHECKOUT NOW
+            </Button>
           </Summary>
         </Bottom>
       </Wrapper>
@@ -325,7 +378,7 @@ const CustomerCart = () => {
       >
         <CircularProgress color="inherit" />
       </Backdrop>
-    </Container>
+    </Container >
   );
 };
 
