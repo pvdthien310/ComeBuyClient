@@ -54,13 +54,10 @@ const DetailProduct = () => {
 
     const LoadData = async () => {
         const response = await productAPI.getProductWithID(id)
-        if (response.status == 200) {
+        if (response.status == 200) 
             setProduct(response.data)
-        }
-        else {
+        else 
             setError("Error Load Product!")
-        }
-
     }
 
     const handleAddToCart = () => {
@@ -93,8 +90,8 @@ const DetailProduct = () => {
 
     useEffect(() => {
         LoadData()
-        return () => setProduct({})
-    }, [])
+        return () => setProduct(null);
+    }, [id])
 
     return (
         <Stack sx={{ width: '100%', height: '100%' }}>
@@ -301,7 +298,7 @@ const DetailProduct = () => {
                         }
                     </Box>
                 </Grid>
-                <RecommendedProductLine/>
+                <RecommendedProductLine productID={id}/>
                 <BoxShopInfo></BoxShopInfo>
                 <ProductComment productID={id}></ProductComment>
                 <BigFooter/>

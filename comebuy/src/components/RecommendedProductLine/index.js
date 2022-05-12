@@ -5,6 +5,8 @@ import { Swiper, SwiperSlide } from "swiper/react";
 import { useEffect, useState } from "react";
 import aiApi from "../../api/aiAPI";
 import ProductItem from "./ProductItem";
+import { useSelector } from "react-redux";
+import { productListSelector } from "../../redux/selectors";
 
 const CustomButton = styled(Button)({
     color: 'white',
@@ -23,21 +25,25 @@ const CustomButton = styled(Button)({
 
 
 const RecommendedProductLine = (props) => {
-
+    const _productList = useSelector(productListSelector)
     const [products, setProduct] = useState([])
 
     useEffect(async () => {
         const response = await aiApi.recommendedSystem({ name: 'Phạm Võ Di Thiên' })
         if (response.status == 200) {
-            const list = response.data.map((ite) => ite[0])
-            setProduct(list)
+            let recommendedList = response.data.filter(ite => ite != props.productID)
+            if (recommendedList.length == 1) {
+                recommendedList.push(_productList[_productList.length - 1].productID)
+                recommendedList.push(_productList[_productList.length - 2].productID)
+            }
+            setProduct(recommendedList)
         }
         else
             console.log("Loi ");
-        
-            return () => {
-                setProduct({})
-            };
+
+        return () => {
+            setProduct({})
+        };
     }, [])
 
     return (

@@ -6,62 +6,90 @@ import Typography from '@mui/material/Typography';
 import ButtonBase from '@mui/material/ButtonBase';
 import Button from '@mui/material/Button';
 import ShoppingCartIcon from '@mui/icons-material/ShoppingCart';
+import { useSelector } from 'react-redux';
+import { productListSelector } from '../../../redux/selectors';
+import { CircularProgress } from '@mui/material';
+import { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom'
 
 const Img = styled('img')({
   margin: 'auto',
   display: 'block',
   maxWidth: '100%',
-  maxHeight: '100%',
+  maxHeight: 200,
 });
 
 const CustomButton = styled(Button)(() => ({
-  backgroundColor: 'black'
+  backgroundColor: '#B360E6',
+  '&:hover': {
+    zIndex: 1,
+    backgroundColor: '#B360AA'
+  },
 }));
 
 const ProductItem = (props) => {
+  const navigate = useNavigate()
+  const _productList = useSelector(productListSelector)
+  const [product, setProduct] = useState(null)
+  const [loading, setLoading] = useState(true)
+  useEffect(() => {
+    const temp = _productList.filter(ite => ite.productID == props.product)
+    setProduct(temp[0]);
+    setLoading(false)
+    return () => {
+      setProduct({})
+      setLoading(false)
+    }
+
+  }, [])
+  const handleNavigateToDetail = () => navigate('/productSpace/' + props.product)
   return (
     <Paper
       sx={{
         p: 2,
         margin: 'auto',
-        maxWidth: 380,
+        maxWidth: 400,
         flexGrow: 1,
         backgroundColor: (theme) =>
           theme.palette.mode === 'dark' ? '#1A2027' : '#fff',
       }}
-    >
-      <Grid container spacing={2}>
-        <Grid item>
-          <ButtonBase sx={{ width: 128, height: 128 }}>
-            <Img alt="complex" src="https://store.storeimages.cdn-apple.com/4982/as-images.apple.com/is/mbp-14-digitalmat-gallery-1-202111?wid=364&hei=333&fmt=png-alpha&.v=1635183223000" />
-          </ButtonBase>
-        </Grid>
-        <Grid item xs={12} sm container>
-          <Grid item xs container direction="column" spacing={2}>
-            <Grid item xs>
-              <Typography gutterBottom variant="subtitle1" component="div">
-                {props.product}
-              </Typography>
-              <Typography variant="body2" gutterBottom>
-                Full resolution 1920x1080 • JPEG
-              </Typography>
-              <Typography variant="body2" color="text.secondary">
-                ID: 1030114
-              </Typography>
-            </Grid>
+    >{
+        !loading && product != null ?
+          <Grid container spacing={2}>
             <Grid item>
-              <CustomButton variant="contained"
-                endIcon={<ShoppingCartIcon />}
-              >Buy Now</CustomButton>
+              <ButtonBase sx={{ width: 128, height: 128 }}>
+                <Img alt="complex" src={product.productimage[0].imageURL} />
+              </ButtonBase>
             </Grid>
-          </Grid>
-          <Grid item>
-            <Typography variant="subtitle1" component="div">
-              $200.00
-            </Typography>
-          </Grid>
-        </Grid>
-      </Grid>
+            <Grid item xs={12} sm container>
+              <Grid item xs container direction="column" spacing={2}>
+                <Grid item xs>
+                  <Typography gutterBottom variant="subtitle2" component="div">
+                    {product.name.split(" (")[0]}
+                  </Typography>
+                  {/* <Typography variant="body2" gutterBottom>
+                  {product.screenDimension}
+                  </Typography> */}
+                  <Typography variant="caption" color="text.secondary">
+                    {product.productID}
+                  </Typography>
+                </Grid>
+                <Grid item>
+                  <CustomButton variant="contained"
+                    endIcon={<ShoppingCartIcon />}
+                    onClick={handleNavigateToDetail}
+                  >Buy Now</CustomButton>
+                </Grid>
+              </Grid>
+              <Grid item>
+                <Typography variant="subtitle1" color={'error'}>
+                  ${product.price}
+                </Typography>
+              </Grid>
+            </Grid>
+          </Grid> :
+          <CircularProgress></CircularProgress>
+      }
     </Paper>
   );
 }
