@@ -32,9 +32,9 @@ const RecommendedProductLine = (props) => {
     const _productList = useSelector(productListSelector)
     const _currentUser = useSelector(currentUser)
     const [products, setProduct] = useState([])
-    const [invoice, setInvoice] = useState(SignalCellularNullOutlined)
 
     useEffect(async () => {
+        let cancel = false;
         try {
             const resultAction = await dispatch(getAllInvoice())
             const originalPromiseResult = unwrapResult(resultAction)
@@ -56,8 +56,9 @@ const RecommendedProductLine = (props) => {
                     }
                 })
             })
+            
             const response = await aiApi.recommendedSystem({ name: _currentUser.name, data: newData })
-            if (response.status == 200) {
+            if (!cancel && response.status == 200) {
                 let recommendedList = response.data.filter(ite => ite != props.productID)
                 if (recommendedList.length == 1) {
                     recommendedList.push(_productList[_productList.length - 1].productID)
@@ -68,12 +69,14 @@ const RecommendedProductLine = (props) => {
             else
                 console.log("Loi ");
 
-            return () => {
-                setProduct({})
-            };
         } catch (rejectedValueOrSerializedError) {
             return rejectedValueOrSerializedError
         }
+
+        return () => {
+            setProduct({})
+            cancel = true
+        };
 
     }, [])
 

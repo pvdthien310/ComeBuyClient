@@ -7,7 +7,7 @@ import "swiper/css";
 import "swiper/css/pagination";
 import { styled } from '@mui/material/styles';
 import { useParams } from 'react-router';
-import { FeatureChart, NavBar, TechInforLine, BreadCrumb, BoxShopInfo, ProductInCart } from '../../components';
+import { FeatureChart, NavBar, TechInforLine, BreadCrumb, BoxShopInfo, ProductInCart, BigFooter } from '../../components';
 import { useDispatch, useSelector } from 'react-redux';
 import { cartListSelector } from '../../redux/selectors.js';
 import { useState, useEffect } from 'react';
@@ -177,6 +177,7 @@ const GuestCart = () => {
                     }
                 </Grid>
                 <BoxShopInfo></BoxShopInfo>
+                <BigFooter/>
             </Grid>
         </Stack>
     )

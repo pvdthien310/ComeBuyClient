@@ -78,9 +78,9 @@ const CustomButton = styled(Button)(({ theme }) => ({
 export default function BrandLineImage(props) {
     return (
         <Container>
-            <ImgFeatureLine item src={props.urlImage}></ImgFeatureLine>
-            <Text item>{props.BigText}</Text>
-            <CustomButton item endIcon={<ArrowRightIcon />}>See More</CustomButton>
+            <ImgFeatureLine src={props.urlImage}></ImgFeatureLine>
+            <Text>{props.BigText}</Text>
+            <CustomButton endIcon={<ArrowRightIcon />}>See More</CustomButton>
         </Container>
     )
 }
