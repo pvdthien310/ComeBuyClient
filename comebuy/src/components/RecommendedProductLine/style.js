@@ -48,11 +48,12 @@ const style = {
     boxShopInfo: {
         height: 'auto',
         width: '70%',
-        padding: 4,
+        padding: 3,
         alignSelf: 'center',
         backgroundColor: 'white',
         borderRadius: '10px',
-        m:4,
+        ml:4,
+        mr:4,
         boxShadow: 10,
     },
     boxComment: {

@@ -6,7 +6,7 @@ import { useEffect, useState } from "react";
 import aiApi from "../../api/aiAPI";
 import ProductItem from "./ProductItem";
 import { useSelector } from "react-redux";
-import { productListSelector } from "../../redux/selectors";
+import { currentUser, productListSelector } from "../../redux/selectors";
 
 const CustomButton = styled(Button)({
     color: 'white',
@@ -26,10 +26,11 @@ const CustomButton = styled(Button)({
 
 const RecommendedProductLine = (props) => {
     const _productList = useSelector(productListSelector)
+    const _currentUser = useSelector(currentUser)
     const [products, setProduct] = useState([])
 
     useEffect(async () => {
-        const response = await aiApi.recommendedSystem({ name: 'Phạm Võ Di Thiên' })
+        const response = await aiApi.recommendedSystem({ name: _currentUser.name })
         if (response.status == 200) {
             let recommendedList = response.data.filter(ite => ite != props.productID)
             if (recommendedList.length == 1) {
@@ -48,7 +49,7 @@ const RecommendedProductLine = (props) => {
 
     return (
         <Grid container item xs={12} sx={style.boxShopInfo}>
-            <Stack direction={'row'} spacing={2} sx={{ alignItems: 'center', p: 2 }}>
+            <Stack direction={'row'} spacing={2} sx={{ alignItems: 'center', pl: 2, pr: 2, pb: 2 }}>
                 <RecommendIcon />
                 <Typography variant='h5' fontWeight={'bold'}>Recommend Product</Typography>
             </Stack>

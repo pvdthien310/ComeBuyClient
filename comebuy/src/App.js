@@ -45,14 +45,13 @@ function App() {
           return <GuestLayout routes={guestRoutes} itemRoutes={guestMenuItems} />; // Guest/Customer 
       }
     }
-    return <HomePage />
   };
 
 
   return (
     <Routes>
       <Route path="*" element={renderRoutes()} />
-      <Route path="login" element={<LoginRegister />} />
+      <Route path="/login" element={<LoginRegister />} />
       <Route path="/forgetpasswordinlogin" element={<ForgotPasswordInLogin />} />
     </Routes>
   );
