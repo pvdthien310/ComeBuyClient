@@ -15,9 +15,10 @@ import Snackbar from '@mui/material/Snackbar';
 import MuiAlert from '@mui/material/Alert';
 import DiamondIcon from '@mui/icons-material/Diamond';
 import Radio from '@mui/material/Radio';
-import RadioGroup from '@mui/material/RadioGroup';
-import FormControlLabel from '@mui/material/FormLabel';
+import LocalShippingIcon from '@mui/icons-material/LocalShipping';
+import CreditCardIcon from '@mui/icons-material/CreditCard';
 
+import Paypal from './../../components/Paypal/index';
 import { CheckEmail, CheckPhoneNumber } from './../LoginAndRegister/ValidationDataForAccount'
 import { isSignedIn_user, currentUser, cartListSelector } from '../../redux/selectors';
 import { getAllCart } from '../../redux/slices/cartSlice';
@@ -36,11 +37,23 @@ export const CheckoutPage = () => {
     const isSignedIn = useSelector(isSignedIn_user)
 
     const [openPaymentMethodScreen, setOpenPaymentMethodScreen] = useState(false)
+    const [openPayOnline, setOpenPayOnline] = useState(false)
 
     const [listCart, setListCart] = useState([])
     const [listProd, setListProd] = useState([])
 
     const _guestCart = useSelector(cartListSelector)
+
+    const [selectedPayMethod, setSelectedPayMethod] = useState("Pay on delivery");
+    const handleChangePayMethod = (event) => {
+        if (event.target.value === 'Pay online') {
+            setOpenPayOnline(true)
+            setSelectedPayMethod(event.target.value);
+        } else {
+            setOpenPayOnline(false)
+            setSelectedPayMethod(event.target.value);
+        }
+    };
 
     useEffect(() => {
         const fetchYourCart = async () => {
@@ -85,6 +98,27 @@ export const CheckoutPage = () => {
         }
         fetchYourCart()
     }, [])
+
+    const [purchaseUnits, setPurchaseUnits] = useState([])
+
+    const MakePurchaseUnit = async () => {
+        let sample = []
+        for (let i = 0; i < listCart.length; i++) {
+            for (let j = 0; j < listProd.length; j++) {
+                if (listProd[j].productID === listCart[i].productid) {
+                    let temp = {
+                        description: listProd[j].productID,
+                        amount: {
+                            currency_code: "USD",
+                            value: Number(listCart[i].amount) * Number(listProd[j].price)
+                        }
+                    }
+                    sample.push(temp)
+                }
+            }
+        }
+        setPurchaseUnits(sample)
+    }
 
     const [subTotal, setSubTotal] = useState(0)
 
@@ -154,15 +188,7 @@ export const CheckoutPage = () => {
 
     function handleChangeProvince(event) {
         setProvince(event.target.value)
-        // setBigAddress(addressShip + ' ' + String(event.target.value.name))
     }
-
-    // const getBigAddress = () => {
-
-    //     const temp = addressShip + ', ' + commune.name + ', ' + district.name + ', ' + province.name
-    //     setBigAddress(temp)
-    // }
-
     //get district
     useEffect(() => {
         const getDistrict = async () => {
@@ -185,16 +211,11 @@ export const CheckoutPage = () => {
             setCommuneList(await resCom)
         }
         getCommune()
-        // setBigAddress(addressShip + ' ' + district.name + ' ' + province.name)
     }, [district])
 
     async function handleChangeCommune(event) {
         setCommune(event.target.value)
     }
-
-    // useEffect(() => {
-    //     setBigAddress(addressShip + ' ' + commune.name + ' ' + district.name + ' ' + province.name)
-    // }, [commune])
 
     function handleClickToCart(event) {
         event.preventDefault();
@@ -214,17 +235,10 @@ export const CheckoutPage = () => {
     }
 
     const handleChangeAddress = async (e) => {
-        // if (province.name != null || district.name != null || commune.name != null) {
-        //     let temp = e.target.value + province.name + district.name + commune.name
-        //     setAddressShip(temp)
-        // } else {
-        //     setAddressShip(e.target.value)
-        // }
         setAddressShip(e.target.value)
-        // setBigAddress(e.target.value + ' ' + commune.name + ' ' + district.name + ' ' + province.name)
     }
 
-    const handleToPayment = () => {
+    const handleToPayment = async () => {
         if (name === '' || phoneNumber === '' || addressShip === '') {
             setOpenSnackbar(true)
         } else {
@@ -234,6 +248,7 @@ export const CheckoutPage = () => {
                 const temp = addressShip + ', ' + commune.name + ', ' + district.name + ', ' + province.name
                 setBigAddress(temp)
                 setOpenPaymentMethodScreen(true)
+                await MakePurchaseUnit()
             }
         }
     }
@@ -353,6 +368,7 @@ export const CheckoutPage = () => {
             }}
             spacing={2}
         >
+            {console.log(listCart)}
             {/* Cart information part */}
 
             {openPaymentMethodScreen ? (
@@ -426,10 +442,10 @@ export const CheckoutPage = () => {
                                         name="radio-buttons"
                                         sx={{ marginTop: '-0.5em' }}
                                     />
-                                    <Typography>Delivery to 64 provinces</Typography>
+                                    <Typography>Delivery within 64 provinces</Typography>
                                 </Stack>
                                 <Stack sx={{ marginTop: '0.55em' }}>
-                                    <Typography>0.70 USD</Typography>
+                                    <Typography>2.00 USD</Typography>
                                 </Stack>
                             </Stack>
                             <Stack marginTop="2em">
@@ -450,38 +466,114 @@ export const CheckoutPage = () => {
                             </Stack>
                             <Stack direction="row"
                                 sx={{
-                                    height: '2.5em',
+                                    height: 'auto',
                                     backgroundColor: '#fafafa',
                                     width: '97%',
                                     borderWidth: '1px',
                                     borderRadius: '8px',
-                                    padding: '0.5em',
+                                    padding: '1.15em',
                                     marginTop: '0.25em'
                                 }}>
                                 <Radio
-                                    checked
-                                    value="1"
+                                    checked={selectedPayMethod === 'Pay on delivery'}
+                                    onChange={handleChangePayMethod}
+                                    value="Pay on delivery"
                                     name="radio-buttons"
+                                    size="medium"
+                                />
+                                <img style={{
+                                    marginRight: '10px',
+                                    display: 'flex',
+                                    alignSelf: 'center',
+                                    width: '50px',
+                                    height: '50px'
+                                }}
+                                    src="https://hstatic.net/0/0/global/design/seller/image/payment/cod.svg?v=1"
                                 />
                                 <Typography sx={{ marginTop: '0.5em' }}>Pay on delivery</Typography>
                             </Stack>
 
-                            <Stack direction="row"
+                            <Stack direction="column"
                                 sx={{
-                                    height: '2.5em',
+                                    height: 'auto',
                                     backgroundColor: '#fafafa',
                                     width: '97%',
                                     borderWidth: '1px',
                                     borderRadius: '8px',
-                                    padding: '0.5em',
+                                    padding: '1.15em',
                                     marginTop: '0.25em'
                                 }}>
-                                <Radio
-                                    checked
-                                    value="1"
-                                    name="radio-buttons"
-                                />
-                                <Typography sx={{ marginTop: '0.5em' }}>Pay online</Typography>
+                                <Stack direction="row">
+                                    <Radio
+                                        checked={selectedPayMethod === 'Pay online'}
+                                        onChange={handleChangePayMethod}
+                                        value="Pay online"
+                                        name="radio-buttons"
+                                        size="medium"
+                                    />
+                                    <img style={{
+                                        marginRight: '10px',
+                                        display: 'flex',
+                                        alignSelf: 'center',
+                                        width: '50px',
+                                        height: '50px'
+                                    }}
+                                        src="https://hstatic.net/0/0/global/design/seller/image/payment/other.svg?v=1"
+                                    />
+                                    <Typography sx={{ marginTop: '0.5em' }}>Pay online</Typography>
+                                </Stack>
+                                {openPayOnline ? (
+                                    <>
+                                        <hr style={{ height: '1px', width: '100%', backgroundColor: 'black' }}></hr>
+                                        <Typography sx={{
+                                            textAlign: 'center',
+                                            whiteSpace: 'pre-line',
+                                            paddingLeft: '2em',
+                                            paddingRight: '2em',
+                                            color: '#737373',
+                                            fontSize: '14px'
+                                        }}
+                                        >
+                                            VIETCOMBANK -
+                                            VONG MINH HUYNH -
+                                            Bank Account Number: 1234567896 -
+                                            PGD TP HCM -
+                                            Transfer content : Your name-Phone number-Product ID
+                                        </Typography>
+                                        <Typography sx={{
+                                            textAlign: 'center',
+                                            whiteSpace: 'pre-line',
+                                            paddingLeft: '2em',
+                                            paddingRight: '2em',
+                                            color: '#737373',
+                                            fontSize: '14px'
+                                        }}
+                                        >
+                                            TECHCOMBANK -
+                                            PHAM VO DI THIEN -
+                                            Bank Account Number : 1852654970 -
+                                            PGD TP HCM -
+                                            Transfer content : Your name-Phone number-Product ID
+                                        </Typography>
+
+                                        <Typography sx={{
+                                            textAlign: 'center',
+                                            whiteSpace: 'pre-line',
+                                            paddingLeft: '2em',
+                                            paddingRight: '2em',
+                                            color: '#737373',
+                                            fontSize: '14px',
+                                            fontWeight: 'bold',
+                                            marginTop: '1.2em'
+                                        }}
+                                        >
+                                            OR:
+                                        </Typography>
+                                        <div style={{ width: '50%', marginTop: '1.2em', alignSelf: 'center' }}>
+                                            <Paypal orderList={listCart} listProduct={listProd} />
+                                        </div>
+                                    </>
+                                ) : (null)}
                             </Stack>
 
                             <Grid spacing={2} container sx={{ width: '100%', position: 'relative', marginTop: '2rem' }}>
@@ -1053,7 +1145,7 @@ export const CheckoutPage = () => {
                                 marginTop: '-0.5em'
                             }}
                             >
-                                ---
+                                $2.00
                             </Typography>
                         </Stack>
                         <div style={{ height: '1px', width: '100%', backgroundColor: '#BFBFBF' }}></div>
@@ -1178,7 +1270,7 @@ export const CheckoutPage = () => {
                                 marginTop: '-0.5em'
                             }}
                             >
-                                ---
+                                $2.00
                             </Typography>
                         </Stack>
                         <div style={{ height: '1px', width: '100%', backgroundColor: '#BFBFBF' }}></div>
