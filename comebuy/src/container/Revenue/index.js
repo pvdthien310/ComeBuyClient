@@ -31,8 +31,6 @@ export default function Revenue() {
                 if (localStorage.getItem('role') == "admin")
                     setBranchList(response.data)
                 else if (localStorage.getItem('role') == "manager"){    
-                    console.log(response.data)
-                    console.log(response.data.filter(ite => ite.branchID == _currentUser.branch.branchid))
                     setBranchList(response.data.filter(ite => ite.branchID == _currentUser.branch.branchid))
                 }
                 setMessageSuccess("Load Branch Successfully")

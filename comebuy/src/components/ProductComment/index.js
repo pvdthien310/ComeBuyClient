@@ -107,7 +107,6 @@ const ProductComment = (props) => {
     useEffect(async () => {
         const response = await commentApi.getCommentsWithID(props.productID)
         if (response.status == 200) {
-            console.log(response.data)
             setComments(response.data)
             setLoading(false)
         }

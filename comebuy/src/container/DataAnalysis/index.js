@@ -5,7 +5,6 @@ import aiApi from "../../api/aiAPI"
 const DataAnalysis = () => {
     useEffect(async () => {
         const response = await aiApi.recommendedSystem({ name: 'Đặng Vĩnh Siêu' })
-        console.log(response)
         if (response) {
         
         }

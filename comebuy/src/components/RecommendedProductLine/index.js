@@ -5,8 +5,11 @@ import { Swiper, SwiperSlide } from "swiper/react";
 import { useEffect, useState } from "react";
 import aiApi from "../../api/aiAPI";
 import ProductItem from "./ProductItem";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { currentUser, productListSelector } from "../../redux/selectors";
+import { getAllInvoice } from "../../redux/slices/invoiceSlice";
+import { SignalCellularNullOutlined } from "@mui/icons-material";
+import { unwrapResult } from "@reduxjs/toolkit";
 
 const CustomButton = styled(Button)({
     color: 'white',
@@ -25,26 +28,53 @@ const CustomButton = styled(Button)({
 
 
 const RecommendedProductLine = (props) => {
+    const dispatch = useDispatch()
     const _productList = useSelector(productListSelector)
     const _currentUser = useSelector(currentUser)
     const [products, setProduct] = useState([])
+    const [invoice, setInvoice] = useState(SignalCellularNullOutlined)
 
     useEffect(async () => {
-        const response = await aiApi.recommendedSystem({ name: _currentUser.name })
-        if (response.status == 200) {
-            let recommendedList = response.data.filter(ite => ite != props.productID)
-            if (recommendedList.length == 1) {
-                recommendedList.push(_productList[_productList.length - 1].productID)
-                recommendedList.push(_productList[_productList.length - 2].productID)
+        try {
+            const resultAction = await dispatch(getAllInvoice())
+            const originalPromiseResult = unwrapResult(resultAction)
+            let newData = []
+            await originalPromiseResult.map(ite => {
+                ite.invoiceitem.map(ite2 => {
+                    if (ite2.productid != null) {
+                        let Time = ite.date.split(" ")
+                        let processedTime = "7 00"
+                        if (Time.length != 1)
+                            processedTime = Time[1].replace(':', ' ')
+                        newData.push({
+                            "MaKhachHang": ite.userid,
+                            "TenKhachHang": ite.account.name,
+                            "MaSanPham": ite2.productid,
+                            "Thoigian": processedTime,
+                            "Amount": ite2.amount
+                        })
+                    }
+                })
+            })
+            const response = await aiApi.recommendedSystem({ name: _currentUser.name, data: newData })
+            if (response.status == 200) {
+                let recommendedList = response.data.filter(ite => ite != props.productID)
+                if (recommendedList.length == 1) {
+                    recommendedList.push(_productList[_productList.length - 1].productID)
+                    recommendedList.push(_productList[_productList.length - 2].productID)
+                }
+                setProduct(recommendedList)
             }
-            setProduct(recommendedList)
-        }
-        else
-            console.log("Loi ");
+            else
+                console.log("Loi ");
 
-        return () => {
-            setProduct({})
-        };
+            return () => {
+                setProduct({})
+            };
+        } catch (rejectedValueOrSerializedError) {
+            return rejectedValueOrSerializedError
+        }
+
     }, [])
 
     return (
