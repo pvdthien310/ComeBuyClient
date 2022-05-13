@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react'
 import { useNavigate } from 'react-router';
-import { useSelector } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 
 import Box from '@mui/material/Box';
 import Paper from '@mui/material/Paper';
@@ -13,9 +13,14 @@ import Select from '@mui/material/Select';
 import { Avatar } from '@mui/material';
 import Snackbar from '@mui/material/Snackbar';
 import MuiAlert from '@mui/material/Alert';
+import DiamondIcon from '@mui/icons-material/Diamond';
 
 import { CheckEmail, CheckPhoneNumber } from './../LoginAndRegister/ValidationDataForAccount'
-import { isSignedIn_user, currentUser } from '../../redux/selectors';
+import { isSignedIn_user, currentUser, cartListSelector } from '../../redux/selectors';
+import { getAllCart } from '../../redux/slices/cartSlice';
+import { unwrapResult } from '@reduxjs/toolkit';
+import { getAllProduct, getProductWithID } from '../../redux/slices/productSlice';
+import { accountSlice } from '../../redux/slices/accountSlice';
 
 const Alert = React.forwardRef(function Alert(props, ref) {
     return <MuiAlert elevation={6} ref={ref} variant="filled" {...props} />;
@@ -24,7 +29,69 @@ const Alert = React.forwardRef(function Alert(props, ref) {
 export const CheckoutPage = () => {
 
     const navigate = useNavigate()
+    const dispatch = useDispatch()
     const isSignedIn = useSelector(isSignedIn_user)
+
+    const [listCart, setListCart] = useState([])
+    const [listProd, setListProd] = useState([])
+
+    const _guestCart = useSelector(cartListSelector)
+
+    useEffect(() => {
+        const fetchYourCart = async () => {
+            if (localStorage.getItem('role') === 'customer') {
+                let temp = []
+                let listCart = []
+                let listProd = []
+                try {
+                    const resultAction = await dispatch(getAllCart())
+                    const originalPromiseResult = unwrapResult(resultAction)
+                    temp = originalPromiseResult
+                    for (let i = 0; i < temp.length; i++) {
+                        if (temp[i].userid === _currentUser.userID) {
+                            listCart.push(temp[i])
+                            const resultAction2 = await dispatch(getProductWithID(temp[i].productid))
+                            const originalPromiseResult2 = unwrapResult(resultAction2)
+                            listProd.push(originalPromiseResult2)
+                        }
+                    }
+                    await setListCart(listCart)
+                    await setListProd(listProd)
+                    await CountTotal(listCart, listProd)
+                } catch (rejectedValueOrSerializedError) {
+                    alert(rejectedValueOrSerializedError)
+                }
+            } else {
+                let temp = _guestCart
+                let listCart = []
+                let listProd = []
+                for (let i = 0; i < temp.length; i++) {
+                    if (temp.productid != 'undefined') {
+                        listCart.push(temp[i])
+                        const resultAction2 = await dispatch(getProductWithID(temp[i].productid))
+                        const originalPromiseResult2 = unwrapResult(resultAction2)
+                        listProd.push(originalPromiseResult2)
+                    }
+                }
+                await setListCart(listCart)
+                await setListProd(listProd)
+                await CountTotal(listCart, listProd)
+            }
+        }
+        fetchYourCart()
+    }, [])
+
+    const [subTotal, setSubTotal] = useState(0)
+
+    const CountTotal = async (_cart, prList) => {
+        let newTotal = 0
+        await _cart.map((item) => {
+            let rs = prList.find((ite) => ite.productID == item.productid)
+            if (rs != undefined)
+                newTotal = newTotal + Number(Number(rs.price) * Number(item.amount))
+        })
+        setSubTotal(newTotal)
+    }
 
     //for snackbar
     const [openSnackbar, setOpenSnackbar] = useState(false);
@@ -118,18 +185,21 @@ export const CheckoutPage = () => {
         console.log(temp)
     }
 
-    function handleClick(event) {
+    function handleClickToCart(event) {
         event.preventDefault();
-        navigate('/myplace')
-    }
-
-    function handleClickToHome(event) {
-        event.preventDefault();
-        navigate('/')
+        if (localStorage.getItem('role') === 'customer') {
+            navigate('/myplace/mycart')
+        } else {
+            navigate('/guestCart')
+        }
     }
 
     const handleLogOut = () => {
-        alert("Handle log out")
+        dispatch(accountSlice.actions.logout());
+        localStorage.setItem('role', '')
+        localStorage.setItem('idUser', '')
+        localStorage.setItem('cart', JSON.stringify([]));
+        navigate(0)
     }
 
     const handleChangeAddress = (e) => {
@@ -177,10 +247,10 @@ export const CheckoutPage = () => {
                 display: 'inline-block',
                 fontSize: '0.85714em',
                 color: '#338dbc',
-                lineHeight: '1.3em'
+                lineHeight: '1.3em',
+                cursor: 'pointer'
             }}
-            href="/myplace"
-            onClick={handleClickToHome}
+            onClick={handleClickToCart}
         >
             Cart
         </Link>,
@@ -219,10 +289,9 @@ export const CheckoutPage = () => {
             }}
             spacing={2}
         >
-
             {/* Cart information part */}
 
-            {_currentUser != null ? (
+            {localStorage.getItem('role') === 'customer' ? (
                 <Grid item xs={7} height="100%" >
                     <Stack direction="column" spacing={2} p="2rem" paddingLeft="12em">
                         <Stack direction="column"
@@ -403,7 +472,7 @@ export const CheckoutPage = () => {
 
                                 <Grid spacing={2} container sx={{ width: '100%', position: 'relative', marginTop: '2rem' }}>
                                     <Grid item xs={6}>
-                                        <a href='/guestCart'
+                                        <a onClick={() => navigate('/myplace/mycart')}
                                             style={{
                                                 textDecoration: 'none',
                                                 color: '#338dbc',
@@ -419,7 +488,6 @@ export const CheckoutPage = () => {
                                             My Cart
                                         </a>
                                     </Grid>
-
                                     <Grid item xs={6}>
                                         <Button onClick={handleToPayment} variant="contained" sx={{ fontSize: '14px' }} size="large">
                                             Continue to payment method
@@ -498,7 +566,7 @@ export const CheckoutPage = () => {
                                 }}
                             >
                                 Did you have an account ?
-                                <a onClick={() => alert("Move to login")}
+                                <a onClick={() => navigate('/login')}
                                     style={{
                                         textDecoration: 'none',
                                         color: '#338dbc',
@@ -519,6 +587,7 @@ export const CheckoutPage = () => {
                                 id="outlined-basic"
                                 label="Full name"
                                 variant="outlined"
+                                value={guestName}
                                 onChange={(e) => setGuestName(e.target.value)}
                                 sx={{
                                     color: '#333333',
@@ -625,7 +694,7 @@ export const CheckoutPage = () => {
 
                                 <Grid spacing={2} container sx={{ width: '100%', position: 'relative', marginTop: '2rem' }}>
                                     <Grid item xs={6}>
-                                        <a onClick={() => alert("Move to guest cart")}
+                                        <a onClick={() => navigate('/guestCart')}
                                             style={{
                                                 textDecoration: 'none',
                                                 color: '#338dbc',
@@ -656,8 +725,256 @@ export const CheckoutPage = () => {
             )}
 
             {/* Cart visualization part */}
-            <Grid sx={{ backgroundColor: 'gray' }} height="100%" item xs={5}>
+            <Grid sx={{
+                backgroundColor: '#fafafa',
+                left: 0,
+                backgroundPosition: 'left top',
+                boxShadow: '1px 0 0 #e1e1e1 inset'
+            }} height="auto" item xs={5}>
+                {localStorage.getItem('role') === 'customer' ? (
+                    <Stack direction="column" spacing={2} p="2rem" paddingRight="6em">
+                        {listCart.map((cart) => (
+                            <Stack
+                                sx={{
+                                    backgroundColor: '#F2F2F2',
+                                    borderRadius: '8px',
+                                    padding: '1em',
+                                    boxShadow: '0px 6px 6px -3px rgb(0 0 0 / 20%), 0px 10px 14px 1px rgb(0 0 0 / 14%), 0px 4px 18px 3px rgb(0 0 0 / 12%)'
+                                }}
+                                direction="row"
+                                width="100%">
+                                {listProd.map((prod) =>
+                                    prod.productID === cart.productid ? (
+                                        <img style={{
+                                            width: '7em',
+                                            height: '7em',
+                                            borderRadius: '8px',
+                                            background: '#fff',
+                                            position: 'relative'
+                                        }}
+                                            alt={prod.name}
+                                            src={prod.productimage[0].imageURL}
+                                        />
+                                    ) : (
+                                        null
+                                    )
+                                )}
+                                <Stack direction="column">
+                                    <Typography sx={{ marginLeft: '1em', marginTop: '1em' }}>{cart.product.name}</Typography>
+                                    <Typography sx={{ marginLeft: '1em', marginTop: '0.75em' }}> Quantity: {cart.amount}</Typography>
+                                </Stack>
+                                {listProd.map((prod) =>
+                                    prod.productID === cart.productid ? (
+                                        <Typography sx={{ alignSelf: 'flex-end', fontWeight: 600 }}> ${Number(prod.price) * Number(cart.amount)}</Typography>
+                                    ) : (null)
+                                )}
+                            </Stack>
+                        ))}
+                        <div style={{ height: '1px', width: '100%', backgroundColor: '#BFBFBF' }}></div>
+                        <Grid container width="100%" spacing={1}>
+                            <Grid item xs={8.5}>
+                                <TextField
+                                    fullWidth
+                                    id="outlined-basic"
+                                    label="Discount code"
+                                    variant="outlined"
+                                    // onChange={handleChangeAddress}
+                                    sx={{
+                                        color: '#333333',
+                                        fontFamily: 'sans-serif',
+                                    }}
+                                />
+                            </Grid>
+                            <Grid item xs={3.5} sx={{ height: '100%' }}>
+                                <Button variant="contained" sx={{ fontSize: '14px', backgroundColor: 'gray', marginTop: '0.5em', width: '100%', height: '100%' }}>
+                                    Use
+                                </Button>
+                            </Grid>
+                        </Grid>
+                        <div style={{ height: '1px', width: '100%', backgroundColor: '#BFBFBF' }}></div>
+                        <Stack direction="column" width="100%">
+                            <Typography sx={{
+                                color: '#333333',
+                                fontFamily: 'sans-serif', fontWeight: 300
+                            }}
+                            >RARE MEMBER
+                            </Typography>
+                            <Stack direction="row" width="100%">
+                                <DiamondIcon sx={{ width: '17px', height: '17px' }} />
+                                <Typography sx={{
+                                    color: '#333333',
+                                    fontFamily: 'sans-serif',
+                                    fontSize: '13px',
+                                    marginLeft: '0.5em'
+                                }}>
+                                    MEMBER - 0 point(s)
+                                </Typography>
+                            </Stack>
+                        </Stack>
+                        <div style={{ height: '1px', width: '100%', backgroundColor: '#BFBFBF' }}></div>
+                        <Stack direction="row" width='100%' justifyContent="space-between">
+                            <Typography sx={{ marginTop: '1.2em', color: 'gray' }}>Temporary cost</Typography>
+                            <Typography sx={{
+                                color: '#333333',
+                                fontWeight: 600,
+                                marginTop: '1.2em'
+                            }}
+                            >
+                                ${subTotal}
+                            </Typography>
+                        </Stack>
+                        <Stack direction="row" width='100%' justifyContent="space-between">
+                            <Typography sx={{ color: 'gray', marginTop: '-0.5em' }}>Delivery cost</Typography>
+                            <Typography sx={{
+                                color: '#333333',
+                                fontWeight: 800,
+                                marginTop: '-0.5em'
+                            }}
+                            >
+                                ---
+                            </Typography>
+                        </Stack>
+                        <div style={{ height: '1px', width: '100%', backgroundColor: '#BFBFBF' }}></div>
 
+                        <Stack direction="row" width='100%' justifyContent="space-between">
+                            <Typography sx={{ color: 'gray', marginTop: '1.2em' }}>Total cost</Typography>
+                            <Typography sx={{
+                                color: '#333333',
+                                fontWeight: 600,
+                                marginTop: '1.2em',
+                                fontSize: '20px'
+                            }}
+                            >
+                                {subTotal} USD
+                            </Typography>
+                        </Stack>
+
+                    </Stack>
+                ) : (
+                    <Stack direction="column" spacing={2} p="2rem" paddingRight="6em">
+                        {listCart.map((cart) => (
+                            <Stack
+                                sx={{
+                                    backgroundColor: '#F2F2F2',
+                                    borderRadius: '8px',
+                                    padding: '1em',
+                                    boxShadow: '0px 6px 6px -3px rgb(0 0 0 / 20%), 0px 10px 14px 1px rgb(0 0 0 / 14%), 0px 4px 18px 3px rgb(0 0 0 / 12%)'
+                                }}
+                                direction="row"
+                                width="100%">
+                                {listProd.map((prod) =>
+                                    prod.productID === cart.productid ? (
+                                        <img style={{
+                                            width: '7em',
+                                            height: '7em',
+                                            borderRadius: '8px',
+                                            background: '#fff',
+                                            position: 'relative'
+                                        }}
+                                            alt={prod.name}
+                                            src={prod.productimage[0].imageURL}
+                                        />
+                                    ) : (
+                                        null
+                                    )
+                                )}
+                                <Stack direction="column">
+                                    {listProd.map((prod) =>
+                                        prod.productID === cart.productid ? (
+                                            <Typography sx={{ marginLeft: '1em', marginTop: '1em' }}>{prod.name}</Typography>
+                                        ) : (
+                                            null
+                                        )
+                                    )}
+                                    <Typography sx={{ marginLeft: '1em', marginTop: '0.75em' }}> Quantity: {cart.amount}</Typography>
+                                </Stack>
+                                {listProd.map((prod) =>
+                                    prod.productID === cart.productid ? (
+                                        <Typography sx={{ alignSelf: 'flex-end', fontWeight: 800 }}> ${Number(prod.price) * Number(cart.amount)}</Typography>
+                                    ) : (null)
+                                )}
+                            </Stack>
+                        ))}
+                        <div style={{ height: '1px', width: '100%', backgroundColor: '#BFBFBF' }}></div>
+                        <Grid container width="100%" spacing={1}>
+                            <Grid item xs={8.5}>
+                                <TextField
+                                    fullWidth
+                                    id="outlined-basic"
+                                    label="Discount code"
+                                    variant="outlined"
+                                    // onChange={handleChangeAddress}
+                                    sx={{
+                                        color: '#333333',
+                                        fontFamily: 'sans-serif',
+                                    }}
+                                />
+                            </Grid>
+                            <Grid item xs={3.5} sx={{ height: '100%' }}>
+                                <Button variant="contained" sx={{ fontSize: '14px', backgroundColor: 'gray', marginTop: '0.5em', width: '100%', height: '100%' }}>
+                                    Use
+                                </Button>
+                            </Grid>
+                        </Grid>
+                        <div style={{ height: '1px', width: '100%', backgroundColor: '#BFBFBF' }}></div>
+                        <Stack direction="column" width="100%">
+                            <Typography sx={{
+                                color: '#333333',
+                                fontFamily: 'sans-serif', fontWeight: 300
+                            }}
+                            >RARE MEMBER
+                            </Typography>
+                            <Stack direction="row" width="100%">
+                                <DiamondIcon sx={{ width: '17px', height: '17px' }} />
+                                <Typography sx={{
+                                    color: '#333333',
+                                    fontFamily: 'sans-serif',
+                                    fontSize: '13px',
+                                    marginLeft: '0.5em'
+                                }}>
+                                    MEMBER - 0 point(s)
+                                </Typography>
+                            </Stack>
+                        </Stack>
+                        <div style={{ height: '1px', width: '100%', backgroundColor: '#BFBFBF' }}></div>
+                        <Stack direction="row" width='100%' justifyContent="space-between">
+                            <Typography sx={{ marginTop: '1.2em', color: 'gray' }}>Temporary cost</Typography>
+                            <Typography sx={{
+                                color: '#333333',
+                                fontWeight: 800,
+                                marginTop: '1.2em'
+                            }}
+                            >
+                                ${subTotal}
+                            </Typography>
+                        </Stack>
+                        <Stack direction="row" width='100%' justifyContent="space-between">
+                            <Typography sx={{ color: 'gray', marginTop: '-0.5em' }}>Delivery cost</Typography>
+                            <Typography sx={{
+                                color: '#333333',
+                                fontWeight: 800,
+                                marginTop: '-0.5em'
+                            }}
+                            >
+                                ---
+                            </Typography>
+                        </Stack>
+                        <div style={{ height: '1px', width: '100%', backgroundColor: '#BFBFBF' }}></div>
+
+                        <Stack direction="row" width='100%' justifyContent="space-between">
+                            <Typography sx={{ color: 'gray', marginTop: '1.2em' }}>Total cost</Typography>
+                            <Typography sx={{
+                                color: '#333333',
+                                fontWeight: 800,
+                                marginTop: '1.2em',
+                                fontSize: '20px'
+                            }}
+                            >
+                                {subTotal} USD
+                            </Typography>
+                        </Stack>
+                    </Stack>
+                )}
             </Grid>
 
             {/* snackbar */}

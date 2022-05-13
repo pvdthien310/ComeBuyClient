@@ -51,8 +51,8 @@ function App() {
 
   return (
     <Routes>
+      <Route path="/login" element={<LoginRegister />} />
       <Route path="*" element={renderRoutes()} />
-      <Route path="login" element={<LoginRegister />} />
       <Route path="/forgetpasswordinlogin" element={<ForgotPasswordInLogin />} />
     </Routes>
   );
