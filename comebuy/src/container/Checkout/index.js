@@ -14,6 +14,9 @@ import { Avatar } from '@mui/material';
 import Snackbar from '@mui/material/Snackbar';
 import MuiAlert from '@mui/material/Alert';
 import DiamondIcon from '@mui/icons-material/Diamond';
+import Radio from '@mui/material/Radio';
+import RadioGroup from '@mui/material/RadioGroup';
+import FormControlLabel from '@mui/material/FormLabel';
 
 import { CheckEmail, CheckPhoneNumber } from './../LoginAndRegister/ValidationDataForAccount'
 import { isSignedIn_user, currentUser, cartListSelector } from '../../redux/selectors';
@@ -31,6 +34,8 @@ export const CheckoutPage = () => {
     const navigate = useNavigate()
     const dispatch = useDispatch()
     const isSignedIn = useSelector(isSignedIn_user)
+
+    const [openPaymentMethodScreen, setOpenPaymentMethodScreen] = useState(false)
 
     const [listCart, setListCart] = useState([])
     const [listProd, setListProd] = useState([])
@@ -135,6 +140,8 @@ export const CheckoutPage = () => {
     const [commune, setCommune] = useState({})
     const [communeList, setCommuneList] = useState([])
 
+    const [bigAddress, setBigAddress] = useState('')
+
     //get province
     useEffect(() => {
         const getProvinceList = async () => {
@@ -146,11 +153,15 @@ export const CheckoutPage = () => {
     }, [])
 
     function handleChangeProvince(event) {
-        let temp = addressShip + ', ' + event.target.value.name
-        setAddressShip(temp)
         setProvince(event.target.value)
+        // setBigAddress(addressShip + ' ' + String(event.target.value.name))
     }
 
+    // const getBigAddress = () => {
+
+    //     const temp = addressShip + ', ' + commune.name + ', ' + district.name + ', ' + province.name
+    //     setBigAddress(temp)
+    // }
 
     //get district
     useEffect(() => {
@@ -163,8 +174,6 @@ export const CheckoutPage = () => {
     }, [province])
 
     function handleChangeDistrict(event) {
-        let temp = addressShip + ', ' + event.target.value.name
-        setAddressShip(temp)
         setDistrict(event.target.value)
     }
 
@@ -176,14 +185,16 @@ export const CheckoutPage = () => {
             setCommuneList(await resCom)
         }
         getCommune()
+        // setBigAddress(addressShip + ' ' + district.name + ' ' + province.name)
     }, [district])
 
-    function handleChangeCommune(event) {
-        let temp = addressShip + ', ' + event.target.value.name
-        setAddressShip(temp)
+    async function handleChangeCommune(event) {
         setCommune(event.target.value)
-        console.log(temp)
     }
+
+    // useEffect(() => {
+    //     setBigAddress(addressShip + ' ' + commune.name + ' ' + district.name + ' ' + province.name)
+    // }, [commune])
 
     function handleClickToCart(event) {
         event.preventDefault();
@@ -202,23 +213,27 @@ export const CheckoutPage = () => {
         navigate(0)
     }
 
-    const handleChangeAddress = (e) => {
-        if (province.name != null || district.name != null || commune.name != null) {
-            let temp = e.target.value + province.name + district.name + commune.name
-            setAddressShip(temp)
-        } else {
-            setAddressShip(e.target.value)
-        }
+    const handleChangeAddress = async (e) => {
+        // if (province.name != null || district.name != null || commune.name != null) {
+        //     let temp = e.target.value + province.name + district.name + commune.name
+        //     setAddressShip(temp)
+        // } else {
+        //     setAddressShip(e.target.value)
+        // }
+        setAddressShip(e.target.value)
+        // setBigAddress(e.target.value + ' ' + commune.name + ' ' + district.name + ' ' + province.name)
     }
 
     const handleToPayment = () => {
         if (name === '' || phoneNumber === '' || addressShip === '') {
             setOpenSnackbar(true)
         } else {
-            if (province != null && district != null && commune != null) {
+            if (province === null || district === null && commune === null) {
                 setOpenSnackbar(true)
             } else {
-                alert("Move to payment method")
+                const temp = addressShip + ', ' + commune.name + ', ' + district.name + ', ' + province.name
+                setBigAddress(temp)
+                setOpenPaymentMethodScreen(true)
             }
         }
     }
@@ -278,6 +293,55 @@ export const CheckoutPage = () => {
         </Typography>,
     ];
 
+    const handleClosePaymentMethodScreen = () => {
+        setAddressShip('')
+        setProvince(null)
+        setDistrict(null)
+        setCommune(null)
+        setOpenPaymentMethodScreen(false)
+    }
+    const breadcrumbsPayment = [
+        <Link
+            underline="hover"
+            key="2"
+            style={{
+                display: 'inline-block',
+                fontSize: '0.85714em',
+                color: '#338dbc',
+                lineHeight: '1.3em',
+                cursor: 'pointer'
+            }}
+            onClick={handleClickToCart}
+        >
+            Cart
+        </Link>,
+        <Link
+            underline="hover"
+            key="2"
+            style={{
+                display: 'inline-block',
+                fontSize: '0.85714em',
+                color: '#338dbc',
+                lineHeight: '1.3em',
+                fontFamily: 'sans-serif',
+                cursor: 'pointer'
+            }}
+            onClick={handleClosePaymentMethodScreen}
+        >
+            Cart Information
+        </Link>,
+        <Typography key="3"
+            style={{
+                display: 'inline-block',
+                fontSize: '0.85714em',
+                color: '#000D0A',
+                lineHeight: '1.3em',
+                fontFamily: 'sans-serif'
+            }}>
+            Payment method
+        </Typography>,
+    ];
+
     return (
         <Grid container
             sx={{
@@ -291,7 +355,7 @@ export const CheckoutPage = () => {
         >
             {/* Cart information part */}
 
-            {localStorage.getItem('role') === 'customer' ? (
+            {openPaymentMethodScreen ? (
                 <Grid item xs={7} height="100%" >
                     <Stack direction="column" spacing={2} p="2rem" paddingLeft="12em">
                         <Stack direction="column"
@@ -325,7 +389,7 @@ export const CheckoutPage = () => {
                                 }}
                             >
                                 <Breadcrumbs separator="›" style={{ color: '#000D0A' }} aria-label="breadcrumb">
-                                    {breadcrumbs}
+                                    {breadcrumbsPayment}
                                 </Breadcrumbs>
                             </Stack>
                             <Stack marginTop="-3%">
@@ -341,27 +405,88 @@ export const CheckoutPage = () => {
                                         fontFamily: 'sans-serif'
                                     }}
                                 >
-                                    Cart Information
+                                    Delivery method
                                 </Typography>
                             </Stack>
-                            <Stack direction="row" sx={{ width: '100%', position: 'relative' }} >
-                                <Avatar sx={{ height: '70px', width: '70px' }} alt="" src={_currentUser.avatar} />
-                                <Stack direction="column" marginLeft="0.1em">
-                                    <p
-                                        style={{
-                                            marginBlockStart: '1em',
-                                            marginBlockEnd: '1em',
-                                            display: 'block',
-                                            marginBottom: '0.75em',
-                                            lineHeight: '1.5em',
-                                            fontSize: '14px',
-                                            fontFamily: 'sans-serif',
-                                            marginTop: '0.1%',
-                                            marginLeft: '1.2em'
-                                        }}
-                                    >{_currentUser.name} ({_currentUser.email})</p>
-                                    <a
-                                        onClick={handleLogOut}
+                            <Stack direction="row"
+                                sx={{
+                                    height: '2.5em',
+                                    backgroundColor: '#fafafa',
+                                    width: '97%',
+                                    borderWidth: '1px',
+                                    borderRadius: '8px',
+                                    padding: '0.5em',
+                                    justifyContent: 'space-between',
+                                    marginTop: '0.25em'
+                                }}>
+                                <Stack direction="row" sx={{ marginTop: '0.5em' }}>
+                                    <Radio
+                                        checked
+                                        value="1"
+                                        name="radio-buttons"
+                                        sx={{ marginTop: '-0.5em' }}
+                                    />
+                                    <Typography>Delivery to 64 provinces</Typography>
+                                </Stack>
+                                <Stack sx={{ marginTop: '0.55em' }}>
+                                    <Typography>0.70 USD</Typography>
+                                </Stack>
+                            </Stack>
+                            <Stack marginTop="2em">
+                                <Typography
+                                    sx={{
+                                        color: '#333333',
+                                        fontSize: '1.28571em',
+                                        fontWeight: 'normal',
+                                        lineHeight: '1em',
+                                        marginBlockStart: '0.83em',
+                                        marginBlockEnd: '0.83em',
+                                        display: 'block',
+                                        fontFamily: 'sans-serif'
+                                    }}
+                                >
+                                    Payment method
+                                </Typography>
+                            </Stack>
+                            <Stack direction="row"
+                                sx={{
+                                    height: '2.5em',
+                                    backgroundColor: '#fafafa',
+                                    width: '97%',
+                                    borderWidth: '1px',
+                                    borderRadius: '8px',
+                                    padding: '0.5em',
+                                    marginTop: '0.25em'
+                                }}>
+                                <Radio
+                                    checked
+                                    value="1"
+                                    name="radio-buttons"
+                                />
+                                <Typography sx={{ marginTop: '0.5em' }}>Pay on delivery</Typography>
+                            </Stack>
+
+                            <Stack direction="row"
+                                sx={{
+                                    height: '2.5em',
+                                    backgroundColor: '#fafafa',
+                                    width: '97%',
+                                    borderWidth: '1px',
+                                    borderRadius: '8px',
+                                    padding: '0.5em',
+                                    marginTop: '0.25em'
+                                }}>
+                                <Radio
+                                    checked
+                                    value="1"
+                                    name="radio-buttons"
+                                />
+                                <Typography sx={{ marginTop: '0.5em' }}>Pay online</Typography>
+                            </Stack>
+
+                            <Grid spacing={2} container sx={{ width: '100%', position: 'relative', marginTop: '2rem' }}>
+                                <Grid item xs={6}>
+                                    <a onClick={handleClosePaymentMethodScreen}
                                         style={{
                                             textDecoration: 'none',
                                             color: '#338dbc',
@@ -374,327 +499,90 @@ export const CheckoutPage = () => {
                                             marginLeft: '1.2em'
                                         }}
                                     >
-                                        Log out
+                                        Back to cart information
                                     </a>
-                                </Stack>
-                            </Stack>
-                            <TextField
-                                fullWidth
-                                id="outlined-basic"
-                                label={_currentUser.name != '' ? null : 'Full name'}
-                                variant="outlined"
-                                sx={{
-                                    color: '#333333',
-                                    fontFamily: 'sans-serif',
-                                    marginTop: '1em'
-                                }}
-                                value={name}
-                                onChange={(e) => setName(e.target.value)}
-                            />
-                            <TextField
-                                fullWidth
-                                id="outlined-basic"
-                                label={_currentUser.phoneNumber != '' ? null : 'Phone number'}
-                                variant="outlined"
-                                value={phoneNumber}
-                                onChange={(e) => setPhoneNumber(e.target.value)}
-                                sx={{
-                                    color: '#333333',
-                                    fontFamily: 'sans-serif',
-                                    marginTop: '1.2rem'
-                                }} />
-                            <TextField
-                                fullWidth
-                                id="outlined-basic"
-                                label="Your address"
-                                variant="outlined"
-                                onChange={handleChangeAddress}
-                                sx={{
-                                    color: '#333333',
-                                    fontFamily: 'sans-serif',
-                                    marginTop: '1.3rem'
-                                }}
-                            />
-                            <Grid spacing={2} container sx={{ width: '100%', position: 'relative', marginTop: '1em' }}>
-                                <Grid item xs={4}>
-                                    <FormControl fullWidth>
-                                        <InputLabel id="demo-simple-select-label">City/Province</InputLabel>
-                                        <Select
-                                            labelId="demo-simple-select-label"
-                                            id="demo-simple-select"
-                                            value={province}
-                                            label="Province/City"
-                                            onChange={handleChangeProvince}
-                                        >
-                                            {provinceList.map((province) => (
-                                                <MenuItem value={province}>{province.name}</MenuItem>
-                                            )
-                                            )}
-                                        </Select>
-                                    </FormControl>
                                 </Grid>
-
-                                <Grid item xs={4}>
-                                    <FormControl fullWidth>
-                                        <InputLabel id="demo-simple-select-label">District</InputLabel>
-                                        <Select
-                                            labelId="demo-simple-select-label"
-                                            id="demo-simple-select"
-                                            value={district}
-                                            label="District"
-                                            onChange={handleChangeDistrict}
-                                        >
-                                            {districtList.map((district) => (
-                                                <MenuItem value={district}>{district.name}</MenuItem>
-                                            )
-                                            )}
-                                        </Select>
-                                    </FormControl>
+                                <Grid item xs={6}>
+                                    <Button onClick={handleToPayment} variant="contained" sx={{ fontSize: '14px' }} size="large">
+                                        Complete order
+                                    </Button>
                                 </Grid>
-
-                                <Grid item xs={4}>
-                                    <FormControl fullWidth>
-                                        <InputLabel id="demo-simple-select-label">Commune</InputLabel>
-                                        <Select
-                                            labelId="demo-simple-select-label"
-                                            id="demo-simple-select"
-                                            value={commune}
-                                            label="Commune"
-                                            onChange={handleChangeCommune}
-                                        >
-                                            {communeList.map((commune) => (
-                                                <MenuItem value={commune}>{commune.name}</MenuItem>
-                                            )
-                                            )}
-                                        </Select>
-                                    </FormControl>
-                                </Grid>
-
-                                <Grid spacing={2} container sx={{ width: '100%', position: 'relative', marginTop: '2rem' }}>
-                                    <Grid item xs={6}>
-                                        <a onClick={() => navigate('/myplace/mycart')}
-                                            style={{
-                                                textDecoration: 'none',
-                                                color: '#338dbc',
-                                                transition: 'color 0.2s ease-in-out',
-                                                display: 'inline-block',
-                                                cursor: 'pointer',
-                                                fontSize: '14px',
-                                                fontFamily: 'sans-serif',
-                                                lineHeight: '1.5em',
-                                                marginLeft: '1.2em'
-                                            }}
-                                        >
-                                            My Cart
-                                        </a>
-                                    </Grid>
-                                    <Grid item xs={6}>
-                                        <Button onClick={handleToPayment} variant="contained" sx={{ fontSize: '14px' }} size="large">
-                                            Continue to payment method
-                                        </Button>
-                                    </Grid>
-                                </Grid>
-
                             </Grid>
                         </Stack>
                     </Stack>
                 </Grid>
             ) : (
-                // Guest
-                <Grid item xs={7} height="100%" >
-                    <Stack direction="column" spacing={2} p="2rem" paddingLeft="12em">
-                        <Stack direction="column"
-                            sx={{
-                                paddingBottom: '1em',
-                                display: 'block'
-                            }}>
-                            <Button
-                                onClick={() => alert("Move to home page")}
+                localStorage.getItem('role') === 'customer' ? (
+                    <Grid item xs={7} height="100%" >
+                        <Stack direction="column" spacing={2} p="2rem" paddingLeft="12em">
+                            <Stack direction="column"
                                 sx={{
-                                    marginLeft: '-1.2%',
-                                    color: '#333333',
-                                    fontSize: '2em',
-                                    fontWeight: 'normal',
-                                    lineHeight: '1em',
-                                    display: 'block',
-                                    marginBlockStart: '0.67em',
-                                    marginBlockEnd: '0.67em',
-                                    background: 'white !important',
-                                    fontFamily: 'sans-serif'
-                                }}
-
-                            >ComeBuy
-                            </Button>
-                            <Stack direction="row"
-                                sx={{
-                                    marginTop: '-2%',
-                                    listStyleType: 'none',
-                                    display: 'block',
-                                    marginBlockEnd: '1em',
-                                }}
-                            >
-                                <Breadcrumbs separator="›" style={{ color: '#000D0A' }} aria-label="breadcrumb">
-                                    {breadcrumbs}
-                                </Breadcrumbs>
-                            </Stack>
-                            <Stack marginTop="-3%">
-                                <Typography
+                                    paddingBottom: '1em',
+                                    display: 'block'
+                                }}>
+                                <Button
                                     sx={{
+                                        marginLeft: '-1.2%',
                                         color: '#333333',
-                                        fontSize: '1.28571em',
+                                        fontSize: '2em',
                                         fontWeight: 'normal',
                                         lineHeight: '1em',
-                                        marginBlockStart: '0.83em',
-                                        marginBlockEnd: '0.83em',
                                         display: 'block',
+                                        marginBlockStart: '0.67em',
+                                        marginBlockEnd: '0.67em',
+                                        background: 'white !important',
                                         fontFamily: 'sans-serif'
                                     }}
+                                    onClick={() => navigate('/')}
                                 >
-                                    Cart Information
-                                </Typography>
-                            </Stack>
-                            <p
-                                style={{
-                                    marginBlockStart: '1em',
-                                    marginBlockEnd: '1em',
-                                    display: 'block',
-                                    marginBottom: '0.75em',
-                                    lineHeight: '1.5em',
-                                    fontSize: '14px',
-                                    fontFamily: 'sans-serif',
-                                    marginTop: '0.1%'
-                                }}
-                            >
-                                Did you have an account ?
-                                <a onClick={() => navigate('/login')}
-                                    style={{
-                                        textDecoration: 'none',
-                                        color: '#338dbc',
-                                        transition: 'color 0.2s ease-in-out',
-                                        display: 'inline-block',
-                                        cursor: 'pointer',
-                                        fontSize: '14px',
-                                        fontFamily: 'sans-serif',
-                                        lineHeight: '1.5em',
-                                        marginLeft: '0.5%'
+                                    ComeBuy
+                                </Button>
+                                <Stack direction="row"
+                                    sx={{
+                                        marginTop: '-2%',
+                                        listStyleType: 'none',
+                                        display: 'block',
+                                        marginBlockEnd: '1em',
                                     }}
                                 >
-                                    Sign in
-                                </a>
-                            </p>
-                            <TextField
-                                fullWidth
-                                id="outlined-basic"
-                                label="Full name"
-                                variant="outlined"
-                                value={guestName}
-                                onChange={(e) => setGuestName(e.target.value)}
-                                sx={{
-                                    color: '#333333',
-                                    fontFamily: 'sans-serif',
-                                    marginTop: '1em'
-                                }}
-                            />
-                            <Grid spacing={2} container sx={{ width: '100%', position: 'relative', marginTop: '0.25rem' }}>
-                                <Grid item xs={8}>
-                                    <TextField
-                                        fullWidth
-                                        id="outlined-basic"
-                                        label="Email"
-                                        variant="outlined"
-                                        onChange={(e) => setEmail(e.target.value)}
+                                    <Breadcrumbs separator="›" style={{ color: '#000D0A' }} aria-label="breadcrumb">
+                                        {breadcrumbs}
+                                    </Breadcrumbs>
+                                </Stack>
+                                <Stack marginTop="-3%">
+                                    <Typography
                                         sx={{
                                             color: '#333333',
-                                            fontFamily: 'sans-serif',
+                                            fontSize: '1.28571em',
+                                            fontWeight: 'normal',
+                                            lineHeight: '1em',
+                                            marginBlockStart: '0.83em',
+                                            marginBlockEnd: '0.83em',
+                                            display: 'block',
+                                            fontFamily: 'sans-serif'
                                         }}
-                                    />
-                                </Grid>
-
-                                <Grid item xs={4}>
-                                    <TextField
-                                        fullWidth
-                                        id="outlined-basic"
-                                        label="Phone number"
-                                        variant="outlined"
-                                        onChange={(e) => setGuestPhoneNum(e.target.value)}
-                                        sx={{
-                                            color: '#333333',
-                                            fontFamily: 'sans-serif',
-                                        }}
-                                    />
-                                </Grid>
-                            </Grid>
-                            <TextField
-                                fullWidth
-                                id="outlined-basic"
-                                label="Your address"
-                                variant="outlined"
-                                onChange={handleChangeAddress}
-                                sx={{
-                                    color: '#333333',
-                                    fontFamily: 'sans-serif',
-                                    marginTop: '1.3rem'
-                                }}
-                            />
-                            <Grid spacing={2} container sx={{ width: '100%', position: 'relative', marginTop: '1em' }}>
-                                <Grid item xs={4}>
-                                    <FormControl fullWidth>
-                                        <InputLabel id="demo-simple-select-label">City/Province</InputLabel>
-                                        <Select
-                                            labelId="demo-simple-select-label"
-                                            id="demo-simple-select"
-                                            value={province}
-                                            label="Province/City"
-                                            onChange={handleChangeProvince}
-                                        >
-                                            {provinceList.map((province) => (
-                                                <MenuItem value={province}>{province.name}</MenuItem>
-                                            )
-                                            )}
-                                        </Select>
-                                    </FormControl>
-
-                                </Grid>
-
-                                <Grid item xs={4}>
-                                    <FormControl fullWidth>
-                                        <InputLabel id="demo-simple-select-label">District</InputLabel>
-                                        <Select
-                                            labelId="demo-simple-select-label"
-                                            id="demo-simple-select"
-                                            value={district}
-                                            label="District"
-                                            onChange={handleChangeDistrict}
-                                        >
-                                            {districtList.map((district) => (
-                                                <MenuItem value={district}>{district.name}</MenuItem>
-                                            )
-                                            )}
-                                        </Select>
-                                    </FormControl>
-                                </Grid>
-
-                                <Grid item xs={4}>
-                                    <FormControl fullWidth>
-                                        <InputLabel id="demo-simple-select-label">Commune</InputLabel>
-                                        <Select
-                                            labelId="demo-simple-select-label"
-                                            id="demo-simple-select"
-                                            value={commune}
-                                            label="Commune"
-                                            onChange={handleChangeCommune}
-                                        >
-                                            {communeList.map((commune) => (
-                                                <MenuItem value={commune}>{commune.name}</MenuItem>
-                                            )
-                                            )}
-                                        </Select>
-                                    </FormControl>
-                                </Grid>
-
-                                <Grid spacing={2} container sx={{ width: '100%', position: 'relative', marginTop: '2rem' }}>
-                                    <Grid item xs={6}>
-                                        <a onClick={() => navigate('/guestCart')}
+                                    >
+                                        Cart Information
+                                    </Typography>
+                                </Stack>
+                                <Stack direction="row" sx={{ width: '100%', position: 'relative' }} >
+                                    <Avatar sx={{ height: '70px', width: '70px' }} alt="" src={_currentUser.avatar} />
+                                    <Stack direction="column" marginLeft="0.1em">
+                                        <p
+                                            style={{
+                                                marginBlockStart: '1em',
+                                                marginBlockEnd: '1em',
+                                                display: 'block',
+                                                marginBottom: '0.75em',
+                                                lineHeight: '1.5em',
+                                                fontSize: '14px',
+                                                fontFamily: 'sans-serif',
+                                                marginTop: '0.1%',
+                                                marginLeft: '1.2em'
+                                            }}
+                                        >{_currentUser.name} ({_currentUser.email})</p>
+                                        <a
+                                            onClick={handleLogOut}
                                             style={{
                                                 textDecoration: 'none',
                                                 color: '#338dbc',
@@ -707,21 +595,355 @@ export const CheckoutPage = () => {
                                                 marginLeft: '1.2em'
                                             }}
                                         >
-                                            My Cart
+                                            Log out
                                         </a>
+                                    </Stack>
+                                </Stack>
+                                <TextField
+                                    fullWidth
+                                    id="outlined-basic"
+                                    label={_currentUser.name != '' ? null : 'Full name'}
+                                    variant="outlined"
+                                    sx={{
+                                        color: '#333333',
+                                        fontFamily: 'sans-serif',
+                                        marginTop: '1em'
+                                    }}
+                                    value={name}
+                                    onChange={(e) => setName(e.target.value)}
+                                />
+                                <TextField
+                                    fullWidth
+                                    id="outlined-basic"
+                                    label={_currentUser.phoneNumber != '' ? null : 'Phone number'}
+                                    variant="outlined"
+                                    value={phoneNumber}
+                                    onChange={(e) => setPhoneNumber(e.target.value)}
+                                    sx={{
+                                        color: '#333333',
+                                        fontFamily: 'sans-serif',
+                                        marginTop: '1.2rem'
+                                    }} />
+                                <TextField
+                                    fullWidth
+                                    id="outlined-basic"
+                                    label="Your address"
+                                    variant="outlined"
+                                    onChange={handleChangeAddress}
+                                    sx={{
+                                        color: '#333333',
+                                        fontFamily: 'sans-serif',
+                                        marginTop: '1.3rem'
+                                    }}
+                                />
+                                <Grid spacing={2} container sx={{ width: '100%', position: 'relative', marginTop: '1em' }}>
+                                    <Grid item xs={4}>
+                                        <FormControl fullWidth>
+                                            <InputLabel id="demo-simple-select-label">City/Province</InputLabel>
+                                            <Select
+                                                labelId="demo-simple-select-label"
+                                                id="demo-simple-select"
+                                                value={province}
+                                                label="Province/City"
+                                                onChange={handleChangeProvince}
+                                            >
+                                                {provinceList.map((province) => (
+                                                    <MenuItem value={province}>{province.name}</MenuItem>
+                                                )
+                                                )}
+                                            </Select>
+                                        </FormControl>
                                     </Grid>
 
-                                    <Grid item xs={6}>
-                                        <Button onClick={handlePaymentGuest} variant="contained" sx={{ fontSize: '14px' }} size="large">
-                                            Continue to payment method
-                                        </Button>
+                                    <Grid item xs={4}>
+                                        <FormControl fullWidth>
+                                            <InputLabel id="demo-simple-select-label">District</InputLabel>
+                                            <Select
+                                                labelId="demo-simple-select-label"
+                                                id="demo-simple-select"
+                                                value={district}
+                                                label="District"
+                                                onChange={handleChangeDistrict}
+                                            >
+                                                {districtList.map((district) => (
+                                                    <MenuItem value={district}>{district.name}</MenuItem>
+                                                )
+                                                )}
+                                            </Select>
+                                        </FormControl>
+                                    </Grid>
+
+                                    <Grid item xs={4}>
+                                        <FormControl fullWidth>
+                                            <InputLabel id="demo-simple-select-label">Commune</InputLabel>
+                                            <Select
+                                                labelId="demo-simple-select-label"
+                                                id="demo-simple-select"
+                                                value={commune}
+                                                label="Commune"
+                                                onChange={handleChangeCommune}
+                                            >
+                                                {communeList.map((commune) => (
+                                                    <MenuItem value={commune}>{commune.name}</MenuItem>
+                                                )
+                                                )}
+                                            </Select>
+                                        </FormControl>
+                                    </Grid>
+
+                                    <Grid spacing={2} container sx={{ width: '100%', position: 'relative', marginTop: '2rem' }}>
+                                        <Grid item xs={6}>
+                                            <a onClick={() => navigate('/myplace/mycart')}
+                                                style={{
+                                                    textDecoration: 'none',
+                                                    color: '#338dbc',
+                                                    transition: 'color 0.2s ease-in-out',
+                                                    display: 'inline-block',
+                                                    cursor: 'pointer',
+                                                    fontSize: '14px',
+                                                    fontFamily: 'sans-serif',
+                                                    lineHeight: '1.5em',
+                                                    marginLeft: '1.2em'
+                                                }}
+                                            >
+                                                My Cart
+                                            </a>
+                                        </Grid>
+                                        <Grid item xs={6}>
+                                            <Button onClick={handleToPayment} variant="contained" sx={{ fontSize: '14px' }} size="large">
+                                                Continue to payment method
+                                            </Button>
+                                        </Grid>
+                                    </Grid>
+
+                                </Grid>
+                            </Stack>
+                        </Stack>
+                    </Grid>
+                ) : (
+                    // Guest
+                    <Grid item xs={7} height="100%" >
+                        <Stack direction="column" spacing={2} p="2rem" paddingLeft="12em">
+                            <Stack direction="column"
+                                sx={{
+                                    paddingBottom: '1em',
+                                    display: 'block'
+                                }}>
+                                <Button
+                                    onClick={() => alert("Move to home page")}
+                                    sx={{
+                                        marginLeft: '-1.2%',
+                                        color: '#333333',
+                                        fontSize: '2em',
+                                        fontWeight: 'normal',
+                                        lineHeight: '1em',
+                                        display: 'block',
+                                        marginBlockStart: '0.67em',
+                                        marginBlockEnd: '0.67em',
+                                        background: 'white !important',
+                                        fontFamily: 'sans-serif'
+                                    }}
+
+                                >ComeBuy
+                                </Button>
+                                <Stack direction="row"
+                                    sx={{
+                                        marginTop: '-2%',
+                                        listStyleType: 'none',
+                                        display: 'block',
+                                        marginBlockEnd: '1em',
+                                    }}
+                                >
+                                    <Breadcrumbs separator="›" style={{ color: '#000D0A' }} aria-label="breadcrumb">
+                                        {breadcrumbs}
+                                    </Breadcrumbs>
+                                </Stack>
+                                <Stack marginTop="-3%">
+                                    <Typography
+                                        sx={{
+                                            color: '#333333',
+                                            fontSize: '1.28571em',
+                                            fontWeight: 'normal',
+                                            lineHeight: '1em',
+                                            marginBlockStart: '0.83em',
+                                            marginBlockEnd: '0.83em',
+                                            display: 'block',
+                                            fontFamily: 'sans-serif'
+                                        }}
+                                    >
+                                        Cart Information
+                                    </Typography>
+                                </Stack>
+                                <p
+                                    style={{
+                                        marginBlockStart: '1em',
+                                        marginBlockEnd: '1em',
+                                        display: 'block',
+                                        marginBottom: '0.75em',
+                                        lineHeight: '1.5em',
+                                        fontSize: '14px',
+                                        fontFamily: 'sans-serif',
+                                        marginTop: '0.1%'
+                                    }}
+                                >
+                                    Did you have an account ?
+                                    <a onClick={() => navigate('/login')}
+                                        style={{
+                                            textDecoration: 'none',
+                                            color: '#338dbc',
+                                            transition: 'color 0.2s ease-in-out',
+                                            display: 'inline-block',
+                                            cursor: 'pointer',
+                                            fontSize: '14px',
+                                            fontFamily: 'sans-serif',
+                                            lineHeight: '1.5em',
+                                            marginLeft: '0.5%'
+                                        }}
+                                    >
+                                        Sign in
+                                    </a>
+                                </p>
+                                <TextField
+                                    fullWidth
+                                    id="outlined-basic"
+                                    label="Full name"
+                                    variant="outlined"
+                                    value={guestName}
+                                    onChange={(e) => setGuestName(e.target.value)}
+                                    sx={{
+                                        color: '#333333',
+                                        fontFamily: 'sans-serif',
+                                        marginTop: '1em'
+                                    }}
+                                />
+                                <Grid spacing={2} container sx={{ width: '100%', position: 'relative', marginTop: '0.25rem' }}>
+                                    <Grid item xs={8}>
+                                        <TextField
+                                            fullWidth
+                                            id="outlined-basic"
+                                            label="Email"
+                                            variant="outlined"
+                                            onChange={(e) => setEmail(e.target.value)}
+                                            sx={{
+                                                color: '#333333',
+                                                fontFamily: 'sans-serif',
+                                            }}
+                                        />
+                                    </Grid>
+
+                                    <Grid item xs={4}>
+                                        <TextField
+                                            fullWidth
+                                            id="outlined-basic"
+                                            label="Phone number"
+                                            variant="outlined"
+                                            onChange={(e) => setGuestPhoneNum(e.target.value)}
+                                            sx={{
+                                                color: '#333333',
+                                                fontFamily: 'sans-serif',
+                                            }}
+                                        />
                                     </Grid>
                                 </Grid>
+                                <TextField
+                                    fullWidth
+                                    id="outlined-basic"
+                                    label="Your address"
+                                    variant="outlined"
+                                    onChange={handleChangeAddress}
+                                    sx={{
+                                        color: '#333333',
+                                        fontFamily: 'sans-serif',
+                                        marginTop: '1.3rem'
+                                    }}
+                                />
+                                <Grid spacing={2} container sx={{ width: '100%', position: 'relative', marginTop: '1em' }}>
+                                    <Grid item xs={4}>
+                                        <FormControl fullWidth>
+                                            <InputLabel id="demo-simple-select-label">City/Province</InputLabel>
+                                            <Select
+                                                labelId="demo-simple-select-label"
+                                                id="demo-simple-select"
+                                                value={province}
+                                                label="Province/City"
+                                                onChange={handleChangeProvince}
+                                            >
+                                                {provinceList.map((province) => (
+                                                    <MenuItem value={province}>{province.name}</MenuItem>
+                                                )
+                                                )}
+                                            </Select>
+                                        </FormControl>
 
-                            </Grid>
+                                    </Grid>
+
+                                    <Grid item xs={4}>
+                                        <FormControl fullWidth>
+                                            <InputLabel id="demo-simple-select-label">District</InputLabel>
+                                            <Select
+                                                labelId="demo-simple-select-label"
+                                                id="demo-simple-select"
+                                                value={district}
+                                                label="District"
+                                                onChange={handleChangeDistrict}
+                                            >
+                                                {districtList.map((district) => (
+                                                    <MenuItem value={district}>{district.name}</MenuItem>
+                                                )
+                                                )}
+                                            </Select>
+                                        </FormControl>
+                                    </Grid>
+
+                                    <Grid item xs={4}>
+                                        <FormControl fullWidth>
+                                            <InputLabel id="demo-simple-select-label">Commune</InputLabel>
+                                            <Select
+                                                labelId="demo-simple-select-label"
+                                                id="demo-simple-select"
+                                                value={commune}
+                                                label="Commune"
+                                                onChange={handleChangeCommune}
+                                            >
+                                                {communeList.map((commune) => (
+                                                    <MenuItem value={commune}>{commune.name}</MenuItem>
+                                                )
+                                                )}
+                                            </Select>
+                                        </FormControl>
+                                    </Grid>
+
+                                    <Grid spacing={2} container sx={{ width: '100%', position: 'relative', marginTop: '2rem' }}>
+                                        <Grid item xs={6}>
+                                            <a onClick={() => navigate('/guestCart')}
+                                                style={{
+                                                    textDecoration: 'none',
+                                                    color: '#338dbc',
+                                                    transition: 'color 0.2s ease-in-out',
+                                                    display: 'inline-block',
+                                                    cursor: 'pointer',
+                                                    fontSize: '14px',
+                                                    fontFamily: 'sans-serif',
+                                                    lineHeight: '1.5em',
+                                                    marginLeft: '1.2em'
+                                                }}
+                                            >
+                                                My Cart
+                                            </a>
+                                        </Grid>
+
+                                        <Grid item xs={6}>
+                                            <Button onClick={handlePaymentGuest} variant="contained" sx={{ fontSize: '14px' }} size="large">
+                                                Continue to payment method
+                                            </Button>
+                                        </Grid>
+                                    </Grid>
+
+                                </Grid>
+                            </Stack>
                         </Stack>
-                    </Stack>
-                </Grid>
+                    </Grid>
+                )
             )}
 
             {/* Cart visualization part */}
