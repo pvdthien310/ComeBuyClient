@@ -15,6 +15,12 @@ import { useDispatch } from 'react-redux';
 import { accountSlice } from '../../redux/slices/accountSlice';
 import { IconButton, Stack } from '@mui/material';
 import MenuIcon from '@mui/icons-material/Menu';
+import ComputerIcon from '@mui/icons-material/Computer';
+import PeopleIcon from '@mui/icons-material/People';
+import InventoryIcon from '@mui/icons-material/Inventory';
+import AssessmentIcon from '@mui/icons-material/Assessment';
+import InsightsIcon from '@mui/icons-material/Insights';
+import LogoutIcon from '@mui/icons-material/Logout';
 
 const MainLayout = props => {
   const [pathname, setPathname] = useState(window.location.pathname);
@@ -75,7 +81,12 @@ const MainLayout = props => {
         {(props.itemRoutes).map((route, index) => (
           <ListItem button key={route.name} onClick={ItemClick}>
             <ListItemIcon>
-              {index % 2 === 0 ? <InboxIcon /> : <MailIcon />}
+              {/* {index % 2 === 0 ? <InboxIcon /> : <MailIcon />} */}
+              {route.name == 'Product' && <ComputerIcon/>}
+              {route.name == 'Staff' && <PeopleIcon/>}
+              {route.name == 'Stock' && <InventoryIcon/>}
+              {route.name == 'Revenue' && <AssessmentIcon/>}
+              {route.name == 'Data Analysis' && <InsightsIcon/>}
             </ListItemIcon>
             <ListItemText primary={route.name} />
           </ListItem>
@@ -86,7 +97,7 @@ const MainLayout = props => {
         {['Log Out'].map((text, index) => (
           <ListItem button key={text} onClick={ItemClick}>
             <ListItemIcon>
-              {index % 2 === 0 ? <InboxIcon /> : <MailIcon />}
+              <LogoutIcon/>
             </ListItemIcon>
             <ListItemText primary={text} />
           </ListItem>
