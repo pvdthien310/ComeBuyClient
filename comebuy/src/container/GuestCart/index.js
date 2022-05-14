@@ -17,6 +17,8 @@ import { getAllProduct } from '../../redux/slices/productSlice';
 import PaymentsIcon from '@mui/icons-material/Payments';
 import { cartSlice } from '../../redux/slices/cartSlice';
 import { useNavigate } from 'react-router-dom';
+import CheckIcon from '@mui/icons-material/Check';
+import ClearIcon from '@mui/icons-material/Clear';
 
 const ProductImage = styled('img')({
     height: 300,
@@ -48,10 +50,11 @@ const GuestCart = () => {
     }
 
     const handleChangeAmount = (value, actionType) => {
+        console.log(value)
         let newCart = [...cart];
         if (actionType == "increase") {
             newCart = cart.map((element) => {
-                if (element.productid == value.productID) {
+                if (element.productid == value) {
                     return {
                         "productid": element.productid,
                         "amount": Number(element.amount) + 1
@@ -59,12 +62,13 @@ const GuestCart = () => {
                 }
                 else return element
             });
-            dispatch(cartSlice.actions.cartListChange(newCart.filter(item => item != null)))
+            console.log(newCart)
+            dispatch(cartSlice.actions.cartListChange(newCart.filter(item => item != undefined)))
 
         }
         else if (actionType == "decrease") {
             newCart = cart.map((element) => {
-                if (element.productid == value.productID) {
+                if (element.productid == value) {
                     let rs = Number(element.amount) - 1
                     if (rs > 0)
                         return {
@@ -74,7 +78,8 @@ const GuestCart = () => {
                 }
                 else return element
             });
-            dispatch(cartSlice.actions.cartListChange(newCart.filter(item => item != null)))
+            console.log(newCart)
+            dispatch(cartSlice.actions.cartListChange(newCart.filter(item => item != undefined)))
         }
     }
 
@@ -173,6 +178,37 @@ const GuestCart = () => {
                                             <Typography variant='body1' fontWeight={'bold'} color='error'>${total}</Typography>
                                         </Stack>
                                         <Button variant='filled' sx={style.buttonCheckout} onClick={handleCheckout} endIcon={<PaymentsIcon />}>Checkout Now</Button>
+                                        {
+                                            total >= 2000 ?
+                                                <Box sx={{
+                                                    borderRadius: 5,
+                                                    borderWidth: 2,
+                                                    border: '1px solid green',
+                                                    p: 2,
+                                                    m: 2,
+                                                    color: 'green',
+                                                    backgroundColor: '#C6FABC'
+                                                }}>
+                                                    <Stack direction={'row'} spacing={1}>
+                                                        <CheckIcon />
+                                                        <Typography>Orders are eligible for free shipping upon prepayment.</Typography>
+                                                    </Stack>
+                                                </Box> :
+                                                <Box sx={{
+                                                    borderRadius: 5,
+                                                    borderWidth: 2,
+                                                    border: '1px solid red',
+                                                    p: 2,
+                                                    m: 2,
+                                                    color: 'white',
+                                                    backgroundColor: '#D97557'
+                                                }}>
+                                                    <Stack direction={'row'} spacing={1}>
+                                                        <ClearIcon />
+                                                        <Typography>Orders are not eligible for free shipping. Invoices need to be over 2000.</Typography>
+                                                    </Stack>
+                                                </Box>
+                                        }
                                     </Stack>
                                     :
                                     <Stack sx={{ width: '100%', height: '100%' }}>
@@ -183,7 +219,7 @@ const GuestCart = () => {
                     }
                 </Grid>
                 <BoxShopInfo></BoxShopInfo>
-                <BigFooter/>
+                <BigFooter />
             </Grid>
         </Stack>
     )

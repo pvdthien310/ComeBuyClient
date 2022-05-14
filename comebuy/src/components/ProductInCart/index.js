@@ -46,9 +46,9 @@ const ProductInCart = (props) => {
         <Card sx={{ p: 2, m: 1, boxShadow: 5 }}>
             {product != null ?
                 <Stack direction={'row'} sx={{ height: '100%', alignContent: 'center' }} >
-                    <Img alt="complex" sx={{ maxWidth: 150 }}
+                    <Img alt="complex" sx={{ maxWidth: 180 }}
                         src={product.productimage[0].imageURL} />
-                    <CardContent sx={{ maxWidth: 450 }}>
+                    <CardContent sx={{ maxWidth: 500 }}>
                         <Typography gutterBottom variant="body1" fontWeight={'bold'} component="div" onClick={handleNavigateToDetail}>
                             {product.name}
                         </Typography>
@@ -71,16 +71,16 @@ const ProductInCart = (props) => {
                         </Stack>
 
                     </CardContent>
-                    <Stack direction={'row'} sx={{ height: '10%', justifyContent: 'center', alignSelf: 'center', p: 3, m: 1 }} spacing={1}>
-                        <IconButton onClick={() => props.handleChangeAmount(product, 'decrease')} color="primary" aria-label="add to shopping cart">
+                    <Stack direction={'row'} sx={{ height: '10%', justifyContent: 'center', alignSelf: 'center', p: 2 }} spacing={1}>
+                        <IconButton onClick={() => props.handleChangeAmount(props.productInCart.productid, 'decrease')} color="primary" aria-label="add to shopping cart">
                             <RemoveIcon />
                         </IconButton>
                         <Chip label={amount} sx={{ backgroundColor: '#B360E6', color: 'white' }} />
-                        <IconButton onClick={() => props.handleChangeAmount(product, 'increase')} color="primary" aria-label="add to shopping cart">
+                        <IconButton onClick={() => props.handleChangeAmount(props.productInCart.productid, 'increase')} color="primary" aria-label="add to shopping cart">
                             <AddIcon />
                         </IconButton>
                     </Stack>
-                    <Typography variant="body1" fontWeight={'bold'} sx={{ textAlign: 'end', alignSelf: 'center' }} color="#D94A56">
+                    <Typography variant="body1" fontWeight={'bold'} sx={{ textAlign: 'end', alignSelf: 'center', minWidth: 100 }} color="#D94A56">
                         $ {product.price * amount}
                     </Typography>
                 </Stack>
