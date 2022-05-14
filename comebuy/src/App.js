@@ -15,9 +15,9 @@ import { ForgotPasswordInLogin } from './components';
 import { guestMenuItems, guestRoutes } from './route/GuestRoutes';
 
 function App() {
-  // if (localStorage.getItem('cart') === 'undefined') {
-  //   localStorage.setItem('cart', JSON.stringify([]))
-  // }
+  if (localStorage.getItem('cart') === 'undefined' || localStorage.getItem('cart') === null) {
+    localStorage.setItem('cart', JSON.stringify([]))
+  }
   const role = localStorage.getItem('role');
   const navigate = useNavigate()
 
@@ -50,8 +50,8 @@ function App() {
 
   return (
     <Routes>
-      <Route path="*" element={renderRoutes()} />
       <Route path="/login" element={<LoginRegister />} />
+      <Route path="*" element={renderRoutes()} />
       <Route path="/forgetpasswordinlogin" element={<ForgotPasswordInLogin />} />
     </Routes>
   );

@@ -16,6 +16,7 @@ import AddShoppingCartIcon from '@mui/icons-material/AddShoppingCart';
 import { getAllProduct } from '../../redux/slices/productSlice';
 import PaymentsIcon from '@mui/icons-material/Payments';
 import { cartSlice } from '../../redux/slices/cartSlice';
+import { useNavigate } from 'react-router-dom';
 
 const ProductImage = styled('img')({
     height: 300,
@@ -28,6 +29,7 @@ const ProductImage = styled('img')({
 
 const GuestCart = () => {
     const dispatch = useDispatch()
+    const navigate = useNavigate()
     const _cart = useSelector(cartListSelector)
     const [cart, setCart] = useState(_cart)
     const [error, setError] = useState(null)
@@ -100,6 +102,10 @@ const GuestCart = () => {
         }
     }, [_cart])
 
+    const handleCheckout = () => {
+        navigate('/myplace/mycart/checkout')
+    }
+
     return (
         <Stack sx={{ width: '100%', height: '100%' }}>
             <NavBar hiddenCartLabel={false}></NavBar>
@@ -166,7 +172,7 @@ const GuestCart = () => {
                                             <Typography variant='body1' >Total:</Typography>
                                             <Typography variant='body1' fontWeight={'bold'} color='error'>${total}</Typography>
                                         </Stack>
-                                        <Button variant='filled' sx={style.buttonCheckout} endIcon={<PaymentsIcon />}>Checkout Now</Button>
+                                        <Button variant='filled' sx={style.buttonCheckout} onClick={handleCheckout} endIcon={<PaymentsIcon />}>Checkout Now</Button>
                                     </Stack>
                                     :
                                     <Stack sx={{ width: '100%', height: '100%' }}>

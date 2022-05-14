@@ -49,6 +49,7 @@ export { default as BigFooter } from './BigFooter'
 export { default as BoxShopInfo } from './BoxShopInfo'
 export { default as SearchBar } from './SearchBar'
 export { default as ProductInCart } from './ProductInCart'
+export { default as Paypal } from './Paypal'
 
 
 

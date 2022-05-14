@@ -5,6 +5,7 @@ import ProductSpace from '../container/ProductSpace';
 import DetailProduct from '../container/Product/DetailProduct';
 import { ForgotPassword } from '../components';
 import GuestCart from '../container/GuestCart';
+import { CheckoutPage } from '../container/Checkout';
 
 const guestRoutes = [
   {
@@ -32,6 +33,11 @@ const guestRoutes = [
     path: '/productSpace/:id',
     page: <DetailProduct />
   },
+  {
+    name: 'Check out cart',
+    path: '/myplace/mycart/checkout',
+    page: <CheckoutPage />
+  }
 ];
 
 const guestMenuItems = []
