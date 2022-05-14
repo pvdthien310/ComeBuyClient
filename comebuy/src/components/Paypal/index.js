@@ -8,22 +8,31 @@ import { addInvoiceItem } from "../../redux/slices/invoiceItemSlice";
 
 import { Dialog, Button } from "@mui/material";
 import { DialogTitle } from "@mui/material";
+import { deleteCartById } from "../../redux/slices/cartSlice";
+import { useNavigate } from 'react-router-dom';
 
 export default function Paypal({ cartList, purchases, prodList }) {
 
     const _currentUser = useSelector(currentUser)
     const dispatch = useDispatch()
     const paypal = useRef();
-    // const { orderList } = listCart
-    // const { listProduct } = prodList
-    // const { purchaseList } = purchaseUnits
-    // const { listPurchase } = purchaseUnits
+    const navigate = useNavigate()
 
     const [paidSuccessfully, setPaidSuccessfully] = useState(false)
 
-    const handleCloseDialog = () => {
+    const handleCloseDialog = async () => {
+        // setPaidSuccessfully(false)
+        // setStartAddInvoiceItem(true)
+        for (let i = 0; i < cartList.length; i++) {
+            try {
+                const resultAction = await dispatch(deleteCartById(cartList[i]))
+                const originalPromiseResult = unwrapResult(resultAction)
+            } catch (rejectedValueOrSerializedError) {
+                alert(rejectedValueOrSerializedError);
+            }
+        }
         setPaidSuccessfully(false)
-        setStartAddInvoiceItem(true)
+        navigate('/')
     }
 
     const [orderData, setOrderData] = useState({
@@ -73,6 +82,12 @@ export default function Paypal({ cartList, purchases, prodList }) {
         setStartAddInvoiceItem(true)
     }
     const [startAddInvoiceItem, setStartAddInvoiceItem] = useState(false)
+    const [isCompleted, setIsCompleted] = useState(false)
+    useEffect(() => {
+        if (isCompleted === true) {
+            setPaidSuccessfully(true)
+        }
+    }, [isCompleted])
 
     useEffect(() => {
         const addItem = async () => {
@@ -80,22 +95,18 @@ export default function Paypal({ cartList, purchases, prodList }) {
                 try {
                     const resultAction = await dispatch(addInvoiceItem(listItem[0]))
                     const originalPromiseResult = unwrapResult(resultAction)
-                    console.log(originalPromiseResult)
-                    setStartAddInvoiceItem(false)
                 } catch (rejectedValueOrSerializedError) {
                     console.log(rejectedValueOrSerializedError)
                 }
             }
             setStartAddInvoiceItem(false)
+            setIsCompleted(true)
         }
         if (startAddInvoiceItem === true) {
             addItem()
-            // console.log(listItem)
-
         }
     }, [startAddInvoiceItem])
 
-    // const [purchaseUnits, setPurchaseUnits] = useState([])
     const [startAddInvoice, setStartAddInvoice] = useState(false)
 
     const MakeInvoice = async () => {
@@ -129,8 +140,6 @@ export default function Paypal({ cartList, purchases, prodList }) {
                 const resultAction = await dispatch(addInvoice(orderData))
                 const originalPromiseResult = unwrapResult(resultAction)
                 setInvoiceId(originalPromiseResult.data.invoiceID)
-                setStartAddInvoice(false)
-                setPaidSuccessfully(true)
             } catch (rejectedValueOrSerializedError) {
                 alert(rejectedValueOrSerializedError)
                 setStartAddInvoice(false)
@@ -144,17 +153,7 @@ export default function Paypal({ cartList, purchases, prodList }) {
                 createOrder: (data, actions, err) => {
                     return actions.order.create({
                         intent: "CAPTURE",
-                        // Here you pass single order or single item here
-                        // purchase_units: purchases,
-                        purchase_units: [
-                            {
-                                description: 'test tes',
-                                amount: {
-                                    currency_code: "USD",
-                                    value: 0.10
-                                }
-                            }
-                        ]
+                        purchase_units: purchases,
                     });
                 },
                 onApprove: async (data, actions) => {
@@ -172,7 +171,7 @@ export default function Paypal({ cartList, purchases, prodList }) {
         <div>
             <div ref={paypal}></div>
             <Dialog open={paidSuccessfully}>
-                <DialogTitle color='success'>Paid Successfully</DialogTitle>
+                <DialogTitle color='success'>Paid Successfully. Click OK to back to Main Page</DialogTitle>
                 <Button
                     onClick={handleCloseDialog}
                     style={{

@@ -377,7 +377,6 @@ export const CheckoutPage = () => {
             }}
             spacing={2}
         >
-            {/* {console.log(listCart)} */}
             {/* Cart information part */}
 
             {openPaymentMethodScreen ? (
@@ -1168,10 +1167,9 @@ export const CheckoutPage = () => {
                                 fontSize: '20px'
                             }}
                             >
-                                {subTotal} USD
+                                {subTotal + 2} USD
                             </Typography>
                         </Stack>
-
                     </Stack>
                 ) : (
                     <Stack direction="column" spacing={2} p="2rem" paddingRight="6em">
