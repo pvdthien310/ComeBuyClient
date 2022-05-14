@@ -52,6 +52,7 @@ export const CheckoutPage = () => {
         } else {
             setOpenPayOnline(false)
             setSelectedPayMethod(event.target.value);
+            MakePurchaseUnit()
         }
     };
 
@@ -76,6 +77,7 @@ export const CheckoutPage = () => {
                     await setListCart(listCart)
                     await setListProd(listProd)
                     await CountTotal(listCart, listProd)
+                    await MakePurchaseUnit(listCart, listProd)
                 } catch (rejectedValueOrSerializedError) {
                     alert(rejectedValueOrSerializedError)
                 }
@@ -94,6 +96,7 @@ export const CheckoutPage = () => {
                 await setListCart(listCart)
                 await setListProd(listProd)
                 await CountTotal(listCart, listProd)
+                await MakePurchaseUnit(listCart, listProd)
             }
         }
         fetchYourCart()
@@ -101,23 +104,28 @@ export const CheckoutPage = () => {
 
     const [purchaseUnits, setPurchaseUnits] = useState([])
 
-    const MakePurchaseUnit = async () => {
+    const MakePurchaseUnit = async (listCart, listProd) => {
         let sample = []
+        let amountObj = {
+            currency_code: "USD",
+            value: 0,
+        }
         for (let i = 0; i < listCart.length; i++) {
             for (let j = 0; j < listProd.length; j++) {
                 if (listProd[j].productID === listCart[i].productid) {
+                    amountObj = {
+                        ...amountObj,
+                        value: Number(listCart[i].amount) * Number(listProd[j].price)
+                    }
                     let temp = {
                         description: listProd[j].productID,
-                        amount: {
-                            currency_code: "USD",
-                            value: Number(listCart[i].amount) * Number(listProd[j].price)
-                        }
+                        amount: amountObj
                     }
                     sample.push(temp)
                 }
             }
         }
-        setPurchaseUnits(sample)
+        setPurchaseUnits(...purchaseUnits, sample)
     }
 
     const [subTotal, setSubTotal] = useState(0)
@@ -248,7 +256,8 @@ export const CheckoutPage = () => {
                 const temp = addressShip + ', ' + commune.name + ', ' + district.name + ', ' + province.name
                 setBigAddress(temp)
                 setOpenPaymentMethodScreen(true)
-                await MakePurchaseUnit()
+                // await MakePurchaseUnit()
+                // console.log(purchaseUnits)
             }
         }
     }
@@ -368,7 +377,7 @@ export const CheckoutPage = () => {
             }}
             spacing={2}
         >
-            {console.log(listCart)}
+            {/* {console.log(listCart)} */}
             {/* Cart information part */}
 
             {openPaymentMethodScreen ? (
@@ -570,7 +579,7 @@ export const CheckoutPage = () => {
                                             OR:
                                         </Typography>
                                         <div style={{ width: '50%', marginTop: '1.2em', alignSelf: 'center' }}>
-                                            <Paypal orderList={listCart} listProduct={listProd} />
+                                            <Paypal cartList={listCart} prodList={listProd} purchases={purchaseUnits} />
                                         </div>
                                     </>
                                 ) : (null)}

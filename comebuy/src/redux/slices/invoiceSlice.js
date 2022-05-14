@@ -28,7 +28,7 @@ export const updateInvoice = createAsyncThunk(
 
 export const addInvoice = createAsyncThunk(
     "invoice/addInvoice",
-    async ({ data }, { rejectWithValue }) => {
+    async (data, { rejectWithValue }) => {
         try {
             const response = await invoiceAPI.addInvoice(data);
             if (!response) {
