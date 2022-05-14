@@ -71,6 +71,7 @@ const ProductComment = (props) => {
 
 
     const HandlePostNewComment = async () => {
+        
         if (newCommentBody == null) {
             setMessageError("Comment is not allowed empty! :((")
             setOpenErrorAlert(true)
@@ -105,22 +106,40 @@ const ProductComment = (props) => {
     }
 
     useEffect(async () => {
-        const response = await commentApi.getCommentsWithID(props.productID)
-        if (response.status == 200) {
-            console.log(response.data)
-            setComments(response.data)
-            setLoading(false)
-        }
-        else {
-            console.log("Load comment failed")
-            setLoading(false)
-        }
+            let cancel = false
+            const response = await commentApi.getCommentsWithID(props.productID)
+            if (!cancel && response.status == 200) {
+                if (cancel) return;
+                setComments(response.data)
+                setLoading(false)
+            }
+            else {
+                console.log("Load comment failed")
+                setLoading(false)
+            };
 
         return () => {
-            setComments({})
-            setLoading(false)
-        }
+            cancel = true;
+        };
     }, [])
+
+
+    // useEffect(async () => {
+    //     const abortController = new AbortController();
+    //     const response = await commentApi.getCommentsWithID(props.productID)
+    //     if ( response.status == 200) {
+    //         setComments(response.data)
+    //         setLoading(false)
+    //     }
+    //     else {
+    //         console.log("Load comment failed")
+    //         setLoading(false)
+    //     };
+    //     return () => {
+    //         abortController.abort();
+    //     }
+    // }, [])
+
     return (
         <Grid container item xs={12} sx={style.boxComment}>
             <Stack sx={{ width: '100%' }}>
@@ -195,7 +214,7 @@ const ProductComment = (props) => {
                 aria-describedby="modal-modal-description"
             >
                 <Stack sx={style.modal} spacing={1}>
-                    <RateReviewIcon fontSize="large"/>
+                    <RateReviewIcon fontSize="large" />
                     <Typography id="modal-modal-title" variant="h6" component="h2">
                         Write your comment below. We appreciate your assistance!
                     </Typography>

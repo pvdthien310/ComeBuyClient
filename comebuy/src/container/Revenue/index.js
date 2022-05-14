@@ -4,8 +4,12 @@ import { useState, useEffect } from 'react'
 import branchApi from '../../api/branchAPI';
 import { SnackBarAlert, StockInBranch, RevenueChart } from '../../components';
 import { StyledTab, StyledTabs, TabPanel } from './child'
+import { useSelector } from 'react-redux';
+import { currentUser } from './../../redux/selectors';
+
 
 export default function Revenue() {
+    const _currentUser = useSelector(currentUser)
     const [value, setValue] = useState(0);
     const [branchList, setBranchList] = useState([])
     const [openSuccessAlert, setOpenSuccessAlert] = useState(false);
@@ -24,7 +28,11 @@ export default function Revenue() {
         try {
             const response = await branchApi.getAll()
             if (response.status == 200) {
-                setBranchList(response.data)
+                if (localStorage.getItem('role') == "admin")
+                    setBranchList(response.data)
+                else if (localStorage.getItem('role') == "manager"){    
+                    setBranchList(response.data.filter(ite => ite.branchID == _currentUser.branch.branchid))
+                }
                 setMessageSuccess("Load Branch Successfully")
                 setOpenSuccessAlert(true)
             }
@@ -37,7 +45,7 @@ export default function Revenue() {
             console.log(err)
         }
     }
-   
+
     useEffect(() => {
         LoadData()
         return () => {

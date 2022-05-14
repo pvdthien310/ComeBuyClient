@@ -45,7 +45,6 @@ function App() {
           return <GuestLayout routes={guestRoutes} itemRoutes={guestMenuItems} />; // Guest/Customer 
       }
     }
-    return <HomePage />
   };
 
 

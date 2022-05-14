@@ -216,7 +216,6 @@ const ProfileManage = () => {
             try {
                 const resultAction = await dispatch(updateAccount(temp))
                 const originalPromiseResult = unwrapResult(resultAction)
-                console.log(originalPromiseResult);
                 handleCloseModalChangeName();
                 setUpdating(false)
                 setOpenSuccess(true)
@@ -239,7 +238,6 @@ const ProfileManage = () => {
             try {
                 const resultAction = await dispatch(updateAccount(temp))
                 const originalPromiseResult = unwrapResult(resultAction)
-                console.log(originalPromiseResult);
                 handleCloseModalChangeContact();
                 setUpdating(false)
                 setOpenSuccess(true)
@@ -264,7 +262,6 @@ const ProfileManage = () => {
         try {
             const resultAction = await dispatch(updateAccount(temp))
             const originalPromiseResult = unwrapResult(resultAction)
-            console.log(originalPromiseResult);
             handleCloseModalChangeAddress();
             setUpdating(false)
             setOpenSuccess(true)
@@ -286,7 +283,6 @@ const ProfileManage = () => {
         try {
             const resultAction = await dispatch(updateAccount(temp))
             const originalPromiseResult = unwrapResult(resultAction)
-            console.log(originalPromiseResult);
             handleCloseModalChangeAddress();
             setUpdating(false)
             setOpenSuccess(true)

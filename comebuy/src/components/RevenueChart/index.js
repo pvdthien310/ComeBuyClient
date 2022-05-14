@@ -7,7 +7,6 @@ import LinearProgress from '@mui/material/LinearProgress';
 import { Typography } from '@mui/material';
 
 const handleMouseEnter = () => {
-  console.log("Thuc khung fa")
 }
 const CustomizedAxisTick = (props) => {
   const { x, y, payload, width, maxChars, lineHeight, fontSize, fill } = props;
