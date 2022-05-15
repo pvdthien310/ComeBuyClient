@@ -15,8 +15,12 @@ import Snackbar from '@mui/material/Snackbar';
 import MuiAlert from '@mui/material/Alert';
 import DiamondIcon from '@mui/icons-material/Diamond';
 import Radio from '@mui/material/Radio';
-import LocalShippingIcon from '@mui/icons-material/LocalShipping';
-import CreditCardIcon from '@mui/icons-material/CreditCard';
+import { Slide } from '@mui/material';
+import Dialog from '@mui/material/Dialog';
+import DialogActions from '@mui/material/DialogActions';
+import DialogContent from '@mui/material/DialogContent';
+import DialogContentText from '@mui/material/DialogContentText';
+import DialogTitle from '@mui/material/DialogTitle';
 
 import Paypal from './../../components/Paypal/index';
 import { CheckEmail, CheckPhoneNumber } from './../LoginAndRegister/ValidationDataForAccount'
@@ -29,12 +33,17 @@ import { accountSlice } from '../../redux/slices/accountSlice';
 const Alert = React.forwardRef(function Alert(props, ref) {
     return <MuiAlert elevation={6} ref={ref} variant="filled" {...props} />;
 });
+const Transition = React.forwardRef(function Transition(props, ref) {
+    return <Slide direction="up" ref={ref} {...props} />;
+});
 
 export const CheckoutPage = () => {
 
     const navigate = useNavigate()
     const dispatch = useDispatch()
     const isSignedIn = useSelector(isSignedIn_user)
+
+    const [isHideCompleteButton, setIsHideCompleteButton] = useState("flex")
 
     const [openPaymentMethodScreen, setOpenPaymentMethodScreen] = useState(false)
     const [openPayOnline, setOpenPayOnline] = useState(false)
@@ -48,9 +57,11 @@ export const CheckoutPage = () => {
     const handleChangePayMethod = (event) => {
         if (event.target.value === 'Pay online') {
             setOpenPayOnline(true)
+            setIsHideCompleteButton("none")
             setSelectedPayMethod(event.target.value);
         } else {
             setOpenPayOnline(false)
+            setIsHideCompleteButton("flex")
             setSelectedPayMethod(event.target.value);
             MakePurchaseUnit()
         }
@@ -118,7 +129,8 @@ export const CheckoutPage = () => {
                         value: Number(listCart[i].amount) * Number(listProd[j].price)
                     }
                     let temp = {
-                        description: listProd[j].productID,
+                        description: listProd[j].name,
+                        reference_id: listProd[j].productID,
                         amount: amountObj
                     }
                     sample.push(temp)
@@ -260,6 +272,17 @@ export const CheckoutPage = () => {
                 // console.log(purchaseUnits)
             }
         }
+    }
+
+    const [openConfirm, setOpenConfirm] = useState(false);
+    const handleCloseConfirm = () => {
+        setOpenConfirm(false);
+    };
+    const handleCompleteOrder = () => {
+        setOpenConfirm(true)
+    }
+    const handleAgreeCOD = () => {
+        console.log("Big address: " + { bigAddress })
     }
 
     const handlePaymentGuest = () => {
@@ -603,7 +626,7 @@ export const CheckoutPage = () => {
                                     </a>
                                 </Grid>
                                 <Grid item xs={6}>
-                                    <Button onClick={handleToPayment} variant="contained" sx={{ fontSize: '14px' }} size="large">
+                                    <Button onClick={handleCompleteOrder} variant="contained" sx={{ fontSize: '14px', display: `${isHideCompleteButton}` }} size="large">
                                         Complete order
                                     </Button>
                                 </Grid>
@@ -1315,6 +1338,29 @@ export const CheckoutPage = () => {
                     "Check your phone number and email whether it's in true type"
                 </Alert>
             </Snackbar>
+
+            <Dialog
+                open={openConfirm}
+                TransitionComponent={Transition}
+                keepMounted
+                aria-describedby="alert-dialog-slide-description"
+            >
+                <DialogTitle>{"Please check these information below carefully before placing an order"}</DialogTitle>
+                <DialogContent>
+                    <DialogContentText id="alert-dialog-slide-description">
+                        You are about using COD service. /n
+                        Your name: {name} \n
+                        Your phone number: {phoneNumber} -
+                        Your address: {bigAddress} -
+                        An order will be sent to your email: {_currentUser.email}
+                        About 5 days your order will be in your hands.
+                    </DialogContentText>
+                </DialogContent>
+                <DialogActions>
+                    <Button onClick={() => setOpenConfirm(false)}>Disagree</Button>
+                    <Button onClick={handleAgreeCOD}>Agree</Button>
+                </DialogActions>
+            </Dialog>
         </Grid >
     )
 }
