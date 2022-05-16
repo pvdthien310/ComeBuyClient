@@ -5,13 +5,14 @@ import moment from 'moment'
 import { addInvoice } from "../../redux/slices/invoiceSlice";
 import { unwrapResult } from "@reduxjs/toolkit";
 import { addInvoiceItem } from "../../redux/slices/invoiceItemSlice";
+import emailApi from "../../api/emailAPI";
 
 import { Dialog, Button } from "@mui/material";
 import { DialogTitle } from "@mui/material";
 import { deleteCartById } from "../../redux/slices/cartSlice";
 import { useNavigate } from 'react-router-dom';
 
-export default function Paypal({ cartList, purchases, prodList }) {
+export default function Paypal({ cartList, purchases, prodList, _bigAddress, _guestEmail, _guestName, _guestPhoneNumber }) {
 
     const _currentUser = useSelector(currentUser)
     const dispatch = useDispatch()
@@ -23,16 +24,23 @@ export default function Paypal({ cartList, purchases, prodList }) {
     const handleCloseDialog = async () => {
         // setPaidSuccessfully(false)
         // setStartAddInvoiceItem(true)
-        for (let i = 0; i < cartList.length; i++) {
-            try {
-                const resultAction = await dispatch(deleteCartById(cartList[i]))
-                const originalPromiseResult = unwrapResult(resultAction)
-            } catch (rejectedValueOrSerializedError) {
-                alert(rejectedValueOrSerializedError);
+        if (localStorage.getItem('role') === "customer") {
+            for (let i = 0; i < cartList.length; i++) {
+                try {
+                    const resultAction = await dispatch(deleteCartById(cartList[i]))
+                    const originalPromiseResult = unwrapResult(resultAction)
+                } catch (rejectedValueOrSerializedError) {
+                    alert(rejectedValueOrSerializedError);
+                }
             }
+            setPaidSuccessfully(false)
+            navigate('/')
+        } else {
+            localStorage.setItem('cart', JSON.stringify([]));
+            setPaidSuccessfully(false)
+            navigate('/')
         }
-        setPaidSuccessfully(false)
-        navigate('/')
+
     }
 
     const [orderData, setOrderData] = useState({
@@ -65,6 +73,7 @@ export default function Paypal({ cartList, purchases, prodList }) {
 
     const _addInvoiceItem = async (_invoiceId) => {
         let t = []
+        let stringOrder = ''
         for (let i = 0; i < cartList.length; i++) {
             for (let j = 0; j < prodList.length; j++) {
                 if (cartList[i].productid === prodList[j].productID) {
@@ -75,11 +84,52 @@ export default function Paypal({ cartList, purchases, prodList }) {
                         total: Number(cartList[i].amount) * Number(prodList[j].price)
                     }
                     t.push(item)
+                    stringOrder = stringOrder + "\n" + `${prodList[j].name} - Quantity: ${cartList[i].amount} - Sub-cost: $${item.total} `
                 }
             }
         }
-        setListItem(t)
-        setStartAddInvoiceItem(true)
+        if (localStorage.getItem('role') === "customer") {
+            emailApi.sendEmail({
+                to: _currentUser.email,
+                subject: "Your order information",
+                text: "Thank for placing order in ComeBuy site. \n" +
+                    "Your order: \n" +
+                    `Name: ${_currentUser.name} \n` +
+                    `Phone: ${_currentUser.phoneNumber} \n` +
+                    `COD Address: ${_bigAddress}` + "\n" +
+                    "-------------------------------------------------------- \n" +
+                    stringOrder + "\n" +
+                    "-------------------------------------------------------- \n" +
+                    `Total: ${getTotal()} USD` + "\n" +
+                    "-------------------------------------------------------- \n" +
+                    "Any wondered things. Please contact with our shop with contact below site: ComeBuy.com"
+            }).then(data => {
+                setListItem(t)
+                setStartAddInvoiceItem(true)
+            })
+                .catch(err => console.log(err))
+        } else {
+            emailApi.sendEmail({
+                to: _guestEmail,
+                subject: "Your order information",
+                text: "Thank for placing order in ComeBuy site. \n" +
+                    "Your order: \n" +
+                    `Name: ${_guestName} \n` +
+                    `Phone: ${_guestPhoneNumber} \n` +
+                    `COD Address: ${_bigAddress}` + "\n" +
+                    "-------------------------------------------------------- \n" +
+                    stringOrder + "\n" +
+                    "-------------------------------------------------------- \n" +
+                    `Total: ${getTotal()} USD` + "\n" +
+                    "-------------------------------------------------------- \n" +
+                    "Any wondered things. Please contact with our shop with contact below site: ComeBuy.com"
+            }).then(data => {
+                setListItem(t)
+                setStartAddInvoiceItem(true)
+            })
+                .catch(err => console.log(err))
+        }
+
     }
     const [startAddInvoiceItem, setStartAddInvoiceItem] = useState(false)
     const [isCompleted, setIsCompleted] = useState(false)
@@ -110,20 +160,38 @@ export default function Paypal({ cartList, purchases, prodList }) {
     const [startAddInvoice, setStartAddInvoice] = useState(false)
 
     const MakeInvoice = async () => {
-        var m = moment().format('H mm')
-        var date = moment().format('D/M/YYYY')
-        let tempID = ''
-        let temp = {
-            ...orderData,
-            moneyReceived: getTotal().toString(),
-            isChecked: true,
-            isPaid: true,
-            date: date + ' ' + m,
-            userID: _currentUser.userID,
-            branchID: 'da198f71-813b-47f8-9ded-331b358d4780'
+        if (localStorage.getItem('role') === 'customer') {
+            var m = moment().format('H mm')
+            var date = moment().format('D/M/YYYY')
+            let tempID = ''
+            let temp = {
+                ...orderData,
+                moneyReceived: getTotal().toString(),
+                isChecked: true,
+                isPaid: true,
+                date: date + ' ' + m,
+                userID: _currentUser.userID,
+                branchID: 'da198f71-813b-47f8-9ded-331b358d4780'
+            }
+            setOrderData(temp)
+            setStartAddInvoice(true)
+        } else {
+            var m = moment().format('H mm')
+            var date = moment().format('D/M/YYYY')
+            let tempID = ''
+            let temp = {
+                ...orderData,
+                moneyReceived: getTotal().toString(),
+                isChecked: true,
+                isPaid: true,
+                date: date + ' ' + m,
+                userID: "10f8e845-b0ea-47fd-9f26-7d65f1bb571a",
+                branchID: 'da198f71-813b-47f8-9ded-331b358d4780'
+            }
+            setOrderData(temp)
+            setStartAddInvoice(true)
         }
-        setOrderData(temp)
-        setStartAddInvoice(true)
+
     }
 
     const [invoiceId, setInvoiceId] = useState(' ')
@@ -170,6 +238,9 @@ export default function Paypal({ cartList, purchases, prodList }) {
     return (
         <div>
             <div ref={paypal}></div>
+            {console.log(cartList)}
+            {console.log(prodList)}
+            {console.log(purchases)}
             <Dialog open={paidSuccessfully}>
                 <DialogTitle color='success'>Paid Successfully. Click OK to back to Main Page</DialogTitle>
                 <Button

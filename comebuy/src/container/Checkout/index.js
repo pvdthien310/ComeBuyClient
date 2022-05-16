@@ -298,13 +298,17 @@ export const CheckoutPage = () => {
     const [openBackdrop, setOpenBackdrop] = useState(false);
     const handleCloseBackdrop = async () => {
         handleCloseConfirm()
-        for (let i = 0; i < listCart.length; i++) {
-            try {
-                const resultAction = await dispatch(deleteCartById(listCart[i]))
-                const originalPromiseResult = unwrapResult(resultAction)
-            } catch (rejectedValueOrSerializedError) {
-                alert(rejectedValueOrSerializedError);
+        if (localStorage.getItem('role') === "customer") {
+            for (let i = 0; i < listCart.length; i++) {
+                try {
+                    const resultAction = await dispatch(deleteCartById(listCart[i]))
+                    const originalPromiseResult = unwrapResult(resultAction)
+                } catch (rejectedValueOrSerializedError) {
+                    alert(rejectedValueOrSerializedError);
+                }
             }
+        } else {
+            localStorage.setItem('cart', JSON.stringify([]));
         }
         setOpenBackdrop(false);
         setPlacedOrderSuccessfully(true)
@@ -321,21 +325,42 @@ export const CheckoutPage = () => {
         var m = moment().format('H mm')
         var date = moment().format('D/M/YYYY')
         let tempID = ''
-        let temp = {
-            moneyReceived: '0',
-            isChecked: false,
-            isPaid: false,
-            date: date + ' ' + m,
-            userID: _currentUser.userID,
-            branchID: 'da198f71-813b-47f8-9ded-331b358d4780'
+        if (localStorage.getItem('role') === "customer") {
+            let temp = {
+                moneyReceived: '0',
+                isChecked: false,
+                isPaid: false,
+                date: date + ' ' + m,
+                userID: _currentUser.userID,
+                branchID: 'da198f71-813b-47f8-9ded-331b358d4780'
+            }
+
+            try {
+                const resultAction = await dispatch(addInvoice(temp))
+                const originalPromiseResult = unwrapResult(resultAction)
+                setInvoiceId(originalPromiseResult.data.invoiceID)
+            } catch (rejectedValueOrSerializedError) {
+                alert(rejectedValueOrSerializedError)
+            }
+        } else {
+            let temp = {
+                moneyReceived: "0",
+                isChecked: false,
+                isPaid: false,
+                date: date + ' ' + m,
+                userID: "10f8e845-b0ea-47fd-9f26-7d65f1bb571a",
+                branchID: 'da198f71-813b-47f8-9ded-331b358d4780'
+            }
+
+            try {
+                const resultAction = await dispatch(addInvoice(temp))
+                const originalPromiseResult = unwrapResult(resultAction)
+                setInvoiceId(originalPromiseResult.data.invoiceID)
+            } catch (rejectedValueOrSerializedError) {
+                alert(rejectedValueOrSerializedError)
+            }
         }
-        try {
-            const resultAction = await dispatch(addInvoice(temp))
-            const originalPromiseResult = unwrapResult(resultAction)
-            setInvoiceId(originalPromiseResult.data.invoiceID)
-        } catch (rejectedValueOrSerializedError) {
-            alert(rejectedValueOrSerializedError)
-        }
+
     }
 
     useEffect(async () => {
@@ -367,24 +392,45 @@ export const CheckoutPage = () => {
             }
         }
 
-        emailApi.sendEmail({
-            to: _currentUser.email,
-            subject: "Your order information",
-            text: "Thank for placing order in ComeBuy site. \n" +
-                "Your order: \n" +
-                `Name: ${_currentUser.name} \n` +
-                `Phone: ${_currentUser.phoneNumber} \n` +
-                `COD Address: ${bigAddress}` + "\n" +
-                "-------------------------------------------------------- \n" +
-                stringOrder + "\n" +
-                "-------------------------------------------------------- \n" +
-                `Total: ${subTotal} USD` + "\n" +
-                "-------------------------------------------------------- \n" +
-                "Any wondered things. Please contact with our shop with contact below site: ComeBuy.com"
-        }).then(data => {
-            handleCloseBackdrop()
-        })
-            .catch(err => console.log(err))
+        if (localStorage.getItem('role') === "customer") {
+            emailApi.sendEmail({
+                to: _currentUser.email,
+                subject: "Your order information",
+                text: "Thank for placing order in ComeBuy site. \n" +
+                    "Your order: \n" +
+                    `Name: ${_currentUser.name} \n` +
+                    `Phone: ${_currentUser.phoneNumber} \n` +
+                    `COD Address: ${bigAddress}` + "\n" +
+                    "-------------------------------------------------------- \n" +
+                    stringOrder + "\n" +
+                    "-------------------------------------------------------- \n" +
+                    `Total: ${subTotal} USD` + "\n" +
+                    "-------------------------------------------------------- \n" +
+                    "Any wondered things. Please contact with our shop with contact below site: ComeBuy.com"
+            }).then(data => {
+                handleCloseBackdrop()
+            })
+                .catch(err => console.log(err))
+        } else {
+            emailApi.sendEmail({
+                to: email,
+                subject: "Your order information",
+                text: "Thank for placing order in ComeBuy site. \n" +
+                    "Your order: \n" +
+                    `Name: ${guestName} \n` +
+                    `Phone: ${guestPhoneNum} \n` +
+                    `COD Address: ${bigAddress}` + "\n" +
+                    "-------------------------------------------------------- \n" +
+                    stringOrder + "\n" +
+                    "-------------------------------------------------------- \n" +
+                    `Total: ${subTotal} USD` + "\n" +
+                    "-------------------------------------------------------- \n" +
+                    "Any wondered things. Please contact with our shop with contact below site: ComeBuy.com"
+            }).then(data => {
+                handleCloseBackdrop()
+            })
+                .catch(err => console.log(err))
+        }
     }
 
 
@@ -704,7 +750,7 @@ export const CheckoutPage = () => {
                                             OR:
                                         </Typography>
                                         <div style={{ width: '50%', marginTop: '1.2em', alignSelf: 'center' }}>
-                                            <Paypal cartList={listCart} prodList={listProd} purchases={purchaseUnits} />
+                                            <Paypal _bigAddress={bigAddress} _guestEmail={email} _guestName={guestName} _guestPhoneNumber={guestPhoneNum} cartList={listCart} prodList={listProd} purchases={purchaseUnits} />
                                         </div>
                                     </>
                                 ) : (null)}
@@ -956,7 +1002,7 @@ export const CheckoutPage = () => {
                                     display: 'block'
                                 }}>
                                 <Button
-                                    onClick={() => alert("Move to home page")}
+                                    onClick={() => navigate('/')}
                                     sx={{
                                         marginLeft: '-1.2%',
                                         color: '#333333',
@@ -1159,7 +1205,7 @@ export const CheckoutPage = () => {
                                         </Grid>
 
                                         <Grid item xs={6}>
-                                            <Button onClick={handlePaymentGuest} variant="contained" sx={{ fontSize: '14px' }} size="large">
+                                            <Button onClick={handleToPayment} variant="contained" sx={{ fontSize: '14px' }} size="large">
                                                 Continue to payment method
                                             </Button>
                                         </Grid>
@@ -1450,14 +1496,25 @@ export const CheckoutPage = () => {
             >
                 <DialogTitle>{"Please check these information below carefully before placing an order"}</DialogTitle>
                 <DialogContent>
-                    <DialogContentText id="alert-dialog-slide-description">
-                        You are about using COD service. <br />
-                        Order's name: {name} <br />
-                        Order's phone number: {phoneNumber} <br />
-                        Order's address: {bigAddress} <br />
-                        An order will be sent to your email: {_currentUser.email} <br />
-                        About 5 days your order will be delivered.
-                    </DialogContentText>
+                    {localStorage.getItem('role') === "customer" ? (
+                        <DialogContentText id="alert-dialog-slide-description">
+                            You are about using COD service. <br />
+                            Order's name: {name} <br />
+                            Order's phone number: {phoneNumber} <br />
+                            Order's address: {bigAddress} <br />
+                            An order will be sent to your email: {_currentUser.email} <br />
+                            About 5 days your order will be delivered.
+                        </DialogContentText>
+                    ) : (
+                        <DialogContentText id="alert-dialog-slide-description">
+                            You are about using COD service. <br />
+                            Order's name: {guestName} <br />
+                            Order's phone number: {guestPhoneNum} <br />
+                            Order's address: {bigAddress} <br />
+                            An order will be sent to your email: {email} <br />
+                            About 5 days your order will be delivered.
+                        </DialogContentText>
+                    )}
                 </DialogContent>
                 <DialogActions>
                     <Button onClick={() => setOpenConfirm(false)}>Disagree</Button>
