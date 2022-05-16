@@ -15,19 +15,32 @@ import Snackbar from '@mui/material/Snackbar';
 import MuiAlert from '@mui/material/Alert';
 import DiamondIcon from '@mui/icons-material/Diamond';
 import Radio from '@mui/material/Radio';
-import LocalShippingIcon from '@mui/icons-material/LocalShipping';
-import CreditCardIcon from '@mui/icons-material/CreditCard';
+import { Slide } from '@mui/material';
+import Dialog from '@mui/material/Dialog';
+import DialogActions from '@mui/material/DialogActions';
+import DialogContent from '@mui/material/DialogContent';
+import DialogContentText from '@mui/material/DialogContentText';
+import DialogTitle from '@mui/material/DialogTitle';
+import Backdrop from '@mui/material/Backdrop';
+import CircularProgress from '@mui/material/CircularProgress';
 
 import Paypal from './../../components/Paypal/index';
 import { CheckEmail, CheckPhoneNumber } from './../LoginAndRegister/ValidationDataForAccount'
 import { isSignedIn_user, currentUser, cartListSelector } from '../../redux/selectors';
-import { getAllCart } from '../../redux/slices/cartSlice';
+import { deleteCartById, getAllCart } from '../../redux/slices/cartSlice';
 import { unwrapResult } from '@reduxjs/toolkit';
 import { getAllProduct, getProductWithID } from '../../redux/slices/productSlice';
 import { accountSlice } from '../../redux/slices/accountSlice';
+import moment from 'moment'
+import { addInvoice } from "../../redux/slices/invoiceSlice";
+import { addInvoiceItem } from "../../redux/slices/invoiceItemSlice";
+import emailApi from '../../api/emailAPI';
 
 const Alert = React.forwardRef(function Alert(props, ref) {
     return <MuiAlert elevation={6} ref={ref} variant="filled" {...props} />;
+});
+const Transition = React.forwardRef(function Transition(props, ref) {
+    return <Slide direction="up" ref={ref} {...props} />;
 });
 
 export const CheckoutPage = () => {
@@ -35,6 +48,8 @@ export const CheckoutPage = () => {
     const navigate = useNavigate()
     const dispatch = useDispatch()
     const isSignedIn = useSelector(isSignedIn_user)
+
+    const [isHideCompleteButton, setIsHideCompleteButton] = useState("flex")
 
     const [openPaymentMethodScreen, setOpenPaymentMethodScreen] = useState(false)
     const [openPayOnline, setOpenPayOnline] = useState(false)
@@ -48,9 +63,11 @@ export const CheckoutPage = () => {
     const handleChangePayMethod = (event) => {
         if (event.target.value === 'Pay online') {
             setOpenPayOnline(true)
+            setIsHideCompleteButton("none")
             setSelectedPayMethod(event.target.value);
         } else {
             setOpenPayOnline(false)
+            setIsHideCompleteButton("flex")
             setSelectedPayMethod(event.target.value);
             MakePurchaseUnit()
         }
@@ -118,7 +135,8 @@ export const CheckoutPage = () => {
                         value: Number(listCart[i].amount) * Number(listProd[j].price)
                     }
                     let temp = {
-                        description: listProd[j].productID,
+                        description: listProd[j].name,
+                        reference_id: listProd[j].productID,
                         amount: amountObj
                     }
                     sample.push(temp)
@@ -261,6 +279,114 @@ export const CheckoutPage = () => {
             }
         }
     }
+
+    const [openConfirm, setOpenConfirm] = useState(false);
+    const handleCloseConfirm = () => {
+        setOpenConfirm(false);
+    };
+    const handleCompleteOrder = () => {
+        setOpenConfirm(true)
+    }
+
+    const [placedOrderSuccessfully, setPlacedOrderSuccessfully] = useState(false)
+
+    const handleClosePlacedOrderSuccessfully = () => {
+        setPlacedOrderSuccessfully(false)
+        navigate('/')
+    }
+
+    const [openBackdrop, setOpenBackdrop] = useState(false);
+    const handleCloseBackdrop = async () => {
+        handleCloseConfirm()
+        for (let i = 0; i < listCart.length; i++) {
+            try {
+                const resultAction = await dispatch(deleteCartById(listCart[i]))
+                const originalPromiseResult = unwrapResult(resultAction)
+            } catch (rejectedValueOrSerializedError) {
+                alert(rejectedValueOrSerializedError);
+            }
+        }
+        setOpenBackdrop(false);
+        setPlacedOrderSuccessfully(true)
+    };
+
+    const handleAgreeCOD = () => {
+        setOpenBackdrop(true)
+        MakeInvoice();
+    }
+
+    const [invoiceId, setInvoiceId] = useState(' ')
+
+    const MakeInvoice = async () => {
+        var m = moment().format('H mm')
+        var date = moment().format('D/M/YYYY')
+        let tempID = ''
+        let temp = {
+            moneyReceived: '0',
+            isChecked: false,
+            isPaid: false,
+            date: date + ' ' + m,
+            userID: _currentUser.userID,
+            branchID: 'da198f71-813b-47f8-9ded-331b358d4780'
+        }
+        try {
+            const resultAction = await dispatch(addInvoice(temp))
+            const originalPromiseResult = unwrapResult(resultAction)
+            setInvoiceId(originalPromiseResult.data.invoiceID)
+        } catch (rejectedValueOrSerializedError) {
+            alert(rejectedValueOrSerializedError)
+        }
+    }
+
+    useEffect(async () => {
+        if (invoiceId != ' ') {
+            _addInvoiceItem(invoiceId)
+        }
+    }, [invoiceId])
+
+    const _addInvoiceItem = async (_invoiceId) => {
+        let stringOrder = ''
+        for (let i = 0; i < listCart.length; i++) {
+            for (let j = 0; j < listProd.length; j++) {
+                if (listCart[i].productid === listProd[j].productID) {
+                    let item = {
+                        invoiceID: _invoiceId,
+                        productID: listProd[j].productID,
+                        amount: listCart[i].amount,
+                        total: Number(listCart[i].amount) * Number(listProd[j].price)
+                    }
+                    stringOrder = stringOrder + "\n" + `${listProd[j].name} - Quantity: ${listCart[i].amount} - Sub-cost: $${item.total} `
+                    // t.push(item)
+                    try {
+                        const resultAction = await dispatch(addInvoiceItem(item))
+                        const originalPromiseResult = unwrapResult(resultAction)
+                    } catch (rejectedValueOrSerializedError) {
+                        console.log(rejectedValueOrSerializedError)
+                    }
+                }
+            }
+        }
+
+        emailApi.sendEmail({
+            to: _currentUser.email,
+            subject: "Your order information",
+            text: "Thank for placing order in ComeBuy site. \n" +
+                "Your order: \n" +
+                `Name: ${_currentUser.name} \n` +
+                `Phone: ${_currentUser.phoneNumber} \n` +
+                `COD Address: ${bigAddress}` + "\n" +
+                "-------------------------------------------------------- \n" +
+                stringOrder + "\n" +
+                "-------------------------------------------------------- \n" +
+                `Total: ${subTotal} USD` + "\n" +
+                "-------------------------------------------------------- \n" +
+                "Any wondered things. Please contact with our shop with contact below site: ComeBuy.com"
+        }).then(data => {
+            handleCloseBackdrop()
+        })
+            .catch(err => console.log(err))
+    }
+
 
     const handlePaymentGuest = () => {
         if (guestName === '' || guestPhoneNum === '' || addressShip === '' || email === '') {
@@ -603,7 +729,7 @@ export const CheckoutPage = () => {
                                     </a>
                                 </Grid>
                                 <Grid item xs={6}>
-                                    <Button onClick={handleToPayment} variant="contained" sx={{ fontSize: '14px' }} size="large">
+                                    <Button onClick={handleCompleteOrder} variant="contained" sx={{ fontSize: '14px', display: `${isHideCompleteButton}` }} size="large">
                                         Complete order
                                     </Button>
                                 </Grid>
@@ -1315,6 +1441,60 @@ export const CheckoutPage = () => {
                     "Check your phone number and email whether it's in true type"
                 </Alert>
             </Snackbar>
+
+            <Dialog
+                open={openConfirm}
+                TransitionComponent={Transition}
+                keepMounted
+                aria-describedby="alert-dialog-slide-description"
+            >
+                <DialogTitle>{"Please check these information below carefully before placing an order"}</DialogTitle>
+                <DialogContent>
+                    <DialogContentText id="alert-dialog-slide-description">
+                        You are about using COD service. <br />
+                        Order's name: {name} <br />
+                        Order's phone number: {phoneNumber} <br />
+                        Order's address: {bigAddress} <br />
+                        An order will be sent to your email: {_currentUser.email} <br />
+                        About 5 days your order will be delivered.
+                    </DialogContentText>
+                </DialogContent>
+                <DialogActions>
+                    <Button onClick={() => setOpenConfirm(false)}>Disagree</Button>
+                    <Button onClick={handleAgreeCOD}>Agree</Button>
+                </DialogActions>
+            </Dialog>
+
+            <Dialog open={placedOrderSuccessfully}>
+                <DialogTitle color='success'>Placed order successfully. <br />
+                    Please check your email or My orders to see your work <br />
+                    Click OK to back to Main Page</DialogTitle>
+                <Button
+                    onClick={handleClosePlacedOrderSuccessfully}
+                    style={{
+                        alignSelf: 'center',
+                        width: '30px',
+                        height: '30px',
+                        borderRadius: '15px',
+                        border: '1px solid #18608a',
+                        backgroundColor: 'green',
+                        color: 'black',
+                        fontSize: '13px',
+                        marginBottom: '10px',
+                        fontWeight: 'bold',
+                        padding: '12px 45px',
+                    }}
+                >
+                    OK
+                </Button>
+            </Dialog>
+
+            <Backdrop
+                sx={{ color: '#fff', zIndex: (theme) => theme.zIndex.drawer + 1 }}
+                open={openBackdrop}
+            >
+                <CircularProgress color="inherit" />
+            </Backdrop>
         </Grid >
     )
 }

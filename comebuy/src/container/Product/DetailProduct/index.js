@@ -29,11 +29,15 @@ import ChangeCircleIcon from '@mui/icons-material/ChangeCircle';
 import AddTaskIcon from '@mui/icons-material/AddTask';
 import InfoIcon from '@mui/icons-material/Info';
 import LocalPhoneIcon from '@mui/icons-material/LocalPhone';
-import { cartListSelector } from '../../../redux/selectors.js';
+import Backdrop from '@mui/material/Backdrop';
+import Snackbar from '@mui/material/Snackbar';
+import MuiAlert from '@mui/material/Alert';
+import { cartListSelector, currentUser } from '../../../redux/selectors.js';
 import { useDispatch, useSelector } from 'react-redux';
-import { cartSlice } from '../../../redux/slices/cartSlice.js';
+import { addCart, cartSlice, updateCart } from '../../../redux/slices/cartSlice.js';
 import ProductComment from '../../../components/ProductComment/index.js';
 import RecommendedProductLine from '../../../components/RecommendedProductLine/index.js';
+import { unwrapResult } from '@reduxjs/toolkit';
 
 
 const ProductImage = styled('img')({
@@ -43,48 +47,125 @@ const ProductImage = styled('img')({
     alignSelf: 'center',
     backgroundSize: 'cover',
 })
+const Alert = React.forwardRef(function Alert(props, ref) {
+    return <MuiAlert elevation={6} ref={ref} variant="filled" {...props} />;
+});
+
 
 
 const DetailProduct = () => {
     const dispatch = useDispatch()
     const _cart = useSelector(cartListSelector)
+    const _currentUser = useSelector(currentUser)
     const { id } = useParams()
     const [product, setProduct] = useState(null)
     const [error, setError] = useState(null)
+    const [startAdding, setStartAdding] = useState(false)
+    const [openBackdrop, setOpenBackdrop] = useState(false)
+    const [openSnackbar, setOpenSnackbar] = React.useState(false);
+
+    const handleCloseSnackbar = (event, reason) => {
+        if (reason === 'clickaway') {
+            return;
+        }
+        setOpenSnackbar(false);
+    };
 
     const LoadData = async () => {
         const response = await productAPI.getProductWithID(id)
-        if (response.status == 200) 
+        if (response.status == 200)
             setProduct(response.data)
-        else 
+        else
             setError("Error Load Product!")
     }
 
-    const handleAddToCart = () => {
-        let isExisted = false
-        let newCart = [..._cart]
-        if (localStorage.getItem('idUser') == '') {
-            newCart = newCart.map((item) => {
-                if (item.productid == product.productID) {
-                    isExisted = true
-                    return {
-                        "productid": product.productID,
-                        "amount": item['amount'] + 1
+    const updateAmount = async (item) => {
+        try {
+            const resultAction = await dispatch(updateCart(item))
+            const originalPromiseResult = unwrapResult(resultAction)
+            setOpenBackdrop(false)
+            setOpenSnackbar(true)
+        } catch (rejectedValueOrSerializedError) {
+            setOpenBackdrop(false)
+            alert(rejectedValueOrSerializedError);
+        }
+    }
+
+    const addNewCart = async (temp) => {
+        try {
+            const resultAction = await dispatch(addCart(temp))
+            const originalPromiseResult = unwrapResult(resultAction)
+            setOpenBackdrop(false)
+            setOpenSnackbar(true)
+        } catch (rejectedValueOrSerializedError) {
+            setOpenBackdrop(false)
+            alert(rejectedValueOrSerializedError);
+        }
+    }
+
+    const handleAddToCart = async () => {
+        if (localStorage.getItem('role') == 'customer') {
+            setOpenBackdrop(true)
+            let isExisted = false;
+            let newCart = [..._cart]
+            if (localStorage.getItem('idUser') != '') {
+                newCart = newCart.map((item) => {
+                    if (item.productid == product.productID) {
+                        isExisted = true
+                        return {
+                            "productid": product.productID,
+                            "amount": item['amount'] + 1
+                        }
                     }
+                    else return item
+                })
+                dispatch(cartSlice.actions.cartListChange(newCart))
+                //Update amount if cart existed
+                if (isExisted === true) {
+                    newCart.map((item) => {
+                        if (item.productid == product.productID) {
+                            updateAmount(item)
+                        }
+                    })
+                } else {
+                    newCart = [...newCart, {
+                        "productid": product.productID,
+                        "amount": 1
+                    }]
+                    dispatch(cartSlice.actions.cartListChange(newCart))
+                    let temp = {
+                        userID: _currentUser.userID,
+                        productID: product.productID,
+                        amount: 1
+                    }
+                    addNewCart(temp)
                 }
-                else return item
-            })
-            dispatch(cartSlice.actions.cartListChange(newCart))
+            }
+        } else {
+            let isExisted = false
+            let newCart = [..._cart]
+            if (localStorage.getItem('idUser') == '') {
+                newCart = newCart.map((item) => {
+                    if (item.productid == product.productID) {
+                        isExisted = true
+                        return {
+                            "productid": product.productID,
+                            "amount": item['amount'] + 1
+                        }
+                    }
+                    else return item
+                })
+                dispatch(cartSlice.actions.cartListChange(newCart))
+            }
+            if (!isExisted) {
+
+                newCart = [...newCart, {
+                    "productid": product.productID,
+                    "amount": 1
+                }]
+                dispatch(cartSlice.actions.cartListChange(newCart))
+            }
         }
-        if (!isExisted) {
-           
-            newCart = [...newCart, {
-                "productid": product.productID,
-                "amount": 1
-            }]
-            dispatch(cartSlice.actions.cartListChange(newCart))
-        }
-        
     }
 
 
@@ -106,20 +187,20 @@ const DetailProduct = () => {
                             <Box sx={style.boxContainer}>
                                 <Box sx={style.boxInfor1}>
                                     <Grid item container>
-                                        <Grid item  xs={11}>
-                                            <Typography  xs={12} color="#152659" id="modal-modal-title" fontWeight='bold' variant="h6" component="h2">
+                                        <Grid item xs={11}>
+                                            <Typography xs={12} color="#152659" id="modal-modal-title" fontWeight='bold' variant="h6" component="h2">
                                                 {product.name}
                                             </Typography>
                                         </Grid>
-                                        <Grid item  xs={1}>
-                                            <Typography  xs={12} color="#152659" id="modal-modal-title" fontWeight='bold' variant="h6" component="h2">
+                                        <Grid item xs={1}>
+                                            <Typography xs={12} color="#152659" id="modal-modal-title" fontWeight='bold' variant="h6" component="h2">
                                                 {"$ " + product.price}
                                             </Typography>
                                         </Grid>
                                     </Grid>
                                     <Box sx={style.boxInfor_Line}></Box>
                                     <Grid item container>
-                                        <Typography  sx={{ marginBottom: 2 }} color="#152659" id="modal-modal-title" fontWeight='bold' variant="h6">
+                                        <Typography sx={{ marginBottom: 2 }} color="#152659" id="modal-modal-title" fontWeight='bold' variant="h6">
                                             Detail Images
                                         </Typography>
                                     </Grid>
@@ -297,11 +378,22 @@ const DetailProduct = () => {
                         }
                     </Box>
                 </Grid>
-                <RecommendedProductLine productID={id}/>
+                <RecommendedProductLine productID={id} />
                 <BoxShopInfo></BoxShopInfo>
                 <ProductComment productID={id}></ProductComment>
-                <BigFooter/>
+                <BigFooter />
             </Grid>
+            <Backdrop
+                sx={{ color: '#fff', zIndex: (theme) => theme.zIndex.drawer + 1 }}
+                open={openBackdrop}
+            >
+                <CircularProgress color="inherit" />
+            </Backdrop>
+            <Snackbar open={openSnackbar} autoHideDuration={6000} onClose={handleCloseSnackbar}>
+                <Alert onClose={handleCloseSnackbar} severity="success" sx={{ width: '100%' }}>
+                    Added to cart
+                </Alert>
+            </Snackbar>
         </Stack>
     )
 }
