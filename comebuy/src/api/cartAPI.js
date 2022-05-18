@@ -17,6 +17,11 @@ const cartApi = {
         const res = await DatabaseClient.delete('/' + baseURL + '/' + data.cartID, data)
             .catch(err => { return err.message })
         return res;
+    },
+    addCart: async (data) => {
+        const res = await DatabaseClient.post('/' + baseURL, data)
+            .catch(err => { return err.response })
+        return res;
     }
 }
 export default cartApi

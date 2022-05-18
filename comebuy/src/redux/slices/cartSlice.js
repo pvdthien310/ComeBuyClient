@@ -39,6 +39,18 @@ export const deleteCartById = createAsyncThunk(
     }
 );
 
+export const addCart = createAsyncThunk(
+    'cart/addCart',
+    async (data, { rejectedWithValue }) => {
+        const response = await cartApi.addCart(data)
+        if (!response) {
+            return rejectedWithValue("Add cart failed")
+        } else {
+            return response
+        }
+    }
+)
+
 export const cartSlice = createSlice({
     name: 'cart',
     initialState: {
@@ -91,6 +103,19 @@ export const cartSlice = createSlice({
             console.log("fulfilled...");
         },
         [deleteCartById.rejected]: (state, action) => {
+            state.loading = false;
+            state.errorMessage = action.payload;
+            console.log("rejected: " + state.errorMessage);
+        },
+        [addCart.pending]: (state) => {
+            state.loading = true;
+            console.log(" pending...");
+        },
+        [addCart.fulfilled]: (state, action) => {
+            state.loading = false;
+            console.log("fulfilled...");
+        },
+        [addCart.rejected]: (state, action) => {
             state.loading = false;
             state.errorMessage = action.payload;
             console.log("rejected: " + state.errorMessage);
