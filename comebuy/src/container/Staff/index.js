@@ -184,9 +184,9 @@ const Staff = () => {
         <Stack direction="column" sx={{
             width: "100%",
             height: "100%",
+            backgroundColor: '#B360AA'
         }}>
-            <BGImg src='https://images.unsplash.com/photo-1490810194309-344b3661ba39?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1448&q=80' />
-            <Button sx={{ height: 50, width: 100, backgroundColor:'white', alignSelf: 'end' }} onClick={() => navigate('/staff/add')}>Add Staff</Button>
+            <Button sx={{ height: 50, width: 100, backgroundColor:'white', alignSelf: 'end', m:2 }} onClick={() => navigate('/staff/add')}>Add Staff</Button>
             <ProductTable
                 rowHeight={100}
                 columns={columns}

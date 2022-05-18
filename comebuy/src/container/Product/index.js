@@ -24,8 +24,9 @@ import { renderImportantTag } from "../../GridDataCellTemplate/ImportantTag";
 // variables
 import { productListSelector } from './../../redux/selectors'
 //function 
-import { deleteProductByID, getAllProduct } from './../../redux/slices/productSlice'
+import { deleteProductByID, editProduct, getAllProduct, productSlice } from './../../redux/slices/productSlice'
 import SnackBarAlert from "../../components/SnackBarAlert";
+import ColorSwitch from "./child";
 
 const BGImg = styled('img')({
     height: '100%',
@@ -76,19 +77,19 @@ const Product = () => {
     const deleteProduct = useCallback(
         (value) => () => {
             dispatch(deleteProductByID(value))
-            .unwrap()
-            .then((originalPromiseResult) => {
-                setMessageSuccess("Delete Product Successfully")
-                setOpenSuccessAlert(true)
-            })
-            .catch((rejectedValueOrSerializedError) => {
-                setMessageError("Error Delete Product Failed")
-                setOpenErrorAlert(true)
-            })
+                .unwrap()
+                .then((originalPromiseResult) => {
+                    setMessageSuccess("Delete Product Successfully")
+                    setOpenSuccessAlert(true)
+                })
+                .catch((rejectedValueOrSerializedError) => {
+                    setMessageError("Error Delete Product Failed")
+                    setOpenErrorAlert(true)
+                })
         }, [],
     );
 
-    const editProduct = useCallback(
+    const handleEditProduct = useCallback(
         (value) => () => {
             navigate('/product/edit', { state: value })
         }, [],
@@ -101,12 +102,26 @@ const Product = () => {
         }, [],
     );
 
+    const handleIsPublishedChange = ( pr ,value) => {
+        dispatch(editProduct({"productID": pr.id, "isPublished" : value}))
+        .unwrap()
+        .then((originalPromiseResult) => {
+            setMessageSuccess("Publish Product Successfully")
+            setOpenSuccessAlert(true);
+        })
+        .catch((rejectedValueOrSerializedError) => {
+            setMessageError("Publish Product Failed. Please Load Page Again")
+            setOpenErrorAlert(true)
+        })
+    }
+
+
     const columns = useMemo(
         () => [
             { field: 'id', hide: true },
-            { field: 'brand', headerName: 'Brand', width: 120 },
-            { field: 'name', headerName: 'Name', width: 150 },
-            { field: 'memory', headerName: 'Memory', width: 100 },
+            { field: 'brand', headerName: 'Brand', width: 50 },
+            { field: 'name', headerName: 'Name', width: 180 },
+            { field: 'memory', headerName: 'Memory', width: 70 },
             { field: 'gpu', headerName: 'GPU', width: 150 },
             { field: 'cpu', headerName: 'CPU', width: 200 },
             { field: 'weight', headerName: 'Weight', width: 100 },
@@ -115,7 +130,12 @@ const Product = () => {
                     renderImportantTag(params.value, 300)
                 )
             },
-            { field: 'origin', headerName: 'Origin', width: 120 },
+            {
+                field: 'isPublished', headerName: 'Published', width: 120, renderCell: (params) => (
+                    <ColorSwitch param={params} onIsPublishedChange={handleIsPublishedChange} />
+                )
+            },
+            { field: 'origin', headerName: 'Origin', width: 80 },
             {
                 field: 'actions',
                 type: 'actions',
@@ -131,7 +151,7 @@ const Product = () => {
                     <GridActionsCellItem
                         icon={<EditIcon />}
                         label="Edit"
-                        onClick={editProduct(params.row)}
+                        onClick={handleEditProduct(params.row)}
                         showInMenu
                     />,
                     <GridActionsCellItem
@@ -148,7 +168,6 @@ const Product = () => {
 
     useEffect(() => {
         if (_productList.length === 0) {
-
             dispatch(getAllProduct())
                 .unwrap()
                 .then((originalPromiseResult) => {
@@ -185,10 +204,9 @@ const Product = () => {
         <Stack direction="column" sx={{
             width: "100%",
             height: "100%",
-            
+            backgroundColor: '#B360AA'
         }}>
-            <BGImg src='https://images.unsplash.com/photo-1490810194309-344b3661ba39?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1448&q=80' />
-            <Button sx={{ height: 50, width: 100}} onClick={() => navigate("/product/add")}>Add Product</Button>
+            <Button sx={{ height: 50, width: 150, backgroundColor:'white', alignSelf: 'end',m:2 }} onClick={() => navigate('/product/add')}>Add Product</Button>
             <DetailProductModal open={openModal} onClose={handleCloseModal} product={currentProduct.value} />
             <ProductTable
                 pageSize={pageSize}
@@ -197,7 +215,7 @@ const Product = () => {
                 columns={columns}
                 rows={productList}
                 getRowId={(row) => row.productID}
-                onCellClick={handleOnCellClick}
+                onCellDoubleClick={handleOnCellClick}
             />
             <SnackBarAlert severity='success' open={openSuccessAlert} handleClose={handleClose} message={messageSuccess} />
             <SnackBarAlert severity='error' open={openErrorAlert} handleClose={handleClose} message={messageError} />
