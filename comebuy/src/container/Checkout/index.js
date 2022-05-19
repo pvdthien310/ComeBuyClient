@@ -331,6 +331,7 @@ export const CheckoutPage = () => {
                 isChecked: false,
                 isPaid: false,
                 date: date + ' ' + m,
+                address: bigAddress,
                 userID: _currentUser.userID,
                 branchID: 'da198f71-813b-47f8-9ded-331b358d4780'
             }
@@ -348,6 +349,7 @@ export const CheckoutPage = () => {
                 isChecked: false,
                 isPaid: false,
                 date: date + ' ' + m,
+                address: bigAddress,
                 userID: "10f8e845-b0ea-47fd-9f26-7d65f1bb571a",
                 branchID: 'da198f71-813b-47f8-9ded-331b358d4780'
             }
@@ -1233,7 +1235,6 @@ export const CheckoutPage = () => {
                                     backgroundColor: '#F2F2F2',
                                     borderRadius: '8px',
                                     padding: '1em',
-                                    boxShadow: '0px 6px 6px -3px rgb(0 0 0 / 20%), 0px 10px 14px 1px rgb(0 0 0 / 14%), 0px 4px 18px 3px rgb(0 0 0 / 12%)'
                                 }}
                                 direction="row"
                                 width="100%">

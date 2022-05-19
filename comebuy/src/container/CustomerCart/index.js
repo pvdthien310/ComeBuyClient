@@ -16,6 +16,8 @@ import DialogContentText from '@mui/material/DialogContentText';
 import DialogTitle from '@mui/material/DialogTitle';
 import Slide from '@mui/material/Slide';
 import { Button } from '@mui/material';
+import Snackbar from '@mui/material/Snackbar';
+import MuiAlert from '@mui/material/Alert';
 
 import { useNavigate } from 'react-router';
 import { getAllCart, updateCart, deleteCartById } from './../../redux/slices/cartSlice';
@@ -103,6 +105,9 @@ const Transition = React.forwardRef(function Transition(props, ref) {
   return <Slide direction='d' ref={ref} {...props} />;
 });
 
+const Alert = React.forwardRef(function Alert(props, ref) {
+  return <MuiAlert elevation={6} ref={ref} variant="filled" {...props} />;
+});
 const CustomerCart = () => {
 
   const dispatch = useDispatch()
@@ -113,6 +118,14 @@ const CustomerCart = () => {
   const [cartList, setCartList] = useState([])
   const [prodList, setProdList] = useState([])
   const [subTotal, setSubTotal] = useState(0)
+  const [openSnackbar, setOpenSnackbar] = useState(false);
+  const handleCloseSnackbar = (event, reason) => {
+    if (reason === 'clickaway') {
+      return;
+    }
+
+    setOpenSnackbar(false);
+  };
 
   const fetchYourCart = async (listCart, listProduct) => {
     let temp = []
@@ -165,11 +178,13 @@ const CustomerCart = () => {
   //handling change amount 
   const handleChangeAmount = async (value, actionType) => {
     let newListCart = cartList
-
+    console.log(actionType);
+    console.log(newListCart);
+    console.log(value);
     if (actionType == "increase") {
       newListCart = newListCart.map((element) => {
         // let dataForUpdate = { ...element }
-        if (element.productid == value.productID) {
+        if (element.productid == value) {
           return {
             ...element,
             "productid": element.productid,
@@ -179,7 +194,7 @@ const CustomerCart = () => {
         else return element
       });
       newListCart.map(async (item) => {
-        if (item.productid == value.productID) {
+        if (item.productid == value) {
           try {
             const resultAction = await dispatch(updateCart(item))
             const originalPromiseResult = unwrapResult(resultAction)
@@ -195,7 +210,7 @@ const CustomerCart = () => {
       //sign 1: run updateCart when amount not = 0
       //sign 0: don't run anything
       newListCart = newListCart.map((element) => {
-        if (element.productid == value.productID) {
+        if (element.productid == value) {
           if (element.amount === 0) {
             sign = 0
             setOpen(true)
@@ -212,7 +227,7 @@ const CustomerCart = () => {
       });
       if (sign === 1) {
         newListCart.map(async (item) => {
-          if (item.productid == value.productID) {
+          if (item.productid == value) {
             try {
               const resultAction = await dispatch(updateCart(item))
               const originalPromiseResult = unwrapResult(resultAction)
@@ -247,7 +262,11 @@ const CustomerCart = () => {
   }
 
   const handleCheckout = () => {
-    navigate('/myplace/mycart/checkout')
+    if (cartList.length > 0) {
+      navigate('/myplace/mycart/checkout')
+    } else {
+      setOpenSnackbar(true)
+    }
   }
 
   function handleClick(event) {
@@ -378,6 +397,11 @@ const CustomerCart = () => {
       >
         <CircularProgress color="inherit" />
       </Backdrop>
+      <Snackbar open={openSnackbar} autoHideDuration={6000} onClose={handleCloseSnackbar}>
+        <Alert onClose={handleCloseSnackbar} severity="warning" sx={{ width: '100%' }}>
+          Add some product ti your cart first
+        </Alert>
+      </Snackbar>
     </Container >
   );
 };

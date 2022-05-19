@@ -48,6 +48,7 @@ export default function Paypal({ cartList, purchases, prodList, _bigAddress, _gu
         moneyReceived: '0',
         isChecked: false,
         isPaid: false,
+        address: _bigAddress,
         userID: _currentUser.userID,
         branchID: 'da198f71-813b-47f8-9ded-331b358d4780'
     })
@@ -171,7 +172,8 @@ export default function Paypal({ cartList, purchases, prodList, _bigAddress, _gu
                 isPaid: true,
                 date: date + ' ' + m,
                 userID: _currentUser.userID,
-                branchID: 'da198f71-813b-47f8-9ded-331b358d4780'
+                address: _bigAddress,
+                branchID: 'a4a66b5e-182b-4b7d-bd13-8e6a54b686a6'
             }
             setOrderData(temp)
             setStartAddInvoice(true)
@@ -185,8 +187,9 @@ export default function Paypal({ cartList, purchases, prodList, _bigAddress, _gu
                 isChecked: true,
                 isPaid: true,
                 date: date + ' ' + m,
+                address: _bigAddress,
                 userID: "10f8e845-b0ea-47fd-9f26-7d65f1bb571a",
-                branchID: 'da198f71-813b-47f8-9ded-331b358d4780'
+                branchID: 'a4a66b5e-182b-4b7d-bd13-8e6a54b686a6'
             }
             setOrderData(temp)
             setStartAddInvoice(true)
@@ -238,9 +241,9 @@ export default function Paypal({ cartList, purchases, prodList, _bigAddress, _gu
     return (
         <div>
             <div ref={paypal}></div>
-            {console.log(cartList)}
+            {/* {console.log(cartList)}
             {console.log(prodList)}
-            {console.log(purchases)}
+            {console.log(purchases)} */}
             <Dialog open={paidSuccessfully}>
                 <DialogTitle color='success'>Paid Successfully. Click OK to back to Main Page</DialogTitle>
                 <Button
