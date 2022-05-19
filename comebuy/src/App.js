@@ -8,22 +8,36 @@ import { staffMenuItems, staffRoutes } from './route/StaffRoutes';
 import { managerRoutes, managerMenuItems } from './route/ManagerRoutes';
 import { useEffect } from 'react';
 import { currentUser } from './redux/selectors';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { customerMenuItems, customerRoutes } from './route/CustomerRoutes';
 import GuestLayout from './page/GuestLayout';
 import { ForgotPasswordInLogin } from './components';
 import { guestMenuItems, guestRoutes } from './route/GuestRoutes';
+import { getAccountWithID } from './redux/slices/accountSlice';
 
 function App() {
   if (localStorage.getItem('cart') === 'undefined' || localStorage.getItem('cart') === null) {
     localStorage.setItem('cart', JSON.stringify([]))
   }
+  const dispatch = useDispatch()
   const role = localStorage.getItem('role');
   const navigate = useNavigate()
 
   const _currentUser = useSelector(currentUser)
 
-  useEffect(() => {
+  const LoadCurrentUser = async () => {
+    if (localStorage.getItem('idUser') != "") {
+      try {
+           await dispatch(getAccountWithID(localStorage.getItem('idUser')))
+      } catch (rejectedValueOrSerializedError) {
+          // handle error here
+          console.log(rejectedValueOrSerializedError.message);
+      }
+  }
+  }
+
+  useEffect(async () => {
+    await LoadCurrentUser()
     navigate('/')
   }, [role])
 

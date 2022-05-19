@@ -74,6 +74,7 @@ const EditProduct = () => {
     const [externalIOPort, SetExternalIOPort] = useState(product.externalIOPort)
     const [colorCoverage, SetColorCoverage] = useState(product.colorCoverage)
     const [warranty, SetWarranty] = useState(product.warranty)
+    const [year, SetYear] = useState(product.year)
     const [price, SetPrice] = useState(product.price)
     const [productImages, SetProductImages] = useState(product.productimage)
     const [previewSource, SetPreviewSource] = useState([])
@@ -106,7 +107,7 @@ const EditProduct = () => {
                 response.data.map((imgurl) => {
                     newImagesList.push({
                         imageURL: imgurl,
-                        productID: product.productID
+                        productid: product.productID
                     })
                 })
                 SetProductImages(productImages.concat(newImagesList))
@@ -175,6 +176,9 @@ const EditProduct = () => {
             case 'Description':
                 SetDescription(event.target.value)
                 break
+            case 'Year':
+                SetYear(event.target.value)
+                break
         }
     };
 
@@ -199,7 +203,7 @@ const EditProduct = () => {
         if (response != undefined && response.status == 200) {
             const response_2 = await productImageAPI.addMany(
                 productImages.map(
-                    (item) => { return Object.assign(item, { productID: product.productID }) })
+                    (item) => { return Object.assign(item, { productid: product.productID }) })
             )
             return response_2.status == 200 ? true : false
         }
@@ -228,6 +232,7 @@ const EditProduct = () => {
             "battery": battery,
             "warranty": warranty,
             "promotion": product.promotion,
+            "year": year
         }
         dispatch(editProduct(newProduct))
             .unwrap()
@@ -337,7 +342,7 @@ const EditProduct = () => {
         SetPrice(product.price)
         SetProductImages(product.productimage)
         SetRam(product.ram)
-        // SetStore(product.store)
+        SetYear(product.year)
         SetWarranty(product.warranty)
         SetScreenDimension(product.screenDimension)
     }, [product])
@@ -415,6 +420,8 @@ const EditProduct = () => {
                             <TextFieldForEdit Icon={<GradientIcon />} Text={colorCoverage} Title="Color Coverage (RGBs)" onChange={handleValueChange} />
                             <Box sx={style.boxinfor_Stack_Line}></Box>
                             <TextFieldForEdit Icon={<PriceChangeIcon />} Text={price} Title="Price (USD)" onChange={handleValueChange} />
+                            <Box sx={style.boxinfor_Stack_Line}></Box>
+                            <TextFieldForEdit Icon={<PriceChangeIcon />} Text={year} Title="Year" onChange={handleValueChange} />
                             <Box sx={style.boxinfor_Stack_Line}></Box>
                         </Stack>
                     </Grid>

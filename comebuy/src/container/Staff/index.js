@@ -6,9 +6,13 @@ import { renderAvatar } from '../../GridDataCellTemplate/Avatar';
 import { useEffect, useState } from 'react'
 import SnackBarAlert from "../../components/SnackBarAlert";
 import accountApi from '../../api/accountAPI';
-import { Button, Stack, styled } from '@mui/material';
+import { Button, Stack, styled, Typography } from '@mui/material';
 import { ConfirmDialog, UserInfoPopOver } from '../../components';
 import { useNavigate } from 'react-router';
+import { Box } from '@mui/system';
+import ImportantDevicesIcon from '@mui/icons-material/ImportantDevices';
+import AccountCircleIcon from '@mui/icons-material/AccountCircle';
+
 
 
 const BGImg = styled('img')({
@@ -20,11 +24,8 @@ const BGImg = styled('img')({
 const ProductTable = styled(DataGrid)(({ theme }) => ({
     height: 700,
     width: 1200,
-    position: 'relative',
-    backgroundColor: 'white',
     alignSelf: 'center',
-    marginBottom: 50
-
+    backgroundColor: 'white',
 }));
 
 
@@ -148,32 +149,11 @@ const Staff = () => {
                 headerName: 'Action',
                 width: 80,
                 getActions: (params) => [
-                    // <GridActionsCellItem
-                    //     icon={<SecurityIcon />}
-                    //     label="Toggle Manager"
-                    //     sx={{ display: params.row.role == "staff" ? 'block' : "none" }}
-                    //     onClick={toggleAdmin(params.id)}
-                    //     showInMenu
-                    // />,
-                    // <GridActionsCellItem
-                    //     icon={<SecurityIcon />}
-                    //     label="Toggle Staff"
-                    //     sx={{ display: params.row.role == "manager" ? 'block' : "none" }}
-                    //     onClick={toggleAdmin(params.id)}
-                    //     showInMenu
-                    // />,
                     <GridActionsCellItem
                         icon={<DeleteIcon />}
                         label="Delete"
                         onClick={deleteUser(params)}
                     />,
-
-                    // <GridActionsCellItem
-                    //     icon={<FileCopyIcon />}
-                    //     label="Duplicate User"
-                    //     onClick={duplicateUser(params.id)}
-
-                    // />,
                 ],
             },
         ],
@@ -184,21 +164,56 @@ const Staff = () => {
         <Stack direction="column" sx={{
             width: "100%",
             height: "100%",
+            justifyItems: 'center',
+            alignItems: 'center',
+            backgroundColor: 'grey',
+            overflowY: 'auto'
         }}>
-            <BGImg src='https://images.unsplash.com/photo-1490810194309-344b3661ba39?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1448&q=80' />
-            <Button sx={{ height: 50, width: 100, backgroundColor:'white', alignSelf: 'end' }} onClick={() => navigate('/staff/add')}>Add Staff</Button>
-            <ProductTable
-                rowHeight={100}
-                columns={columns}
-                rows={accountList}
-                pagination
-                getRowId={(row) => row.userID} />
-            <ConfirmDialog
-                body="Please check the product information again to make sure. This operation cannot be redo. If you are sure, please confirm!"
-                title="Confirm Action?"
-                open={openConfirmDialog} handleClose={handleClose} handleConfirm={handleDeleteUser} />
-            <SnackBarAlert severity='success' open={openSuccessAlert} handleClose={handleClose} message={messageSuccess} />
-            <SnackBarAlert severity='error' open={openErrorAlert} handleClose={handleClose} message={messageError} />
+            <Box sx={{
+                width: "90%",
+                height: "95%",
+                boxShadow: 10,
+                borderRadius: 3,
+                alignItems: 'center',
+                justifyItems: 'center',
+                backgroundColor: '#D2D5FA'
+            }}>
+                <Stack sx={{
+                    width: "100%",
+                    height: "100%"
+                }}>
+                    <Stack sx={{ alignItems: 'center', justifyItems: 'center', pl: 2, pt: 2 }} direction={'row'} spacing={2}>
+                        <AccountCircleIcon />
+                        <Typography variant="h6">Staff Manager</Typography>
+                    </Stack>
+                    <Button sx={{
+                        width: 150,
+                        backgroundColor: '#2E1534',
+                        color: 'white', alignSelf: 'end',
+                        ml: 2,
+                        mr: 2,
+                        mb:2,
+                        borderRadius: 3,
+                        '&:hover': {
+                            backgroundColor: 'black',
+                            color: 'white',
+                        }
+                    }} onClick={() => navigate('/staff/add')}>Add Staff</Button>
+                    <ProductTable
+                        rowHeight={100}
+                        columns={columns}
+                        rows={accountList}
+                        pagination
+                        getRowId={(row) => row.userID} />
+                    <ConfirmDialog
+                        body="Please check the product information again to make sure. This operation cannot be redo. If you are sure, please confirm!"
+                        title="Confirm Action?"
+                        open={openConfirmDialog} handleClose={handleClose} handleConfirm={handleDeleteUser} />
+                    <SnackBarAlert severity='success' open={openSuccessAlert} handleClose={handleClose} message={messageSuccess} />
+                    <SnackBarAlert severity='error' open={openErrorAlert} handleClose={handleClose} message={messageError} />
+                    <Box sx={{height: 20}}></Box>
+                </Stack>
+            </Box>
         </Stack>
     );
 }

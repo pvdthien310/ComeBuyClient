@@ -65,15 +65,15 @@ const Invoice = () => {
                 width: '100%',
                 height: '100%',
                 display: 'flex',
+                backgroundColor:'black'
             }}
         >
-            <BGImg src='https://images.unsplash.com/photo-1490810194309-344b3661ba39?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1448&q=80' />
             <TableContainer
                 style={{
                     backgroundColor: 'transparent',
                     padding: '2%',
                     zIndex: 0,
-                    width: '100%',
+                    width: '95%',
                     height: '100%',
                     justifyContent: 'center',
                     position: 'absolute'
@@ -93,7 +93,7 @@ const Invoice = () => {
                     INVOICE MANAGEMENT
                 </Typography>
                 <Table aria-label="collapsible table">
-                    <TableHead style={{ backgroundColor: '#F2F2F2', borderRadius: '15px' }}>
+                    <TableHead style={{ backgroundColor: 'white', borderRadius: '15px' }}>
                         <TableRow>
                             <TableCell />
                             <TableCell style={{ color: '#0D0D0D', fontWeight: 'bold' }}>Invoice ID</TableCell>
@@ -117,7 +117,7 @@ const Invoice = () => {
                 <TablePagination
                     rowsPerPageOptions={[10, 25, 50]}
                     component="div"
-                    style={{ color: '#F2F2F2' }}
+                    style={{  }}
                     count={invoiceList.length}
                     rowsPerPage={rowsPerPage}
                     page={page}
