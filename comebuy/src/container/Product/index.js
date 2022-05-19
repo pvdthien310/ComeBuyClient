@@ -12,12 +12,13 @@ import {
     GridActionsCellItem
 } from '@mui/x-data-grid';
 import { useNavigate } from 'react-router-dom'
-import { Box, Stack } from '@mui/material';
+import { Box, Stack, TableCell, tableCellClasses, Typography } from '@mui/material';
 import { Button } from '@mui/material'
 // icons 
 import DeleteIcon from '@mui/icons-material/Delete';
 import EditIcon from '@mui/icons-material/Edit';
 import InfoIcon from '@mui/icons-material/Info';
+import ImportantDevicesIcon from '@mui/icons-material/ImportantDevices';
 //components
 import DetailProductModal from "../../components/DetailProductModal";
 import { renderImportantTag } from "../../GridDataCellTemplate/ImportantTag";
@@ -28,21 +29,22 @@ import { deleteProductByID, editProduct, getAllProduct, productSlice } from './.
 import SnackBarAlert from "../../components/SnackBarAlert";
 import ColorSwitch from "./child";
 
-const BGImg = styled('img')({
-    height: '100%',
-    width: '100%',
-    position: 'absolute',
-    resize: true,
-})
+
 const ProductTable = styled(DataGrid)(({ theme }) => ({
     height: 700,
-    // top: '10%',
-    left: '10%',
     width: 1200,
-    position: 'relative',
     backgroundColor: 'white',
-    // alignSelf: 'center'
+    alignSelf: 'center'
 
+}));
+const StyledTableCell = styled(TableCell)(({ theme }) => ({
+    [`&.${tableCellClasses.head}`]: {
+        backgroundColor: theme.palette.common.black,
+        color: theme.palette.common.white,
+    },
+    [`&.${tableCellClasses.body}`]: {
+        fontSize: 14,
+    },
 }));
 
 const Product = () => {
@@ -102,24 +104,24 @@ const Product = () => {
         }, [],
     );
 
-    const handleIsPublishedChange = ( pr ,value) => {
-        dispatch(editProduct({"productID": pr.id, "isPublished" : value}))
-        .unwrap()
-        .then((originalPromiseResult) => {
-            setMessageSuccess("Publish Product Successfully")
-            setOpenSuccessAlert(true);
-        })
-        .catch((rejectedValueOrSerializedError) => {
-            setMessageError("Publish Product Failed. Please Load Page Again")
-            setOpenErrorAlert(true)
-        })
+    const handleIsPublishedChange = (pr, value) => {
+        dispatch(editProduct({ "productID": pr.id, "isPublished": value }))
+            .unwrap()
+            .then((originalPromiseResult) => {
+                setMessageSuccess("Publish Product Successfully")
+                setOpenSuccessAlert(true);
+            })
+            .catch((rejectedValueOrSerializedError) => {
+                setMessageError("Publish Product Failed. Please Load Page Again")
+                setOpenErrorAlert(true)
+            })
     }
 
 
     const columns = useMemo(
         () => [
             { field: 'id', hide: true },
-            { field: 'brand', headerName: 'Brand', width: 50 },
+            { field: 'brand', headerName: 'Brand', width: 100 },
             { field: 'name', headerName: 'Name', width: 180 },
             { field: 'memory', headerName: 'Memory', width: 70 },
             { field: 'gpu', headerName: 'GPU', width: 150 },
@@ -204,27 +206,58 @@ const Product = () => {
         <Stack direction="column" sx={{
             width: "100%",
             height: "100%",
-            backgroundColor: '#B360AA'
+            justifyItems: 'center',
+            alignItems: 'center',
+            backgroundColor: 'grey',
+            overflowY: 'auto'
         }}>
-            <Button sx={{ height: 50, width: 150, backgroundColor:'white', alignSelf: 'end',m:2 }} onClick={() => navigate('/product/add')}>Add Product</Button>
-            <DetailProductModal open={openModal} onClose={handleCloseModal} product={currentProduct.value} />
-            <ProductTable
-                pageSize={pageSize}
-                onPageSizeChange={(newPage) => setPageSize(newPage)}
-                pagination
-                columns={columns}
-                rows={productList}
-                getRowId={(row) => row.productID}
-                onCellDoubleClick={handleOnCellClick}
-            />
-            <SnackBarAlert severity='success' open={openSuccessAlert} handleClose={handleClose} message={messageSuccess} />
-            <SnackBarAlert severity='error' open={openErrorAlert} handleClose={handleClose} message={messageError} />
-
-            <Box sx={{ height: 50 }}></Box>
-            {/* <Routes>
+            <Box sx={{
+                width: "90%",
+                height: "95%",
+                boxShadow: 5,
+                borderRadius: 1,
+                alignItems: 'center',
+                justifyItems: 'center',
+                backgroundColor:'white'
+            }}>
+                <Stack sx={{
+                    width: "100%",
+                    height: "100%"
+                }}>
+                    <Stack sx={{alignItems: 'center', justifyItems: 'center', pl: 2, pt: 2 }} direction={'row'} spacing={2}>
+                        <ImportantDevicesIcon />
+                        <Typography variant="h6">Product Manager</Typography>
+                    </Stack>
+                    <Button sx={{
+                        width: 150,
+                        backgroundColor: '#2E1534',
+                        color: 'white', alignSelf: 'end',
+                        m: 2,
+                        borderRadius: 3,
+                        '&:hover': {
+                            backgroundColor: 'black',
+                            color: 'white',
+                        }
+                    }} onClick={() => navigate('/product/add')}>Add Product</Button>
+                    <DetailProductModal open={openModal} onClose={handleCloseModal} product={currentProduct.value} />
+                    <ProductTable
+                        pageSize={pageSize}
+                        onPageSizeChange={(newPage) => setPageSize(newPage)}
+                        pagination
+                        columns={columns}
+                        rows={productList}
+                        getRowId={(row) => row.productID}
+                        onCellDoubleClick={handleOnCellClick}
+                    />
+                    <SnackBarAlert severity='success' open={openSuccessAlert} handleClose={handleClose} message={messageSuccess} />
+                    <SnackBarAlert severity='error' open={openErrorAlert} handleClose={handleClose} message={messageError} />
+                    <Box sx={{height: 20}}></Box>
+                    {/* <Routes>
                 <Route path='add' element={<AddProduct />}></Route>
                 <Route path='edit' element={<EditProduct />}></Route>
             </Routes> */}
+                </Stack>
+            </Box>
         </Stack>
     );
 }

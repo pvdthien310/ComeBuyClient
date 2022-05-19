@@ -27,10 +27,10 @@ const SplitFeatureFromList = async (product, setBrand, setRAM, setCPU, setGPU, s
     let memories = product.map(item => item.memory)
     var memoryOptions = memories.filter((v, i, a) => a.indexOf(v) === i); 
     setMemory({loading : true, option : memoryOptions})
-    //year
-    // let years = product.map(item => item.year)
-    // var yearOptions = years.filter((v, i, a) => a.indexOf(v) === i); 
-    // setYear({loading : true, option : yearOptions})
+    // year
+    let years = product.map(item => item.year)
+    var yearOptions = years.filter((v, i, a) => a.indexOf(v) === i); 
+    setYear({loading : true, option : yearOptions})
 
     return true
 }

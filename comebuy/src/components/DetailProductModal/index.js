@@ -105,7 +105,7 @@ const DetailProductModal = ({ open, product, onClose }) => {
                                     </Stack>
                                     <Stack direction='row' spacing={1}>
                                         <Typography fontWeight='bold' color='white' variant='h6'>Year:</Typography>
-                                        <Typography fontWeight='bold' color='white' variant='h6'>2021</Typography>
+                                        <Typography fontWeight='bold' color='white' variant='h6'>{product.year}</Typography>
                                     </Stack>
                                 </Stack>
                             </Box>

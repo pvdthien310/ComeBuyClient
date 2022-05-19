@@ -40,6 +40,7 @@ import TableInvoiceItem from '../InvoiceTableInvoiceItem';
 import { currentUser } from '../../redux/selectors';
 import ProdInfo from './../InvoiceProdInfo/index';
 import IOSSwitch from './../InvoiceIOSSwitch/index';
+import ReceiptIcon from '@mui/icons-material/Receipt';
 const Alert = React.forwardRef(function Alert(props, ref) {
     return <MuiAlert elevation={6} ref={ref} variant="filled" {...props} />;
 });
@@ -240,7 +241,7 @@ const Row = (props) => {
 
     return (
         <React.Fragment >
-            <TableRow sx={{ '& > *': { borderBottom: 'set', backgroundColor: '#384D59' } }}>
+            <TableRow sx={{ '& > *': { borderBottom: 'set', backgroundColor: 'white' } }}>
                 <TableCell>
                     <IconButton
                         aria-label="expand row"
@@ -253,7 +254,7 @@ const Row = (props) => {
                 </TableCell>
                 <TableCell scope="row">
                     <Box>
-                        <Typography style={{ color: '#52BF04', fontWeight: 'bold' }}>{row.invoiceID}</Typography>
+                        <Typography style={{ color: 'black', fontWeight: 'bold' }}>{row.invoiceID}</Typography>
                     </Box>
                 </TableCell>
                 <TableCell align="center">
@@ -276,8 +277,8 @@ const Row = (props) => {
                         <CusInfo userID={row.account.userid} />
                     </Popover>
                 </TableCell>
-                <TableCell align="center" style={{ color: '#F2EFE9' }}>{row.date}</TableCell>
-                <TableCell align="center" style={{ color: '#F2EFE9', fontWeight: 'bold' }}>{invoiceTotal}</TableCell>
+                <TableCell align="center" style={{ color: 'black' }}>{row.date}</TableCell>
+                <TableCell align="center" style={{ color: 'black', fontWeight: 'bold' }}>{invoiceTotal}</TableCell>
                 <TableCell align="center">
                     <FormGroup>
                         <FormControlLabel
@@ -289,7 +290,7 @@ const Row = (props) => {
                         />
                     </FormGroup>
                 </TableCell>
-                <TableCell align="center" style={{ fontWeight: 'bold', color: '#F2EFE9' }}>{dataForUpdate.moneyReceived}</TableCell>
+                <TableCell align="center" style={{ fontWeight: 'bold', color: 'black' }}>{dataForUpdate.moneyReceived}</TableCell>
                 <TableCell align="center">
                     <FormGroup>
                         <FormControlLabel

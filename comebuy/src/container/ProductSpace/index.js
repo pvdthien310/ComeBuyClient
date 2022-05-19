@@ -55,9 +55,9 @@ const ProductSpace = () => {
             }
         })
         if (reset == true)
-            setProductList(_productList)
+            setProductList(_productList.filter(ite => ite.isPublished != false))
         else
-            setProductList(newProductList)
+            setProductList(newProductList.filter(ite => ite.isPublished != false))
     }
 
     const handleFilter = (value) => {
@@ -90,7 +90,7 @@ const ProductSpace = () => {
         dispatch(getAllProduct())
             .unwrap()
             .then((originalPromiseResult) => {
-                setProductList(originalPromiseResult)
+                setProductList(originalPromiseResult.filter(ite => ite.isPublished != false))
                 setMessageSuccess("Load Product Successfully")
                 setOpenSuccessAlert(true)
             })
