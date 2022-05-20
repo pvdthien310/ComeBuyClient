@@ -50,6 +50,7 @@ export { default as BoxShopInfo } from './BoxShopInfo'
 export { default as SearchBar } from './SearchBar'
 export { default as ProductInCart } from './ProductInCart'
 export { default as Paypal } from './Paypal'
+export { default as MemberShipStepper } from './MemberShipStepper'
 
 
 

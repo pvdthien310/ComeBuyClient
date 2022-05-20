@@ -12,7 +12,7 @@ import { DialogTitle } from "@mui/material";
 import { deleteCartById } from "../../redux/slices/cartSlice";
 import { useNavigate } from 'react-router-dom';
 
-export default function Paypal({ cartList, purchases, prodList, _bigAddress, _guestEmail, _guestName, _guestPhoneNumber }) {
+export default function Paypal({ _lastTotal, cartList, purchases, prodList, _bigAddress, _guestEmail, _guestName, _guestPhoneNumber }) {
 
     const _currentUser = useSelector(currentUser)
     const dispatch = useDispatch()
@@ -62,14 +62,6 @@ export default function Paypal({ cartList, purchases, prodList, _bigAddress, _gu
 
     // const [listOrderDataItem, setListOrderDataItem] = useState([])
 
-    const getTotal = () => {
-        let temp = 0
-        for (let i = 0; i < purchases.length; i++) {
-            temp = temp + Number(purchases[i].amount.value)
-        }
-        return temp
-    }
-
     const [listItem, setListItem] = useState([])
 
     const _addInvoiceItem = async (_invoiceId) => {
@@ -101,7 +93,7 @@ export default function Paypal({ cartList, purchases, prodList, _bigAddress, _gu
                     "-------------------------------------------------------- \n" +
                     stringOrder + "\n" +
                     "-------------------------------------------------------- \n" +
-                    `Total: ${getTotal()} USD` + "\n" +
+                    `Total: ${_lastTotal} USD` + "\n" +
                     "-------------------------------------------------------- \n" +
                     "Any wondered things. Please contact with our shop with contact below site: ComeBuy.com"
             }).then(data => {
@@ -121,7 +113,7 @@ export default function Paypal({ cartList, purchases, prodList, _bigAddress, _gu
                     "-------------------------------------------------------- \n" +
                     stringOrder + "\n" +
                     "-------------------------------------------------------- \n" +
-                    `Total: ${getTotal()} USD` + "\n" +
+                    `Total: ${_lastTotal} USD` + "\n" +
                     "-------------------------------------------------------- \n" +
                     "Any wondered things. Please contact with our shop with contact below site: ComeBuy.com"
             }).then(data => {
@@ -167,7 +159,7 @@ export default function Paypal({ cartList, purchases, prodList, _bigAddress, _gu
             let tempID = ''
             let temp = {
                 ...orderData,
-                moneyReceived: getTotal().toString(),
+                moneyReceived: _lastTotal.toString(),
                 isChecked: true,
                 isPaid: true,
                 date: date + ' ' + m,
@@ -183,7 +175,7 @@ export default function Paypal({ cartList, purchases, prodList, _bigAddress, _gu
             let tempID = ''
             let temp = {
                 ...orderData,
-                moneyReceived: getTotal().toString(),
+                moneyReceived: _lastTotal.toString(),
                 isChecked: true,
                 isPaid: true,
                 date: date + ' ' + m,
@@ -224,7 +216,19 @@ export default function Paypal({ cartList, purchases, prodList, _bigAddress, _gu
                 createOrder: (data, actions, err) => {
                     return actions.order.create({
                         intent: "CAPTURE",
-                        purchase_units: purchases,
+                        purchase_units: [{
+                            amount: {
+                                currency_code: "USD",
+                                value: _lastTotal,
+                                breakdown: {
+                                    item_total: {  /* Required when including the `items` array */
+                                        currency_code: "USD",
+                                        value: _lastTotal
+                                    }
+                                }
+                            },
+                            items: purchases
+                        }],
                     });
                 },
                 onApprove: async (data, actions) => {
@@ -244,6 +248,9 @@ export default function Paypal({ cartList, purchases, prodList, _bigAddress, _gu
             {/* {console.log(cartList)}
             {console.log(prodList)}
             {console.log(purchases)} */}
+            {console.log(purchases)}
+            {console.log(_lastTotal)}
+
             <Dialog open={paidSuccessfully}>
                 <DialogTitle color='success'>Paid Successfully. Click OK to back to Main Page</DialogTitle>
                 <Button

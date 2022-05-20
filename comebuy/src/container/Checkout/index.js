@@ -57,6 +57,9 @@ export const CheckoutPage = () => {
     const [listCart, setListCart] = useState([])
     const [listProd, setListProd] = useState([])
 
+    const [discount, setDiscount] = useState(0)
+    const [typeCus, setTypeCus] = useState('Rare member')
+
     const _guestCart = useSelector(cartListSelector)
 
     const [selectedPayMethod, setSelectedPayMethod] = useState("Pay on delivery");
@@ -112,43 +115,112 @@ export const CheckoutPage = () => {
                 }
                 await setListCart(listCart)
                 await setListProd(listProd)
-                await CountTotal(listCart, listProd)
+                await CountSubTotal(listCart, listProd)
                 await MakePurchaseUnit(listCart, listProd)
             }
         }
         fetchYourCart()
     }, [])
 
+    useEffect(() => {
+        const Identify = () => {
+            if (_currentUser.score < 2000) {
+                setDiscount(0)
+                setTypeCus("Rare Member")
+            } else if (_currentUser.score >= 2000 && _currentUser.score < 5000) {
+                setDiscount(10)
+                setTypeCus("Silver Member")
+            } else if (_currentUser.score >= 5000 && _currentUser.score < 20000) {
+                setDiscount(20)
+                setTypeCus("Golden Member")
+            } else {
+                setDiscount(30)
+                setTypeCus("Diamond Member")
+            }
+        }
+        if (discount === 0) {
+            Identify()
+        }
+
+    }, [])
+
     const [purchaseUnits, setPurchaseUnits] = useState([])
 
     const MakePurchaseUnit = async (listCart, listProd) => {
-        let sample = []
-        let amountObj = {
-            currency_code: "USD",
-            value: 0,
-        }
-        for (let i = 0; i < listCart.length; i++) {
-            for (let j = 0; j < listProd.length; j++) {
-                if (listProd[j].productID === listCart[i].productid) {
-                    amountObj = {
-                        ...amountObj,
-                        value: Number(listCart[i].amount) * Number(listProd[j].price)
+        if (localStorage.getItem('role') === 'customer') {
+            let sample = []
+            let unitAmountObj = {
+                currency_code: "USD",
+                value: " " //price
+            }
+
+            for (let i = 0; i < listCart.length; i++) {
+                for (let j = 0; j < listProd.length; j++) {
+                    if (listProd[j].productID === listCart[i].productid) {
+                        // amountObj = {
+                        //     ...amountObj,
+                        //     value: (Number(listCart[i].amount) * Number(listProd[j].price)) - Number(listCart[i].amount) * Number(listProd[j].price) * discount / 100
+                        // }
+                        unitAmountObj = {
+                            ...unitAmountObj,
+                            value: Number(listCart[i].amount) * Number(listProd[j].price)
+                        }
+                        let temp = {
+                            name: listProd[j].name,
+                            unit_amount: unitAmountObj,
+                            description: listProd[j].name,
+                            quantity: listCart[i].amount
+                        }
+                        sample.push(temp)
                     }
-                    let temp = {
-                        description: listProd[j].name,
-                        reference_id: listProd[j].productID,
-                        amount: amountObj
-                    }
-                    sample.push(temp)
                 }
             }
+            setPurchaseUnits(...purchaseUnits, sample)
+        } else {
+            let sample = []
+            let amountObj = {
+                currency_code: "USD",
+                value: 0,
+            }
+            for (let i = 0; i < listCart.length; i++) {
+                for (let j = 0; j < listProd.length; j++) {
+                    if (listProd[j].productID === listCart[i].productid) {
+                        amountObj = {
+                            ...amountObj,
+                            value: Number(listCart[i].amount) * Number(listProd[j].price)
+                        }
+                        let temp = {
+                            description: listProd[j].name,
+                            reference_id: listProd[j].productID,
+                            amount: amountObj
+                        }
+                        sample.push(temp)
+                    }
+                }
+            }
+            setPurchaseUnits(...purchaseUnits, sample)
         }
-        setPurchaseUnits(...purchaseUnits, sample)
+
     }
 
-    const [subTotal, setSubTotal] = useState(0)
 
+    const [subTotal, setSubTotal] = useState(0)
     const CountTotal = async (_cart, prList) => {
+        let newTotal = 0
+        await _cart.map((item) => {
+            let rs = prList.find((ite) => ite.productID == item.productid)
+            if (rs != undefined)
+                newTotal = newTotal + Number(Number(rs.price) * Number(item.amount))
+        })
+        // let t = newTotal - (newTotal * discount) / 100
+        // let t2 = t + 2
+
+        // await setSubTotal(t)
+        // await setLastTotal(t2)
+        setSubTotal(newTotal)
+    }
+
+    const CountSubTotal = async (_cart, prList) => {
         let newTotal = 0
         await _cart.map((item) => {
             let rs = prList.find((ite) => ite.productID == item.productid)
@@ -752,7 +824,7 @@ export const CheckoutPage = () => {
                                             OR:
                                         </Typography>
                                         <div style={{ width: '50%', marginTop: '1.2em', alignSelf: 'center' }}>
-                                            <Paypal _bigAddress={bigAddress} _guestEmail={email} _guestName={guestName} _guestPhoneNumber={guestPhoneNum} cartList={listCart} prodList={listProd} purchases={purchaseUnits} />
+                                            <Paypal _lastTotal={subTotal - subTotal * discount / 100 + 2} _bigAddress={bigAddress} _guestEmail={email} _guestName={guestName} _guestPhoneNumber={guestPhoneNum} cartList={listCart} prodList={listProd} purchases={purchaseUnits} />
                                         </div>
                                     </>
                                 ) : (null)}
@@ -1292,18 +1364,28 @@ export const CheckoutPage = () => {
                                 color: '#333333',
                                 fontFamily: 'sans-serif', fontWeight: 300
                             }}
-                            >RARE MEMBER
+                            >MEMBERSHIP
                             </Typography>
-                            <Stack direction="row" width="100%">
-                                <DiamondIcon sx={{ width: '17px', height: '17px' }} />
+                            <Stack direction="row" width="100%" justifyContent="space-between">
+                                <>
+                                    {/* <DiamondIcon sx={{ width: '17px', height: '17px' }} /> */}
+                                    <Typography sx={{
+                                        color: '#333333',
+                                        fontSize: '13px',
+                                        fontWeight: 'bold'
+                                    }}>
+                                        {typeCus} - {_currentUser.score} point(s)
+                                    </Typography>
+                                </>
                                 <Typography sx={{
                                     color: '#333333',
-                                    fontFamily: 'sans-serif',
-                                    fontSize: '13px',
-                                    marginLeft: '0.5em'
-                                }}>
-                                    MEMBER - 0 point(s)
+                                    fontWeight: 600,
+                                    marginTop: '1.2em'
+                                }}
+                                >
+                                    -{discount}%
                                 </Typography>
+
                             </Stack>
                         </Stack>
                         <div style={{ height: '1px', width: '100%', backgroundColor: '#BFBFBF' }}></div>
@@ -1315,7 +1397,7 @@ export const CheckoutPage = () => {
                                 marginTop: '1.2em'
                             }}
                             >
-                                ${subTotal}
+                                ${subTotal - subTotal * discount / 100}
                             </Typography>
                         </Stack>
                         <Stack direction="row" width='100%' justifyContent="space-between">
@@ -1340,7 +1422,7 @@ export const CheckoutPage = () => {
                                 fontSize: '20px'
                             }}
                             >
-                                {subTotal + 2} USD
+                                {subTotal - subTotal * discount / 100 + 2} USD
                             </Typography>
                         </Stack>
                     </Stack>
@@ -1464,7 +1546,7 @@ export const CheckoutPage = () => {
                                 fontSize: '20px'
                             }}
                             >
-                                {subTotal} USD
+                                {subTotal + 2} USD
                             </Typography>
                         </Stack>
                     </Stack>

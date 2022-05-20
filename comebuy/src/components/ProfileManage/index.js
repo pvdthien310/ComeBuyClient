@@ -16,11 +16,19 @@ import CircularProgress from '@mui/material/CircularProgress';
 import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 import Breadcrumbs from '@mui/material/Breadcrumbs';
 import EditTwoToneIcon from '@mui/icons-material/EditTwoTone';
+import MoreIcon from '@mui/icons-material/More';
+import KeyboardArrowLeft from '@mui/icons-material/KeyboardArrowLeft';
+import KeyboardArrowRight from '@mui/icons-material/KeyboardArrowRight';
+import SwipeableViews from 'react-swipeable-views';
+import { autoPlay } from 'react-swipeable-views-utils';
 
 import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import { MobileDatePicker } from '@mui/x-date-pickers/MobileDatePicker';
+import { useTheme } from '@mui/material/styles';
+import MobileStepper from '@mui/material/MobileStepper';
+import Paper from '@mui/material/Paper';
 
 import "react-datepicker/dist/react-datepicker.css"
 
@@ -36,6 +44,33 @@ import * as Validation from '../../container/LoginAndRegister/ValidationDataForA
 import { updateAccount, getAccountWithID } from '../../redux/slices/accountSlice';
 import cloudinaryApi from '../../api/cloudinaryAPI';
 import BigFooter from './../BigFooter/index';
+import MemberShipStepper from '../MemberShipStepper';
+
+const AutoPlaySwipeableViews = autoPlay(SwipeableViews);
+
+const images = [
+    {
+        label: 'Rare member: (< 2000 points) you will get no auto-discount in your order',
+        imgPath:
+            'https://www.isaca.org/-/media/images/isacadp/project/isaca/membership-levels/badge-bronze.png',
+    },
+    {
+        label: 'Silver member: ( > or 2000 points and  under 5000 points) You will get an auto-discount for 10%',
+        imgPath:
+            'https://www.isaca.org/-/media/images/isacadp/project/isaca/membership-levels/silver-badge.png',
+    },
+    {
+        label: 'Golden member: ( > or 5000 points and  under 20000 points) You will get an auto-discount for 20%',
+        imgPath:
+            'https://www.isaca.org/-/media/images/isacadp/project/isaca/membership-levels/gold-badge.png',
+    },
+    {
+        label: 'Diamond member: ( > or 20000 points) You will get an auto-discount for 30%',
+        imgPath:
+            'https://www.isaca.org/-/media/images/isacadp/project/isaca/membership-levels/platinum-badge.png',
+    },
+];
+
 
 const ProfileManage = () => {
 
@@ -389,6 +424,27 @@ const ProfileManage = () => {
         setOpenContactWrong(false);
     };
 
+    //for modal display rule of membership and discount
+    const theme = useTheme();
+    const [activeStep, setActiveStep] = React.useState(0);
+    const maxSteps = images.length;
+
+    const [openModalMemberRule, setOpenModalMemberRule] = useState(false)
+
+    const handleNext = () => {
+        setActiveStep((prevActiveStep) => prevActiveStep + 1);
+    };
+
+    const handleBack = () => {
+        setActiveStep((prevActiveStep) => prevActiveStep - 1);
+    };
+
+    const handleStepChange = (step) => {
+        setActiveStep(step);
+    };
+
+    const handleCloseModalMemberRule = () => setOpenModalMemberRule(false)
+
 
 
     return (
@@ -514,6 +570,12 @@ const ProfileManage = () => {
                     paddingTop: '-1%'
                 }}
             >
+                <Stack direction="row" spacing={0.5}>
+                    <MemberShipStepper />
+                    <IconButton onClick={() => setOpenModalMemberRule(true)} style={{ marginLeft: '-2%', marginTop: '-2.5%', backgroundColor: '#F2EBDF' }}>
+                        <MoreIcon />
+                    </IconButton>
+                </Stack>
                 <Typography style={{
                     fontSize: '23px',
                     fontWeight: 'bold',
@@ -970,6 +1032,97 @@ const ProfileManage = () => {
                     >
                         <CircularProgress color="inherit" />
                     </Backdrop>
+                </Box>
+            </Modal>
+
+
+            {/* Modal display membership rank rule and discount */}
+            <Modal
+                open={openModalMemberRule}
+                onClose={handleCloseModalMemberRule}
+                aria-labelledby="modal-modal-title"
+                aria-describedby="modal-modal-description"
+            >
+                <Box sx={{
+                    maxWidth: 400,
+                    flexGrow: 1,
+                    position: 'absolute',
+                    top: '55%',
+                    left: '50%',
+                    transform: 'translate(-50%, -50%)',
+                    bgcolor: 'background.paper',
+                    borderRadius: '15px',
+                    border: '2px solid #000',
+                    boxShadow: 24,
+                    p: 0.5
+                }}>
+                    <Paper
+                        square
+                        elevation={0}
+                        sx={{
+                            display: 'flex',
+                            alignItems: 'center',
+                            height: 50,
+                            pl: 2,
+                            bgcolor: 'background.default'
+                        }}
+                    >
+                        <Typography>{images[activeStep].label}</Typography>
+                    </Paper>
+                    <AutoPlaySwipeableViews
+                        axis={theme.direction === 'rtl' ? 'x-reverse' : 'x'}
+                        index={activeStep}
+                        onChangeIndex={handleStepChange}
+                        enableMouseEvents
+                    >
+                        {images.map((step, index) => (
+                            <div key={step.label}>
+                                {Math.abs(activeStep - index) <= 2 ? (
+                                    <Avatar
+                                        sx={{
+                                            height: 255,
+                                            display: 'flex',
+                                            maxWidth: 255,
+                                            overflow: 'hidden',
+                                            width: '100%',
+                                            marginLeft: '17%'
+                                        }}
+                                        src={step.imgPath}
+                                        alt={step.label}
+                                    />
+                                ) : null}
+                            </div>
+                        ))}
+                    </AutoPlaySwipeableViews>
+                    <MobileStepper
+                        steps={maxSteps}
+                        position="static"
+                        activeStep={activeStep}
+                        nextButton={
+                            <Button
+                                size="small"
+                                onClick={handleNext}
+                                disabled={activeStep === maxSteps - 1}
+                            >
+                                Next
+                                {theme.direction === 'rtl' ? (
+                                    <KeyboardArrowLeft />
+                                ) : (
+                                    <KeyboardArrowRight />
+                                )}
+                            </Button>
+                        }
+                        backButton={
+                            <Button size="small" onClick={handleBack} disabled={activeStep === 0}>
+                                {theme.direction === 'rtl' ? (
+                                    <KeyboardArrowRight />
+                                ) : (
+                                    <KeyboardArrowLeft />
+                                )}
+                                Back
+                            </Button>
+                        }
+                    />
                 </Box>
             </Modal>
 
