@@ -20,7 +20,7 @@ const JWTApi = {
         return res.data;
     },
     RefreshToken: async refToken => {
-        const res = await DatabaseClient.post('/' + baseURL + 'get-refreshToken', { token: refToken  });
+        const res = await DatabaseClient.post('/' + baseURL + '/refreshToken', { token: refToken  });
         return res.data;
     },
     logout: async refToken => {
