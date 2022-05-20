@@ -75,6 +75,17 @@ const Row = (props) => {
     const openHover = Boolean(anchorEl);
     const id = open ? 'simple-popover' : undefined;
 
+    //Get invoice detail (address)
+    const [anchorE3, setAnchorE3] = React.useState(null);
+    const handleClickInvoiceID = (event) => {
+        setAnchorE3(event.currentTarget);
+    };
+    const handleCloseInvoiceID = () => {
+        setAnchorE3(null);
+    };
+    const openHoverInvoiceID = Boolean(anchorE3);
+    const id3 = open ? 'simple-popover' : undefined;
+
     //Get product information
     const [anchorEl2, setAnchorEl2] = React.useState(null);
     const handleClickProductId = (event) => {
@@ -238,14 +249,13 @@ const Row = (props) => {
     const closeModalBill = () => {
         setOpenModalBill(false)
     }
-
     return (
         <React.Fragment >
             <TableRow sx={{ '& > *': { borderBottom: 'set', backgroundColor: 'white' } }}>
                 <TableCell>
                     <IconButton
                         aria-label="expand row"
-                        sx={{ backgroundColor: '#141E26' }}
+                        sx={{ backgroundColor: 'white' }}
                         size="small"
                         onClick={() => setOpen(!open)}
                     >
@@ -253,9 +263,30 @@ const Row = (props) => {
                     </IconButton>
                 </TableCell>
                 <TableCell scope="row">
-                    <Box>
+                    {/* <Box>
                         <Typography style={{ color: 'black', fontWeight: 'bold' }}>{row.invoiceID}</Typography>
-                    </Box>
+                    </Box> */}
+                    <Button
+                        aria-describedby={id}
+                        onClick={handleClickInvoiceID}
+                    >
+                        {row.invoiceID}
+                    </Button>
+                    <Popover
+                        id={id}
+                        open={openHoverInvoiceID}
+                        anchorEl={anchorE3}
+                        onClose={handleCloseInvoiceID}
+                        anchorOrigin={{
+                            vertical: 'top',
+                            horizontal: 'right',
+                        }}
+                    >
+                        <Box sx={{ padding: '2%', backgroundColor: '#F2F2F2', display: 'flex', flexDirection: 'column', width: 'auto', height: '100%' }}>
+                            <Typography sx={{ color: 'black', fontWeight: 'bold', textDecoration: 'underline' }}> Ship to: </Typography>
+                            <Typography sx={{ color: 'black', fontWeight: 500, marginLeft: '5px' }}> {row.address} </Typography>
+                        </Box>
+                    </Popover>
                 </TableCell>
                 <TableCell align="center">
                     <Button
@@ -312,19 +343,19 @@ const Row = (props) => {
                     </TableCell>
                 )}
             </TableRow>
-            <TableRow sx={{ '& > *': { borderBottom: 'set', backgroundColor: '#384D59' } }}>
-                <TableCell style={{ paddingBottom: 0, paddingTop: 0, backgroundColor: '#384D59', marginLeft: '10%' }} colSpan={6}>
+            <TableRow sx={{ '& > *': { borderBottom: 'set', backgroundColor: 'white' } }}>
+                <TableCell style={{ paddingBottom: 0, paddingTop: 0, backgroundColor: 'white', marginLeft: '10%' }} colSpan={6}>
                     <Collapse in={open} timeout="auto" unmountOnExit>
                         <Box sx={{ margin: 1 }}>
-                            <Typography variant="h7" style={{ fontWeight: 'bold', color: '#F2EFE9', textDecoration: 'underline' }} gutterBottom component="div">
+                            <Typography variant="h7" style={{ fontWeight: 'bold', color: 'black', textDecoration: 'underline' }} gutterBottom component="div">
                                 Details:
                             </Typography>
                             <Table size="small" aria-label="purchases">
                                 <TableHead>
                                     <TableRow>
-                                        <TableCell style={{ fontWeight: 'bold', color: '#F2EFE9' }}>Product ID</TableCell>
-                                        <TableCell align="center" style={{ color: '#F2EFE9' }}>Amount</TableCell>
-                                        <TableCell align="center" style={{ color: '#F2EFE9' }}>Total price (USD)</TableCell>
+                                        <TableCell style={{ color: 'black' }}>Product ID</TableCell>
+                                        <TableCell align="center" style={{ color: 'black' }}>Amount</TableCell>
+                                        <TableCell align="center" style={{ color: 'black' }}>Total price (USD)</TableCell>
                                     </TableRow>
                                 </TableHead>
                                 <TableBody>

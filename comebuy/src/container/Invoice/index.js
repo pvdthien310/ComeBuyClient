@@ -65,7 +65,8 @@ const Invoice = () => {
                 width: '100%',
                 height: '100%',
                 display: 'flex',
-                backgroundColor:'black'
+                position: 'fixed',
+                backgroundColor: 'black'
             }}
         >
             <TableContainer
@@ -87,7 +88,7 @@ const Invoice = () => {
                         marginBottom: '2%',
                         fontWeight: 'bold',
                         fontSize: '30px',
-                        color: '#F2F2F2'
+                        color: 'white'
                     }}
                 >
                     INVOICE MANAGEMENT
@@ -100,9 +101,9 @@ const Invoice = () => {
                             <TableCell align="center" style={{ color: '#0D0D0D', fontWeight: 'bold' }}>Customer ID</TableCell>
                             <TableCell align="center" style={{ color: '#0D0D0D', fontWeight: 'bold' }}>Date</TableCell>
                             <TableCell align="center" style={{ color: '#0D0D0D', fontWeight: 'bold' }}>Total&nbsp;(USD)</TableCell>
-                            <TableCell align="center" style={{ color: '#0D0D0D', fontWeight: 'bold' }}>Is Checked ?</TableCell>
+                            <TableCell align="center" style={{ color: '#0D0D0D', fontWeight: 'bold' }}>Is Checked</TableCell>
                             <TableCell align="center" style={{ color: '#0D0D0D', fontWeight: 'bold' }}>Recieved&nbsp;(USD)</TableCell>
-                            <TableCell align="center" style={{ color: '#0D0D0D', fontWeight: 'bold' }}>Is Paid ?</TableCell>
+                            <TableCell align="center" style={{ color: '#0D0D0D', fontWeight: 'bold' }}>Is Paid</TableCell>
                             <TableCell align="center" style={{ color: '#0D0D0D', fontWeight: 'bold' }}>Print out</TableCell>
                         </TableRow>
                     </TableHead>
@@ -117,10 +118,11 @@ const Invoice = () => {
                 <TablePagination
                     rowsPerPageOptions={[10, 25, 50]}
                     component="div"
-                    style={{  }}
+                    style={{}}
                     count={invoiceList.length}
                     rowsPerPage={rowsPerPage}
                     page={page}
+                    sx={{ color: 'white' }}
                     onPageChange={handleChangePage}
                     onRowsPerPageChange={handleChangeRowsPerPage}
                 />
