@@ -63,9 +63,8 @@ const Invoice = () => {
         <div
             style={{
                 width: '100%',
-                height: '100%',
+                height: 'auto',
                 display: 'flex',
-                position: 'fixed',
                 backgroundColor: 'black'
             }}
         >
@@ -73,11 +72,11 @@ const Invoice = () => {
                 style={{
                     backgroundColor: 'transparent',
                     padding: '2%',
+                    paddingBottom: '5%',
                     zIndex: 0,
                     width: '95%',
                     height: '100%',
                     justifyContent: 'center',
-                    position: 'absolute'
                 }}
                 component={Paper}
             >

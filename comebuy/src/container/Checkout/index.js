@@ -124,18 +124,22 @@ export const CheckoutPage = () => {
 
     useEffect(() => {
         const Identify = () => {
-            if (_currentUser.score < 2000) {
-                setDiscount(0)
-                setTypeCus("Rare Member")
-            } else if (_currentUser.score >= 2000 && _currentUser.score < 5000) {
-                setDiscount(10)
-                setTypeCus("Silver Member")
-            } else if (_currentUser.score >= 5000 && _currentUser.score < 20000) {
-                setDiscount(20)
-                setTypeCus("Golden Member")
+            if (localStorage.getItem('role') === 'customer') {
+                if (_currentUser.score < 2000) {
+                    setDiscount(0)
+                    setTypeCus("Rare Member")
+                } else if (_currentUser.score >= 2000 && _currentUser.score < 5000) {
+                    setDiscount(10)
+                    setTypeCus("Silver Member")
+                } else if (_currentUser.score >= 5000 && _currentUser.score < 20000) {
+                    setDiscount(20)
+                    setTypeCus("Golden Member")
+                } else {
+                    setDiscount(30)
+                    setTypeCus("Diamond Member")
+                }
             } else {
-                setDiscount(30)
-                setTypeCus("Diamond Member")
+                setDiscount(0)
             }
         }
         if (discount === 0) {
@@ -163,12 +167,11 @@ export const CheckoutPage = () => {
                         // }
                         unitAmountObj = {
                             ...unitAmountObj,
-                            value: Number(listCart[i].amount) * Number(listProd[j].price)
+                            value: Number(listProd[j].price)
                         }
                         let temp = {
                             name: listProd[j].name,
                             unit_amount: unitAmountObj,
-                            description: listProd[j].name,
                             quantity: listCart[i].amount
                         }
                         sample.push(temp)
@@ -178,21 +181,22 @@ export const CheckoutPage = () => {
             setPurchaseUnits(...purchaseUnits, sample)
         } else {
             let sample = []
-            let amountObj = {
+            let unitAmountObj = {
                 currency_code: "USD",
-                value: 0,
+                value: " " //price
             }
+
             for (let i = 0; i < listCart.length; i++) {
                 for (let j = 0; j < listProd.length; j++) {
                     if (listProd[j].productID === listCart[i].productid) {
-                        amountObj = {
-                            ...amountObj,
-                            value: Number(listCart[i].amount) * Number(listProd[j].price)
+                        unitAmountObj = {
+                            ...unitAmountObj,
+                            value: Number(listProd[j].price)
                         }
                         let temp = {
-                            description: listProd[j].name,
-                            reference_id: listProd[j].productID,
-                            amount: amountObj
+                            name: listProd[j].name,
+                            unit_amount: unitAmountObj,
+                            quantity: listCart[i].amount
                         }
                         sample.push(temp)
                     }
@@ -405,7 +409,7 @@ export const CheckoutPage = () => {
                 date: date + ' ' + m,
                 address: bigAddress,
                 userID: _currentUser.userID,
-                branchID: 'da198f71-813b-47f8-9ded-331b358d4780'
+                branchID: 'a4a66b5e-182b-4b7d-bd13-8e6a54b686a6'
             }
 
             try {
@@ -422,8 +426,8 @@ export const CheckoutPage = () => {
                 isPaid: false,
                 date: date + ' ' + m,
                 address: bigAddress,
-                userID: "10f8e845-b0ea-47fd-9f26-7d65f1bb571a",
-                branchID: 'da198f71-813b-47f8-9ded-331b358d4780'
+                userID: "dbbe802d-a52e-4c1b-99c0-3382a2e6e8cb",
+                branchID: 'a4a66b5e-182b-4b7d-bd13-8e6a54b686a6'
             }
 
             try {
@@ -824,7 +828,7 @@ export const CheckoutPage = () => {
                                             OR:
                                         </Typography>
                                         <div style={{ width: '50%', marginTop: '1.2em', alignSelf: 'center' }}>
-                                            <Paypal _lastTotal={subTotal - subTotal * discount / 100 + 2} _bigAddress={bigAddress} _guestEmail={email} _guestName={guestName} _guestPhoneNumber={guestPhoneNum} cartList={listCart} prodList={listProd} purchases={purchaseUnits} />
+                                            <Paypal _discount={discount} _lastTotal={subTotal} _bigAddress={bigAddress} _guestEmail={email} _guestName={guestName} _guestPhoneNumber={guestPhoneNum} cartList={listCart} prodList={listProd} purchases={purchaseUnits} />
                                         </div>
                                     </>
                                 ) : (null)}
@@ -1603,6 +1607,12 @@ export const CheckoutPage = () => {
                     <Button onClick={() => setOpenConfirm(false)}>Disagree</Button>
                     <Button onClick={handleAgreeCOD}>Agree</Button>
                 </DialogActions>
+                <Backdrop
+                    sx={{ color: '#fff', zIndex: (theme) => theme.zIndex.drawer + 1 }}
+                    open={openBackdrop}
+                >
+                    <CircularProgress color="inherit" />
+                </Backdrop>
             </Dialog>
 
             <Dialog open={placedOrderSuccessfully}>

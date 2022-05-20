@@ -12,7 +12,7 @@ import { DialogTitle } from "@mui/material";
 import { deleteCartById } from "../../redux/slices/cartSlice";
 import { useNavigate } from 'react-router-dom';
 
-export default function Paypal({ _lastTotal, cartList, purchases, prodList, _bigAddress, _guestEmail, _guestName, _guestPhoneNumber }) {
+export default function Paypal({ _discount, _lastTotal, cartList, purchases, prodList, _bigAddress, _guestEmail, _guestName, _guestPhoneNumber }) {
 
     const _currentUser = useSelector(currentUser)
     const dispatch = useDispatch()
@@ -93,7 +93,13 @@ export default function Paypal({ _lastTotal, cartList, purchases, prodList, _big
                     "-------------------------------------------------------- \n" +
                     stringOrder + "\n" +
                     "-------------------------------------------------------- \n" +
-                    `Total: ${_lastTotal} USD` + "\n" +
+                    `Subtotal: ${_lastTotal} USD` + "\n" +
+                    "-------------------------------------------------------- \n" +
+                    `Discount: ${_discount} %` + "\n" +
+                    "-------------------------------------------------------- \n" +
+                    `Shipping-fee: 2 USD` + "\n" +
+                    "-------------------------------------------------------- \n" +
+                    `Total: ${_lastTotal + 2 - (_lastTotal * _discount / 100)} USD` + "\n" +
                     "-------------------------------------------------------- \n" +
                     "Any wondered things. Please contact with our shop with contact below site: ComeBuy.com"
             }).then(data => {
@@ -113,7 +119,11 @@ export default function Paypal({ _lastTotal, cartList, purchases, prodList, _big
                     "-------------------------------------------------------- \n" +
                     stringOrder + "\n" +
                     "-------------------------------------------------------- \n" +
-                    `Total: ${_lastTotal} USD` + "\n" +
+                    `Shipping-fee: 2 USD` + "\n" +
+                    "-------------------------------------------------------- \n" +
+                    `Subtotal: ${_lastTotal} USD` + "\n" +
+                    "-------------------------------------------------------- \n" +
+                    `Total: ${_lastTotal + 2} USD` + "\n" +
                     "-------------------------------------------------------- \n" +
                     "Any wondered things. Please contact with our shop with contact below site: ComeBuy.com"
             }).then(data => {
@@ -159,7 +169,7 @@ export default function Paypal({ _lastTotal, cartList, purchases, prodList, _big
             let tempID = ''
             let temp = {
                 ...orderData,
-                moneyReceived: _lastTotal.toString(),
+                moneyReceived: _lastTotal,
                 isChecked: true,
                 isPaid: true,
                 date: date + ' ' + m,
@@ -180,7 +190,7 @@ export default function Paypal({ _lastTotal, cartList, purchases, prodList, _big
                 isPaid: true,
                 date: date + ' ' + m,
                 address: _bigAddress,
-                userID: "10f8e845-b0ea-47fd-9f26-7d65f1bb571a",
+                userID: "dbbe802d-a52e-4c1b-99c0-3382a2e6e8cb",
                 branchID: 'a4a66b5e-182b-4b7d-bd13-8e6a54b686a6'
             }
             setOrderData(temp)
@@ -211,44 +221,88 @@ export default function Paypal({ _lastTotal, cartList, purchases, prodList, _big
     }, [startAddInvoice])
 
     useEffect(() => {
-        window.paypal
-            .Buttons({
-                createOrder: (data, actions, err) => {
-                    return actions.order.create({
-                        intent: "CAPTURE",
-                        purchase_units: [{
-                            amount: {
-                                currency_code: "USD",
-                                value: _lastTotal,
-                                breakdown: {
-                                    item_total: {  /* Required when including the `items` array */
-                                        currency_code: "USD",
-                                        value: _lastTotal
+        if (localStorage.getItem('role') === 'customer') {
+            window.paypal
+                .Buttons({
+                    createOrder: (data, actions, err) => {
+                        return actions.order.create({
+                            intent: "CAPTURE",
+                            purchase_units: [{
+                                amount: {
+                                    currency_code: "USD",
+                                    value: _lastTotal + 2 - (_lastTotal * _discount / 100),
+                                    breakdown: {
+                                        item_total: {
+                                            currency_code: "USD",
+                                            value: _lastTotal
+                                        },
+                                        discount: {
+                                            currency_code: 'USD',
+                                            value: (_lastTotal * _discount) / 100
+                                        },
+                                        shipping: {
+                                            currency_code: 'USD',
+                                            value: 2
+                                        }
                                     }
-                                }
-                            },
-                            items: purchases
-                        }],
-                    });
-                },
-                onApprove: async (data, actions) => {
-                    const order = await actions.order.capture();
-                    await MakeInvoice()
-                },
-                onError: (err) => {
-                    console.log(err);
-                },
-            })
-            .render(paypal.current);
+                                },
+                                items: purchases
+                            }],
+                        });
+                    },
+                    onApprove: async (data, actions) => {
+                        const order = await actions.order.capture();
+                        await MakeInvoice()
+                    },
+                    onError: (err) => {
+                        console.log(err);
+                    },
+                })
+                .render(paypal.current);
+        } else {
+            window.paypal
+                .Buttons({
+                    createOrder: (data, actions, err) => {
+                        return actions.order.create({
+                            intent: "CAPTURE",
+                            purchase_units: [{
+                                amount: {
+                                    currency_code: "USD",
+                                    value: _lastTotal + 2,
+                                    breakdown: {
+                                        item_total: {
+                                            currency_code: "USD",
+                                            value: _lastTotal
+                                        },
+                                        shipping: {
+                                            currency_code: 'USD',
+                                            value: 2
+                                        }
+                                    }
+                                },
+                                items: purchases
+                            }],
+                        });
+                    },
+                    onApprove: async (data, actions) => {
+                        const order = await actions.order.capture();
+                        await MakeInvoice()
+                    },
+                    onError: (err) => {
+                        console.log(err);
+                    },
+                })
+                .render(paypal.current);
+        }
     }, []);
 
     return (
         <div>
             <div ref={paypal}></div>
             {/* {console.log(cartList)}
-            {console.log(prodList)}
-            {console.log(purchases)} */}
+            {console.log(prodList)} */}
             {console.log(purchases)}
+            {console.log(_discount)}
             {console.log(_lastTotal)}
 
             <Dialog open={paidSuccessfully}>
