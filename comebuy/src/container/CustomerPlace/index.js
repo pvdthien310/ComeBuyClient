@@ -26,6 +26,9 @@ const CustomerPlace = () => {
     const gotoCart = () => {
         navigate('/myplace/mycart')
     }
+    const gotoFavorite = () => {
+        navigate('/myplace/myfavorite')
+    }
 
     return (
         <div style={{ height: '100%', width: '100%' }}>
@@ -105,7 +108,7 @@ const CustomerPlace = () => {
                             </CardContent>
                         </CardActionArea>
                         <CardActions style={{ justifyContent: 'flex-end' }}>
-                            <Button style={{ color: 'white', fontWeight: 'bold' }} endIcon={<NavigateNextIcon />}>
+                            <Button onClick={gotoFavorite} style={{ color: 'white', fontWeight: 'bold' }} endIcon={<NavigateNextIcon />}>
                                 Go to
                             </Button>
                         </CardActions>

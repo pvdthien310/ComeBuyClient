@@ -8,6 +8,7 @@ import DetailProduct from '../container/Product/DetailProduct';
 import { ForgotPassword } from '../components';
 import CustomerCart from '../container/CustomerCart';
 import { CheckoutPage } from '../container/Checkout';
+import FavoritePlace from './../container/Favourite/index';
 
 const customerRoutes = [
   {
@@ -49,6 +50,11 @@ const customerRoutes = [
     name: 'Check out cart',
     path: '/myplace/mycart/checkout',
     page: <CheckoutPage />
+  },
+  {
+    name: ' Favorite place',
+    path: '/myplace/myfavorite',
+    page: <FavoritePlace />
   }
 ];
 

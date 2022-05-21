@@ -6,7 +6,7 @@ export { default as FeatureBar } from './FeatureBar/FeatureBar'
 export { default as FeatureImage } from './FeatureImage/FeatureImage'
 export { default as BrandLineImage } from './BrandLineImage/BrandLineImage'
 export { default as LaptopImageLine } from './LaptopImageLine/LaptopImageLine'
-export { default as ScrollButton } from './ScrollButton/ScrollButton'
+// export { default as ScrollButton } from './ScrollButton/ScrollButton'
 export { default as TextFieldForEdit } from './TextFieldForEdit'
 export { default as FeatureSelect } from './FeatureSelect'
 export { default as PreviewImagesModal } from './PreviewImagesModal'
@@ -64,7 +64,6 @@ export { default as MemberShipStepper } from './MemberShipStepper'
 
 
 
-// export { default as ScrollButton } from './ScrollButton/ScrollButton'
 
 
 
