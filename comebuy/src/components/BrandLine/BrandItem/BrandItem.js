@@ -18,13 +18,15 @@ const CustomButton = styled(Button)(() => ({
   backgroundColor: 'black'
 }));
 
-export default function BrandItem() {
+const BrandItem = (props) => {
+  console.log(props.item.productimage[0].imageURL)
   return (
     <Paper
       sx={{
         p: 2,
         margin: 'auto',
         maxWidth: 380,
+        maxHeight: 200,
         flexGrow: 1,
         backgroundColor: (theme) =>
           theme.palette.mode === 'dark' ? '#1A2027' : '#fff',
@@ -33,20 +35,20 @@ export default function BrandItem() {
       <Grid container spacing={2}>
         <Grid item>
           <ButtonBase sx={{ width: 128, height: 128 }}>
-            <Img alt="complex" src="https://store.storeimages.cdn-apple.com/4982/as-images.apple.com/is/mbp-14-digitalmat-gallery-1-202111?wid=364&hei=333&fmt=png-alpha&.v=1635183223000" />
+            <Img alt="complex" src={props.item.productimage[0].imageURL} />
           </ButtonBase>
         </Grid>
         <Grid item xs={12} sm container>
           <Grid item xs container direction="column" spacing={2}>
             <Grid item xs>
-              <Typography gutterBottom variant="subtitle1" component="div">
-                Standard license
+              <Typography gutterBottom variant="subtitle2" component="div">
+                {props.item.name.split(' (')[0]}
               </Typography>
               <Typography variant="body2" gutterBottom>
-                Full resolution 1920x1080 • JPEG
+               {props.item.screenDimension}
               </Typography>
               <Typography variant="body2" color="text.secondary">
-                ID: 1030114
+                {props.item.productID}
               </Typography>
             </Grid>
             <Grid item>
@@ -56,8 +58,8 @@ export default function BrandItem() {
             </Grid>
           </Grid>
           <Grid item>
-            <Typography variant="subtitle1" component="div">
-              $200.00
+            <Typography variant="subtitle1" component="div" color='error'>
+              ${props.item.price}
             </Typography>
           </Grid>
         </Grid>
@@ -65,3 +67,4 @@ export default function BrandItem() {
     </Paper>
   );
 }
+export default BrandItem;

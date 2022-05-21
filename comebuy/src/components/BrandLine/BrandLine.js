@@ -1,10 +1,13 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import Grid from '@mui/material/Grid'
 import { styled } from '@mui/material/styles';
 import { Swiper, SwiperSlide } from "swiper/react";
 import BrandItem from "./BrandItem/BrandItem";
 import Button from '@mui/material/Button';
 import NavigateNextIcon from '@mui/icons-material/NavigateNext';
+import { useDispatch, useSelector } from "react-redux";
+import { getAllProduct } from "../../redux/slices/productSlice";
+import {productListSelector} from "../../redux/selectors"
 
 const Img = styled('img')({
     maxWidth: '100%',
@@ -44,11 +47,16 @@ const Line = styled(Grid)(({ theme }) => ({
 }))
 
 
-function BrandLine(props) {
+const  BrandLine = (props) => {
+    const _productList  = useSelector(productListSelector)
     const brandName = props.brandName
     const brandurl = props.url
-
-    const as = ['1', '2', '3']
+    const dispatch = useDispatch()
+    const [productList, setProductList] = useState([])
+    useEffect(() => {
+        console.log(_productList.filter(ite => ite.brand == brandName))
+        setProductList(_productList.filter(ite => ite.brand == brandName))
+    }, [])
     return (
         <Line id={props.id} sx={{p: 1}} className='BrandLine' container rowSpacing={1} columnSpacing={{ xs: 1, sm: 2, md: 3 }}>
             <Grid container justifyContent={'flex-end'} item xs={12} className='BrandLine__ImgBrand'>
@@ -62,9 +70,9 @@ function BrandLine(props) {
             <Grid item xs={10}>
                 <Swiper slidesPerView={3} loop spacing={1}>
                     {
-                        as.map((item, i) => (
+                        productList && productList.map((item, i) => (
                             <SwiperSlide key={i} >
-                                <BrandItem></BrandItem>
+                                <BrandItem item={item}></BrandItem>
                             </SwiperSlide>
                         ))
                     }

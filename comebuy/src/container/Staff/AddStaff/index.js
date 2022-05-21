@@ -194,7 +194,7 @@ const AddStaff = () => {
                                             Please check carefully!</Typography>
                                     </Stack>
                                     <TextFieldForAdd inputConfig="text" Icon={<BusinessIcon />} Text={branchAddress} Title='Branch Address' onChange={handleValueChange} />
-                                    <BranchSelect value={existedBranch} branchList={branchList.filter((item) => item.userid == null)} handleChange={handleBranchChange}></BranchSelect>
+                                    <BranchSelect value={existedBranch} branchList={branchList.filter((item) => (item.userid == null || item.account == null))} handleChange={handleBranchChange}></BranchSelect>
                                     <Box sx={style.boxinfor_Stack_Line}></Box>
                                 </Stack>
                             }
