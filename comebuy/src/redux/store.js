@@ -7,6 +7,7 @@ import { branchSlice } from "./slices/branchSlice";
 import { productImageSlice } from "./slices/productImageSlice";
 import { cartSlice } from "./slices/cartSlice";
 import { invoiceItemSlice } from "./slices/invoiceItemSlice";
+import { favoriteSlice } from './slices/favoriteSlice';
 
 const store = configureStore({
     reducer: {
@@ -17,7 +18,8 @@ const store = configureStore({
         invoiceItem: invoiceItemSlice.reducer,
         branch: branchSlice.reducer,
         productImage: productImageSlice.reducer,
-        cart: cartSlice.reducer
+        cart: cartSlice.reducer,
+        favorite: favoriteSlice.reducer
     },
 })
 

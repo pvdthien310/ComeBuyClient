@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from 'react'
-import { Add, Remove } from "@material-ui/icons";
+import { Add, DeleteForeverOutlined, Remove } from "@material-ui/icons";
 import styled from "styled-components";
 import NavBar from "../../components/NavBar/NavBar";
-import { BigFooter, ProductInCart, } from '../../components';
+import { BigFooter, ProductInFavorite } from '../../components';
 import { mobile } from "./responsive";
 
 import { Typography, Link } from '@mui/material';
@@ -18,13 +18,21 @@ import Slide from '@mui/material/Slide';
 import { Button } from '@mui/material';
 import Snackbar from '@mui/material/Snackbar';
 import MuiAlert from '@mui/material/Alert';
+import SpeedDial from '@mui/material/SpeedDial';
+import SpeedDialIcon from '@mui/material/SpeedDialIcon';
+import SpeedDialAction from '@mui/material/SpeedDialAction';
+import FileCopyIcon from '@mui/icons-material/FileCopyOutlined';
+import SaveIcon from '@mui/icons-material/Save';
+import PrintIcon from '@mui/icons-material/Print';
+import ShareIcon from '@mui/icons-material/Share';
 
 import { useNavigate } from 'react-router';
-import { getAllCart, updateCart, deleteCartById } from './../../redux/slices/cartSlice';
+import { getAllFavorite, deleteFavoriteById } from './../../redux/slices/favoriteSlice';
 import { useDispatch, useSelector } from 'react-redux';
 import { unwrapResult } from '@reduxjs/toolkit';
 import { currentUser } from '../../redux/selectors';
 import { getProductWithID } from '../../redux/slices/productSlice';
+import { ShoppingCartCheckoutOutlined } from '@mui/icons-material';
 
 const Container = styled.div`
     background-color: white
@@ -86,6 +94,12 @@ const Transition = React.forwardRef(function Transition(props, ref) {
 const Alert = React.forwardRef(function Alert(props, ref) {
   return <MuiAlert elevation={6} ref={ref} variant="filled" {...props} />;
 });
+
+const actions = [
+  { icon: <ShoppingCartCheckoutOutlined />, name: 'Get all to cart' },
+  { icon: <DeleteForeverOutlined />, name: 'Delete all favorite' }
+];
+
 const FavoritePlace = () => {
 
   const dispatch = useDispatch()
@@ -93,7 +107,7 @@ const FavoritePlace = () => {
   const navigate = useNavigate()
 
   const [isLoading, setIsLoading] = useState(true)
-  const [cartList, setCartList] = useState([])
+  const [favoriteList, setFavoriteList] = useState([])
   const [prodList, setProdList] = useState([])
   const [subTotal, setSubTotal] = useState(0)
   const [openSnackbar, setOpenSnackbar] = useState(false);
@@ -105,30 +119,30 @@ const FavoritePlace = () => {
     setOpenSnackbar(false);
   };
 
-  const fetchYourCart = async (listCart, listProduct) => {
+  const fetchYourFavorite = async (listFavorite, listProduct) => {
     let temp = []
     try {
-      const resultAction = await dispatch(getAllCart())
+      const resultAction = await dispatch(getAllFavorite())
       const originalPromiseResult = unwrapResult(resultAction)
       temp = originalPromiseResult
       for (let i = 0; i < temp.length; i++) {
         if (temp[i].userid === _currentUser.userID) {
-          listCart.push(temp[i])
+          listFavorite.push(temp[i])
           const resultAction2 = await dispatch(getProductWithID(temp[i].productid))
           const originalPromiseResult2 = unwrapResult(resultAction2)
           listProduct.push(originalPromiseResult2)
         }
       }
       setIsLoading(false)
-      await CountTotal(listCart, listProduct)
+      await CountTotal(listFavorite, listProduct)
     } catch (rejectedValueOrSerializedError) {
       return rejectedValueOrSerializedError
     }
   }
 
-  const CountTotal = async (_cart, prList) => {
+  const CountTotal = async (_favorite, prList) => {
     let newTotal = 0
-    await _cart.map((item) => {
+    await _favorite.map((item) => {
       let rs = prList.find((ite) => ite.productID == item.productid)
       if (rs != undefined)
         newTotal = newTotal + Number(Number(rs.price) * Number(item.amount))
@@ -138,11 +152,11 @@ const FavoritePlace = () => {
 
   useEffect(() => {
     if (isLoading === true) {
-      let listCart = []
+      let listFavorite = []
       let listProduct = []
       let tempSubTotal = 0
-      fetchYourCart(listCart, listProduct)
-      setCartList(listCart)
+      fetchYourFavorite(listFavorite, listProduct)
+      setFavoriteList(listFavorite)
       setProdList(listProduct)
     }
   }, [])
@@ -153,90 +167,13 @@ const FavoritePlace = () => {
     setOpen(false);
   };
 
-  //handling change amount 
-  const handleChangeAmount = async (value, actionType) => {
-    let newListCart = cartList
-    console.log(actionType);
-    console.log(newListCart);
-    console.log(value);
-    if (actionType == "increase") {
-      newListCart = newListCart.map((element) => {
-        // let dataForUpdate = { ...element }
-        if (element.productid == value) {
-          return {
-            ...element,
-            "productid": element.productid,
-            "amount": Number(element.amount) + 1
-          }
-        }
-        else return element
-      });
-      newListCart.map(async (item) => {
-        if (item.productid == value) {
-          try {
-            const resultAction = await dispatch(updateCart(item))
-            const originalPromiseResult = unwrapResult(resultAction)
-          } catch (rejectedValueOrSerializedError) {
-            alert(rejectedValueOrSerializedError);
-          }
-        }
-      })
-      setCartList(newListCart)
-      await CountTotal(newListCart, prodList)
-    } else if (actionType === "decrease") {
-      let sign = 1
-      //sign 1: run updateCart when amount not = 0
-      //sign 0: don't run anything
-      newListCart = newListCart.map((element) => {
-        if (element.productid == value) {
-          if (element.amount === 0) {
-            sign = 0
-            setOpen(true)
-          } else {
-            sign = 1
-            return {
-              ...element,
-              "productid": element.productid,
-              "amount": Number(element.amount) - 1
-            }
-          }
-        }
-        else return element
-      });
-      if (sign === 1) {
-        newListCart.map(async (item) => {
-          if (item.productid == value) {
-            try {
-              const resultAction = await dispatch(updateCart(item))
-              const originalPromiseResult = unwrapResult(resultAction)
-            } catch (rejectedValueOrSerializedError) {
-              alert(rejectedValueOrSerializedError);
-            }
-          }
-        })
-        setCartList(newListCart)
-        await CountTotal(newListCart, prodList)
-      } else {
-        return
-      }
-    }
+  const handleMoveItemToMyCart = async (value) => {
+    console.log(value)
   }
 
   //handle agree dis-cart
   const handleAgree = async (item) => {
-    try {
-      const resultAction = await dispatch(deleteCartById(item))
-      const originalPromiseResult = unwrapResult(resultAction)
-      console.log(originalPromiseResult)
-      for (let i = 0; i < cartList.length; i++) {
-        if (cartList[i].cartID === item.cartID) {
-          cartList.splice(i, 1)
-        }
-      }
-      handleClose()
-    } catch (rejectedValueOrSerializedError) {
-      alert(rejectedValueOrSerializedError);
-    }
+    alert('dis like this product')
   }
 
   const handlePlaceAllToCart = () => {
@@ -295,17 +232,32 @@ const FavoritePlace = () => {
         <Title>YOUR FAVORITE</Title>
         <Top>
           <TopTexts style={{ marginLeft: '12%' }}>
-            <TopText>Your Favorite ({cartList.length})</TopText>
+            <TopText>Your Favorite ({favoriteList.length})</TopText>
             <TopText>Shopping Bag()</TopText>
           </TopTexts>
-          <TopButton onClick={handlePlaceAllToCart} type="filled">Add all to cart</TopButton>
+          <SpeedDial
+            ariaLabel="SpeedDial tooltip example"
+            sx={{ top: 0, right: 16, marginRight: '20%' }}
+            icon={<SpeedDialIcon />}
+            direction="left"
+          >
+            {actions.map((action) => (
+              <SpeedDialAction
+                key={action.name}
+                icon={action.icon}
+                tooltipTitle={action.name}
+                onClick={() => console.log(action.name)}
+              />
+            ))}
+          </SpeedDial>
+          {/* <TopButton onClick={handlePlaceAllToCart} type="filled">Add all to cart</TopButton> */}
         </Top>
         <Bottom>
           <Stack sx={{ marginLeft: '12%', p: 2 }}>
             {
-              cartList.map((item, i) => (
+              favoriteList.map((item, i) => (
                 <>
-                  <ProductInCart key={i} productInCart={item} handleChangeAmount={handleChangeAmount}></ProductInCart>
+                  <ProductInFavorite key={i} handleMoveItemToCart={handleMoveItemToMyCart} productInFavorite={item} ></ProductInFavorite>
                   <Dialog
                     open={open}
                     TransitionComponent={Transition}
@@ -315,7 +267,7 @@ const FavoritePlace = () => {
                     <DialogTitle>{"Discart"}</DialogTitle>
                     <DialogContent>
                       <DialogContentText id="alert-dialog-slide-description">
-                        Are you sure want discart this product ?
+                        Are you sure want de-Favorite this product ?
                       </DialogContentText>
                     </DialogContent>
                     <DialogActions>
@@ -328,6 +280,7 @@ const FavoritePlace = () => {
             }
           </Stack>
         </Bottom>
+
       </Wrapper>
       <BigFooter />
       <Backdrop
