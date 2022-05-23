@@ -21,10 +21,7 @@ import MuiAlert from '@mui/material/Alert';
 import SpeedDial from '@mui/material/SpeedDial';
 import SpeedDialIcon from '@mui/material/SpeedDialIcon';
 import SpeedDialAction from '@mui/material/SpeedDialAction';
-import FileCopyIcon from '@mui/icons-material/FileCopyOutlined';
-import SaveIcon from '@mui/icons-material/Save';
-import PrintIcon from '@mui/icons-material/Print';
-import ShareIcon from '@mui/icons-material/Share';
+
 
 import { useNavigate } from 'react-router';
 import { getAllFavorite, deleteFavoriteById } from './../../redux/slices/favoriteSlice';
@@ -33,6 +30,7 @@ import { unwrapResult } from '@reduxjs/toolkit';
 import { currentUser } from '../../redux/selectors';
 import { getProductWithID } from '../../redux/slices/productSlice';
 import { ShoppingCartCheckoutOutlined } from '@mui/icons-material';
+import { addCart } from '../../redux/slices/cartSlice';
 
 const Container = styled.div`
     background-color: white
@@ -111,6 +109,16 @@ const FavoritePlace = () => {
   const [prodList, setProdList] = useState([])
   const [subTotal, setSubTotal] = useState(0)
   const [openSnackbar, setOpenSnackbar] = useState(false);
+
+  const [isMovingToCart, setIsMovingToCart] = useState(false);
+  const handleCloseMovingToCart = () => {
+    setIsMovingToCart(false);
+  };
+
+  const handleToggleIsMovingToCart = () => {
+    setIsMovingToCart(!isMovingToCart);
+  };
+
   const handleCloseSnackbar = (event, reason) => {
     if (reason === 'clickaway') {
       return;
@@ -168,12 +176,25 @@ const FavoritePlace = () => {
   };
 
   const handleMoveItemToMyCart = async (value) => {
-    console.log(value)
+    setIsMovingToCart(true)
+    let newCart = {
+      userID: _currentUser.userID,
+      productID: value
+    }
+    try {
+      const resultAction = await dispatch(addCart(newCart))
+      const originalPromiseResult = unwrapResult(resultAction)
+
+
+      await CountTotal(listFavorite, listProduct)
+    } catch (rejectedValueOrSerializedError) {
+      return rejectedValueOrSerializedError
+    }
   }
 
   //handle agree dis-cart
   const handleAgree = async (item) => {
-    alert('dis like this product')
+    alert('dislike this product')
   }
 
   const handlePlaceAllToCart = () => {
@@ -257,7 +278,7 @@ const FavoritePlace = () => {
             {
               favoriteList.map((item, i) => (
                 <>
-                  <ProductInFavorite key={i} handleMoveItemToCart={handleMoveItemToMyCart} productInFavorite={item} ></ProductInFavorite>
+                  <ProductInFavorite key={i} handleMoveItemToCart={() => handleMoveItemToMyCart(item)} productInFavorite={item} ></ProductInFavorite>
                   <Dialog
                     open={open}
                     TransitionComponent={Transition}
@@ -289,6 +310,14 @@ const FavoritePlace = () => {
       >
         <CircularProgress color="inherit" />
       </Backdrop>
+
+      <Backdrop
+        sx={{ color: '#fff', zIndex: (theme) => theme.zIndex.drawer + 1 }}
+        open={isMovingToCart}
+      >
+        <CircularProgress color="inherit" />
+      </Backdrop>
+
       <Snackbar open={openSnackbar} autoHideDuration={6000} onClose={handleCloseSnackbar}>
         <Alert onClose={handleCloseSnackbar} severity="warning" sx={{ width: '100%' }}>
           Add some product ti your cart first
