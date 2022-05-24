@@ -66,7 +66,7 @@ const ProductInFavorite = (props) => {
 
                     </CardContent>
                     <Stack direction={'row'} sx={{ height: '10%', justifyContent: 'center', alignSelf: 'center', p: 2, marginLeft: '3%' }} spacing={1}>
-                        <IconButton onClick={() => props.handleMoveItemToCart(props.productInFavorite.productid)} color="primary" aria-label="add to shopping cart">
+                        <IconButton onClick={() => props.handleMoveItemToCart(props.productInFavorite)} color="primary" aria-label="add to shopping cart">
                             <ShoppingCartCheckoutSharp />
                         </IconButton>
                     </Stack>

@@ -13,8 +13,8 @@ const favoriteApi = {
     //         .catch(err => { return err.response })
     //     return res;
     // },
-    deleteFavoriteById: async (data) => {
-        const res = await DatabaseClient.delete('/' + baseURL + '/' + data.favoriteID, data)
+    deleteFavoriteById: async (id) => {
+        const res = await DatabaseClient.delete('/' + baseURL + '/' + id, id)
             .catch(err => { return err.message })
         return res;
     },

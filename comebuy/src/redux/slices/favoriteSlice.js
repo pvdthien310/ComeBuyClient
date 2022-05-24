@@ -29,8 +29,8 @@ export const getAllFavorite = createAsyncThunk(
 
 export const deleteFavoriteById = createAsyncThunk(
     'favorite/deleteFavoriteById',
-    async (data, { rejectedWithValue }) => {
-        const response = await favoriteApi.deleteFavoriteById(data)
+    async (id, { rejectedWithValue }) => {
+        const response = await favoriteApi.deleteFavoriteById(id)
         if (!response) {
             return rejectedWithValue("Deleted failed !")
         } else {

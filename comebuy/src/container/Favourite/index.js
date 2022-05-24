@@ -175,20 +175,38 @@ const FavoritePlace = () => {
     setOpen(false);
   };
 
+  const [openMoveToCartSuccess, setOpenMoveToCartSuccess] = useState(false)
+
+  const handleCloseMoveToCartSuccess = () => setOpenMoveToCartSuccess(false)
+
   const handleMoveItemToMyCart = async (value) => {
+    console.log(value)
     setIsMovingToCart(true)
     let newCart = {
       userID: _currentUser.userID,
-      productID: value
+      productID: value.productid,
+      amount: 1
     }
+    //addCart to db
     try {
       const resultAction = await dispatch(addCart(newCart))
       const originalPromiseResult = unwrapResult(resultAction)
-
-
-      await CountTotal(listFavorite, listProduct)
+      console.log(originalPromiseResult)
     } catch (rejectedValueOrSerializedError) {
-      return rejectedValueOrSerializedError
+      alert(rejectedValueOrSerializedError)
+    }
+    //delete favorite
+    try {
+      const resultAction = await dispatch(deleteFavoriteById(value.favoriteID))
+      const originalPromiseResult = unwrapResult(resultAction)
+      var index = favoriteList.indexOf(value)
+      if (index !== -1) {
+        favoriteList.splice(index, 1)
+      }
+      handleCloseMovingToCart()
+      setOpenMoveToCartSuccess(true)
+    } catch (rejectedValueOrSerializedError) {
+      alert(rejectedValueOrSerializedError)
     }
   }
 
@@ -197,9 +215,56 @@ const FavoritePlace = () => {
     alert('dislike this product')
   }
 
-  const handlePlaceAllToCart = () => {
-    alert("Place all favorite to cart")
+  const [openDeleteAllSuccess, setOpenDeleteAllSuccess] = useState(false)
+  const handleCloseDeleteAllSuccess = () => setOpenDeleteAllSuccess(false)
+
+  const [openMoveAllSuccess, setOpenMoveAllSuccess] = useState(false)
+  const handleCloseMoveAllSuccess = () => setOpenMoveAllSuccess(false)
+
+  const handleDeleteAllFavorite = () => {
+    setIsMovingToCart(true) //backdrop
+    favoriteList.map((i) => {
+      dispatch(deleteFavoriteById(i.favoriteID))
+    }
+    )
+    favoriteList.splice(0, favoriteList.length)
+    handleCloseMovingToCart()
+    handleCloseConfirmDelete()
+    setOpenDeleteAllSuccess(true)
   }
+
+  const handlePlaceAllToCart = () => {
+    setIsMovingToCart(true) //backdrop
+    favoriteList.map((i) => {
+      dispatch(addCart({
+        userID: _currentUser.userID,
+        productID: i.productid
+      }))
+      dispatch(deleteFavoriteById(i.favoriteID))
+    })
+    favoriteList.splice(0, favoriteList.length)
+    handleCloseMovingToCart()
+    handleCloseConfirmMove()
+    setOpenMoveAllSuccess(true)
+  }
+
+  const handleSpeedDialClick = (action) => {
+    if (action.name === 'Get all to cart') {
+      if (favoriteList.length != 0) {
+        setOpenConfirmMove(true)
+      }
+    } else {
+      if (favoriteList.length != 0) {
+        setOpenConfirmDelete(true)
+      }
+    }
+  }
+
+  const [openConfirmDelete, setOpenConfirmDelete] = useState(false)
+  const handleCloseConfirmDelete = () => setOpenConfirmDelete(false)
+
+  const [openConfirmMove, setOpenConfirmMove] = useState(false)
+  const handleCloseConfirmMove = () => setOpenConfirmMove(false)
 
   function handleClick(event) {
     event.preventDefault();
@@ -267,7 +332,7 @@ const FavoritePlace = () => {
                 key={action.name}
                 icon={action.icon}
                 tooltipTitle={action.name}
-                onClick={() => console.log(action.name)}
+                onClick={() => handleSpeedDialClick(action)}
               />
             ))}
           </SpeedDial>
@@ -278,7 +343,7 @@ const FavoritePlace = () => {
             {
               favoriteList.map((item, i) => (
                 <>
-                  <ProductInFavorite key={i} handleMoveItemToCart={() => handleMoveItemToMyCart(item)} productInFavorite={item} ></ProductInFavorite>
+                  <ProductInFavorite key={i} handleMoveItemToCart={handleMoveItemToMyCart} productInFavorite={item} ></ProductInFavorite>
                   <Dialog
                     open={open}
                     TransitionComponent={Transition}
@@ -323,6 +388,60 @@ const FavoritePlace = () => {
           Add some product ti your cart first
         </Alert>
       </Snackbar>
+
+      <Snackbar open={openMoveToCartSuccess} autoHideDuration={6000} onClose={handleCloseMoveToCartSuccess}>
+        <Alert onClose={handleCloseMoveToCartSuccess} severity="success" sx={{ width: '100%' }}>
+          Added to cart successfully
+        </Alert>
+      </Snackbar>
+
+      <Snackbar open={openDeleteAllSuccess} autoHideDuration={6000} onClose={handleCloseDeleteAllSuccess}>
+        <Alert onClose={handleCloseDeleteAllSuccess} severity="success" sx={{ width: '100%' }}>
+          Deleted all successfully
+        </Alert>
+      </Snackbar>
+
+      <Snackbar open={openMoveAllSuccess} autoHideDuration={6000} onClose={handleCloseMoveAllSuccess}>
+        <Alert onClose={handleCloseMoveAllSuccess} severity="success" sx={{ width: '100%' }}>
+          Added all to cart successfully
+        </Alert>
+      </Snackbar>
+
+      <Dialog
+        open={openConfirmDelete}
+        TransitionComponent={Transition}
+        keepMounted
+        aria-describedby="alert-dialog-slide-description"
+      >
+        <DialogTitle>Confirm task</DialogTitle>
+        <DialogContent>
+          <DialogContentText id="alert-dialog-slide-description">
+            Are you sure to delete all your favorite product ?
+          </DialogContentText>
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={handleCloseConfirmDelete}>Cancel</Button>
+          <Button onClick={handleDeleteAllFavorite}>Ok</Button>
+        </DialogActions>
+      </Dialog>
+
+      <Dialog
+        open={openConfirmMove}
+        TransitionComponent={Transition}
+        keepMounted
+        aria-describedby="alert-dialog-slide-description"
+      >
+        <DialogTitle>Confirm task</DialogTitle>
+        <DialogContent>
+          <DialogContentText id="alert-dialog-slide-description">
+            Are you sure to add all your favorite product to cart ?
+          </DialogContentText>
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={handleCloseConfirmMove}>Cancel</Button>
+          <Button onClick={handlePlaceAllToCart}>Ok</Button>
+        </DialogActions>
+      </Dialog>
     </Container >
   );
 };
