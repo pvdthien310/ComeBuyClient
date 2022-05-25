@@ -38,6 +38,7 @@ import { addCart, cartSlice, updateCart } from '../../../redux/slices/cartSlice.
 import ProductComment from '../../../components/ProductComment/index.js';
 import RecommendedProductLine from '../../../components/RecommendedProductLine/index.js';
 import { unwrapResult } from '@reduxjs/toolkit';
+import FavoriteIcon from '@mui/icons-material/Favorite';
 
 
 const ProductImage = styled('img')({
@@ -47,6 +48,18 @@ const ProductImage = styled('img')({
     alignSelf: 'center',
     backgroundSize: 'cover',
 })
+const CustomButton = styled(Button)({
+  '&:hover': {
+      backgroundColor: '#D93B48',
+      color: 'white'
+  }
+})
+const CustomButton1 = styled(Button)({
+    '&:hover': {
+        backgroundColor: 'grey',
+        color: 'white'
+    }
+  })
 const Alert = React.forwardRef(function Alert(props, ref) {
     return <MuiAlert elevation={6} ref={ref} variant="filled" {...props} />;
 });
@@ -101,6 +114,9 @@ const DetailProduct = () => {
             setOpenBackdrop(false)
             alert(rejectedValueOrSerializedError);
         }
+    }
+    const handleAddToFavorite = async () => {
+
     }
 
     const handleAddToCart = async () => {
@@ -364,12 +380,18 @@ const DetailProduct = () => {
                                             <Chip label="New Seal" color="success" variant="outlined" />
                                         </Stack>
                                     </Box>
-                                    <Button onClick={handleAddToCart} variant="filled" sx={{ color: 'white', backgroundColor: '#D92365', p: 1, mt: 2 }} startIcon={<AddTaskIcon />}>
+                                    <CustomButton onClick={handleAddToCart} variant="filled" sx={{ color: 'white', backgroundColor: '#D92365', p: 1, mt: 2 }} startIcon={<AddTaskIcon />}>
                                         Add To Cart
-                                    </Button>
-                                    <Button variant="filled" sx={{ p: 1, mt: 2, backgroundColor: 'black', color: 'white' }} startIcon={<LocalPhoneIcon />}>
+                                    </CustomButton>
+                                    {
+                                        localStorage.getItem('idUser') != "" &&
+                                        <CustomButton onClick={handleAddToFavorite} variant="filled" sx={{ color: 'white', backgroundColor: '#8C030E', p: 1, mt: 2 }} startIcon={<FavoriteIcon />}>
+                                            Add To Favorite
+                                        </CustomButton>
+                                    }
+                                    <CustomButton1 variant="filled" sx={{ p: 1, mt: 2, backgroundColor: 'black', color: 'white' }} startIcon={<LocalPhoneIcon />}>
                                         Hotline 0834344655
-                                    </Button>
+                                    </CustomButton1>
                                 </Stack>
                                 :
                                 <Stack sx={{ width: '100%', height: '100%' }}>

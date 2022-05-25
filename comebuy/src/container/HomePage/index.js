@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
-import { useDispatch } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 import { getAccountWithID } from '../../redux/slices/accountSlice'
 import {
     BrandNavBar,
@@ -15,8 +15,11 @@ import {
 } from '../../components'
 import { unwrapResult } from '@reduxjs/toolkit'
 import { cartSlice } from './../../redux/slices/cartSlice'
+import { getAllProduct } from '../../redux/slices/productSlice'
+import { productListSelector } from '../../redux/selectors'
 
 const HomePage = () => {
+    const _productList = useSelector(productListSelector)
     const navigate = useNavigate()
     const dispatch = useDispatch()
     // const [numberItemsInCart, setNumberItemsInCart] = useState(JSON.parse(localStorage.getItem('cart')).length)
@@ -38,7 +41,21 @@ const HomePage = () => {
             const value = JSON.parse(localStorage.getItem('cart'))
             dispatch(cartSlice.actions.cartListChange(value))
         }
+        dispatch(getAllProduct())
+            .unwrap()
+            .then((originalPromiseResult) => {
+                console.log(originalPromiseResult)
+                // setProductList(originalPromiseResult.filter(ite => ite.brand == brandName))
+            })
+            .catch((rejectedValueOrSerializedError) => {
+                console.log("Error load product")
+            })
+        return () => {
+           
+        }
+
     }, [])
+
 
     const brandList = [
         {
@@ -66,7 +83,7 @@ const HomePage = () => {
         <div>
             <NavBar></NavBar>
             <BrandNavBar brandLine={brandList} ></BrandNavBar>
-            <Slider></Slider>
+            {/* <Slider></Slider> */}
             <FeatureImage
                 onNavigate={() => navigate('/productSpace')}
                 urlImage='https://images.unsplash.com/photo-1537498425277-c283d32ef9db?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1178&q=80'
@@ -81,7 +98,7 @@ const HomePage = () => {
             ></BrandLineImage>
             <div>
                 {
-                    brandList.map((item, i) => {
+                    _productList.length > 0 && brandList.map((item, i) => {
                         const stringID = 'Line_' + item.title
                         return (
                             <BrandLine key={i} id={stringID} brandName={item.title} url={item.url} ></BrandLine>
