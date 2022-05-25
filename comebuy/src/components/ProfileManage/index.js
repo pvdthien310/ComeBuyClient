@@ -1047,12 +1047,11 @@ const ProfileManage = () => {
                     maxWidth: 400,
                     flexGrow: 1,
                     position: 'absolute',
-                    top: '55%',
+                    top: '50%',
                     left: '50%',
                     transform: 'translate(-50%, -50%)',
                     bgcolor: 'background.paper',
                     borderRadius: '15px',
-                    border: '2px solid #000',
                     boxShadow: 24,
                     p: 0.5
                 }}>
@@ -1062,12 +1061,12 @@ const ProfileManage = () => {
                         sx={{
                             display: 'flex',
                             alignItems: 'center',
-                            height: 50,
+                            height: 70,
                             pl: 2,
                             bgcolor: 'background.default'
                         }}
                     >
-                        <Typography>{images[activeStep].label}</Typography>
+                        <Typography sx={{ marginBottom: 15, marginTop: 15, padding: 3 }}>{images[activeStep].label}</Typography>
                     </Paper>
                     <AutoPlaySwipeableViews
                         axis={theme.direction === 'rtl' ? 'x-reverse' : 'x'}

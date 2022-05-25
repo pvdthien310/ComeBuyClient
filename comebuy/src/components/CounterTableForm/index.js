@@ -162,8 +162,8 @@ const TableForm = ({
           onChange={(e) => setQuantity(e.target.value)}
           variant="outlined"
         />
-        <Button variant="contained" sx={{ backgroundColor: '#0ABF04' }} onClick={handleSubmit}>
-          Add  To Table Item
+        <Button variant="contained" sx={{ backgroundColor: 'green' }} onClick={handleSubmit}>
+          Add
         </Button>
       </Stack>
 

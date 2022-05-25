@@ -174,8 +174,24 @@ const FavoritePlace = () => {
     })
     setSubTotal(newTotal)
   }
+
+  const handleDeleteOneFav = async (value) => {
+    setIsMovingToCart(true)
+    try {
+      const resultAction = await dispatch(deleteFavoriteById(value.favoriteID))
+      const originalPromiseResult = unwrapResult(resultAction)
+      var index = favoriteList.indexOf(value)
+      if (index !== -1) {
+        favoriteList.splice(index, 1)
+      }
+      handleCloseMovingToCart()
+      setOpenDeleteAllSuccess(true)
+    } catch (rejectedValueOrSerializedError) {
+      alert(rejectedValueOrSerializedError)
+    }
+  }
+
   const handleMoveItemToMyCart = async (value) => {
-    console.log(value)
     setIsMovingToCart(true)
     let newCart = {
       userID: _currentUser.userID,
@@ -374,7 +390,7 @@ const FavoritePlace = () => {
             {
               favoriteList.map((item, i) => (
                 <>
-                  <ProductInFavorite key={i} handleMoveItemToCart={handleMoveItemToMyCart} productInFavorite={item} ></ProductInFavorite>
+                  <ProductInFavorite key={i} handleDeleteOneFavorite={handleDeleteOneFav} handleMoveItemToCart={handleMoveItemToMyCart} productInFavorite={item} ></ProductInFavorite>
                   <Dialog
                     open={open}
                     TransitionComponent={Transition}
@@ -428,7 +444,7 @@ const FavoritePlace = () => {
 
       <Snackbar open={openDeleteAllSuccess} autoHideDuration={6000} onClose={handleCloseDeleteAllSuccess}>
         <Alert onClose={handleCloseDeleteAllSuccess} severity="success" sx={{ width: '100%' }}>
-          Deleted all successfully
+          Deleted favorite successfully
         </Alert>
       </Snackbar>
 

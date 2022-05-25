@@ -14,6 +14,7 @@ import logo from '../../assets/img/logo.png'
 
 import ReactToPrint from "react-to-print"
 import { Stack, Grid, Box, Typography, TextField, Button, IconButton } from '@mui/material';
+import DeleteForeverIcon from '@mui/icons-material/DeleteForever';
 import BackspaceSharpIcon from '@mui/icons-material/BackspaceSharp';
 import TextareaAutosize from '@mui/material/TextareaAutosize';
 import { styled } from '@mui/material/styles';
@@ -62,14 +63,14 @@ const CounterForManager = () => {
             setPhone(originalPromiseResult.phoneNumber)
         } catch (rejectedValueOrSerializedError) {
             console.log("Load user Failed")
-        }   
+        }
     }
 
     useEffect(() => {
         if (_currentUser.userID == "00000000-0000-0000-0000-000000000000")
             LoadData()
     }, [])
- 
+
 
     const componentRef = useRef()
 
@@ -113,11 +114,10 @@ const CounterForManager = () => {
                 height: '100%',
                 p: 2,
                 position: 'relative',
-                backgroundColor: '#9D4DE8'
+                backgroundColor: 'white'
             }}
             spacing={1}
         >
-            {/* <BGImg style={{ zIndex: -1 }} src='https://images.unsplash.com/photo-1490810194309-344b3661ba39?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1448&q=80' /> */}
             <Grid item xs={7}
                 sx={{
                     height: 'auto',
@@ -275,16 +275,9 @@ const CounterForManager = () => {
                                 maxHeight: '100px'
                             }}
                         />
-                        <IconButton onClick={AfterPrint}
-                            sx={{
-                                backgroundColor: 'transparent',
-                                width: '15%',
-                                height: "auto",
-                                marginLeft: '45%'
-                            }}>
-                            <BackspaceSharpIcon color="error" sx={{ backgroundColor: 'transparent' }} />
-                            <Typography sx={{ marginLeft: '1%', fontWeight: 'bold' }}>Clear</Typography>
-                        </IconButton>
+                        <Button onClick={AfterPrint} color="error" sx={{ marginLeft: '45%', marginTop: '2rem' }} variant="outlined" startIcon={<DeleteForeverIcon />}>
+                            Clear
+                        </Button>
                     </Box>
                 </Stack >
             </Grid >

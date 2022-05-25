@@ -12,6 +12,7 @@ import productAPI from '../../api/productAPI';
 import AddIcon from '@mui/icons-material/Add';
 import RemoveIcon from '@mui/icons-material/Remove';
 import { ShoppingCartCheckoutSharp } from '@mui/icons-material';
+import ClearIcon from '@mui/icons-material/Clear';
 
 const Img = styled('img')({
     margin: 'auto',
@@ -66,6 +67,9 @@ const ProductInFavorite = (props) => {
 
                     </CardContent>
                     <Stack direction={'row'} sx={{ height: '10%', justifyContent: 'center', alignSelf: 'center', p: 2, marginLeft: '3%' }} spacing={1}>
+                        <IconButton onClick={() => props.handleDeleteOneFavorite(props.productInFavorite)} color="primary" aria-label="add to shopping cart">
+                            <ClearIcon color="error" />
+                        </IconButton>
                         <IconButton onClick={() => props.handleMoveItemToCart(props.productInFavorite)} color="primary" aria-label="add to shopping cart">
                             <ShoppingCartCheckoutSharp />
                         </IconButton>
