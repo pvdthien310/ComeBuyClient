@@ -122,6 +122,18 @@ const CustomerCart = () => {
   const [prodList, setProdList] = useState([])
   const [subTotal, setSubTotal] = useState(0)
   const [openSnackbar, setOpenSnackbar] = useState(false);
+  const [input, setInput] = useState('')
+  const [output, setOutput] = useState([])
+
+  useEffect(() => {
+    setOutput([])
+    cartList.filter(val => {
+      if (val.product.name.toLowerCase().includes(input.toLowerCase())) {
+        setOutput(output => [...output, val])
+      }
+    })
+  }, [input])
+
   const handleCloseSnackbar = (event, reason) => {
     if (reason === 'clickaway') {
       return;
