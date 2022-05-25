@@ -39,6 +39,8 @@ import ProductComment from '../../../components/ProductComment/index.js';
 import RecommendedProductLine from '../../../components/RecommendedProductLine/index.js';
 import { unwrapResult } from '@reduxjs/toolkit';
 import FavoriteIcon from '@mui/icons-material/Favorite';
+import { addFavorite } from './../../../redux/slices/favoriteSlice';
+import { TramRounded } from '@mui/icons-material';
 
 
 const ProductImage = styled('img')({
@@ -49,17 +51,17 @@ const ProductImage = styled('img')({
     backgroundSize: 'cover',
 })
 const CustomButton = styled(Button)({
-  '&:hover': {
-      backgroundColor: '#D93B48',
-      color: 'white'
-  }
+    '&:hover': {
+        backgroundColor: '#D93B48',
+        color: 'white'
+    }
 })
 const CustomButton1 = styled(Button)({
     '&:hover': {
         backgroundColor: 'grey',
         color: 'white'
     }
-  })
+})
 const Alert = React.forwardRef(function Alert(props, ref) {
     return <MuiAlert elevation={6} ref={ref} variant="filled" {...props} />;
 });
@@ -116,7 +118,19 @@ const DetailProduct = () => {
         }
     }
     const handleAddToFavorite = async () => {
-
+        setOpenBackdrop(true)
+        let temp = {
+            productID: product.productid,
+            userID: _currentUser.userID
+        }
+        try {
+            const resultAction = await dispatch(addFavorite(temp))
+            const originalPromiseResult = unwrapResult(resultAction)
+            setOpenBackdrop(false)
+            setOpenSnackbar(true)
+        } catch (rejectedValueOrSerializedError) {
+            alert(rejectedValueOrSerializedError);
+        }
     }
 
     const handleAddToCart = async () => {
@@ -413,7 +427,7 @@ const DetailProduct = () => {
             </Backdrop>
             <Snackbar open={openSnackbar} autoHideDuration={6000} onClose={handleCloseSnackbar}>
                 <Alert onClose={handleCloseSnackbar} severity="success" sx={{ width: '100%' }}>
-                    Added to cart
+                    Added successfully
                 </Alert>
             </Snackbar>
         </Stack>
