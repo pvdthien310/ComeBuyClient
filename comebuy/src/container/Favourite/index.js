@@ -1,12 +1,14 @@
+//importation from libs
 import React, { useState, useEffect } from 'react'
-import { Add, DeleteForeverOutlined, Remove } from "@material-ui/icons";
-import styled from "styled-components";
-import NavBar from "../../components/NavBar/NavBar";
-import { BigFooter, ProductInFavorite } from '../../components';
-import { mobile } from "./responsive";
+import { useNavigate } from 'react-router';
+import { useDispatch, useSelector } from 'react-redux';
+import { unwrapResult } from '@reduxjs/toolkit';
 
-import { Typography, Link } from '@mui/material';
-import { Stack, Breadcrumbs } from '@mui/material';
+//Importation from mui
+import styled from "styled-components";
+import { ShoppingCartCheckoutOutlined } from '@mui/icons-material';
+import { Add, DeleteForeverOutlined, Remove } from "@material-ui/icons";
+import { Typography, Link, Stack, Breadcrumbs, Button } from '@mui/material';
 import Backdrop from '@mui/material/Backdrop';
 import CircularProgress from '@mui/material/CircularProgress';
 import Dialog from '@mui/material/Dialog';
@@ -15,21 +17,21 @@ import DialogContent from '@mui/material/DialogContent';
 import DialogContentText from '@mui/material/DialogContentText';
 import DialogTitle from '@mui/material/DialogTitle';
 import Slide from '@mui/material/Slide';
-import { Button } from '@mui/material';
 import Snackbar from '@mui/material/Snackbar';
 import MuiAlert from '@mui/material/Alert';
 import SpeedDial from '@mui/material/SpeedDial';
 import SpeedDialIcon from '@mui/material/SpeedDialIcon';
 import SpeedDialAction from '@mui/material/SpeedDialAction';
 
+//Importation from component
+import NavBar from "../../components/NavBar/NavBar";
+import { BigFooter, ProductInFavorite } from '../../components';
+import { mobile } from "./responsive";
 
-import { useNavigate } from 'react-router';
+//Importation from slices, api,...
 import { getAllFavorite, deleteFavoriteById } from './../../redux/slices/favoriteSlice';
-import { useDispatch, useSelector } from 'react-redux';
-import { unwrapResult } from '@reduxjs/toolkit';
 import { currentUser } from '../../redux/selectors';
 import { getProductWithID } from '../../redux/slices/productSlice';
-import { ShoppingCartCheckoutOutlined } from '@mui/icons-material';
 import { addCart } from '../../redux/slices/cartSlice';
 
 const Container = styled.div`
@@ -55,19 +57,10 @@ const Top = styled.div`
   padding: 20px;
 `;
 
-const TopButton = styled.button`
-  padding: 10px;
-  font-weight: 600;
-  cursor: pointer;
-  border: ${(props) => props.type === "filled" && "none"};
-  background-color: ${(props) =>
-    props.type === "filled" ? "#2C4001" : "transparent"};
-  color: ${(props) => props.type === "filled" && "white"};
-`;
-
 const TopTexts = styled.div`
   ${mobile({ display: "none" })}
 `;
+
 const TopText = styled.span`
   text-decoration: underline;
   cursor: pointer;
@@ -100,25 +93,35 @@ const actions = [
 
 const FavoritePlace = () => {
 
+  //dispatch, selector, navigate,..
   const dispatch = useDispatch()
   const _currentUser = useSelector(currentUser)
   const navigate = useNavigate()
 
-  const [isLoading, setIsLoading] = useState(true)
+  //data state
   const [favoriteList, setFavoriteList] = useState([])
-  const [prodList, setProdList] = useState([])
-  const [subTotal, setSubTotal] = useState(0)
-  const [openSnackbar, setOpenSnackbar] = useState(false);
 
+
+  //process situation states
+  const [isLoading, setIsLoading] = useState(true)
+  const [open, setOpen] = useState(false);
+  const [openSnackbar, setOpenSnackbar] = useState(false);
   const [isMovingToCart, setIsMovingToCart] = useState(false);
+  const [openMoveToCartSuccess, setOpenMoveToCartSuccess] = useState(false)
+  const [openDeleteAllSuccess, setOpenDeleteAllSuccess] = useState(false)
+  const [openMoveAllSuccess, setOpenMoveAllSuccess] = useState(false)
+  const [openConfirmDelete, setOpenConfirmDelete] = useState(false)
+  const [openConfirmMove, setOpenConfirmMove] = useState(false)
+  const [subTotal, setSubTotal] = useState(0)
+  const [prodList, setProdList] = useState([])
+
+  //function middle handler
   const handleCloseMovingToCart = () => {
     setIsMovingToCart(false);
   };
-
   const handleToggleIsMovingToCart = () => {
     setIsMovingToCart(!isMovingToCart);
   };
-
   const handleCloseSnackbar = (event, reason) => {
     if (reason === 'clickaway') {
       return;
@@ -126,7 +129,19 @@ const FavoritePlace = () => {
 
     setOpenSnackbar(false);
   };
+  const handleClose = () => {
+    setOpen(false);
+  };
+  const handleCloseMoveToCartSuccess = () => setOpenMoveToCartSuccess(false)
+  const handleCloseDeleteAllSuccess = () => setOpenDeleteAllSuccess(false)
+  const handleCloseMoveAllSuccess = () => setOpenMoveAllSuccess(false)
+  const handleCloseConfirmDelete = () => setOpenConfirmDelete(false)
+  const handleCloseConfirmMove = () => setOpenConfirmMove(false)
+  const handleAgree = async (item) => {
+    alert('dislike this product')
+  }
 
+  //task function
   const fetchYourFavorite = async (listFavorite, listProduct) => {
     let temp = []
     try {
@@ -147,7 +162,6 @@ const FavoritePlace = () => {
       return rejectedValueOrSerializedError
     }
   }
-
   const CountTotal = async (_favorite, prList) => {
     let newTotal = 0
     await _favorite.map((item) => {
@@ -157,28 +171,6 @@ const FavoritePlace = () => {
     })
     setSubTotal(newTotal)
   }
-
-  useEffect(() => {
-    if (isLoading === true) {
-      let listFavorite = []
-      let listProduct = []
-      let tempSubTotal = 0
-      fetchYourFavorite(listFavorite, listProduct)
-      setFavoriteList(listFavorite)
-      setProdList(listProduct)
-    }
-  }, [])
-
-  const [open, setOpen] = useState(false);
-
-  const handleClose = () => {
-    setOpen(false);
-  };
-
-  const [openMoveToCartSuccess, setOpenMoveToCartSuccess] = useState(false)
-
-  const handleCloseMoveToCartSuccess = () => setOpenMoveToCartSuccess(false)
-
   const handleMoveItemToMyCart = async (value) => {
     console.log(value)
     setIsMovingToCart(true)
@@ -209,18 +201,6 @@ const FavoritePlace = () => {
       alert(rejectedValueOrSerializedError)
     }
   }
-
-  //handle agree dis-cart
-  const handleAgree = async (item) => {
-    alert('dislike this product')
-  }
-
-  const [openDeleteAllSuccess, setOpenDeleteAllSuccess] = useState(false)
-  const handleCloseDeleteAllSuccess = () => setOpenDeleteAllSuccess(false)
-
-  const [openMoveAllSuccess, setOpenMoveAllSuccess] = useState(false)
-  const handleCloseMoveAllSuccess = () => setOpenMoveAllSuccess(false)
-
   const handleDeleteAllFavorite = () => {
     setIsMovingToCart(true) //backdrop
     favoriteList.map((i) => {
@@ -232,7 +212,6 @@ const FavoritePlace = () => {
     handleCloseConfirmDelete()
     setOpenDeleteAllSuccess(true)
   }
-
   const handlePlaceAllToCart = () => {
     setIsMovingToCart(true) //backdrop
     favoriteList.map((i) => {
@@ -247,7 +226,6 @@ const FavoritePlace = () => {
     handleCloseConfirmMove()
     setOpenMoveAllSuccess(true)
   }
-
   const handleSpeedDialClick = (action) => {
     if (action.name === 'Get all to cart') {
       if (favoriteList.length != 0) {
@@ -259,23 +237,29 @@ const FavoritePlace = () => {
       }
     }
   }
-
-  const [openConfirmDelete, setOpenConfirmDelete] = useState(false)
-  const handleCloseConfirmDelete = () => setOpenConfirmDelete(false)
-
-  const [openConfirmMove, setOpenConfirmMove] = useState(false)
-  const handleCloseConfirmMove = () => setOpenConfirmMove(false)
-
   function handleClick(event) {
-    event.preventDefault();
+    event.preventDefault()
     navigate('/myplace')
   }
 
-  function handleClickToHome(event) {
+  const handleClickToHome = (event) => {
     event.preventDefault();
     navigate('/')
   }
+  const gotoProductScreen = () => navigate('/productSpace')
 
+  //useEffect..
+  useEffect(() => {
+    if (isLoading === true) {
+      let listFavorite = []
+      let listProduct = []
+      fetchYourFavorite(listFavorite, listProduct)
+      setFavoriteList(listFavorite)
+      setProdList(listProduct)
+    }
+  }, [])
+
+  //Breadcrumb
   const breadcrumbs = [
     <Link
       underline="hover"
@@ -299,9 +283,6 @@ const FavoritePlace = () => {
       My Favorite
     </Typography>,
   ];
-
-  const gotoProductScreen = () => navigate('/productSpace')
-  const [num, setNum] = useState(2)
 
   return (
     <Container>
