@@ -14,8 +14,13 @@ import Typography from '@mui/material/Typography';
 import TablePagination from '@mui/material/TablePagination';
 import Paper from '@mui/material/Paper';
 import { styled } from '@mui/material/styles';
-import { Stack, Box } from '@mui/material';
+import { Stack, Box, IconButton } from '@mui/material';
 import AccountCircleIcon from '@mui/icons-material/AccountCircle';
+import { TextField } from '@mui/material';
+import SearchIcon from '@mui/icons-material/Search';
+import { Button } from '@mui/material';
+import RefreshIcon from '@mui/icons-material/Refresh';
+import SnackBarAlert from './../../components/SnackBarAlert/index';
 
 
 const BGImg = styled('img')({
@@ -60,6 +65,66 @@ const Invoice = () => {
         };
     }, [])
 
+    const [fromDate, setFromDate] = React.useState('');
+    const [toDate, setToDate] = React.useState('')
+
+    const makeDate = (ostr) => {
+        let index = ostr.indexOf(' ', 0)
+        let str = ostr.slice(0, index)
+        let i1 = str.indexOf('/', 0)
+        let i2 = str.indexOf('/', i1 + 1)
+        let day = str.slice(0, i1)
+        let month = str.slice(i1 + 1, i2)
+        let year = str.slice(i2 + 1, str.length)
+        let here = new Date(year + '-' + month + '-' + day)
+        return here;
+    }
+
+    const [output, setOutput] = React.useState([])
+    const [changeDataBySearch, setChangeDataBySearch] = React.useState(false)
+
+    const [openSnackbar, setOpenSnackbar] = React.useState(false)
+
+    const handleCloseSnackbar = () => setOpenSnackbar(false)
+
+
+    const handleSearch = () => {
+        let temp = []
+        if (new Date(fromDate) > new Date(toDate)) {
+            setOpenSnackbar(true)
+        } else {
+            invoiceList.map((i) => {
+                if (fromDate != '') {
+                    if (toDate != '') {
+                        if ((makeDate(i.date) >= new Date(fromDate)) && (makeDate(i.date) <= new Date(toDate))) {
+                            temp.push(i)
+                        }
+                    } else {
+                        if (makeDate(i.date) >= new Date(fromDate)) {
+                            temp.push(i)
+                        }
+                    }
+                } else {
+                    if (toDate != '') {
+                        if (makeDate(i.date) <= new Date(toDate)) {
+                            temp.push(i)
+                        }
+                    } else {
+                        setChangeDataBySearch(false)
+                    }
+                }
+            })
+            setOutput(temp)
+            setChangeDataBySearch(true)
+        }
+    }
+
+    const handleRefresh = () => {
+        setFromDate('')
+        setToDate('')
+        setChangeDataBySearch(false)
+    }
+
 
     return (
         <Stack direction="column" sx={{
@@ -83,9 +148,46 @@ const Invoice = () => {
                     width: "100%",
                     height: "100%"
                 }}>
+                    <Stack direction="row" spacing={2} sx={{
+                        marginTop: 3,
+                        marginBottom: 2,
+                        marginLeft: 10
+                    }}>
+                        <TextField
+                            id="date"
+                            label="From"
+                            type="date"
+                            value={fromDate}
+                            sx={{
+                                width: 220,
+                            }}
+                            InputLabelProps={{
+                                shrink: true,
+                            }}
+                            onChange={e => setFromDate(e.target.value)}
+                        />
+                        <TextField
+                            id="date"
+                            label="To"
+                            type="date"
+                            value={toDate}
+                            sx={{
+                                width: 220,
+                            }}
+                            InputLabelProps={{
+                                shrink: true,
+                            }}
+                            onChange={e => setToDate(e.target.value)}
+                        />
+                        <Button onClick={handleSearch} color="success" variant="outlined" startIcon={<SearchIcon />}>
+                            Search
+                        </Button>
+                        <IconButton onClick={handleRefresh} style={{ backgroundColor: 'white' }}>
+                            <RefreshIcon style={{ backgroundColor: 'white' }} />
+                        </IconButton>
+                    </Stack>
                     <TableContainer
                         style={{
-
                             height: 600,
                             width: 1200,
                             alignSelf: 'center',
@@ -108,11 +210,18 @@ const Invoice = () => {
                                 </TableRow>
                             </TableHead>
                             <TableBody>
-                                {invoiceList
-                                    .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-                                    .map((row) => (
-                                        <Row key={row.invoiceID} row={row} />
-                                    ))}
+                                {changeDataBySearch != true ? (
+                                    invoiceList.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
+                                        .map((row) => (
+                                            <Row key={row.invoiceID} row={row} />
+                                        ))
+
+                                ) : (
+                                    output.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
+                                        .map((row) => (
+                                            <Row key={row.invoiceID} row={row} />
+                                        ))
+                                )}
                             </TableBody>
                         </Table>
                         <TablePagination
@@ -129,6 +238,7 @@ const Invoice = () => {
                     </TableContainer>
                 </Stack>
             </Box>
+            <SnackBarAlert open={openSnackbar} handleClose={handleCloseSnackbar} severity="error" message="From date can not be greater than To Date" />
         </Stack>
     )
 }
