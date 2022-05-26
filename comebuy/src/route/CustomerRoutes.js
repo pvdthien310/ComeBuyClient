@@ -9,6 +9,7 @@ import { ForgotPassword } from '../components';
 import CustomerCart from '../container/CustomerCart';
 import { CheckoutPage } from '../container/Checkout';
 import FavoritePlace from './../container/Favourite/index';
+import { CustomerOrderSpace } from '../container/CustomerOrder';
 
 const customerRoutes = [
   {
@@ -55,6 +56,11 @@ const customerRoutes = [
     name: ' Favorite place',
     path: '/myplace/myfavorite',
     page: <FavoritePlace />
+  },
+  {
+    name: 'Orders space',
+    path: '/myplace/myorders',
+    page: <CustomerOrderSpace />
   }
 ];
 

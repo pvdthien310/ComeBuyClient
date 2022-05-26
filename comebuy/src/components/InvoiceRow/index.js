@@ -429,34 +429,6 @@ const Row = (props) => {
                     borderRadius: 10,
                 }}
                 >
-                    {/* <Stack ref={componentRef} direction="column" width="100%">
-                        <Header handlePrint={handlePrint} />
-                        <MainDetails name={"Printed by " + _currentUser.name}
-                            address={"ComeBuy Store"} />
-                        <ClientDetails
-                            clientName={row.account.name}
-                            clientAddress={row.account.address}
-                        />
-
-                        <Dates
-                            invoiceDate={row.date}
-                            dueDate=""
-                        />
-
-                        <TableInvoiceItem
-                            list={row.invoiceitem}
-                            total={invoiceTotal}
-                        />
-
-                        <Notes notes="Online" />
-                        <div style={{ height: '1px', width: '100%', backgroundColor: 'black' }}></div>
-                        <Footer
-                            name={"Printed by " + _currentUser.name}
-                            address={"ComeBuy Store"}
-                            email={"Printer Email: " + _currentUser.email}
-                            phone={"Printer phone: " + _currentUser.phoneNumber}
-                        />
-                    </Stack> */}
                     <Stack ref={componentRef} sx={{ paddingTop: '3rem' }} direction="column" width="100%">
                         <Stack direction="row" width="100%" sx={{ marginRight: '2rem', backgroundColor: 'grey' }}>
                             <Stack direction="column" width="100%">

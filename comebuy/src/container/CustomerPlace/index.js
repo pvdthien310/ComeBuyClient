@@ -30,6 +30,10 @@ const CustomerPlace = () => {
         navigate('/myplace/myfavorite')
     }
 
+    const gotoOrder = () => {
+        navigate('/myplace/myorders')
+    }
+
     return (
         <div style={{ height: '100%', width: '100%' }}>
             <NavBar  ></NavBar>
@@ -58,7 +62,7 @@ const CustomerPlace = () => {
                             </CardContent>
                         </CardActionArea>
                         <CardActions style={{ justifyContent: 'flex-end' }}>
-                            <Button style={{ color: 'white', fontWeight: 'bold' }} endIcon={<NavigateNextIcon />}>
+                            <Button onClick={gotoOrder} style={{ color: 'white', fontWeight: 'bold' }} endIcon={<NavigateNextIcon />}>
                                 Go to
                             </Button>
                         </CardActions>

@@ -52,6 +52,7 @@ export { default as ProductInCart } from './ProductInCart'
 export { default as Paypal } from './Paypal'
 export { default as MemberShipStepper } from './MemberShipStepper'
 export { default as ProductInFavorite } from './ProductInFavorite'
+export { default as OrderRow } from './OrderRow'
 
 
 
