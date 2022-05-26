@@ -10,13 +10,21 @@ import "swiper/css";
 import "swiper/css/pagination";
 import { Pagination } from "swiper";
 import { styled } from '@mui/material/styles';
+import SendIcon from '@mui/icons-material/Send';
 
 const ProductImage = styled('img')({
-    height: 300,
-    width: 'auto',
+    height: 400,
+    width: '100%',
     maxWidth: 500,
     alignSelf: 'center',
-    backgroundSize: 'cover',
+})
+const CustomButton = styled(Button)({
+  
+  backgroundColor : 'teal',
+  '&:hover': {
+    backgroundColor : '#0BD458'
+  }
+
 })
 
 const PreviewImagesModal = (props) => {
@@ -40,19 +48,27 @@ const PreviewImagesModal = (props) => {
                     p: 4,
                     overflowY: 'scroll',
                     maxHeight: 700,
+                    justifyContent: 'center',
+                    alignItems: 'center'
                 }}>
+                    <Typography variant='h6' fontWeight={'bold'}>Review Images</Typography>
+                    <Box sx={{width: '100%', backgroundColor: '#2E1534', height: 3}}></Box>
                     <Swiper slidesPerView={1} modules={[Pagination]} spaceBetween={30} pagination={true}>
                         {
                             props.images.map((item, i) => (
-                                <SwiperSlide key={i} >
-                                    <ProductImage src={item} key={item} />
+                                <SwiperSlide key={i}>
+                                    <Stack sx={{width: '100%', justifyContent:'center'}}>
+                                        <ProductImage src={item} key={item} />
+                                    </Stack>
                                 </SwiperSlide>
                             ))
                         }
 
                     </Swiper>
-                    <Button onClick={props.onClose} >Back</Button>
-                    <Button onClick={props.onSubmit} >Submit</Button>
+                    <Stack direction={'row'} sx={{width: '100%', justifyContent:'center',mt:2}} spacing={2}>
+                    <Button onClick={props.onClose} variant='contained' color='error'>Back</Button>
+                    <CustomButton onClick={props.onSubmit} sx={{backgroundColor: '#0BD458'}} variant='contained' endIcon={<SendIcon />}>Submit</CustomButton>
+                    </Stack>
                 </Box>
 
             </Modal>
