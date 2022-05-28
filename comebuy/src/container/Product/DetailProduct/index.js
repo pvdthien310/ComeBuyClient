@@ -120,7 +120,7 @@ const DetailProduct = () => {
     const handleAddToFavorite = async () => {
         setOpenBackdrop(true)
         let temp = {
-            productID: product.productid,
+            productID: product.productID,
             userID: _currentUser.userID
         }
         try {
