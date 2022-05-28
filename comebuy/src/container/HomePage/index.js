@@ -107,7 +107,7 @@ const HomePage = () => {
                 }
             </div>
             <LaptopImageLine></LaptopImageLine>
-            {/* <BigFooter /> */}
+            <BigFooter />
         </div>
     )
 

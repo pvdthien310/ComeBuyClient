@@ -79,29 +79,28 @@ const MainLayout = props => {
 
   const list = (anchor) => (
     <Box
-      sx={{ width: 250, height: '100%', backgroundColor: '#593954'}}
+      sx={{ width: 250, height: '100%', backgroundColor: '#593954' }}
       role="presentation"
       onClick={toggleDrawer(anchor, false)}
       onKeyDown={toggleDrawer(anchor, false)}
     >
       <List>
-        <ListItem sx ={{p: 2}}>
+        <ListItem sx={{ p: 2 }}>
           <ListItemAvatar>
-            { _currentUser.avatar ? 
-            <Avatar alt="Admin" src="https://scontent.fsgn2-6.fna.fbcdn.net/v/t39.30808-6/269601282_3076773205930548_4661138205493195861_n.jpg?_nc_cat=110&ccb=1-6&_nc_sid=09cbfe&_nc_ohc=1t8wjEnMgUUAX-orkLB&_nc_ht=scontent.fsgn2-6.fna&oh=00_AT9f3PY1HR9C-4Mrw88aIvVSAQQaWUb9nx41EjSIg3TiQw&oe=628B802E" />
-            :
-            <Avatar alt="Admin" src={_currentUser.avatar} />
-
+            {!(_currentUser && _currentUser.avatar) ?
+              <Avatar alt="Admin" src="https://scontent.fsgn2-6.fna.fbcdn.net/v/t39.30808-6/269601282_3076773205930548_4661138205493195861_n.jpg?_nc_cat=110&ccb=1-6&_nc_sid=09cbfe&_nc_ohc=1t8wjEnMgUUAX-orkLB&_nc_ht=scontent.fsgn2-6.fna&oh=00_AT9f3PY1HR9C-4Mrw88aIvVSAQQaWUb9nx41EjSIg3TiQw&oe=628B802E" />
+              :
+              <Avatar alt="Admin" src={_currentUser.avatar} />
             }
-            </ListItemAvatar>
-          <ListItemText sx={{color:'white'}} primary={_currentUser ? _currentUser.name : 'Admin'} />
+          </ListItemAvatar>
+          <ListItemText sx={{ color: 'white' }} primary={_currentUser ? _currentUser.name : 'Admin'} />
         </ListItem>
-        <Divider/>
+        <Divider />
         {(props.itemRoutes).map((route, index) => (
-          <ListItem sx={{backgroundColor: '#593940'}} button key={route.name} onClick={ItemClick}>
-            <ListItemIcon sx={{color : 'white'}}>
+          <ListItem sx={{ backgroundColor: '#593940' }} button key={route.name} onClick={ItemClick}>
+            <ListItemIcon sx={{ color: 'white' }}>
               {/* {index % 2 === 0 ? <InboxIcon /> : <MailIcon />} */}
-              {route.name == 'Product' && <ComputerIcon/>}
+              {route.name == 'Product' && <ComputerIcon />}
               {route.name == 'Staff' && <PeopleIcon />}
               {route.name == 'Stock' && <InventoryIcon />}
               {route.name == 'Revenue' && <AssessmentIcon />}
@@ -109,14 +108,14 @@ const MainLayout = props => {
               {route.name == 'Workspace' && <CountertopsIcon />}
               {route.name == 'Invoice' && <ReceiptIcon />}
             </ListItemIcon>
-            <ListItemText sx={{color : 'white'}} primary={route.name} />
+            <ListItemText sx={{ color: 'white' }} primary={route.name} />
           </ListItem>
         ))}
         <ListItem button key={'Log Out'} onClick={ItemClick}>
-          <ListItemIcon  sx={{color : 'white'}}>
+          <ListItemIcon sx={{ color: 'white' }}>
             <LogoutIcon />
           </ListItemIcon>
-          <ListItemText sx={{color : 'white'}} primary={'Log Out'} />
+          <ListItemText sx={{ color: 'white' }} primary={'Log Out'} />
         </ListItem>
       </List>
       {/* <Divider />
@@ -136,13 +135,16 @@ const MainLayout = props => {
     <Stack sx={{ height: window.innerHeight }}>
       <React.Fragment key={'left'}>
 
-        <Stack direction={'row'} sx={{ width: '100%', backgroundColor:'#2E1534' }}>
+        <Stack direction={'row'} sx={{ width: '100%', backgroundColor: '#2E1534' }}>
           <Grid container sx={{ width: '100%' }}>
             <Grid item xs={10}>
-              <IconButton sx={{color: 'white'}} size="large" onClick={toggleDrawer('left', true)}><MenuIcon /></IconButton>
+              <IconButton sx={{ color: 'white' }} size="large" onClick={toggleDrawer('left', true)}><MenuIcon /></IconButton>
             </Grid>
             <Grid item xs={2} sx={{ alignItems: 'end', mt: 2 }}>
-              <Typography variant='body2' sx={{color: 'white'}} fontWeight={'bold'}>Hi, {_currentUser.name}</Typography>
+              {
+                _currentUser &&
+                <Typography variant='body2' sx={{ color: 'white' }} fontWeight={'bold'}>Hi, {_currentUser.name}</Typography>
+              }
             </Grid>
           </Grid>
         </Stack>
