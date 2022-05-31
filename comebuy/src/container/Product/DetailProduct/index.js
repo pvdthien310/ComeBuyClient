@@ -128,6 +128,7 @@ const DetailProduct = () => {
             const originalPromiseResult = unwrapResult(resultAction)
             setOpenBackdrop(false)
             setOpenSnackbar(true)
+            console.log(originalPromiseResult)
         } catch (rejectedValueOrSerializedError) {
             alert(rejectedValueOrSerializedError);
         }
