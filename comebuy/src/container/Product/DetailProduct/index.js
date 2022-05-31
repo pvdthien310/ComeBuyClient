@@ -120,7 +120,7 @@ const DetailProduct = () => {
     const handleAddToFavorite = async () => {
         setOpenBackdrop(true)
         let temp = {
-            productID: product.productid,
+            productID: product.productID,
             userID: _currentUser.userID
         }
         try {
@@ -128,6 +128,7 @@ const DetailProduct = () => {
             const originalPromiseResult = unwrapResult(resultAction)
             setOpenBackdrop(false)
             setOpenSnackbar(true)
+            console.log(originalPromiseResult)
         } catch (rejectedValueOrSerializedError) {
             alert(rejectedValueOrSerializedError);
         }
