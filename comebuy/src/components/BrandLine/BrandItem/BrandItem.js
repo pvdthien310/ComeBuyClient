@@ -6,6 +6,7 @@ import Typography from '@mui/material/Typography';
 import ButtonBase from '@mui/material/ButtonBase';
 import Button from '@mui/material/Button';
 import ShoppingCartIcon from '@mui/icons-material/ShoppingCart';
+import {useNavigate} from 'react-router-dom'
 
 const Img = styled('img')({
   margin: 'auto',
@@ -19,9 +20,11 @@ const CustomButton = styled(Button)(() => ({
 }));
 
 const BrandItem = (props) => {
-  console.log(props.item.productimage[0].imageURL)
+  const navigate = useNavigate()
+
   return (
     <Paper
+      onClick={() => navigate("/productSpace/" + props.item.productID)}
       sx={{
         p: 2,
         margin: 'auto',

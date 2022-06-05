@@ -54,7 +54,6 @@ const  BrandLine = (props) => {
     const dispatch = useDispatch()
     const [productList, setProductList] = useState([])
     useEffect(() => {
-        console.log(_productList.filter(ite => ite.brand == brandName))
         setProductList(_productList.filter(ite => ite.brand == brandName))
     }, [])
     return (
