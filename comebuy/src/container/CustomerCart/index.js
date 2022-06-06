@@ -5,7 +5,7 @@ import NavBar from "../../components/NavBar/NavBar";
 import { BigFooter, ProductInCart } from '../../components';
 import { mobile } from "./responsive";
 
-import { Typography, Link, Autocomplete, createFilterOptions } from '@mui/material';
+import { Typography, Link, Autocomplete, createFilterOptions, InputBase, Paper } from '@mui/material';
 import { Stack, Breadcrumbs, TextField } from '@mui/material';
 import Backdrop from '@mui/material/Backdrop';
 import CircularProgress from '@mui/material/CircularProgress';
@@ -180,6 +180,7 @@ const CustomerCart = () => {
       let tempSubTotal = 0
       fetchYourCart(listCart, listProduct)
       setCartList(listCart)
+      setmasterData(listCart)
       setProdList(listProduct)
     }
   }, [])
@@ -189,6 +190,26 @@ const CustomerCart = () => {
   const handleClose = () => {
     setOpen(false);
   };
+
+  const [search, setSearch] = React.useState('')
+  const [masterData, setmasterData] = React.useState([])
+
+  const searchFilter = (text) => {
+    if (text) {
+      const newData = masterData.filter((item) => {
+        const itemData = item.email ?
+          item.email.toUpperCase()
+          : ''.toUpperCase();
+        const textData = text.toUpperCase();
+        return itemData.indexOf(textData) > -1;
+      });
+      setCartList(newData);
+      setSearch(text);
+    } else {
+      setCartList(masterData);
+      setSearch(text);
+    }
+  }
 
   //handling change amount 
   const handleChangeAmount = async (value, actionType) => {
@@ -337,58 +358,13 @@ const CustomerCart = () => {
         <Title>YOUR CART</Title>
         <Top>
           <TopButton onClick={gotoProductScreen}>CONTINUE SHOPPING</TopButton>
-          <Autocomplete
-            onChange={(event, newValue) => {
-              if (typeof newValue === 'string') {
-                return newValue
-              } else if (newValue && newValue.inputValue) {
-                return newValue.inputValue;
-              } else {
-                // setDescription(newValue);
-                // setPrice(newValue.price)
-                // setCurrentProduct(newValue)
-                // setOpenModal(true)
-                navigate('/productSpace/' + newValue.productid)
-              }
-            }}
-            filterOptions={(options, params) => {
-              const filtered = filter(options, params);
-
-              const { inputValue } = params;
-              // Suggest the creation of a new value
-              const isExisting = options.some((option) => inputValue === option.name);
-              if (inputValue !== '' && !isExisting) {
-                // filtered.push({
-                //   inputValue,
-                //   name: `Add "${inputValue}"`,
-                // });
-                return filtered;
-              }
-              return filtered;
-            }}
-            selectOnFocus
-            clearOnBlur
-            handleHomeEndKeys
-            id="free-solo-with-text-demo"
-            options={cartList}
-            getOptionLabel={(option) => {
-              // Value selected with enter, right from the input
-              if (typeof option === 'string') {
-                return option;
-              }
-              // Add "xxx" option created dynamically
-              if (option.inputValue) {
-                return option.inputValue;
-              }
-              // Regular option
-              return option.product.name;
-            }}
-            renderOption={(props, option) => <li {...props}>{option.product.name}</li>}
-            sx={{ width: 500 }}
-            freeSolo
-            renderInput={(params) => (
-              <TextField {...params} label="Search your cart" />
-            )}
+          <TextField
+            sx={{ p: '2px 4px 2px 2px', display: 'flex', alignItems: 'center', width: 500 }}
+            placeholder="Search cart "
+            variant='outlined'
+            inputProps={{ 'aria-label': 'Search cart' }}
+            value={search}
+            onChange={(text) => searchFilter(text.target.value)}
           />
           <TopButton onClick={handleCheckout} type="filled">CHECKOUT NOW</TopButton>
         </Top>
