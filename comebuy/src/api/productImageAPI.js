@@ -9,7 +9,7 @@ const productImageAPI = {
         return res;
     },
     addMany: async (list) => {
-        console.log(list)
+        // console.log(list)
         const res = await DatabaseClient.post('/' + baseURL + '/many', list)
             .catch(err => { return err.response })
         return res;
