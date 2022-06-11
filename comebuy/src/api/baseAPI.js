@@ -1,10 +1,11 @@
 import axios from 'axios'
-import { local_base_URL } from '../constant.js';
+import { DELOYED_BASE_SERVER_URL, local_base_URL } from '../constant.js';
 import JWTApi from './JWTAPI.js';
 
 
 const DatabaseClient = axios.create({
-    baseURL: local_base_URL,
+    // baseURL: local_base_URL,
+    baseURL: DELOYED_BASE_SERVER_URL,
     headers: {
         'Content-Type': 'application/json'
     }

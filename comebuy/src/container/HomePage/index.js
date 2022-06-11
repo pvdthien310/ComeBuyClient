@@ -41,7 +41,7 @@ const HomePage = () => {
             const value = JSON.parse(localStorage.getItem('cart'))
             dispatch(cartSlice.actions.cartListChange(value))
         }
-        dispatch(getAllProduct())
+        await dispatch(getAllProduct())
             .unwrap()
             .then((originalPromiseResult) => {
                 console.log(originalPromiseResult)

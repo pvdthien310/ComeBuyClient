@@ -1,8 +1,9 @@
-import { ai_server_URL } from '../constant.js';
+import { ai_server_URL, DELOYED_AI_SERVER_URL } from '../constant.js';
 import axios from 'axios'
 
 const AIServer = axios.create({
-    baseURL: "http://127.0.0.1:5000",
+    // baseURL: "http://127.0.0.1:5000",
+    baseURL: DELOYED_AI_SERVER_URL,
     headers: {
         'Content-Type': 'application/json',
     }
@@ -11,9 +12,9 @@ const AIServer = axios.create({
 const aiApi = {
     recommendedSystem: async (data) => {
         const res = await AIServer.post('/rs', data)
-            .catch(err => { 
+            .catch(err => {
                 console.log(err)
-                return err.response 
+                return err.response
             })
         return res;
     },
