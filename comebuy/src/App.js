@@ -19,6 +19,9 @@ function App() {
   if (localStorage.getItem('cart') === 'undefined' || localStorage.getItem('cart') === null) {
     localStorage.setItem('cart', JSON.stringify([]))
   }
+  if (localStorage.getItem('idUser') === 'undefined' || localStorage.getItem('cart') === null) {
+    localStorage.setItem('idUser', '')
+  }
   const dispatch = useDispatch()
   const role = localStorage.getItem('role');
   const navigate = useNavigate()
@@ -64,6 +67,7 @@ function App() {
 
   return (
     <Routes>
+       <Route path="/" element={<HomePage />} />
       <Route path="/login" element={<LoginRegister />} />
       <Route path="*" element={renderRoutes()} />
       <Route path="/forgetpasswordinlogin" element={<ForgotPasswordInLogin />} />
