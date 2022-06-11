@@ -14,14 +14,13 @@ import GuestLayout from './page/GuestLayout';
 import { ForgotPasswordInLogin } from './components';
 import { guestMenuItems, guestRoutes } from './route/GuestRoutes';
 import { getAccountWithID } from './redux/slices/accountSlice';
+import SetUpFunction from './lib/utils/setUpFunction';
 
 function App() {
-  if (localStorage.getItem('cart') === 'undefined' || localStorage.getItem('cart') === null) {
-    localStorage.setItem('cart', JSON.stringify([]))
-  }
-  if (localStorage.getItem('idUser') === 'undefined' || localStorage.getItem('cart') === null) {
-    localStorage.setItem('idUser', '')
-  }
+ 
+  /// For the first open website
+  SetUpFunction()
+  
   const dispatch = useDispatch()
   const role = localStorage.getItem('role');
   const navigate = useNavigate()
@@ -29,7 +28,7 @@ function App() {
   const _currentUser = useSelector(currentUser)
 
   const LoadCurrentUser = async () => {
-    if (localStorage.getItem('idUser') != "") {
+    if (localStorage.getItem('idUser') && localStorage.getItem('idUser') != "") {
       try {
            await dispatch(getAccountWithID(localStorage.getItem('idUser')))
       } catch (rejectedValueOrSerializedError) {
@@ -67,7 +66,7 @@ function App() {
 
   return (
     <Routes>
-       <Route path="/" element={<HomePage />} />
+       {/* <Route path="/" element={<HomePage />} /> */}
       <Route path="/login" element={<LoginRegister />} />
       <Route path="*" element={renderRoutes()} />
       <Route path="/forgetpasswordinlogin" element={<ForgotPasswordInLogin />} />
