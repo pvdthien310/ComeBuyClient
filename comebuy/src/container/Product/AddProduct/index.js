@@ -32,11 +32,12 @@ import CottageIcon from '@mui/icons-material/Cottage';
 import ImageForEditProduct from "../../../components/ImageForEditProduct";
 import FeatureSelect from "../../../components/FeatureSelect/index.js";
 import AddPhotoAlternateIcon from '@mui/icons-material/AddPhotoAlternate';
+import AccessTimeIcon from '@mui/icons-material/AccessTime';
 import productImageAPI from "../../../api/productImageAPI";
 import PreviewImagesModal from "../../../components/PreviewImagesModal";
 import { productAPI } from "../../../api";
 import TextFieldForAdd from "../../../components/TextFieldForAdd";
-import {ConfirmDialog } from "../../../components";
+import { ConfirmDialog } from "../../../components";
 import accountApi from "../../../api/accountAPI.js";
 import { accountSlice } from "../../../redux/slices/accountSlice.js";
 
@@ -78,7 +79,9 @@ const AddProduct = () => {
     const [price, SetPrice] = useState("")
     const [productImages, SetProductImages] = useState([])
     const [previewSource, SetPreviewSource] = useState([])
+    const [year, SetYear] = useState("")
     const [openPreviewModal, SetOpenPreviewModal] = useState(false)
+
 
     const handleImageChange = async (e) => {
         if (e.target.files) {
@@ -175,6 +178,9 @@ const AddProduct = () => {
             case 'Description':
                 SetDescription(event.target.value)
                 break
+            case 'Year':
+                SetYear(event.target.value)
+                break
         }
     };
 
@@ -224,7 +230,7 @@ const AddProduct = () => {
                 navigate("/product")
             })
             .catch((rejectedValueOrSerializedError) => {
-                
+
             })
     }
 
@@ -247,13 +253,14 @@ const AddProduct = () => {
             "battery": battery,
             "warranty": warranty,
             "promotion": '0',
+            "year": year
         }
 
         try {
             const result = await productAPI.createNewProduct(newProduct)
-            if (result) {
+            if (result.status == 200) {
                 const images = productImages.map((item) => {
-                    return { ...item, productID: result.data.productID }
+                    return { ...item, productid: result.data.productID }
                 })
                 if (await AddFeature(result.data.productID)) {
                     if (await AddImages(result.data.productID, images)) {
@@ -373,6 +380,8 @@ const AddProduct = () => {
                             <TextFieldForAdd inputConfig="number" Icon={<GradientIcon />} Text={colorCoverage} Title="Color Coverage (RGBs)" onChange={handleValueChange} />
                             <Box sx={style.boxinfor_Stack_Line}></Box>
                             <TextFieldForAdd inputConfig="number" Icon={<PriceChangeIcon />} Text={price} Title="Price (USD)" onChange={handleValueChange} />
+                            <Box sx={style.boxinfor_Stack_Line}></Box>
+                            <TextFieldForAdd inputConfig="number" Icon={<AccessTimeIcon />} Text={year} Title="Year" onChange={handleValueChange} />
                             <Box sx={style.boxinfor_Stack_Line}></Box>
                         </Stack>
                     </Grid>
