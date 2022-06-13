@@ -1,8 +1,8 @@
 
 import { BrandNavBar, Slider, NavBar, BrandLine, FeatureBar } from '../../components'
 import { styled } from '@mui/material/styles';
-import { Grid } from '@mui/material';
-import {Typography} from '@mui/material';
+import { Grid, Stack } from '@mui/material';
+import { Typography } from '@mui/material';
 import Button from '@mui/material/Button';
 import ArrowRightIcon from '@mui/icons-material/ArrowRight';
 
@@ -11,14 +11,15 @@ import ArrowRightIcon from '@mui/icons-material/ArrowRight';
 
 const ImgFeatureLine = styled('img')(({ theme }) => ({
     width: '100%',
-    height: 700,
+    height: 450,
     backgroundSize: 'cover',
     backgroundPosition: 'center',
     top: 0,
     left: 0,
     bottom: 0,
     right: 0,
-    position: 'absolute',
+    borderRadius: 10,
+    boxShadow: 10,
 
 
     [theme.breakpoints.down('sm')]: {
@@ -27,21 +28,27 @@ const ImgFeatureLine = styled('img')(({ theme }) => ({
 
 }));
 
-const Container = styled(Grid)(({ theme }) => ({
+const Container = styled(Stack)(({ theme }) => ({
+    spacing: 2,
     display: 'flex',
-    height: 700,
+    height: 500,
     position: 'relative',
     justifyContent: 'top',
     alignItems: 'center',
     flexDirection: 'column',
-    backgroundColor: 'white'
+    backgroundColor: 'white',
+    p: 5,
+    mt: 10,
+    borderRadius: 10,
+    boxShadow:50
+
 }))
 
 const Text = styled(Typography)(({ theme }) => ({
     color: 'white',
     zIndex: '3',
     height: 'auto',
-    fontSize: '60px',
+    fontSize: '50px',
     fontWeight: 'bold',
     marginTop: '4%',
     display: 'flex',
@@ -50,20 +57,19 @@ const SmallText = styled(Typography)(({ theme }) => ({
 
     color: 'darkgrey',
     zIndex: '3',
-    height: 100,
-    fontSize: '20px',
+    height: 70,
+    fontSize: '15px',
     fontWeight: 'bold',
-
 }))
 
 const CustomButton = styled(Button)(({ theme }) => ({
     variant: 'outlined',
-    color: 'darkgrey',
+    color: 'black',
     zIndex: '3',
     fontWeight: 'bold',
-    border: '2px solid white',
-    marginTop: '18%',
-    bottom: 0
+    border: '2px solid black',
+    marginTop: '3%',
+    bottom: 0,
 }))
 
 
@@ -72,8 +78,10 @@ export default function FeatureImage(props) {
     return (
         <Container>
             <ImgFeatureLine src={props.urlImage}></ImgFeatureLine>
-            <Text xs={12} >{props.BigText}</Text>
-            <SmallText xs={12}>{props.SmallText}</SmallText>
+            {/* <Stack sx={{ position: 'absolute', alignItems: 'center' }}>
+                <Text xs={12} >{props.BigText}</Text>
+                <SmallText xs={12}>{props.SmallText}</SmallText>
+            </Stack> */}
             <CustomButton endIcon={<ArrowRightIcon />} onClick={props.onNavigate}>See More</CustomButton>
         </Container>
     )

@@ -8,7 +8,6 @@ import InputBase from '@mui/material/InputBase';
 import Badge from '@mui/material/Badge';
 import MenuItem from '@mui/material/MenuItem';
 import Menu from '@mui/material/Menu';
-import MenuIcon from '@mui/icons-material/Menu';
 import SearchIcon from '@mui/icons-material/Search';
 import AccountCircle from '@mui/icons-material/AccountCircle';
 import MailIcon from '@mui/icons-material/Mail';
@@ -20,7 +19,8 @@ import { useSelector, useDispatch } from 'react-redux'
 import { cartListSelector, currentUser, isSignedIn_user } from './../../redux/selectors'
 import { accountSlice } from './../../redux/slices/accountSlice'
 import ShoppingCartIcon from '@mui/icons-material/ShoppingCart';
-import { Button } from "@mui/material";
+import { Button, Typography } from "@mui/material";
+import MenuIcon from '@mui/icons-material/Menu';
 
 
 const Search = styled('div')(({ theme }) => ({
@@ -154,7 +154,7 @@ export default function NavBar(props) {
                 id={menuId}
                 keepMounted
                 transformOrigin={{
-                    vertical: 'top',
+                    vertical: 'bottom',
                     horizontal: 'right',
                 }}
                 open={isMenuOpen}
@@ -236,19 +236,19 @@ export default function NavBar(props) {
 
     return (
         <Box sx={{ flexGrow: 1 }}>
-            <AppBar position="static" style={{ backgroundColor: 'black' }}>
+            <AppBar position="static" style={{ backgroundColor: 'white', padding: 2 }}>
                 <Toolbar>
 
-                    <img style={{ height: 50, alignItems: 'center', alignSelf: 'center', top: 50 }} src={logo} alt="logo" />
-                    <Search>
-                        <SearchIconWrapper>
-                            <SearchIcon />
-                        </SearchIconWrapper>
-                        <StyledInputBase
-                            placeholder="Search…"
-                            inputProps={{ 'aria-label': 'search' }}
-                        />
-                    </Search>
+                    <Typography variant="h5" fontWeight={'bold'} sx={{
+                        color: 'black',
+                        fontFamily: 'Monospace',
+                        textDecoration: 'underline',
+                        alignSelf: 'center',
+                        cursor: 'pointer',
+                    }}
+                        onClick={() => navigate("/")}>
+                        ComeBuy</Typography>
+
                     <Box sx={{ flexGrow: 1 }} />
                     {
                         (localStorage.getItem('role') == 'customer' || localStorage.getItem('role') == '' && props.hiddenCartLabel != false) &&
@@ -256,32 +256,18 @@ export default function NavBar(props) {
                             {numberCart}
                         </CartButton>
                     }
-                    <Box sx={{ display: { xs: 'none', md: 'flex' } }}>
-                        <IconButton size="large" aria-label="show 4 new mails" color="inherit">
-                            <Badge badgeContent={4} color="error">
-                                <MailIcon />
-                            </Badge>
-                        </IconButton>
-                        <IconButton
-                            size="large"
-                            aria-label="show 17 new notifications"
-                            color="inherit"
-                        >
-                            <Badge badgeContent={17} color="error">
-                                <NotificationsIcon />
-                            </Badge>
-                        </IconButton>
-                        <IconButton
-                            size="large"
+                    <Box sx={{ display: { xs: 'none', md: 'flex' }, ml: 1 }}>
+                        <Button
+                            size='small'
                             edge="end"
                             aria-label="account of current user"
                             aria-controls={menuId}
                             aria-haspopup="true"
                             onClick={handleProfileMenuOpen}
-                            color="inherit"
+                            sx={{ color: 'gray', borderColor: 'black', fontWeight: 'bold' }}
                         >
-                            <AccountCircle />
-                        </IconButton>
+                            <MenuIcon></MenuIcon>
+                        </Button>
                     </Box>
                     <Box sx={{ display: { xs: 'flex', md: 'none' } }}>
                         <IconButton
