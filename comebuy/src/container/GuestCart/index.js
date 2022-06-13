@@ -50,7 +50,7 @@ const GuestCart = () => {
     }
 
     const handleChangeAmount = (value, actionType) => {
-        console.log(value)
+     
         let newCart = [...cart];
         if (actionType == "increase") {
             newCart = cart.map((element) => {
@@ -62,7 +62,6 @@ const GuestCart = () => {
                 }
                 else return element
             });
-            console.log(newCart)
             dispatch(cartSlice.actions.cartListChange(newCart.filter(item => item != undefined)))
 
         }
@@ -78,7 +77,7 @@ const GuestCart = () => {
                 }
                 else return element
             });
-            console.log(newCart)
+      
             dispatch(cartSlice.actions.cartListChange(newCart.filter(item => item != undefined)))
         }
     }
