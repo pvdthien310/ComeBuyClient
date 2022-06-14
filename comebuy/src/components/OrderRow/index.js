@@ -94,11 +94,12 @@ const OrderRow = (props) => {
                         size="small"
                         onClick={() => setOpen(!open)}
                     >
-                        {open ? <KeyboardArrowUpIcon color='error' /> : <KeyboardArrowDownIcon style={{ color: '#6FA61C' }} />}
+                        {open ? <KeyboardArrowUpIcon sx={{ color: 'black' }} /> : <KeyboardArrowDownIcon sx={{ color: 'black' }} />}
                     </IconButton>
                 </TableCell>
                 <TableCell scope="row">
                     <Typography
+                        sx={{ fontSize: '14px' }}
                         aria-describedby={id}
                     >
                         {row.invoiceID}
@@ -106,13 +107,14 @@ const OrderRow = (props) => {
                 </TableCell>
                 <TableCell align="center">
                     <Typography
+                        sx={{ fontSize: '14px' }}
                         aria-describedby={id}
                     >
                         {row.date}
                     </Typography>
                 </TableCell>
-                <TableCell align="center" style={{ color: 'black' }}>{row.address}</TableCell>
-                <TableCell align="center" style={{ color: 'black', fontWeight: 'bold' }}>{invoiceTotal}</TableCell>
+                <TableCell align="center" style={{ color: 'black', fontSize: '14px' }}>{row.address}</TableCell>
+                <TableCell align="center" style={{ color: 'black', fontWeight: 'bold', fontSize: '14px' }}>{invoiceTotal}</TableCell>
             </TableRow>
             <TableRow sx={{ '& > *': { borderBottom: 'set', backgroundColor: 'white' } }}>
                 <TableCell style={{ paddingBottom: 0, paddingTop: 0, backgroundColor: 'white', marginLeft: '10%' }} colSpan={6}>

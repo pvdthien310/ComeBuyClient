@@ -37,6 +37,8 @@ import { addInvoice } from "../../redux/slices/invoiceSlice";
 import { addInvoiceItem } from "../../redux/slices/invoiceItemSlice";
 import emailApi from '../../api/emailAPI';
 
+import logo from '../../assets/img/logoremovebg.png'
+
 const Alert = React.forwardRef(function Alert(props, ref) {
     return <MuiAlert elevation={6} ref={ref} variant="filled" {...props} />;
 });
@@ -472,9 +474,9 @@ export const CheckoutPage = () => {
         }
 
         if (localStorage.getItem('role') === "customer") {
-            emailApi.sendEmail({
+            emailApi.sendOrder({
                 to: _currentUser.email,
-                subject: "Your order information",
+                subject: "Your order information in ComeBuy",
                 text: "Thank for placing order in ComeBuy site. \n" +
                     "Your order: \n" +
                     `Name: ${_currentUser.name} \n` +
@@ -485,13 +487,13 @@ export const CheckoutPage = () => {
                     "-------------------------------------------------------- \n" +
                     `Total: ${subTotal} USD` + "\n" +
                     "-------------------------------------------------------- \n" +
-                    "Any wondered things. Please contact with our shop with contact below site: ComeBuy.com"
+                    "Any wondered things ? Please contact with our shop with contact below site: ComeBuy.com"
             }).then(data => {
                 handleCloseBackdrop()
             })
                 .catch(err => console.log(err))
         } else {
-            emailApi.sendEmail({
+            emailApi.sendOrder({
                 to: email,
                 subject: "Your order information",
                 text: "Thank for placing order in ComeBuy site. \n" +
@@ -854,7 +856,7 @@ export const CheckoutPage = () => {
                                     </a>
                                 </Grid>
                                 <Grid item xs={6}>
-                                    <Button onClick={handleCompleteOrder} variant="contained" sx={{ fontSize: '14px', display: `${isHideCompleteButton}` }} size="large">
+                                    <Button onClick={handleCompleteOrder} variant="contained" sx={{ backgroundColor: 'black', fontSize: '13px', display: `${isHideCompleteButton}` }} size="large">
                                         Complete order
                                     </Button>
                                 </Grid>
@@ -1284,7 +1286,7 @@ export const CheckoutPage = () => {
                                         </Grid>
 
                                         <Grid item xs={6}>
-                                            <Button onClick={handleToPayment} variant="contained" sx={{ fontSize: '14px' }} size="large">
+                                            <Button onClick={handleToPayment} sx={{ fontSize: '13px', backgroundColor: 'black' }} >
                                                 Continue to payment method
                                             </Button>
                                         </Grid>

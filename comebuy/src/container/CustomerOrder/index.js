@@ -132,11 +132,13 @@ export const CustomerOrderSpace = () => {
                 borderRadius: 3,
                 alignItems: 'center',
                 justifyItems: 'center',
-                backgroundColor: 'white'
+                backgroundColor: 'white',
+                marginBottom: 2
             }}>
                 <Stack sx={{
                     width: "100%",
-                    height: "100%"
+                    height: "100%",
+                    marginBottom: 2
                 }}>
                     <Stack direction="row" spacing={2} sx={{
                         marginTop: 3,
@@ -180,13 +182,16 @@ export const CustomerOrderSpace = () => {
                         style={{
                             height: 600,
                             width: 1200,
+                            mb: 2,
                             alignSelf: 'center',
                             backgroundColor: 'white',
                         }}
                         component={Paper}
                     >
-                        <Table aria-label="collapsible table">
-                            <TableHead style={{ backgroundColor: 'white', borderRadius: '15px' }}>
+                        <Table stickyHeader aria-label="sticky table" >
+                            <TableHead style={{
+                                backgroundColor: 'white', borderRadius: '15px'
+                            }}>
                                 <TableRow>
                                     <TableCell />
                                     <TableCell style={{ color: '#0D0D0D', fontWeight: 'bold' }}>Invoice ID</TableCell>

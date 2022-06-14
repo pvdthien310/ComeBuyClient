@@ -82,9 +82,9 @@ export default function Paypal({ _discount, _lastTotal, cartList, purchases, pro
             }
         }
         if (localStorage.getItem('role') === "customer") {
-            emailApi.sendEmail({
+            emailApi.sendOrder({
                 to: _currentUser.email,
-                subject: "Your order information",
+                subject: "Your order information in ComeBuy",
                 text: "Thank for placing order in ComeBuy site. \n" +
                     "Your order: \n" +
                     `Name: ${_currentUser.name} \n` +
@@ -108,7 +108,7 @@ export default function Paypal({ _discount, _lastTotal, cartList, purchases, pro
             })
                 .catch(err => console.log(err))
         } else {
-            emailApi.sendEmail({
+            emailApi.sendOrder({
                 to: _guestEmail,
                 subject: "Your order information",
                 text: "Thank for placing order in ComeBuy site. \n" +
@@ -315,7 +315,7 @@ export default function Paypal({ _discount, _lastTotal, cartList, purchases, pro
                         height: '30px',
                         borderRadius: '15px',
                         border: '1px solid #18608a',
-                        backgroundColor: 'green',
+                        backgroundColor: 'black',
                         color: 'black',
                         fontSize: '13px',
                         marginBottom: '10px',

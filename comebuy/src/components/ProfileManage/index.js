@@ -470,7 +470,6 @@ const ProfileManage = () => {
                 color: 'black',
                 fontSize: '24px',
                 fontWeight: 'bold',
-                fontFamily: 'serif'
             }}>
                 Your information
             </Typography>

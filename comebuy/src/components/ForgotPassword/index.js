@@ -151,7 +151,7 @@ const ForgotPassword = () => {
             emailApi.sendEmail({
                 to: email,
                 subject: "Please use OTP code below to reset password ",
-                text: "Thank you for using our website. \nThis is your OTP code: " + verifyCode
+                text: verifyCode
             }).then(data => {
                 handleOpenModalVerify();
                 setOpenBackdrop(false)

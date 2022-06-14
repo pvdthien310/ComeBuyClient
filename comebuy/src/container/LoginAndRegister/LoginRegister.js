@@ -314,8 +314,8 @@ const LoginRegister = () => {
         if (verifyCode != '') {
             emailApi.sendEmail({
                 to: dataForReg.email,
-                subject: "Please use OTP code below to register ",
-                text: "Thank you for using our website. \nThis is your OTP code: " + verifyCode
+                subject: "VERIFY FROM COMEBUY ",
+                text: verifyCode
             }).then(data => {
                 handleOpenModalVerify();
                 setOpenBackdrop(false)
@@ -492,14 +492,14 @@ const LoginRegister = () => {
                                 <div style={{ display: 'flex', flexDirection: 'row', marginTop: '10px' }}>
                                     <CheckCircleRoundedIcon
                                         style={{
-                                            color: 'green',
-                                            width: '50px',
-                                            height: '50px',
+                                            color: 'black',
+                                            width: '26px',
+                                            height: '26px',
                                             marginBottom: '-10px',
-                                            paddingTop: '5px'
+                                            paddingTop: '0px'
                                         }}
                                     />
-                                    <p style={{ fontWeight: 'bold', marginTop: '15px' }}>
+                                    <p style={{ fontSize: '13px', fontWeight: 'bold', marginLeft: '5px', marginTop: '7px' }}>
                                         Accepted all the terms in this web.
                                     </p>
                                 </div>
@@ -555,14 +555,14 @@ const LoginRegister = () => {
                                     left: '50%',
                                     transform: 'translate(-50%, -50%)',
                                     width: '40%',
-                                    height: '50%',
+                                    height: 'auto',
                                     bgcolor: 'background.paper',
                                     border: '2px solid #000',
                                     boxShadow: 24,
-                                    p: 4,
+                                    p: 7,
                                 }}>
                                     <Typography id="modal-modal-title" variant="h6" component="h2">
-                                        Terms in ComeBuy
+                                        ComeBuy's terms
                                     </Typography>
                                     <Typography id="modal-modal-description" sx={{ mt: 2 }}>
                                         While we know it's easy to overlook these Terms of Service, it's important to clarify our responsibilities and your responsibilities during your use of Google services.
@@ -593,7 +593,9 @@ const LoginRegister = () => {
                                         label="I accept all terms"
                                     />
                                     <br></br>
-                                    <Button onClick={handleCloseModal}>Continue</Button>
+                                    <Box sx={{ width: '100%', display: 'flex', justifyContent: 'center' }}>
+                                        <Button onClick={handleCloseModal}>Continue</Button>
+                                    </Box>
                                 </Box>
                             </Modal>
                         </Stack>
