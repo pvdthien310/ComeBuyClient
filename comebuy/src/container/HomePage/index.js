@@ -99,7 +99,7 @@ const HomePage = () => {
             <Box sx={{ height: 2, m: 2, width: '95%', backgroundColor: 'black' }}></Box>
             <BrandNavBar brandLine={brandList} ></BrandNavBar>
             <Stack sx={{ p: 2 }} spacing={5}>
-                
+
                 <FeatureImage
                     onNavigate={() => navigate('/productSpace')}
                     urlImage='https://store.storeimages.cdn-apple.com/4982/as-images.apple.com/is/mac-compare-202206?wid=1806&hei=642&fmt=jpeg&qlt=90&.v=1652989686485'
@@ -113,8 +113,8 @@ const HomePage = () => {
                     BigText='CHOOSE AND GET YOUR WORK EFFECTIVELY'
                     SmallText='ComeBuy Store. The best way to buy the products you love.'
                 ></BrandLineImage>
-                <Typography variant='h4' fontWeight={'bold'} sx={{alignSelf:'center'}}>Our store.
-                <Typography variant='h4' fontWeight={'bold'} sx={{color:'#BCBFB0'}}>The best way to buy the products you love.</Typography>
+                <Typography variant='h4' fontWeight={'bold'} sx={{ alignSelf: 'center' }}>Our store.
+                    <Typography variant='h4' fontWeight={'bold'} sx={{ color: '#BCBFB0' }}>The best way to buy the products you love.</Typography>
                 </Typography>
                 <div>
                     {
@@ -126,8 +126,8 @@ const HomePage = () => {
                         })
                     }
                 </div>
-                <Typography variant='h4' fontWeight={'bold'} sx={{alignSelf:'center'}}>Feedback.
-                <Typography variant='h4' fontWeight={'bold'} sx={{color:'#BCBFB0'}}>Here's where the fun begins.</Typography>
+                <Typography variant='h4' fontWeight={'bold'} sx={{ alignSelf: 'center' }}>Feedback.
+                    <Typography variant='h4' fontWeight={'bold'} sx={{ color: '#BCBFB0' }}>Here's where the fun begins.</Typography>
                 </Typography>
                 <LaptopImageLine></LaptopImageLine>
             </Stack>
