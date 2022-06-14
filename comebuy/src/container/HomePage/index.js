@@ -18,7 +18,7 @@ import { unwrapResult } from '@reduxjs/toolkit'
 import { cartSlice } from './../../redux/slices/cartSlice'
 import { getAllProduct } from '../../redux/slices/productSlice'
 import { productListSelector } from '../../redux/selectors'
-import { Box, Stack } from '@mui/material'
+import { Box, Stack, Typography } from '@mui/material'
 
 const HomePage = () => {
     const _productList = useSelector(productListSelector)
@@ -113,6 +113,9 @@ const HomePage = () => {
                     BigText='CHOOSE AND GET YOUR WORK EFFECTIVELY'
                     SmallText='ComeBuy Store. The best way to buy the products you love.'
                 ></BrandLineImage>
+                <Typography variant='h4' fontWeight={'bold'} sx={{alignSelf:'center'}}>Our store.
+                <Typography variant='h4' fontWeight={'bold'} sx={{color:'#BCBFB0'}}>The best way to buy the products you love.</Typography>
+                </Typography>
                 <div>
                     {
                         _productList.length > 0 && brandList.map((item, i) => {
@@ -123,6 +126,9 @@ const HomePage = () => {
                         })
                     }
                 </div>
+                <Typography variant='h4' fontWeight={'bold'} sx={{alignSelf:'center'}}>Feedback.
+                <Typography variant='h4' fontWeight={'bold'} sx={{color:'#BCBFB0'}}>Here's where the fun begins.</Typography>
+                </Typography>
                 <LaptopImageLine></LaptopImageLine>
             </Stack>
             <BigFooter />
