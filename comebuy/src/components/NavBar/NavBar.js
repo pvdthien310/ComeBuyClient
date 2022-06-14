@@ -21,6 +21,8 @@ import { accountSlice } from './../../redux/slices/accountSlice'
 import ShoppingCartIcon from '@mui/icons-material/ShoppingCart';
 import { Button, Typography } from "@mui/material";
 import MenuIcon from '@mui/icons-material/Menu';
+import './style'
+import style from "./style";
 
 
 
@@ -38,6 +40,9 @@ const CartButton = styled(Button)(({ theme }) => ({
 
 export default function NavBar(props) {
     // const _isSignedIn = useSelector(isSignedIn_user)
+    const currentPath = window.location.pathname
+    console.log(currentPath)
+    
     const _currentUser = useSelector(currentUser)
     let isSignedIn = (localStorage.getItem('role') !== '') ? true : false
     const _cart = useSelector(cartListSelector)
@@ -199,7 +204,7 @@ export default function NavBar(props) {
     );
 
     return (
-        <Box sx={{ flexGrow: 1, top: 0, position: 'fixed', zIndex: 99, width: '100%' }}>
+        <Box sx={currentPath != '/' ? style.base : style.homeNavbar}>
             <AppBar position="static" style={{ backgroundColor: 'white', padding: 2 }}>
                 <Toolbar>
 
