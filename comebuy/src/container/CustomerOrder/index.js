@@ -133,12 +133,12 @@ export const CustomerOrderSpace = () => {
                 alignItems: 'center',
                 justifyItems: 'center',
                 backgroundColor: 'white',
-                marginBottom: 2
+                marginBottom: 5
             }}>
                 <Stack sx={{
                     width: "100%",
                     height: "100%",
-                    marginBottom: 2
+                    marginBottom: 5
                 }}>
                     <Stack direction="row" spacing={2} sx={{
                         marginTop: 3,
@@ -152,6 +152,7 @@ export const CustomerOrderSpace = () => {
                             value={fromDate}
                             sx={{
                                 width: 220,
+                                fontSize: '14px'
                             }}
                             InputLabelProps={{
                                 shrink: true,
@@ -165,13 +166,14 @@ export const CustomerOrderSpace = () => {
                             value={toDate}
                             sx={{
                                 width: 220,
+                                fontSize: '14px'
                             }}
                             InputLabelProps={{
                                 shrink: true,
                             }}
                             onChange={e => setToDate(e.target.value)}
                         />
-                        <Button onClick={handleSearch} color="success" variant="outlined" startIcon={<SearchIcon />}>
+                        <Button onClick={handleSearch} sx={{ fontSize: '14px' }} color="success" variant="outlined" startIcon={<SearchIcon />}>
                             Search
                         </Button>
                         <IconButton onClick={handleRefresh} style={{ backgroundColor: 'white' }}>
@@ -196,8 +198,8 @@ export const CustomerOrderSpace = () => {
                                     <TableCell />
                                     <TableCell style={{ color: '#0D0D0D', fontWeight: 'bold' }}>Invoice ID</TableCell>
                                     <TableCell align="center" style={{ color: '#0D0D0D', fontWeight: 'bold' }}>Date</TableCell>
-                                    <TableCell align="center" style={{ color: '#0D0D0D', fontWeight: 'bold' }}>Address</TableCell>
                                     <TableCell align="center" style={{ color: '#0D0D0D', fontWeight: 'bold' }}>Total&nbsp;(USD)</TableCell>
+                                    <TableCell align="center" style={{ color: '#0D0D0D', fontWeight: 'bold' }}>Status</TableCell>
                                 </TableRow>
                             </TableHead>
                             <TableBody>

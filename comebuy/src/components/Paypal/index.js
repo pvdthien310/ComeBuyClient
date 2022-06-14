@@ -170,8 +170,8 @@ export default function Paypal({ _discount, _lastTotal, cartList, purchases, pro
             let temp = {
                 ...orderData,
                 moneyReceived: _lastTotal,
-                isChecked: true,
-                isPaid: true,
+                isChecked: false,
+                isPaid: false,
                 date: date + ' ' + m,
                 userID: _currentUser.userID,
                 address: _bigAddress,
@@ -186,8 +186,8 @@ export default function Paypal({ _discount, _lastTotal, cartList, purchases, pro
             let temp = {
                 ...orderData,
                 moneyReceived: _lastTotal.toString(),
-                isChecked: true,
-                isPaid: true,
+                isChecked: false,
+                isPaid: false,
                 date: date + ' ' + m,
                 address: _bigAddress,
                 userID: "dbbe802d-a52e-4c1b-99c0-3382a2e6e8cb",

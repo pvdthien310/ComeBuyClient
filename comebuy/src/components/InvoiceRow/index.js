@@ -285,7 +285,7 @@ const Row = (props) => {
                     </TableCell>
                 ) : (
                     <TableCell align="center">
-                        <Typography sx={{ fontSize: '13px' }}>Paying...</Typography>
+                        <Typography sx={{ fontSize: '13px' }}>Execute</Typography>
                     </TableCell>
                 )}
             </TableRow>
