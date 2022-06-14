@@ -26,6 +26,7 @@ Of course, our project will no  serve all since you needs may be different. So w
 Thanks for conducting from our teacher
 
 Server repo: https://github.com/pvdthien310/CoolzyServer
+Website: https://comebuy-site-offical.netlify.app/
 
 ### Main Features
  - Product management
@@ -64,7 +65,7 @@ Server repo: https://github.com/pvdthien310/CoolzyServer
 |Admin| admin@gmail.com|123456
 |Manager|manager3@gmail.com|123456
 |Customer|cus1@gmail.com|123456
-|Staff|staff@gmail.com|123456
+|Staff|staff1@gmail.com|123456
 
 
 ## Authors
