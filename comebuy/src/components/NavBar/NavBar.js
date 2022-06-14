@@ -21,24 +21,12 @@ import { accountSlice } from './../../redux/slices/accountSlice'
 import ShoppingCartIcon from '@mui/icons-material/ShoppingCart';
 import { Button, Typography } from "@mui/material";
 import MenuIcon from '@mui/icons-material/Menu';
+import './style'
+import style from "./style";
 
 
 
-const Search = styled('div')(({ theme }) => ({
-    position: 'relative',
-    borderRadius: theme.shape.borderRadius,
-    backgroundColor: alpha(theme.palette.common.white, 0.15),
-    '&:hover': {
-        backgroundColor: alpha(theme.palette.common.white, 0.25),
-    },
-    marginRight: theme.spacing(2),
-    marginLeft: 0,
-    width: '150%',
-    [theme.breakpoints.up('sm')]: {
-        marginLeft: theme.spacing(3),
-        width: 'auto',
-    },
-}));
+
 
 const CartButton = styled(Button)(({ theme }) => ({
     borderRadius: 20,
@@ -49,32 +37,12 @@ const CartButton = styled(Button)(({ theme }) => ({
     }
 }));
 
-const SearchIconWrapper = styled('div')(({ theme }) => ({
-    padding: theme.spacing(0, 2),
-    height: '100%',
-    position: 'absolute',
-    pointerEvents: 'none',
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'center',
-}));
-
-const StyledInputBase = styled(InputBase)(({ theme }) => ({
-    color: 'inherit',
-    '& .MuiInputBase-input': {
-        padding: theme.spacing(1, 1, 1, 0),
-        // vertical padding + font size from searchIcon
-        paddingLeft: `calc(1em + ${theme.spacing(4)})`,
-        transition: theme.transitions.create('width'),
-        width: '100%',
-        [theme.breakpoints.up('md')]: {
-            width: '20ch',
-        },
-    },
-}));
 
 export default function NavBar(props) {
     // const _isSignedIn = useSelector(isSignedIn_user)
+    const currentPath = window.location.pathname
+    console.log(currentPath)
+    
     const _currentUser = useSelector(currentUser)
     let isSignedIn = (localStorage.getItem('role') !== '') ? true : false
     const _cart = useSelector(cartListSelector)
@@ -236,7 +204,7 @@ export default function NavBar(props) {
     );
 
     return (
-        <Box sx={{ flexGrow: 1 }}>
+        <Box sx={currentPath != '/' ? style.base : style.homeNavbar}>
             <AppBar position="static" style={{ backgroundColor: 'white', padding: 2 }}>
                 <Toolbar>
 

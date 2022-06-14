@@ -46,8 +46,7 @@ const HomePage = () => {
         await dispatch(getAllProduct())
             .unwrap()
             .then((originalPromiseResult) => {
-                console.log(originalPromiseResult)
-                // setProductList(originalPromiseResult.filter(ite => ite.brand == brandName))
+
             })
             .catch((rejectedValueOrSerializedError) => {
                 console.log("Error load product")
@@ -96,7 +95,7 @@ const HomePage = () => {
     return (
         <Stack>
             <NavBar></NavBar>
-            <Box sx={{ height: 2, m: 2, width: '95%', backgroundColor: 'black' }}></Box>
+            <Box sx={{ height: 2, m: 2, mt: 10, width: '95%', backgroundColor: 'black' }}></Box>
             <BrandNavBar brandLine={brandList} ></BrandNavBar>
             <Stack sx={{ p: 2 }} spacing={5}>
 
@@ -106,7 +105,9 @@ const HomePage = () => {
                     BigText='Which one is right for you?'
                     SmallText='ComeBuy Store. The best way to buy the products you love.'
                 ></FeatureImage>
-                <NewProductLine />
+                {
+                    _productList.length > 0 && <NewProductLine />
+                }
                 <FeatureBar></FeatureBar>
                 <BrandLineImage
                     urlImage='https://images.unsplash.com/photo-1615750173609-2fbf12fd1d2d?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1170&q=80'

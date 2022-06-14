@@ -101,7 +101,7 @@ const ImageMarked = styled('span')(({ theme }) => ({
 
 export default function FeatureBar() {
     return (
-        <Box sx={{ display: 'flex', flexWrap: 'wrap', minWidth: 300, width: '100%', padding: 5 }}>
+        <Box sx={{ display: 'flex', flexWrap: 'wrap', minWidth: 300, width: '100%', padding: 2 }}>
             {images.map((image) => (
                 <ImageButton
                     focusRipple
