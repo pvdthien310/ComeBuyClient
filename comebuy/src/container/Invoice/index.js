@@ -149,17 +149,19 @@ const Invoice = () => {
                     height: "100%"
                 }}>
                     <Stack direction="row" spacing={2} sx={{
-                        marginTop: 3,
-                        marginBottom: 2,
-                        marginLeft: 10
+                        mt: 3,
+                        mb: 2,
+                        ml: 11
                     }}>
                         <TextField
                             id="date"
                             label="From"
                             type="date"
+                            size="small"
                             value={fromDate}
                             sx={{
                                 width: 220,
+                                fontSize: '8px'
                             }}
                             InputLabelProps={{
                                 shrink: true,
@@ -171,8 +173,10 @@ const Invoice = () => {
                             label="To"
                             type="date"
                             value={toDate}
+                            size="small"
                             sx={{
                                 width: 220,
+                                fontSize: '8px'
                             }}
                             InputLabelProps={{
                                 shrink: true,
@@ -199,14 +203,12 @@ const Invoice = () => {
                             <TableHead style={{ backgroundColor: 'white', borderRadius: '15px' }}>
                                 <TableRow>
                                     <TableCell />
-                                    <TableCell style={{ color: '#0D0D0D', fontWeight: 'bold' }}>Invoice ID</TableCell>
-                                    <TableCell align="center" style={{ color: '#0D0D0D', fontWeight: 'bold' }}>Customer ID</TableCell>
-                                    <TableCell align="center" style={{ color: '#0D0D0D', fontWeight: 'bold' }}>Date</TableCell>
-                                    <TableCell align="center" style={{ color: '#0D0D0D', fontWeight: 'bold' }}>Total&nbsp;(USD)</TableCell>
-                                    <TableCell align="center" style={{ color: '#0D0D0D', fontWeight: 'bold' }}>Is Checked</TableCell>
-                                    <TableCell align="center" style={{ color: '#0D0D0D', fontWeight: 'bold' }}>Recieved&nbsp;(USD)</TableCell>
-                                    <TableCell align="center" style={{ color: '#0D0D0D', fontWeight: 'bold' }}>Is Paid</TableCell>
-                                    <TableCell align="center" style={{ color: '#0D0D0D', fontWeight: 'bold' }}>Print out</TableCell>
+                                    <TableCell style={{ color: '#0D0D0D', fontWeight: 'bold', fontSize: '13px' }}>Invoice ID</TableCell>
+                                    <TableCell align="center" style={{ color: '#0D0D0D', fontWeight: 'bold', fontSize: '13px' }}>Customer ID</TableCell>
+                                    <TableCell align="center" style={{ color: '#0D0D0D', fontWeight: 'bold', fontSize: '13px' }}>Date</TableCell>
+                                    <TableCell align="center" style={{ color: '#0D0D0D', fontWeight: 'bold', fontSize: '13px' }}>Total&nbsp;(USD)</TableCell>
+                                    <TableCell align="center" style={{ color: '#0D0D0D', fontWeight: 'bold', fontSize: '13px' }}>Status</TableCell>
+                                    <TableCell align="center" style={{ color: '#0D0D0D', fontWeight: 'bold', fontSize: '13px' }}>Print out</TableCell>
                                 </TableRow>
                             </TableHead>
                             <TableBody>
