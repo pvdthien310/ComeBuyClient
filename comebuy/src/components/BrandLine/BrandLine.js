@@ -49,11 +49,10 @@ const Line = styled(Grid)(({ theme }) => ({
 const  BrandLine = (props) => {
     const _productList  = useSelector(productListSelector)
     const brandName = props.brandName
-    const brandurl = props.url
     const dispatch = useDispatch()
     const [productList, setProductList] = useState([])
     useEffect(() => {
-        setProductList(_productList.filter(ite => ite.brand == brandName))
+        setProductList(_productList.filter(ite => ite.brand == brandName && ite.isPublished == true))
     }, [])
     return (
         <Line id={props.id} sx={{p: 2}} className='BrandLine' container rowSpacing={1} columnSpacing={{ xs: 1, sm: 2, md: 2 }}>
