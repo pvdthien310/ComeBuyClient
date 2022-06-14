@@ -10,7 +10,7 @@ export const getAllProduct = createAsyncThunk(
       return rejectWithValue("Get All Failed");
     }
     else {
-      console.log(response)
+      // console.log(response)
       return response;
     }
   }

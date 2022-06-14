@@ -13,7 +13,7 @@ import AccountCircle from '@mui/icons-material/AccountCircle';
 import MailIcon from '@mui/icons-material/Mail';
 import NotificationsIcon from '@mui/icons-material/Notifications';
 import MoreIcon from '@mui/icons-material/MoreVert';
-import logo from '../../assets/img/logoremovebg.png';
+import logo from '../../assets/img/logo-removebg.png';
 import { useNavigate } from 'react-router-dom'
 import { useSelector, useDispatch } from 'react-redux'
 import { cartListSelector, currentUser, isSignedIn_user } from './../../redux/selectors'
