@@ -15,6 +15,9 @@ import TablePrint from '../CounterTablePrint';
 import Notes from '../CounterNotes';
 import Footer from '../CounterFooter';
 
+import Stepper from '@mui/material/Stepper';
+import Step from '@mui/material/Step';
+import StepLabel from '@mui/material/StepLabel';
 import Snackbar from '@mui/material/Snackbar';
 import MuiAlert from '@mui/material/Alert';
 import Box from '@mui/material/Box';
@@ -44,6 +47,8 @@ import ReceiptIcon from '@mui/icons-material/Receipt';
 const Alert = React.forwardRef(function Alert(props, ref) {
     return <MuiAlert elevation={6} ref={ref} variant="filled" {...props} />;
 });
+
+const steps = ['Checked', 'Delivered'];
 
 const Row = (props) => {
     const componentRef = React.useRef()
@@ -138,51 +143,32 @@ const Row = (props) => {
     }, [updating])
 
     const handleClickPaidInvoice = async () => {
-        if (isPaid === true) {
-            setUpdating(true)
-            const temp = {
-                ...dataForUpdate,
-                isPaid: false,
-                moneyReceived: '0'
-            }
-            try {
-                const resultAction = await dispatch(updateInvoice(temp))
-                const originalPromiseResult = unwrapResult(resultAction)
-                // handle result here
-            } catch (rejectedValueOrSerializedError) {
-                // handle error here
-                console.log(rejectedValueOrSerializedError.message);
-            }
-            setDataForUpdate(temp)
-            setIsPaid(false);
-            setUpdating(false)
-            setOpenSnackbar(true)
-            setDisablePaid(false)
-        } else {
-            if (isChecked === false) {
-                console.log("Have to check invoice first");
-            } else {
-                setUpdating(true)
-                const temp = {
-                    ...dataForUpdate,
+        setUpdating(true)
+        let temp = dataForUpdate
+        try {
+            if (temp.isChecked === true) {
+                temp = {
+                    ...temp,
                     isPaid: true,
                     moneyReceived: invoiceTotal
                 }
-                try {
-                    const resultAction = await dispatch(updateInvoice(temp))
-                    const originalPromiseResult = unwrapResult(resultAction)
-                    // handle result here
-                } catch (rejectedValueOrSerializedError) {
-                    // handle error here
-                    console.log(rejectedValueOrSerializedError.message);
+            } else {
+                temp = {
+                    ...temp,
+                    isChecked: true,
                 }
-                setUpdating(false)
-                setOpenSnackbar(true)
-                setDataForUpdate(temp)
-                setIsPaid(true)
-                setDisablePaid(true)
-                setDisableCheck(true)
             }
+            const resultAction = await dispatch(updateInvoice(temp))
+            const originalPromiseResult = unwrapResult(resultAction)
+            setDataForUpdate(temp)
+            console.log("temp:" + temp)
+            console.log("dataforup:" + dataForUpdate)
+            setActiveStep(activeStep + 1)
+            setUpdating(false)
+            setOpenSnackbar(true)
+        } catch (rejectedValueOrSerializedError) {
+            // handle error here
+            console.log(rejectedValueOrSerializedError.message);
         }
     }
 
@@ -202,53 +188,31 @@ const Row = (props) => {
         }
     }, [])
 
-    const handleClickCheckInvoice = async () => {
-        if (isChecked === true) {
-            if (isPaid === true) {
-                alert("Can not accept this action")
-            } else {
-                setUpdating(true)
-                const temp = {
-                    ...dataForUpdate,
-                    isChecked: false,
-                }
-                try {
-                    const resultAction = await dispatch(updateInvoice(temp))
-                    const originalPromiseResult = unwrapResult(resultAction)
-                    // handle result here
-                } catch (rejectedValueOrSerializedError) {
-                    // handle error here
-                    console.log(rejectedValueOrSerializedError.message);
-                }
-                setUpdating(false)
-                setOpenSnackbar(true)
-                setIsChecked(false)
-                setDisablePaid(true)
-            }
-        } else {
-            setUpdating(true)
-            const temp = {
-                ...dataForUpdate,
-                isChecked: true,
-            }
-            try {
-                const resultAction = await dispatch(updateInvoice(temp))
-                const originalPromiseResult = unwrapResult(resultAction)
-                // handle result here
-            } catch (rejectedValueOrSerializedError) {
-                // handle error here
-                console.log(rejectedValueOrSerializedError.message);
-            }
-            setUpdating(false)
-            setOpenSnackbar(true)
-            setIsChecked(true)
-            setDisablePaid(false)
-        }
-    }
     const [openModalBill, setOpenModalBill] = React.useState(false)
     const closeModalBill = () => {
         setOpenModalBill(false)
     }
+
+    const [activeStep, setActiveStep] = React.useState(0);
+
+    React.useEffect(() => {
+        let t = false
+        const setActive = () => {
+            if (Boolean(row.isChecked) === true) {
+                if (Boolean(row.isPaid) === true) {
+                    setActiveStep(2)
+                } else {
+                    setActiveStep(1)
+                }
+            } else {
+                setActiveStep(0)
+            }
+        }
+        if (t === false) {
+            setActive()
+            t = true
+        }
+    }, [])
     return (
         <React.Fragment >
             <TableRow sx={{ '& > *': { borderBottom: 'set', backgroundColor: 'white' } }}>
@@ -259,39 +223,19 @@ const Row = (props) => {
                         size="small"
                         onClick={() => setOpen(!open)}
                     >
-                        {open ? <KeyboardArrowUpIcon color='error' /> : <KeyboardArrowDownIcon style={{ color: '#6FA61C' }} />}
+                        {open ? <KeyboardArrowUpIcon style={{ color: 'black' }} /> : <KeyboardArrowDownIcon style={{ color: 'black' }} />}
                     </IconButton>
                 </TableCell>
                 <TableCell scope="row">
-                    {/* <Box>
-                        <Typography style={{ color: 'black', fontWeight: 'bold' }}>{row.invoiceID}</Typography>
-                    </Box> */}
-                    <Button
-                        aria-describedby={id}
-                        onClick={handleClickInvoiceID}
-                    >
-                        {row.invoiceID}
-                    </Button>
-                    <Popover
-                        id={id}
-                        open={openHoverInvoiceID}
-                        anchorEl={anchorE3}
-                        onClose={handleCloseInvoiceID}
-                        anchorOrigin={{
-                            vertical: 'top',
-                            horizontal: 'right',
-                        }}
-                    >
-                        <Box sx={{ padding: '2%', backgroundColor: '#F2F2F2', display: 'flex', flexDirection: 'column', width: 'auto', height: '100%' }}>
-                            <Typography sx={{ color: 'black', fontWeight: 'bold', textDecoration: 'underline' }}> Ship to: </Typography>
-                            <Typography sx={{ color: 'black', fontWeight: 500, marginLeft: '5px' }}> {row.address} </Typography>
-                        </Box>
-                    </Popover>
+                    <Box>
+                        <Typography style={{ color: 'black', fontWeight: 'bold', fontSize: '13px' }}>{row.invoiceID}</Typography>
+                    </Box>
                 </TableCell>
                 <TableCell align="center">
                     <Button
                         aria-describedby={id}
                         onClick={handleClick}
+                        sx={{ fontSize: '13px', color: 'green' }}
                     >
                         {row.account.userid}
                     </Button>
@@ -308,38 +252,40 @@ const Row = (props) => {
                         <CusInfo userID={row.account.userid} />
                     </Popover>
                 </TableCell>
-                <TableCell align="center" style={{ color: 'black' }}>{row.date}</TableCell>
-                <TableCell align="center" style={{ color: 'black', fontWeight: 'bold' }}>{invoiceTotal}</TableCell>
+                <TableCell align="center" style={{ color: 'black', fontSize: '13px' }}>{row.date}</TableCell>
+                <TableCell align="center" style={{ color: 'black', fontWeight: 'bold', fontSize: '13px' }}>{invoiceTotal}</TableCell>
                 <TableCell align="center">
-                    <FormGroup>
-                        <FormControlLabel
-                            control={<IOSSwitch sx={{ m: 1 }} defaultChecked={isChecked} />}
-                            label=""
-                            checked={isChecked}
-                            disabled={disableCheck}
-                            onClick={handleClickCheckInvoice}
-                        />
-                    </FormGroup>
+                    <Box sx={{ width: '100%' }}>
+                        <Stepper activeStep={activeStep} alternativeLabel>
+                            {steps.map((label) => (
+                                <Step color='success' key={label}>
+                                    <StepLabel sx={{ fontSize: '7px' }}>{label}</StepLabel>
+                                </Step>
+                            ))}
+                        </Stepper>
+                        <div>
+                            <React.Fragment>
+                                <Box sx={{ display: 'flex', flexDirection: 'row', pt: 2 }}>
+                                    <Box sx={{ flex: '1 1 auto' }} />
+                                    {activeStep !== steps.length ? (
+                                        <Button onClick={handleClickPaidInvoice} sx={{ fontSize: '9px' }} >
+                                            Done
+                                        </Button>
+                                    ) : (
+                                        null
+                                    )}
+                                </Box>
+                            </React.Fragment>
+                        </div>
+                    </Box>
                 </TableCell>
-                <TableCell align="center" style={{ fontWeight: 'bold', color: 'black' }}>{dataForUpdate.moneyReceived}</TableCell>
-                <TableCell align="center">
-                    <FormGroup>
-                        <FormControlLabel
-                            control={<IOSSwitch sx={{ m: 1 }} defaultChecked={row.isPaid} />}
-                            label=""
-                            checked={isPaid}
-                            disabled={disablePaid}
-                            onClick={handleClickPaidInvoice}
-                        />
-                    </FormGroup>
-                </TableCell>
-                {isPaid ? (
+                {dataForUpdate.isPaid ? (
                     <TableCell align="center">
-                        <Button onClick={() => setOpenModalBill(true)}>Print</Button>
+                        <Button sx={{ fontSize: '13px' }} onClick={() => setOpenModalBill(true)}>Print</Button>
                     </TableCell>
                 ) : (
                     <TableCell align="center">
-                        <Typography>Paying...</Typography>
+                        <Typography sx={{ fontSize: '13px' }}>Paying...</Typography>
                     </TableCell>
                 )}
             </TableRow>
@@ -347,15 +293,18 @@ const Row = (props) => {
                 <TableCell style={{ paddingBottom: 0, paddingTop: 0, backgroundColor: 'white', marginLeft: '10%' }} colSpan={6}>
                     <Collapse in={open} timeout="auto" unmountOnExit>
                         <Box sx={{ margin: 1 }}>
-                            <Typography variant="h7" style={{ fontWeight: 'bold', color: 'black', textDecoration: 'underline' }} gutterBottom component="div">
+                            <Typography variant="h7" style={{ fontSize: '13px', fontWeight: 'bold', color: 'black', textDecoration: 'underline' }} gutterBottom component="div">
                                 Details:
+                            </Typography>
+                            <Typography variant="h8" style={{ fontSize: '13px', fontWeight: 'bold', color: 'black' }} gutterBottom component="div">
+                                Ship to: {row.address}
                             </Typography>
                             <Table size="small" aria-label="purchases">
                                 <TableHead>
                                     <TableRow>
-                                        <TableCell style={{ color: 'black' }}>Product ID</TableCell>
-                                        <TableCell align="center" style={{ color: 'black' }}>Amount</TableCell>
-                                        <TableCell align="center" style={{ color: 'black' }}>Total price (USD)</TableCell>
+                                        <TableCell style={{ color: 'black', fontSize: '13px' }}>Product ID</TableCell>
+                                        <TableCell align="center" style={{ color: 'black', fontSize: '13px' }}>Amount</TableCell>
+                                        <TableCell align="center" style={{ color: 'black', fontSize: '13px' }}>Total price (USD)</TableCell>
                                     </TableRow>
                                 </TableHead>
                                 <TableBody>
@@ -366,7 +315,7 @@ const Row = (props) => {
                                                     <Button
                                                         aria-describedby={id}
                                                         onClick={handleProductPopoverOpen}
-                                                        style={{ fontWeight: 'bold', color: '#52BF04', fontStyle: 'italic' }}
+                                                        style={{ fontSize: '13px', fontWeight: 'bold', color: '#52BF04', fontStyle: 'italic' }}
                                                     >
                                                         {detailsRow.productid}
                                                     </Button>
@@ -384,8 +333,8 @@ const Row = (props) => {
                                                         <ProdInfo productID={detailsRow.productid} />
                                                     </Popover>
                                                 </TableCell>
-                                                <TableCell align="center">{detailsRow.amount}</TableCell>
-                                                <TableCell align="center" style={{ fontWeight: 'bold', color: 'black' }}>{detailsRow.total}</TableCell>
+                                                <TableCell align="center" style={{ fontSize: '13px', color: 'black' }}>{detailsRow.amount}</TableCell>
+                                                <TableCell align="center" style={{ fontSize: '13px', fontWeight: 'bold', color: 'black' }}>{detailsRow.total}</TableCell>
                                             </TableRow>
                                         ) : (
                                             null
