@@ -13,7 +13,7 @@ import AccountCircle from '@mui/icons-material/AccountCircle';
 import MailIcon from '@mui/icons-material/Mail';
 import NotificationsIcon from '@mui/icons-material/Notifications';
 import MoreIcon from '@mui/icons-material/MoreVert';
-import logo from './../../assets/img/logo.png';
+import logo from '../../assets/img/logoremovebg.png';
 import { useNavigate } from 'react-router-dom'
 import { useSelector, useDispatch } from 'react-redux'
 import { cartListSelector, currentUser, isSignedIn_user } from './../../redux/selectors'
@@ -21,6 +21,7 @@ import { accountSlice } from './../../redux/slices/accountSlice'
 import ShoppingCartIcon from '@mui/icons-material/ShoppingCart';
 import { Button, Typography } from "@mui/material";
 import MenuIcon from '@mui/icons-material/Menu';
+
 
 
 const Search = styled('div')(({ theme }) => ({
@@ -239,7 +240,7 @@ export default function NavBar(props) {
             <AppBar position="static" style={{ backgroundColor: 'white', padding: 2 }}>
                 <Toolbar>
 
-                    <Typography variant="h5" fontWeight={'bold'} sx={{
+                    {/* <Typography variant="h5" fontWeight={'bold'} sx={{
                         color: 'black',
                         fontFamily: 'Monospace',
                         textDecoration: 'underline',
@@ -247,7 +248,10 @@ export default function NavBar(props) {
                         cursor: 'pointer',
                     }}
                         onClick={() => navigate("/")}>
-                        ComeBuy</Typography>
+                        ComeBuy</Typography> */}
+                    <img style={{ width: 120, backgroundSize: 'cover', cursor: 'pointer' }}
+                        onClick={() => navigate("/")}
+                        src={logo}></img>
 
                     <Box sx={{ flexGrow: 1 }} />
                     {
