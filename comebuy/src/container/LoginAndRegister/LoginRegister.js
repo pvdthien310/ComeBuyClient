@@ -565,7 +565,14 @@ const LoginRegister = () => {
                                         Terms in ComeBuy
                                     </Typography>
                                     <Typography id="modal-modal-description" sx={{ mt: 2 }}>
-                                        Here is place where you input your term
+                                        While we know it's easy to overlook these Terms of Service, it's important to clarify our responsibilities and your responsibilities during your use of Google services.
+                                        These Terms of Service reflect the way Google does business, the laws our company must follow, and some of the things we have always believed to be true. These Terms of Service therefore help define Google's relationship with you when you interact with our services. For example, these terms cover the following topics:
+
+                                        Our Responsibilities: This is a description of how we deliver and develop our services
+                                        Your responsibilities: This section outlines some rules that you must follow when using our services
+                                        Content in Google services: This section describes the intellectual property rights to the content you see in our services, regardless of whether it belongs to you, Google, or someone else.
+                                        In the event of a problem or disagreement: This section describes other legal rights you have and what you should know in the event someone violates these terms
+                                        It is very important to understand these terms because by using our services you agree to these terms.
                                     </Typography>
                                     <FormControlLabel
                                         control={
