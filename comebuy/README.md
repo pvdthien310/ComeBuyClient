@@ -65,7 +65,7 @@ Thanks for conducting from our teacher
 |Admin| admin@gmail.com|123456
 |Manager|manager3@gmail.com|123456
 |Customer|cus1@gmail.com|123456
-|Staff|staff1@gmail.com|123456
+|Staff|staffone@gmail.com|123456
 
 
 ## Authors
