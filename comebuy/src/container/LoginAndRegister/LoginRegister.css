@@ -1,21 +1,20 @@
 @import url("https://fonts.googleapis.com/css2?family=Poppins:wght@200;300;400;500;600;700;800&display=swap");
 
-body,
-input {
+/* input {
   font-family: "Poppins", sans-serif;
-}
+} */
 
 .container {
   position: relative;
   width: 100%;
-  background-color: #a6adaf;
+  background-color: #ead1ea;
   min-height: 100vh;
   overflow: hidden;
 }
 
 .forms-container {
   position: absolute;
-  background-color: #a6adaf;
+  background-color: #ead1ea;
   width: 100%;
   height: 100%;
   top: 0;
@@ -35,7 +34,7 @@ input {
 }
 
 form {
-  background-color: #a6adaf;
+  background-color: #ead1ea;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -67,7 +66,7 @@ form.sign-in-form {
 .input-field {
   max-width: 380px;
   width: 100%;
-  background-color: #fff;
+  background-color: #ead1ea;
   margin: 10px 0;
   height: 55px;
   border-radius: 15px;
@@ -102,7 +101,7 @@ form.sign-in-form {
 
 .btn {
   width: 150px;
-  background-color: #000000;
+  background-color: #903f90;
   border: none;
   outline: none;
   height: 49px;
@@ -116,7 +115,7 @@ form.sign-in-form {
 }
 
 .btn:hover {
-  background-color: #000000;
+  background-color: #903f90;
 }
 .panels-container {
   position: absolute;
@@ -136,7 +135,7 @@ form.sign-in-form {
   top: -10%;
   right: 48%;
   transform: translateY(-50%);
-  background-image: linear-gradient(-45deg, #000000 0%, #27292a 100%);
+  background-image: linear-gradient(-35deg, #903f90 0%, #4f4d8c 100%);
   transition: 1.8s ease-in-out;
   border-radius: 50%;
   z-index: 6;

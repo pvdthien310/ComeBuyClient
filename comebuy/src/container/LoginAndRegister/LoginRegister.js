@@ -10,7 +10,7 @@ import { unwrapResult } from '@reduxjs/toolkit'
 import { useNavigate } from 'react-router';
 //M-UI
 import { TextField, Checkbox, Typography, FormControlLabel, Modal, Box, Button, Dialog, DialogTitle } from '@material-ui/core';
-import { Stack } from '@mui/material'
+import { Fab, Stack } from '@mui/material'
 import IconButton from '@mui/material/IconButton';
 import CheckCircleRoundedIcon from '@mui/icons-material/CheckCircleRounded';
 import VisibilityIcon from '@mui/icons-material/Visibility';
@@ -21,6 +21,7 @@ import { Autorenew } from "@material-ui/icons";
 import Backdrop from '@mui/material/Backdrop';
 import CircularProgress from '@mui/material/CircularProgress';
 import Snackbar from '@mui/material/Snackbar';
+import HomeIcon from '@mui/icons-material/Home';
 
 //From file
 import { currentUser, isSignedIn_user, loading_user, messageError } from '../../redux/selectors'
@@ -446,11 +447,11 @@ const LoginRegister = () => {
                                     onChange={(e) => setDataForReg({ ...dataForReg, password: e.target.value })}
                                 />
                                 {passwordShown ? (
-                                    <IconButton style={{ backgroundColor: '#a6adaf' }} onClick={togglePassword}>
+                                    <IconButton style={{ backgroundColor: '#ead1ea' }} onClick={togglePassword}>
                                         <VisibilityIcon color="success" />
                                     </IconButton>
                                 ) : (
-                                    <IconButton style={{ backgroundColor: '#a6adaf' }} onClick={togglePassword}>
+                                    <IconButton style={{ backgroundColor: '#ead1ea' }} onClick={togglePassword}>
                                         <VisibilityOffIcon />
                                     </IconButton>
                                 )}
@@ -476,11 +477,11 @@ const LoginRegister = () => {
                                     onChange={(e) => setCfPass(e.target.value)}
                                 />
                                 {cfPasswordShown ? (
-                                    <IconButton style={{ backgroundColor: '#a6adaf' }} onClick={toggleCfPassword}>
+                                    <IconButton style={{ backgroundColor: '#ead1ea' }} onClick={toggleCfPassword}>
                                         <VisibilityIcon color="success" />
                                     </IconButton>
                                 ) : (
-                                    <IconButton style={{ backgroundColor: '#a6adaf' }} onClick={toggleCfPassword}>
+                                    <IconButton style={{ backgroundColor: '#ead1ea' }} onClick={toggleCfPassword}>
                                         <VisibilityOffIcon />
                                     </IconButton>
                                 )}
@@ -852,11 +853,11 @@ const LoginRegister = () => {
                                     onChange={(e) => setPasswordUser(e.target.value)}
                                 />
                                 {passwordShown ? (
-                                    <IconButton style={{ backgroundColor: '#a6adaf' }} onClick={togglePassword}>
+                                    <IconButton style={{ backgroundColor: '#ead1ea' }} onClick={togglePassword}>
                                         <VisibilityIcon color="success" />
                                     </IconButton>
                                 ) : (
-                                    <IconButton style={{ backgroundColor: '#a6adaf' }} onClick={togglePassword}>
+                                    <IconButton style={{ backgroundColor: '#ead1ea' }} onClick={togglePassword}>
                                         <VisibilityOffIcon />
                                     </IconButton>
                                 )}
@@ -926,6 +927,9 @@ const LoginRegister = () => {
                     </div>
                     <Register1SVG className="image" />
                 </div>
+                <Fab sx={{ position: 'absolute', backgroundColor: '#EA8BFA' }} onClick={() => navigate('/')} size="small" color="secondary" aria-label="add">
+                    <HomeIcon sx={{ color: 'white' }} />
+                </Fab>
             </div>
             {/*Snackbar*/}
             <Snackbar open={openLoginFailed} autoHideDuration={6000} onClose={handleCloseLoginFailed}>
@@ -975,6 +979,7 @@ const LoginRegister = () => {
                     Account with this email was existed
                 </Alert>
             </Snackbar>
+
         </div >
     )
 }
