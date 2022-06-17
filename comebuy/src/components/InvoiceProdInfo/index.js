@@ -37,14 +37,14 @@ const ProdInfo = (props) => {
         <div>
             {product != 0 ? (
                 <div style={{
-                    width: '100%',
-                    height: '100%',
+                    maxWidth: 700,
+                    height: 'auto',
                     backgroundColor: '#BFBFBF',
                     padding: '10px',
                     display: 'flex',
                     flexDirection: 'row',
                 }}>
-                    <img alt="" src={product[0].productimage[0].imageURL} style={{ width: 'auto', maxWidth: 200 }} />
+                    <img alt="" src={product[0].productimage[0].imageURL} style={{ width: 250, height: 250 }} />
                     <div style={{ display: 'flex', flexDirection: 'column', padding: '15px' }}>
                         <div style={{ display: 'flex', flexDirection: 'row' }}>
                             <Typography style={{ fontWeight: 'bold' }}>Brand:</Typography>
