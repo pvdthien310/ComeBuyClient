@@ -40,7 +40,7 @@ const TableForm = ({
       alert("Please fill in quantity")
     } else {
       const newItems = {
-        id: uuidv4(),
+        id: description.productID,
         description: description.name,
         quantity,
         price,

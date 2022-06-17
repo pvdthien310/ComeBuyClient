@@ -50,7 +50,7 @@ export default function Paypal({ _discount, _lastTotal, cartList, purchases, pro
         isPaid: false,
         address: _bigAddress,
         userID: _currentUser.userID,
-        branchID: 'da198f71-813b-47f8-9ded-331b358d4780'
+        branchID: 'a4a66b5e-182b-4b7d-bd13-8e6a54b686a6'
     })
 
     const [orderDataItem, setOrderDataItem] = useState({
@@ -146,7 +146,7 @@ export default function Paypal({ _discount, _lastTotal, cartList, purchases, pro
         const addItem = async () => {
             for (let i = 0; i < listItem.length; i++) {
                 try {
-                    const resultAction = await dispatch(addInvoiceItem(listItem[0]))
+                    const resultAction = await dispatch(addInvoiceItem(listItem[i]))
                     const originalPromiseResult = unwrapResult(resultAction)
                 } catch (rejectedValueOrSerializedError) {
                     console.log(rejectedValueOrSerializedError)
@@ -190,7 +190,7 @@ export default function Paypal({ _discount, _lastTotal, cartList, purchases, pro
                 isPaid: false,
                 date: date + ' ' + m,
                 address: _bigAddress,
-                userID: "dbbe802d-a52e-4c1b-99c0-3382a2e6e8cb",
+                userID: "c464ea83-fcf5-44a4-8d90-f41b78b78db8",
                 branchID: 'a4a66b5e-182b-4b7d-bd13-8e6a54b686a6'
             }
             setOrderData(temp)
