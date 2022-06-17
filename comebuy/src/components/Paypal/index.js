@@ -301,21 +301,21 @@ export default function Paypal({ _discount, _lastTotal, cartList, purchases, pro
             <div ref={paypal}></div>
             {/* {console.log(cartList)}
             {console.log(prodList)} */}
-            {console.log(purchases)}
+            {/* {console.log(purchases)}
             {console.log(_discount)}
-            {console.log(_lastTotal)}
+            {console.log(_lastTotal)} */}
 
             <Dialog open={paidSuccessfully}>
-                <DialogTitle color='success'>Paid Successfully. Click OK to back to Main Page</DialogTitle>
+                <DialogTitle color='success'>Paid successfully. Thanks for involving</DialogTitle>
                 <Button
                     onClick={handleCloseDialog}
-                    style={{
+                    sx={{
                         alignSelf: 'center',
                         width: '30px',
                         height: '30px',
                         borderRadius: '15px',
                         border: '1px solid #18608a',
-                        backgroundColor: 'black',
+                        backgroundColor: 'green',
                         color: 'black',
                         fontSize: '13px',
                         marginBottom: '10px',
