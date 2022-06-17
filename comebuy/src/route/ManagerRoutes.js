@@ -5,11 +5,6 @@ import Revenue from '../container/Revenue';
 
 const managerRoutes = [
   {
-    name: 'Product',
-    path: '/product/*',
-    page: <Product />,
-  },
-  {
     name: 'Workspace',
     path: '/workspace/*',
     page: <CounterForManager />,
@@ -22,11 +17,6 @@ const managerRoutes = [
 ];
 
 const managerMenuItems = [
-  {
-    name: 'Product',
-    path: '/product/*',
-    page: <Product />,
-  },
   {
     name: 'Workspace',
     path: '/workspace/*',
