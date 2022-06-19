@@ -266,7 +266,7 @@ const Invoice = () => {
                         }}
                         component={Paper}
                     >
-                        <Table aria-label="collapsible table">
+                        <Table stickyHeader aria-label="sticky table" >
                             <TableHead style={{ backgroundColor: 'white', borderRadius: '15px' }}>
                                 <TableRow>
                                     <TableCell />
