@@ -72,6 +72,6 @@ const Status = /*#__PURE__*/React.memo(props => {
 export function renderStatus(params) {
 
   return /*#__PURE__*/_jsx(Status, {
-    status: params.value.toString()
+    status: params.value.toString().toLowerCase()
   });
 }

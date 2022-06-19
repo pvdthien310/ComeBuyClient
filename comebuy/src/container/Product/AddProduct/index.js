@@ -186,7 +186,7 @@ const AddProduct = () => {
 
     const deleteImage = (image) => {
         SetProductImages(productImages.filter((img) => {
-            if (img.productImageID != image.productImageID)
+            if (img.imageURL != image.imageURL)
                 return img
         }));
     }
