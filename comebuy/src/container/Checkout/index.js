@@ -1574,7 +1574,7 @@ export const CheckoutPage = () => {
 
             <Snackbar open={openSnackbar2} autoHideDuration={6000} onClose={handleCloseSnackbar2}>
                 <Alert onClose={handleCloseSnackbar2} severity="warnings" sx={{ width: '100%' }}>
-                    "Check your phone number and email whether it's in true type"
+                    "Check your phone number and email whether it's an email"
                 </Alert>
             </Snackbar>
 
@@ -1593,7 +1593,7 @@ export const CheckoutPage = () => {
                             Order's phone number: {phoneNumber} <br />
                             Order's address: {bigAddress} <br />
                             An order will be sent to your email: {_currentUser.email} <br />
-                            About 5 days your order will be delivered.
+                            Within 5 days your order will be delivered.
                         </DialogContentText>
                     ) : (
                         <DialogContentText id="alert-dialog-slide-description">
@@ -1620,8 +1620,8 @@ export const CheckoutPage = () => {
 
             <Dialog open={placedOrderSuccessfully}>
                 <DialogTitle color='success'>Placed order successfully. <br />
-                    Please check your email or My orders to see your work <br />
-                    Click OK to back to Main Page</DialogTitle>
+                    Please check your email see your order <br />
+                </DialogTitle>
                 <Button
                     onClick={handleClosePlacedOrderSuccessfully}
                     style={{
