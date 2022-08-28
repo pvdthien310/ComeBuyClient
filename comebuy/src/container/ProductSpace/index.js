@@ -7,9 +7,14 @@ import { getAllProduct } from "../../redux/slices/productSlice";
 import FilterListIcon from '@mui/icons-material/FilterList';
 import { getAllFeature } from "../../redux/slices/featureSlice";
 import { AirbnbSlider, AirbnbThumbComponent, ExampleSlider, PrettoSlider } from "./style";
+import io from "socket.io-client"
 
 import { cartListSelector, productListSelector } from "../../redux/selectors";
+import { WS_URL } from "../../constant";
 const ProductSpace = () => {
+    const socket = io(WS_URL, {
+        transports: ["websocket"]
+    });
     const _cart = useSelector(cartListSelector)
     const _productList = useSelector(productListSelector)
     const [productList, setProductList] = useState([])
@@ -84,8 +89,18 @@ const ProductSpace = () => {
         setOpenSuccessAlert(false);
         setOpenErrorAlert(false);
     };
+        
+    const handleSocket = () => {
+        socket.on("connect", () => {
+            console.log('Connect socket successfully!'); // x8WIv7-mJelg7on_ALbx
+          });
+        socket.on("update-new-product", (message) => {
+            console.log(message);
+        })
+    }
 
     useEffect(() => {
+        handleSocket()
         // Load Product
         dispatch(getAllProduct())
             .unwrap()

@@ -8,5 +8,8 @@ export default function SetUpFunction() {
       if (localStorage.getItem('role') === 'undefined' || localStorage.getItem('role') === null) {
         localStorage.setItem('role', '')
       }
+      if (localStorage.getItem('idUser') === 'undefined' || localStorage.getItem('idUser') === null) {
+        localStorage.setItem('idUser', '')
+      }
 }
 
