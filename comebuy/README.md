@@ -25,7 +25,7 @@ Here's why:
 Of course, our project will no  serve all since you needs may be different. So we try something more interesting such as recommended system into an E-commerce website,..
 Thanks for conducting from our teacher
 
-- Server repo: https://github.com/pvdthien310/CoolzyServer
+- Server repo: https://github.com/pvdthien310/ComeBuyServer
 - Website: https://comebuy-site-offical.netlify.app/
 
 ### Main Features
@@ -65,7 +65,7 @@ Thanks for conducting from our teacher
 |Admin| admin@gmail.com|123456
 |Manager|manager3@gmail.com|123456
 |Customer|cus1@gmail.com|123456
-|Staff|staff1@gmail.com|123456
+|Staff|staffone@gmail.com|123456
 
 
 ## Authors
