@@ -11,16 +11,25 @@ import TableContainer from '@mui/material/TableContainer';
 import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
 import Typography from '@mui/material/Typography';
+import NavigationIcon from '@mui/icons-material/Navigation';
 import TablePagination from '@mui/material/TablePagination';
 import Paper from '@mui/material/Paper';
 import { styled } from '@mui/material/styles';
 import { Stack, Box, IconButton } from '@mui/material';
 import AccountCircleIcon from '@mui/icons-material/AccountCircle';
 import { TextField } from '@mui/material';
+import SpeedDial from '@mui/material/SpeedDial';
+import SpeedDialIcon from '@mui/material/SpeedDialIcon';
+import SpeedDialAction from '@mui/material/SpeedDialAction';
 import SearchIcon from '@mui/icons-material/Search';
 import { Button } from '@mui/material';
 import RefreshIcon from '@mui/icons-material/Refresh';
 import SnackBarAlert from './../../components/SnackBarAlert/index';
+
+import CheckCircleIcon from '@mui/icons-material/CheckCircle';
+import RemoveDoneIcon from '@mui/icons-material/RemoveDone';
+import SortIcon from '@mui/icons-material/Sort';
+import FilterListIcon from '@mui/icons-material/FilterList';
 
 
 const BGImg = styled('img')({
@@ -29,6 +38,14 @@ const BGImg = styled('img')({
     position: 'fixed',
 
 })
+
+const actions = [
+    { icon: <CheckCircleIcon />, name: 'Show done orders' },
+    { icon: <RemoveDoneIcon />, name: 'Show not done orders' },
+    { icon: <SortIcon />, name: 'Show increased orders' },
+    { icon: <FilterListIcon />, name: 'Show decreased orders' }
+
+];
 
 const Invoice = () => {
 
@@ -49,11 +66,24 @@ const Invoice = () => {
 
     React.useEffect(() => {
         async function fetchInvoice() {
+            let temp = []
             if (invoiceList.length === 0) {
                 try {
                     const resultAction = await dispatch(getAllInvoice())
                     const originalPromiseResult = unwrapResult(resultAction)
-                    setInvoiceList(originalPromiseResult)
+                    let tempList = []
+                    originalPromiseResult.map((invoice) => {
+                        let t = 0
+                        invoice.invoiceitem.map(i => {
+                            t = t + Number(i.total)
+                        })
+                        let obj = {
+                            ...invoice,
+                            total: t
+                        }
+                        tempList.push(obj)
+                    })
+                    setInvoiceList(tempList)
                 } catch (rejectedValueOrSerializedError) {
                     console.log(rejectedValueOrSerializedError);
                 }
@@ -125,6 +155,42 @@ const Invoice = () => {
         setChangeDataBySearch(false)
     }
 
+    const handleSpeedDialClick = (action) => {
+        if (action.name === 'Show done orders') {
+            let temp = []
+            invoiceList.map((i) => {
+                if (i.isPaid === true && i.isChecked === true) {
+                    temp.push(i)
+                }
+            })
+            setOutput(temp)
+            setChangeDataBySearch(true)
+        } else if (action.name === 'Show not done orders') {
+            let temp = []
+            invoiceList.map((i) => {
+                if (i.isPaid === false || i.isChecked === false) {
+                    temp.push(i)
+                }
+            })
+            setOutput(temp)
+            setChangeDataBySearch(true)
+        } else if (action.name === 'Show increased orders') {
+            let temp = invoiceList
+            temp.sort((a, b) => {
+                return a.total - b.total
+            })
+            setOutput(temp)
+            setChangeDataBySearch(true)
+        } else {
+            let temp = invoiceList
+            temp.sort((a, b) => {
+                return b.total - a.total
+            })
+            setOutput(temp)
+            setChangeDataBySearch(true)
+        }
+    }
+
 
     return (
         <Stack direction="column" sx={{
@@ -135,6 +201,7 @@ const Invoice = () => {
             backgroundColor: 'grey',
             overflowY: 'auto'
         }}>
+            {console.log(invoiceList)}
             <Box sx={{
                 width: "90%",
                 height: "95%",
@@ -199,7 +266,7 @@ const Invoice = () => {
                         }}
                         component={Paper}
                     >
-                        <Table aria-label="collapsible table">
+                        <Table stickyHeader aria-label="sticky table" >
                             <TableHead style={{ backgroundColor: 'white', borderRadius: '15px' }}>
                                 <TableRow>
                                     <TableCell />
@@ -238,8 +305,26 @@ const Invoice = () => {
                             onRowsPerPageChange={handleChangeRowsPerPage}
                         />
                     </TableContainer>
+                    <Box sx={{ height: 'auto', transform: 'translateZ(0px)', flexGrow: 1 }}>
+                        <SpeedDial
+                            ariaLabel="SpeedDial basic example"
+                            sx={{ position: 'absolute', bottom: 16, right: 16 }}
+                            icon={<SpeedDialIcon />}
+                        >
+                            {actions.map((action) => (
+                                <SpeedDialAction
+                                    key={action.name}
+                                    icon={action.icon}
+                                    tooltipTitle={action.name}
+                                    onClick={() => handleSpeedDialClick(action)}
+                                />
+                            ))}
+                        </SpeedDial>
+                    </Box>
+
                 </Stack>
             </Box>
+
             <SnackBarAlert open={openSnackbar} handleClose={handleCloseSnackbar} severity="error" message="From date can not be greater than To Date" />
         </Stack>
     )

@@ -10,7 +10,7 @@ import { unwrapResult } from '@reduxjs/toolkit'
 import { useNavigate } from 'react-router';
 //M-UI
 import { TextField, Checkbox, Typography, FormControlLabel, Modal, Box, Button, Dialog, DialogTitle } from '@material-ui/core';
-import { Stack } from '@mui/material'
+import { Fab, Stack } from '@mui/material'
 import IconButton from '@mui/material/IconButton';
 import CheckCircleRoundedIcon from '@mui/icons-material/CheckCircleRounded';
 import VisibilityIcon from '@mui/icons-material/Visibility';
@@ -21,6 +21,7 @@ import { Autorenew } from "@material-ui/icons";
 import Backdrop from '@mui/material/Backdrop';
 import CircularProgress from '@mui/material/CircularProgress';
 import Snackbar from '@mui/material/Snackbar';
+import HomeIcon from '@mui/icons-material/Home';
 
 //From file
 import { currentUser, isSignedIn_user, loading_user, messageError } from '../../redux/selectors'
@@ -314,8 +315,8 @@ const LoginRegister = () => {
         if (verifyCode != '') {
             emailApi.sendEmail({
                 to: dataForReg.email,
-                subject: "Please use OTP code below to register ",
-                text: "Thank you for using our website. \nThis is your OTP code: " + verifyCode
+                subject: "VERIFY FROM COMEBUY ",
+                text: verifyCode
             }).then(data => {
                 handleOpenModalVerify();
                 setOpenBackdrop(false)
@@ -446,11 +447,11 @@ const LoginRegister = () => {
                                     onChange={(e) => setDataForReg({ ...dataForReg, password: e.target.value })}
                                 />
                                 {passwordShown ? (
-                                    <IconButton style={{ backgroundColor: '#a6adaf' }} onClick={togglePassword}>
+                                    <IconButton style={{ backgroundColor: '#ead1ea' }} onClick={togglePassword}>
                                         <VisibilityIcon color="success" />
                                     </IconButton>
                                 ) : (
-                                    <IconButton style={{ backgroundColor: '#a6adaf' }} onClick={togglePassword}>
+                                    <IconButton style={{ backgroundColor: '#ead1ea' }} onClick={togglePassword}>
                                         <VisibilityOffIcon />
                                     </IconButton>
                                 )}
@@ -476,11 +477,11 @@ const LoginRegister = () => {
                                     onChange={(e) => setCfPass(e.target.value)}
                                 />
                                 {cfPasswordShown ? (
-                                    <IconButton style={{ backgroundColor: '#a6adaf' }} onClick={toggleCfPassword}>
+                                    <IconButton style={{ backgroundColor: '#ead1ea' }} onClick={toggleCfPassword}>
                                         <VisibilityIcon color="success" />
                                     </IconButton>
                                 ) : (
-                                    <IconButton style={{ backgroundColor: '#a6adaf' }} onClick={toggleCfPassword}>
+                                    <IconButton style={{ backgroundColor: '#ead1ea' }} onClick={toggleCfPassword}>
                                         <VisibilityOffIcon />
                                     </IconButton>
                                 )}
@@ -492,14 +493,14 @@ const LoginRegister = () => {
                                 <div style={{ display: 'flex', flexDirection: 'row', marginTop: '10px' }}>
                                     <CheckCircleRoundedIcon
                                         style={{
-                                            color: 'green',
-                                            width: '50px',
-                                            height: '50px',
+                                            color: 'black',
+                                            width: '26px',
+                                            height: '26px',
                                             marginBottom: '-10px',
-                                            paddingTop: '5px'
+                                            paddingTop: '0px'
                                         }}
                                     />
-                                    <p style={{ fontWeight: 'bold', marginTop: '15px' }}>
+                                    <p style={{ fontSize: '13px', fontWeight: 'bold', marginLeft: '5px', marginTop: '7px' }}>
                                         Accepted all the terms in this web.
                                     </p>
                                 </div>
@@ -555,14 +556,14 @@ const LoginRegister = () => {
                                     left: '50%',
                                     transform: 'translate(-50%, -50%)',
                                     width: '40%',
-                                    height: '50%',
+                                    height: 'auto',
                                     bgcolor: 'background.paper',
                                     border: '2px solid #000',
                                     boxShadow: 24,
-                                    p: 4,
+                                    p: 7,
                                 }}>
                                     <Typography id="modal-modal-title" variant="h6" component="h2">
-                                        Terms in ComeBuy
+                                        ComeBuy's terms
                                     </Typography>
                                     <Typography id="modal-modal-description" sx={{ mt: 2 }}>
                                         While we know it's easy to overlook these Terms of Service, it's important to clarify our responsibilities and your responsibilities during your use of Google services.
@@ -593,7 +594,9 @@ const LoginRegister = () => {
                                         label="I accept all terms"
                                     />
                                     <br></br>
-                                    <Button onClick={handleCloseModal}>Continue</Button>
+                                    <Box sx={{ width: '100%', display: 'flex', justifyContent: 'center' }}>
+                                        <Button onClick={handleCloseModal}>Continue</Button>
+                                    </Box>
                                 </Box>
                             </Modal>
                         </Stack>
@@ -850,11 +853,11 @@ const LoginRegister = () => {
                                     onChange={(e) => setPasswordUser(e.target.value)}
                                 />
                                 {passwordShown ? (
-                                    <IconButton style={{ backgroundColor: '#a6adaf' }} onClick={togglePassword}>
+                                    <IconButton style={{ backgroundColor: '#ead1ea' }} onClick={togglePassword}>
                                         <VisibilityIcon color="success" />
                                     </IconButton>
                                 ) : (
-                                    <IconButton style={{ backgroundColor: '#a6adaf' }} onClick={togglePassword}>
+                                    <IconButton style={{ backgroundColor: '#ead1ea' }} onClick={togglePassword}>
                                         <VisibilityOffIcon />
                                     </IconButton>
                                 )}
@@ -924,6 +927,9 @@ const LoginRegister = () => {
                     </div>
                     <Register1SVG className="image" />
                 </div>
+                <Fab sx={{ position: 'absolute', backgroundColor: '#EA8BFA' }} onClick={() => navigate('/')} size="small" color="secondary" aria-label="add">
+                    <HomeIcon sx={{ color: 'white' }} />
+                </Fab>
             </div>
             {/*Snackbar*/}
             <Snackbar open={openLoginFailed} autoHideDuration={6000} onClose={handleCloseLoginFailed}>
@@ -973,6 +979,7 @@ const LoginRegister = () => {
                     Account with this email was existed
                 </Alert>
             </Snackbar>
+
         </div >
     )
 }

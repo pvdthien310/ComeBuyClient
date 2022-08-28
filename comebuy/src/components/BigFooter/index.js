@@ -10,22 +10,44 @@ import {
 
 import styled from "styled-components";
 import { useNavigate } from "react-router";
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 
 import { accountSlice } from "../../redux/slices/accountSlice";
 import { Typography, Link } from '@mui/material';
+import { currentUser } from './../../redux/selectors';
 
 
 const BigFooter = () => {
+
+  const _curUser = useSelector(currentUser)
 
   const navigate = useNavigate()
   const dispatch = useDispatch()
 
   const gotoHome = () => navigate('/')
-  const gotoCart = () => navigate('/myplace/mycart')
-  const gotoFavorite = () => alert("Go to favorite chua lam")
-  const gotoPlace = () => navigate('/myplace')
-  const gotoOrders = () => alert("Orders chua lam")
+
+  const gotoCart = () => {
+    if (_curUser.role === "customer") {
+      navigate('/myplace/mycart')
+    }
+  }
+
+  const gotoFavorite = () => {
+    if (_curUser.role === "customer") {
+      navigate('/myplace/myfavorite')
+    }
+  }
+
+  const gotoPlace = () => {
+    if (_curUser.role === "customer") {
+      navigate('/myplace')
+    }
+  }
+  const gotoOrders = () => {
+    if (_curUser.role === "customer") {
+      navigate('/myplace/myorders')
+    }
+  }
 
   const logOut = async () => {
     dispatch(accountSlice.actions.logout());
@@ -47,7 +69,7 @@ const BigFooter = () => {
         <h1>COMEBUY.</h1>
         <p style={{ margin: '20px 0px' }}>
           ComeBuy is a web store which includes a lot of the best laptop in the world.
-          Come with us, you will never be confused about choosing, type, proper price of Laptop you want
+          Come with us, you will never be confused about choosing type, proper price of Laptop you want
         </p>
         <div style={{ display: 'flex' }}>
           <div
@@ -132,7 +154,7 @@ const BigFooter = () => {
             <Link
               underline="hover"
               key="2"
-              style={{ color: 'black' }}
+              style={{ color: 'black', cursor: 'pointer' }}
               onClick={gotoHome}
             >
               Home
@@ -145,7 +167,7 @@ const BigFooter = () => {
             <Link
               underline="hover"
               key="2"
-              style={{ color: 'black' }}
+              style={{ color: 'black', cursor: 'pointer' }}
               onClick={gotoCart}
             >
               Your cart
@@ -158,7 +180,7 @@ const BigFooter = () => {
             <Link
               underline="hover"
               key="2"
-              style={{ color: 'black' }}
+              style={{ color: 'black', cursor: 'pointer' }}
               onClick={gotoPlace}
             >
               Your place
@@ -171,7 +193,7 @@ const BigFooter = () => {
             <Link
               underline="hover"
               key="2"
-              style={{ color: 'black' }}
+              style={{ color: 'black', cursor: 'pointer' }}
               onClick={gotoFavorite}
             >
               Your favorite
@@ -184,7 +206,7 @@ const BigFooter = () => {
             <Link
               underline="hover"
               key="2"
-              style={{ color: 'black' }}
+              style={{ color: 'black', cursor: 'pointer' }}
               onClick={gotoOrders}
             >
               Your orders
@@ -197,7 +219,7 @@ const BigFooter = () => {
             <Link
               underline="hover"
               key="2"
-              style={{ color: 'black' }}
+              style={{ color: 'black', cursor: 'pointer' }}
               onClick={logOut}
             >
               Log out

@@ -14,14 +14,18 @@ import logo from '../../assets/img/logo.png'
 
 import ReactToPrint from "react-to-print"
 import { Stack, Grid, Box, Typography, TextField, Button, IconButton } from '@mui/material';
+import moment from 'moment'
+
 import DeleteForeverIcon from '@mui/icons-material/DeleteForever';
 import BackspaceSharpIcon from '@mui/icons-material/BackspaceSharp';
 import TextareaAutosize from '@mui/material/TextareaAutosize';
 import { styled } from '@mui/material/styles';
 import { useSelector, useDispatch } from "react-redux"
 import { unwrapResult } from "@reduxjs/toolkit"
-import { BigFooter } from "../../components"
+import { BigFooter, SnackBarAlert } from "../../components"
 import { getAccountWithID } from '../../redux/slices/accountSlice';
+import { addInvoice } from "../../redux/slices/invoiceSlice"
+import { addInvoiceItem } from "../../redux/slices/invoiceItemSlice"
 
 const BGImg = styled('img')({
     height: '100%',
@@ -77,14 +81,102 @@ const CounterForManager = () => {
     const handlePrint = () => {
         window.print()
     }
+    const [orderData, setOrderData] = useState({
+        date: ' ',
+        moneyReceived: '0',
+        isChecked: false,
+        isPaid: false,
+        address: '',
+        userID: '',
+        branchID: ''
+    })
+
+    const [startAddInvoice, setStartAddInvoice] = useState(false)
 
     const AfterPrint = () => {
-        setClientName("")
-        setClientAddress("")
-        setList([])
-        setNotes("")
-        setTotal(0)
+        // setClientName("")
+        // setClientAddress("")
+        // setList([])
+        // setNotes("")
+        // setTotal(0)
+        // await MakeInvoice()
+        // console.log(list)
+        var m = moment().format('H mm')
+        var date = moment().format('D/M/YYYY')
+        let temp = {
+            date: date + ' ' + m,
+            moneyReceived: total,
+            isChecked: true,
+            isPaid: true,
+            address: clientAddress,
+            userID: 'c464ea83-fcf5-44a4-8d90-f41b78b78db8',
+            branchID: _currentUser.branch.branchid
+        }
+        setOrderData(temp)
+        setStartAddInvoice(true)
     }
+    const [invoiceId, setInvoiceId] = useState(' ')
+    useEffect(async () => {
+        if (startAddInvoice === true) {
+            try {
+                const resultAction = await dispatch(addInvoice(orderData))
+                const originalPromiseResult = unwrapResult(resultAction)
+                setInvoiceId(originalPromiseResult.data.invoiceID)
+            } catch (rejectedValueOrSerializedError) {
+                alert(rejectedValueOrSerializedError)
+                setStartAddInvoice(false)
+            }
+        }
+    }, [startAddInvoice])
+
+    useEffect(async () => {
+        if (invoiceId != ' ') {
+            _addInvoiceItem(invoiceId)
+        }
+    }, [invoiceId])
+
+    const [listItem, setListItem] = useState([])
+
+    const _addInvoiceItem = async (_invoiceId) => {
+        let t = []
+        for (let i = 0; i < list.length; i++) {
+            let item = {
+                invoiceID: _invoiceId,
+                productID: list[i].id,
+                amount: Number(list[i].quantity),
+                total: Number(list[i].quantity) * Number(list[i].price)
+            }
+            t.push(item)
+        }
+        setListItem(t)
+        setStartAddInvoiceItem(true)
+    }
+
+    const [startAddInvoiceItem, setStartAddInvoiceItem] = useState(false)
+
+    useEffect(() => {
+        const addItem = async () => {
+            for (let i = 0; i < listItem.length; i++) {
+                try {
+                    const resultAction = await dispatch(addInvoiceItem(listItem[i]))
+                    const originalPromiseResult = unwrapResult(resultAction)
+                } catch (rejectedValueOrSerializedError) {
+                    console.log(rejectedValueOrSerializedError)
+                }
+            }
+            setStartAddInvoiceItem(false)
+            setStartAddInvoice(false)
+            setClientName("")
+            setClientAddress("")
+            setList([])
+            setNotes("")
+            setTotal(0)
+            setOpenSnackbar(true)
+        }
+        if (startAddInvoiceItem === true) {
+            addItem()
+        }
+    }, [startAddInvoiceItem])
 
     const getListBranch = async () => {
         try {
@@ -95,6 +187,9 @@ const CounterForManager = () => {
             return rejectedValueOrSerializedError
         }
     }
+
+
+
     useEffect(() => {
         if (listBranch.length === 0) {
             getListBranch()
@@ -106,6 +201,11 @@ const CounterForManager = () => {
             alert("Place your phone in landscape mode for the best experience")
         }
     }, [width])
+
+    const [openSnackbar, setOpenSnackbar] = useState(false)
+    const handleCloseSnackbar = () => {
+        setOpenSnackbar(false)
+    }
 
     return (
         <Grid container
@@ -374,6 +474,7 @@ const CounterForManager = () => {
                     </Box>
                 </Stack>
             </Grid>
+            <SnackBarAlert open={openSnackbar} handleClose={handleCloseSnackbar} severity="success" message="Counter completed" />
             <BigFooter />
         </Grid >
     )

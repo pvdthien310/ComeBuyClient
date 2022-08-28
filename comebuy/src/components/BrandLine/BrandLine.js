@@ -15,9 +15,8 @@ const Img = styled('img')({
 });
 
 const CustomButton = styled(Button)({
-    color: 'white',
+    color: 'black',
     fontWeight: 'bold',
-    backgroundColor: 'black',
     borderRadius: '5px',
     borderWidth: '3px',
     marginBottom: '5px',
@@ -43,30 +42,25 @@ const CustomButton = styled(Button)({
 })
 
 const Line = styled(Grid)(({ theme }) => ({
-    backgroundColor: 'black'
+    backgroundColor: 'white'
 }))
 
 
 const  BrandLine = (props) => {
     const _productList  = useSelector(productListSelector)
     const brandName = props.brandName
-    const brandurl = props.url
     const dispatch = useDispatch()
     const [productList, setProductList] = useState([])
     useEffect(() => {
-        setProductList(_productList.filter(ite => ite.brand == brandName))
+        setProductList(_productList.filter(ite => ite.brand == brandName && ite.isPublished == true))
     }, [])
     return (
-        <Line id={props.id} sx={{p: 1}} className='BrandLine' container rowSpacing={1} columnSpacing={{ xs: 1, sm: 2, md: 3 }}>
-            <Grid container justifyContent={'flex-end'} item xs={12} className='BrandLine__ImgBrand'>
+        <Line id={props.id} sx={{p: 2}} className='BrandLine' container rowSpacing={1} columnSpacing={{ xs: 1, sm: 2, md: 2 }}>
+            <Grid container justifyContent={'flex-end'} item xs={12} className='BrandLine__ImgBrand' >
                 <CustomButton endIcon={<NavigateNextIcon />} >
                     {brandName}
                 </CustomButton>
             </Grid>
-            <Grid item xs={2}>
-                <Img style={{}} alt="complex" src={brandurl} />
-            </Grid>
-            <Grid item xs={10}>
                 <Swiper slidesPerView={3} loop spacing={1}>
                     {
                         productList && productList.map((item, i) => (
@@ -76,8 +70,6 @@ const  BrandLine = (props) => {
                         ))
                     }
                 </Swiper>
-            </Grid>
-
         </Line>
     )
 }

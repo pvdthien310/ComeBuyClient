@@ -6,8 +6,13 @@ import ProdInfo from '../InvoiceProdInfo';
 import Popover from '@mui/material/Popover';
 import { Collapse, Box, Typography, TableCell, Table, TableHead, TableBody } from '@mui/material';
 import { unwrapResult } from '@reduxjs/toolkit';
+import Stepper from '@mui/material/Stepper';
+import Step from '@mui/material/Step';
+import StepLabel from '@mui/material/StepLabel';
 
 import { useDispatch } from 'react-redux';
+
+const steps = ['Checked', 'Delivered'];
 
 const OrderRow = (props) => {
     const { row } = props;
@@ -84,6 +89,27 @@ const OrderRow = (props) => {
             setInvoiceTotal(Total())
         }
     }, [])
+
+    const [activeStep, setActiveStep] = React.useState(0);
+
+    React.useEffect(() => {
+        let t = false
+        const setActive = () => {
+            if (Boolean(row.isChecked) === true) {
+                if (Boolean(row.isPaid) === true) {
+                    setActiveStep(2)
+                } else {
+                    setActiveStep(1)
+                }
+            } else {
+                setActiveStep(0)
+            }
+        }
+        if (t === false) {
+            setActive()
+            t = true
+        }
+    }, [])
     return (
         <React.Fragment >
             <TableRow sx={{ '& > *': { borderBottom: 'set', backgroundColor: 'white' } }}>
@@ -94,25 +120,37 @@ const OrderRow = (props) => {
                         size="small"
                         onClick={() => setOpen(!open)}
                     >
-                        {open ? <KeyboardArrowUpIcon color='error' /> : <KeyboardArrowDownIcon style={{ color: '#6FA61C' }} />}
+                        {open ? <KeyboardArrowUpIcon sx={{ color: 'black' }} /> : <KeyboardArrowDownIcon sx={{ color: 'black' }} />}
                     </IconButton>
                 </TableCell>
                 <TableCell scope="row">
                     <Typography
+                        sx={{ fontSize: '13px' }}
                         aria-describedby={id}
                     >
-                        {row.invoiceID}
+                        #{row.invoiceID}
                     </Typography>
                 </TableCell>
                 <TableCell align="center">
                     <Typography
+                        sx={{ fontSize: '13px' }}
                         aria-describedby={id}
                     >
                         {row.date}
                     </Typography>
                 </TableCell>
-                <TableCell align="center" style={{ color: 'black' }}>{row.address}</TableCell>
-                <TableCell align="center" style={{ color: 'black', fontWeight: 'bold' }}>{invoiceTotal}</TableCell>
+                <TableCell align="center" style={{ color: 'black', fontWeight: 'bold', fontSize: '14px' }}>{invoiceTotal}</TableCell>
+                <TableCell align="center" style={{ color: 'black', fontSize: '14px' }}>
+                    <Box sx={{ width: '100%' }}>
+                        <Stepper activeStep={activeStep} alternativeLabel>
+                            {steps.map((label) => (
+                                <Step color='success' key={label}>
+                                    <StepLabel sx={{ fontSize: '7px' }}>{label}</StepLabel>
+                                </Step>
+                            ))}
+                        </Stepper>
+                    </Box>
+                </TableCell>
             </TableRow>
             <TableRow sx={{ '& > *': { borderBottom: 'set', backgroundColor: 'white' } }}>
                 <TableCell style={{ paddingBottom: 0, paddingTop: 0, backgroundColor: 'white', marginLeft: '10%' }} colSpan={6}>
@@ -120,6 +158,9 @@ const OrderRow = (props) => {
                         <Box sx={{ margin: 1 }}>
                             <Typography variant="h7" style={{ fontWeight: 'bold', color: 'black', textDecoration: 'underline' }} gutterBottom component="div">
                                 Details:
+                            </Typography>
+                            <Typography variant="h8" style={{ fontSize: '14px', fontWeight: 'bold', color: 'black' }} gutterBottom component="div">
+                                Receive at: {row.address}
                             </Typography>
                             <Table size="small" aria-label="purchases">
                                 <TableHead>
@@ -137,7 +178,7 @@ const OrderRow = (props) => {
                                                     <Button
                                                         aria-describedby={id}
                                                         onClick={handleProductPopoverOpen}
-                                                        style={{ fontWeight: 'bold', color: '#52BF04', fontStyle: 'italic' }}
+                                                        style={{ fontWeight: 'bold', fontSize: '14px', color: 'black', fontStyle: 'italic' }}
                                                     >
                                                         {detailsRow.productid}
                                                     </Button>
@@ -155,8 +196,8 @@ const OrderRow = (props) => {
                                                         <ProdInfo productID={detailsRow.productid} />
                                                     </Popover>
                                                 </TableCell>
-                                                <TableCell align="center">{detailsRow.amount}</TableCell>
-                                                <TableCell align="center" style={{ fontWeight: 'bold', color: 'black' }}>{detailsRow.total}</TableCell>
+                                                <TableCell align="center" sx={{ fontSize: '13px' }}>{detailsRow.amount}</TableCell>
+                                                <TableCell align="center" style={{ fontWeight: 'bold', color: 'black', fontSize: '13px' }}>{detailsRow.total}</TableCell>
                                             </TableRow>
                                         ) : (
                                             null

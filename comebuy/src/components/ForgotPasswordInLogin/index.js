@@ -148,7 +148,7 @@ const ForgotPasswordInLogin = () => {
             emailApi.sendEmail({
                 to: email,
                 subject: "Please use OTP code below to reset password ",
-                text: "Thank you for using our website. \nThis is your OTP code: " + verifyCode
+                text: verifyCode
             }).then(data => {
                 handleOpenModalVerify();
                 setOpenBackdrop(false)
@@ -183,7 +183,7 @@ const ForgotPasswordInLogin = () => {
 
     const handleCloseDialogRegSuccessfully = () => {
         setOpenDialogRegSuccessfully(false)
-        navigate('/myplace')
+        navigate('/login')
     }
     const handleCloseDialogRegFailed = () => {
         setOpenDialogRegFailed(false);

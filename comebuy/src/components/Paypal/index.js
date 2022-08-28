@@ -50,7 +50,7 @@ export default function Paypal({ _discount, _lastTotal, cartList, purchases, pro
         isPaid: false,
         address: _bigAddress,
         userID: _currentUser.userID,
-        branchID: 'da198f71-813b-47f8-9ded-331b358d4780'
+        branchID: 'a4a66b5e-182b-4b7d-bd13-8e6a54b686a6'
     })
 
     const [orderDataItem, setOrderDataItem] = useState({
@@ -82,9 +82,9 @@ export default function Paypal({ _discount, _lastTotal, cartList, purchases, pro
             }
         }
         if (localStorage.getItem('role') === "customer") {
-            emailApi.sendEmail({
+            emailApi.sendOrder({
                 to: _currentUser.email,
-                subject: "Your order information",
+                subject: "Your order information in ComeBuy",
                 text: "Thank for placing order in ComeBuy site. \n" +
                     "Your order: \n" +
                     `Name: ${_currentUser.name} \n` +
@@ -108,7 +108,7 @@ export default function Paypal({ _discount, _lastTotal, cartList, purchases, pro
             })
                 .catch(err => console.log(err))
         } else {
-            emailApi.sendEmail({
+            emailApi.sendOrder({
                 to: _guestEmail,
                 subject: "Your order information",
                 text: "Thank for placing order in ComeBuy site. \n" +
@@ -146,7 +146,7 @@ export default function Paypal({ _discount, _lastTotal, cartList, purchases, pro
         const addItem = async () => {
             for (let i = 0; i < listItem.length; i++) {
                 try {
-                    const resultAction = await dispatch(addInvoiceItem(listItem[0]))
+                    const resultAction = await dispatch(addInvoiceItem(listItem[i]))
                     const originalPromiseResult = unwrapResult(resultAction)
                 } catch (rejectedValueOrSerializedError) {
                     console.log(rejectedValueOrSerializedError)
@@ -170,8 +170,8 @@ export default function Paypal({ _discount, _lastTotal, cartList, purchases, pro
             let temp = {
                 ...orderData,
                 moneyReceived: _lastTotal,
-                isChecked: true,
-                isPaid: true,
+                isChecked: false,
+                isPaid: false,
                 date: date + ' ' + m,
                 userID: _currentUser.userID,
                 address: _bigAddress,
@@ -186,11 +186,11 @@ export default function Paypal({ _discount, _lastTotal, cartList, purchases, pro
             let temp = {
                 ...orderData,
                 moneyReceived: _lastTotal.toString(),
-                isChecked: true,
-                isPaid: true,
+                isChecked: false,
+                isPaid: false,
                 date: date + ' ' + m,
                 address: _bigAddress,
-                userID: "dbbe802d-a52e-4c1b-99c0-3382a2e6e8cb",
+                userID: "c464ea83-fcf5-44a4-8d90-f41b78b78db8",
                 branchID: 'a4a66b5e-182b-4b7d-bd13-8e6a54b686a6'
             }
             setOrderData(temp)
@@ -301,15 +301,15 @@ export default function Paypal({ _discount, _lastTotal, cartList, purchases, pro
             <div ref={paypal}></div>
             {/* {console.log(cartList)}
             {console.log(prodList)} */}
-            {console.log(purchases)}
+            {/* {console.log(purchases)}
             {console.log(_discount)}
-            {console.log(_lastTotal)}
+            {console.log(_lastTotal)} */}
 
             <Dialog open={paidSuccessfully}>
-                <DialogTitle color='success'>Paid Successfully. Click OK to back to Main Page</DialogTitle>
+                <DialogTitle color='success'>Paid successfully. Thanks for involving</DialogTitle>
                 <Button
                     onClick={handleCloseDialog}
-                    style={{
+                    sx={{
                         alignSelf: 'center',
                         width: '30px',
                         height: '30px',

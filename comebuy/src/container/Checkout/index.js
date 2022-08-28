@@ -37,6 +37,8 @@ import { addInvoice } from "../../redux/slices/invoiceSlice";
 import { addInvoiceItem } from "../../redux/slices/invoiceItemSlice";
 import emailApi from '../../api/emailAPI';
 
+import logo from '../../assets/img/logoremovebg.png'
+
 const Alert = React.forwardRef(function Alert(props, ref) {
     return <MuiAlert elevation={6} ref={ref} variant="filled" {...props} />;
 });
@@ -427,7 +429,7 @@ export const CheckoutPage = () => {
                 isPaid: false,
                 date: date + ' ' + m,
                 address: bigAddress,
-                userID: "dbbe802d-a52e-4c1b-99c0-3382a2e6e8cb",
+                userID: "c464ea83-fcf5-44a4-8d90-f41b78b78db8",
                 branchID: 'a4a66b5e-182b-4b7d-bd13-8e6a54b686a6'
             }
 
@@ -472,9 +474,9 @@ export const CheckoutPage = () => {
         }
 
         if (localStorage.getItem('role') === "customer") {
-            emailApi.sendEmail({
+            emailApi.sendOrder({
                 to: _currentUser.email,
-                subject: "Your order information",
+                subject: "Your order information in ComeBuy",
                 text: "Thank for placing order in ComeBuy site. \n" +
                     "Your order: \n" +
                     `Name: ${_currentUser.name} \n` +
@@ -485,13 +487,13 @@ export const CheckoutPage = () => {
                     "-------------------------------------------------------- \n" +
                     `Total: ${subTotal} USD` + "\n" +
                     "-------------------------------------------------------- \n" +
-                    "Any wondered things. Please contact with our shop with contact below site: ComeBuy.com"
+                    "Any wondered things ? Please contact with our shop with contact below site: ComeBuy.com"
             }).then(data => {
                 handleCloseBackdrop()
             })
                 .catch(err => console.log(err))
         } else {
-            emailApi.sendEmail({
+            emailApi.sendOrder({
                 to: email,
                 subject: "Your order information",
                 text: "Thank for placing order in ComeBuy site. \n" +
@@ -854,7 +856,7 @@ export const CheckoutPage = () => {
                                     </a>
                                 </Grid>
                                 <Grid item xs={6}>
-                                    <Button onClick={handleCompleteOrder} variant="contained" sx={{ fontSize: '14px', display: `${isHideCompleteButton}` }} size="large">
+                                    <Button onClick={handleCompleteOrder} variant="contained" sx={{ backgroundColor: 'black', fontSize: '13px', display: `${isHideCompleteButton}` }} size="large">
                                         Complete order
                                     </Button>
                                 </Grid>
@@ -1284,7 +1286,7 @@ export const CheckoutPage = () => {
                                         </Grid>
 
                                         <Grid item xs={6}>
-                                            <Button onClick={handleToPayment} variant="contained" sx={{ fontSize: '14px' }} size="large">
+                                            <Button onClick={handleToPayment} sx={{ fontSize: '13px' }} >
                                                 Continue to payment method
                                             </Button>
                                         </Grid>
@@ -1572,7 +1574,7 @@ export const CheckoutPage = () => {
 
             <Snackbar open={openSnackbar2} autoHideDuration={6000} onClose={handleCloseSnackbar2}>
                 <Alert onClose={handleCloseSnackbar2} severity="warnings" sx={{ width: '100%' }}>
-                    "Check your phone number and email whether it's in true type"
+                    "Check your phone number and email whether it's an email"
                 </Alert>
             </Snackbar>
 
@@ -1591,7 +1593,7 @@ export const CheckoutPage = () => {
                             Order's phone number: {phoneNumber} <br />
                             Order's address: {bigAddress} <br />
                             An order will be sent to your email: {_currentUser.email} <br />
-                            About 5 days your order will be delivered.
+                            Within 5 days your order will be delivered.
                         </DialogContentText>
                     ) : (
                         <DialogContentText id="alert-dialog-slide-description">
@@ -1618,8 +1620,8 @@ export const CheckoutPage = () => {
 
             <Dialog open={placedOrderSuccessfully}>
                 <DialogTitle color='success'>Placed order successfully. <br />
-                    Please check your email or My orders to see your work <br />
-                    Click OK to back to Main Page</DialogTitle>
+                    Please check your email see your order <br />
+                </DialogTitle>
                 <Button
                     onClick={handleClosePlacedOrderSuccessfully}
                     style={{

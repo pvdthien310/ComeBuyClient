@@ -35,7 +35,7 @@ const style = {
         position: 'sticky',
         top: '10%',
         bottom: '10%',
-        height: '30%',
+        height: '32%',
         width: '100%',
         padding: 4,
         // alignSelf: 'center',

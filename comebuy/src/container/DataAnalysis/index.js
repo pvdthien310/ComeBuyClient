@@ -23,12 +23,37 @@ import MenuItem from '@mui/material/MenuItem';
 import FormControl from '@mui/material/FormControl';
 import Select from '@mui/material/Select';
 
+const CustomizedAxisTick = (props) => {
+    const { x, y, payload, width, maxChars, lineHeight, fontSize, fill } = props;
+    const rx = new RegExp(`.{1,${maxChars}}`, 'g');
+    const chunks = payload.value.replace(/-/g, ' ').split(' ').map(s => s.match(rx)).flat();
+    const tspans = chunks.map((s, i) => <tspan key={i} x={0} y={lineHeight} dy={(i * lineHeight)}>{s}</tspan>);
+    return (
+        <g transform={`translate(${x},${y})`}>
+            <text width={width} height="auto" textAnchor="middle" fontSize={fontSize} fill={fill}>
+                {tspans}
+            </text>
+        </g>
+    );
+};
+
+CustomizedAxisTick.defaultProps = {
+    width: 50,
+    maxChars: 10,
+    fontSize: 9,
+    lineHeight: 14,
+    fill: "#333"
+};
+
 const DataAnalysis = () => {
     const dispatch = useDispatch()
     const _productList = useSelector(productListSelector)
     const [result, setResult] = useState(null)
     const [loading, setLoading] = useState(true)
     const [selectedMonth, setSelectedMonth] = useState((new Date()).getMonth() + 1);
+    let sortedListPr = _productList.slice().sort((a, b) => {
+        return a.keyIndex - b.keyIndex
+    })
 
     const handleChange = (event) => {
         setSelectedMonth(event.target.value);
@@ -55,11 +80,11 @@ const DataAnalysis = () => {
             item_id_list.push(ite.keyIndex)
             item_feature_id_list.push(ite.feature.length)
             item_price_list.push(ite.price)
-            month.push(5)
+            month.push((new Date()).getMonth() + 1)
             year.push((new Date()).getFullYear())
             searching.push(Math.floor(Math.random() * 10) + 1)
         })
-       
+
         return {
             "date_block_num": data_block_num_list,
             "branch_id": branch_id_list,
@@ -72,17 +97,18 @@ const DataAnalysis = () => {
         }
     }
     const AnalysisNewData = async () => {
+
         const response = await aiApi.dataAnalysis(prepareData(_productList, selectedMonth))
         if (response.status == 200) {
 
             let tempData = []
             await (JSON.parse(response.data.result)).map((ite, i) => {
-                const namePr = _productList.filter(ite => ite.keyIndex == (i + 1))[0].name
+                const pr = sortedListPr.filter((ite, j) => j == i)
+                const namePr = pr[0].name.split(' (')[0]
                 tempData.push({
-                    "name": i+1,
-                    "namePr": namePr,
-                    "Trend Index": ite/1000,
-                    "Trend Index": ite/1000
+                    "name": namePr,
+                    "Trend Index": ite / 1000
+
                 })
             }
             )
@@ -97,7 +123,7 @@ const DataAnalysis = () => {
 
     useEffect(async () => {
         let cancel = false
-        if (_productList.length === 0) {
+        if (sortedListPr.length === 0) {
             if (cancel) return;
             dispatch(getAllProduct())
                 .unwrap()
@@ -107,12 +133,12 @@ const DataAnalysis = () => {
                         if (cancel) return;
                         let tempData = []
                         await (JSON.parse(response.data.result)).map((ite, i) => {
-                            const namePr = _productList.filter(ite => ite.keyIndex == (i + 1))[0].name
+                            const pr = sortedListPr.filter((ite, j) => j == i)
+                            const namePr = pr[0].name.split(' (')[0]
                             tempData.push({
-                                "name": i+1,
-                                "namePr": namePr,
-                                "Trend Index": ite / 1000,
+                                "name": namePr,
                                 "Trend Index": ite / 1000
+
                             })
                         }
                         )
@@ -136,16 +162,17 @@ const DataAnalysis = () => {
                 if (cancel) return;
                 let tempData = []
                 await (JSON.parse(response.data.result)).map((ite, i) => {
-                    const namePr = _productList.filter(ite => ite.keyIndex == (i + 1))[0].name
+                    const pr = sortedListPr.filter((ite, j) => j == i)
+                    const namePr = pr[0].name.split(' (')[0]
                     tempData.push({
-                        "name": i + 1,
-                        "namePR": namePr,
-                        "Trend Index": ite / 1000,
+                        "name": namePr,
                         "Trend Index": ite / 1000
+
                     })
                 }
                 )
                 setResult(tempData)
+                console.log(tempData)
                 setLoading(false)
             }
             else {
@@ -157,7 +184,7 @@ const DataAnalysis = () => {
     }, [])
     return (
         <Stack sx={{ height: '100%', width: '100%' }}>
-            <FormControl sx={{ width: 100, p: 1, ml:5 }}>
+            <FormControl sx={{ width: 100, p: 1, ml: 5 }}>
                 <InputLabel id="demo-simple-select-label">Month</InputLabel>
                 <Select
                     labelId="demo-simple-select-label"
@@ -201,11 +228,11 @@ const DataAnalysis = () => {
                                         }}
                                     >
                                         <CartesianGrid stroke="#f5f5f5" />
-                                        <XAxis dataKey="name" scale="band" />
+                                        <XAxis dataKey="name" tick={<CustomizedAxisTick />} height={100} interval={0} stroke="#8884d8" />
                                         <YAxis />
                                         <Tooltip />
                                         <Legend />
-                                        <Bar dataKey="Trend Index" barSize={30} fill="#413ea0" />
+                                        <Bar dataKey="Trend Index" barSize={50} fill="#413ea0" />
                                         <Line type="monotone" dataKey="Trend Index" stroke="#ff7300" />
                                     </ComposedChart>
                                     {/* <LineChart width={300} height={100} data={result}>
