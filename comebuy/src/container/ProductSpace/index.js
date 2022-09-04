@@ -1,4 +1,4 @@
-import { Button, Grid, Stack, Typography } from "@mui/material";
+import { Button, Grid, Pagination, Stack, Typography } from "@mui/material";
 import { Box } from "@mui/system";
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
@@ -33,6 +33,7 @@ const ProductSpace = () => {
         memory: [],
         year: []
     })
+    const [selectedPrices, SetSelectedPrices] = useState([0,3000])
     const [currentFeature, setCurrentFeature] = useState([])
 
     const Filter = () => {
@@ -72,6 +73,7 @@ const ProductSpace = () => {
     }
 
     const FilterByPrice = (prices) => {
+        SetSelectedPrices(prices)
         let newProductList = productList.filter(ite => (ite.price >= Number(prices[0]) && ite.price <= Number(prices[1])))
         setProductList(newProductList)
         setMessageSuccess("Filter Product Successfully")
@@ -158,6 +160,14 @@ const ProductSpace = () => {
                                     ))
                                 }
                             </Stack>
+                            <Pagination 
+                            count={10} 
+                            color="secondary"
+                            onChange={(e) => {
+                                console.log(e.target.textContent)
+                                console.log(Object.assign(filterOptions, { prices: selectedPrices }))
+                            }}
+                            />
                         </Stack>
                     </Grid>
                     <SnackBarAlert severity='success' open={openSuccessAlert} handleClose={handleClose} message={messageSuccess} />
