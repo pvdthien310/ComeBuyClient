@@ -12,6 +12,7 @@ import Checkbox from '@mui/material/Checkbox';
 import FormControlLabel from '@mui/material/FormControlLabel';
 import { SplitFeatureFromList } from './function';
 import { ConstructionOutlined } from '@mui/icons-material';
+import productAPI from '../../api/productAPI';
 const CheckBoxList = (props) => {
     const [checkedBox, setCheckedBox] = useState([])
     const handleCheck = (value) => {
@@ -56,19 +57,21 @@ const FilterAccordion = (props) => {
         { featureName: 'Year', option: yearOptions }
     ])
     useEffect(async () => {
-        if (props.product.length > 0)
-            await SplitFeatureFromList(
-                props.product,
-                setBrandOptions,
-                setRAMOptions,
-                setCPUOptions,
-                setGPUOptions,
-                setScreenDimensionOptions,
-                setWeightOptions,
-                setMemoryOptions,
-                setYearOptions
-            )
-    }, [props.product])
+        const response = await productAPI.getProductFilterOptions()
+        if (response.status == 200)
+        await SplitFeatureFromList(
+                    response.data,
+                    setBrandOptions,
+                    setRAMOptions,
+                    setCPUOptions,
+                    setGPUOptions,
+                    setScreenDimensionOptions,
+                    setWeightOptions,
+                    setMemoryOptions,
+                    setYearOptions
+                )
+        else console.log('Load Feature Failed')
+    }, [])
 
 
     useEffect(() => {
@@ -82,7 +85,15 @@ const FilterAccordion = (props) => {
             { featureName: 'Memory', option: memoryOptions },
             { featureName: 'Year', option: yearOptions }
         ])
-    }, [brandOptions])
+    }, [brandOptions, 
+        ramOptions, 
+        cpuOptions, 
+        gpuOptions, 
+        screenDimensionOptions, 
+        weightOptions, 
+        memoryOptions,
+        yearOptions
+    ])
 
 
     const handleChange = (panel) => (event, isExpanded) => {

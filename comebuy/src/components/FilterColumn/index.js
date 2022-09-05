@@ -24,12 +24,9 @@ const FilterColumn = (props) => {
     const dispatch = useDispatch()
     const [currentFeature, setCurrentFeature] = useState([])
     const [featureList, setFeatureList] = useState([])
-    const [selectedPrice, setSelectedPrice] = useState([0,3000])
-    
-
     const handleChange = (event, newValue) => {
         const arr = newValue.map(ite => ite*30)
-        setSelectedPrice(arr)
+        props.changeSelectedPrices(arr)
     };
 
     const marks = [
@@ -95,15 +92,14 @@ const FilterColumn = (props) => {
                     step={10}
                     marks={marks}
                 />
-                <FilerByPriceBtn onClick={() => props.FilterByPrice(selectedPrice)} variant="contained" sx={{ p: 1, m: 2 }}>Filter By Price</FilerByPriceBtn>
                 <Box sx={{ backgroundColor: 'white', height: 2, marginTop: 2, width: '100%' }}></Box>
             </Stack>
             <Stack sx={{ p: 2 }}>
                 <Typography variant="h6" fontWeight={'bold'} color={'white'} sx={{ pb: 1 }}>Choose With Your Option</Typography>
-                <FilterAccordion product={props.product} handleFilter={props.handleFilter} />
+                <FilterAccordion handleFilter={props.handleFilter} />
                 <Box sx={{ backgroundColor: 'white', height: 2, width: '100%' }}></Box>
             </Stack>
-
+            <FilerByPriceBtn onClick={() => props.getRecords(1)}  variant="contained" sx={{ p: 1, m: 2 }}>Filter</FilerByPriceBtn>
         </Stack>
     )
 }

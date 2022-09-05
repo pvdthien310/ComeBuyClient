@@ -1,4 +1,4 @@
-import { Button, Grid, Pagination, Stack, Typography } from "@mui/material";
+import { Backdrop, Button, CircularProgress, Grid, Pagination, Stack, Typography } from "@mui/material";
 import { Box } from "@mui/system";
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
@@ -11,18 +11,17 @@ import io from "socket.io-client"
 
 import { cartListSelector, productListSelector } from "../../redux/selectors";
 import { WS_URL } from "../../constant";
+import productAPI from "../../api/productAPI";
 const ProductSpace = () => {
     const socket = io(WS_URL, {
         transports: ["websocket"]
     });
-    const _cart = useSelector(cartListSelector)
-    const _productList = useSelector(productListSelector)
     const [productList, setProductList] = useState([])
-    const dispatch = useDispatch()
     const [openSuccessAlert, setOpenSuccessAlert] = useState(false);
     const [openErrorAlert, setOpenErrorAlert] = useState(false);
     const [messageError, setMessageError] = useState("No Error")
     const [messageSuccess, setMessageSuccess] = useState("Notification")
+    const [loading, setLoading] = useState(false)
     const [filterOptions, setFilterOptions] = useState({
         brand: [],
         ram: [],
@@ -33,38 +32,9 @@ const ProductSpace = () => {
         memory: [],
         year: []
     })
-    const [selectedPrices, SetSelectedPrices] = useState([0,3000])
+    const [selectedPrices, SetSelectedPrices] = useState([0, 3000])
     const [currentFeature, setCurrentFeature] = useState([])
-
-    const Filter = () => {
-        let newProductList = _productList
-        let reset = true
-        if (currentFeature.length > 0) {
-            reset = false
-            newProductList = _productList.filter((pr) => {
-                const containsAll = pr.feature.every(element => {
-                    return currentFeature.includes(element.name);
-                });
-                if (containsAll) return true
-                else return false
-            })
-        }
-        const props = Object.getOwnPropertyNames(filterOptions)
-        props.forEach((item) => {
-            if (filterOptions[item].length > 0) {
-                newProductList = newProductList.filter((pr) => {
-                    if (item != 'screendimension')
-                        return filterOptions[item].includes(pr[item])
-                    else return filterOptions[item].includes(pr['screenDimension'])
-                })
-                reset = false
-            }
-        })
-        if (reset == true)
-            setProductList(_productList.filter(ite => ite.isPublished != false))
-        else
-            setProductList(newProductList.filter(ite => ite.isPublished != false))
-    }
+    const [total, SetTotal] = useState(0)
 
     const handleFilter = (value) => {
         let newFilterOptions = Object.assign({}, filterOptions);  // Shallow copy for the reference value as object
@@ -72,17 +42,30 @@ const ProductSpace = () => {
         setFilterOptions(newFilterOptions)
     }
 
-    const FilterByPrice = (prices) => {
-        SetSelectedPrices(prices)
-        let newProductList = productList.filter(ite => (ite.price >= Number(prices[0]) && ite.price <= Number(prices[1])))
-        setProductList(newProductList)
-        setMessageSuccess("Filter Product Successfully")
-        setOpenSuccessAlert(true)
-    }
+    const LoadRecords = async (offset) => {
+        setLoading(true)
+        const response = await productAPI.getRecordsFilter(
+            Object.assign(
+                filterOptions,
+                { prices: selectedPrices },
+                { demand: currentFeature },
+                { offset: offset })
+        );
 
-    useEffect(() => {
-        Filter()
-    }, [filterOptions, currentFeature])
+        if (response.status == 200) {
+            setProductList(response.data.data)
+            SetTotal(response.data.total)
+            setMessageSuccess("Load Product Successfully")
+            setOpenSuccessAlert(true)
+            setLoading(false)
+        }
+        else {
+            console.log('Filter Failed', response)
+            setMessageError("Error Load Product List")
+            setOpenErrorAlert(true)
+            setLoading(false)
+        }
+    }
 
 
     const handleClose = (event, reason) => {
@@ -91,11 +74,11 @@ const ProductSpace = () => {
         setOpenSuccessAlert(false);
         setOpenErrorAlert(false);
     };
-        
+
     const handleSocket = () => {
         socket.on("connect", () => {
             console.log('Connect socket successfully!'); // x8WIv7-mJelg7on_ALbx
-          });
+        });
         socket.on("update-new-product", (message) => {
             console.log(message);
         })
@@ -103,19 +86,7 @@ const ProductSpace = () => {
 
     useEffect(() => {
         handleSocket()
-        // Load Product
-        dispatch(getAllProduct())
-            .unwrap()
-            .then((originalPromiseResult) => {
-                setProductList(originalPromiseResult.filter(ite => ite.isPublished != false))
-                setMessageSuccess("Load Product Successfully")
-                setOpenSuccessAlert(true)
-            })
-            .catch((rejectedValueOrSerializedError) => {
-                console.log("Error load product")
-                setMessageError("Error Load Product List")
-                setOpenErrorAlert(true)
-            })
+        LoadRecords(1)
         // Load Feature
         return () => {
             setProductList({})
@@ -140,7 +111,7 @@ const ProductSpace = () => {
                 </Stack>
                 <Grid container sx={{ width: '100%', height: '100%', mt: 2 }} spacing={2}>
                     <Grid item xs={3} sx={{ p: 2, backgroundColor: '#C69AD9' }}>
-                        <FilterColumn FilterByPrice={FilterByPrice} handleFeatureChosen={handleFeatureChosen} product={_productList} handleFilter={handleFilter} />
+                        <FilterColumn getRecords={LoadRecords} changeSelectedPrices={(value) => SetSelectedPrices(value)} handleFeatureChosen={handleFeatureChosen} handleFilter={handleFilter} />
                     </Grid>
                     <Grid item xs={9} sx={{ p: 2 }}>
                         <Stack>
@@ -160,20 +131,29 @@ const ProductSpace = () => {
                                     ))
                                 }
                             </Stack>
-                            <Pagination 
-                            count={10} 
-                            color="secondary"
-                            onChange={(e) => {
-                                console.log(e.target.textContent)
-                                console.log(Object.assign(filterOptions, { prices: selectedPrices }))
-                            }}
-                            />
+                            {
+                                Math.ceil(total / 9) > 1 &&
+                                <Pagination
+                                    sx={{ alignSelf: 'center', m: 1 }}
+                                    count={Math.ceil(total / 9)}
+                                    color="secondary"
+                                    onChange={async (e) => {
+                                        await LoadRecords(e.target.textContent)
+                                    }}
+                                />
+                            }
                         </Stack>
                     </Grid>
                     <SnackBarAlert severity='success' open={openSuccessAlert} handleClose={handleClose} message={messageSuccess} />
                     <SnackBarAlert severity='error' open={openErrorAlert} handleClose={handleClose} message={messageError} />
                 </Grid>
             </Stack>
+            <Backdrop
+                sx={{ color: '#fff', zIndex: (theme) => theme.zIndex.drawer + 1 }}
+                open={loading}
+            >
+                <CircularProgress color="inherit" />
+            </Backdrop>
         </div >
     )
 }

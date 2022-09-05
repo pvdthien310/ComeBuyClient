@@ -36,6 +36,16 @@ const productAPI = {
         const res = await DatabaseClient.delete('/' + baseURL + `/${productID}`)
             .catch(err => { return err.response })
         return res;
+    },
+    getProductFilterOptions: async () => {
+        const res = await DatabaseClient.get('/' + baseURL + '/filter/feature')
+            .catch(err => { return err.response })
+        return res;
+    },
+    getRecordsFilter: async (filterOptions) => {
+        const res = await DatabaseClient.post('/' + baseURL + '/filter', filterOptions)
+            .catch(err => { return err.response })
+        return res;
     }
 }
 export default productAPI
