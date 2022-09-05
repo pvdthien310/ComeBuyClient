@@ -41,7 +41,6 @@ const CartButton = styled(Button)(({ theme }) => ({
 export default function NavBar(props) {
     // const _isSignedIn = useSelector(isSignedIn_user)
     const currentPath = window.location.pathname
-    console.log(currentPath)
     
     const _currentUser = useSelector(currentUser)
     let isSignedIn = (localStorage.getItem('role') !== '') ? true : false

@@ -125,10 +125,11 @@ const ProductSpace = () => {
                             <Box sx={{ backgroundColor: '#C69AD9', height: 5, width: '100%' }}></Box>
                             <Stack direction={"row"} flexWrap={"wrap"} sx={{ alignSelf: 'center', m: 2, justifyContent: 'center', alignItems: 'center' }}>
                                 {
-                                    productList.length > 0 &&
+                                    productList.length > 0 ?
                                     productList.map((item, i) => (
                                         <ProductItem key={i} product={item} ></ProductItem>
-                                    ))
+                                    )) :
+                                    <Typography variant="h6"> No Records</Typography>
                                 }
                             </Stack>
                             {
