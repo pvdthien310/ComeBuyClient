@@ -1,6 +1,6 @@
 import React from 'react';
 import CounterForManager from '../container/CounterForManger';
-import Product from '../container/Product';
+import Distribution from '../container/Distribution';
 import Revenue from '../container/Revenue';
 
 const managerRoutes = [
@@ -13,7 +13,13 @@ const managerRoutes = [
     name: 'Revenue',
     path: '/revenue/*',
     page: <Revenue />,
-  }
+  },
+  {
+    name: 'Distribution',
+    path: '/distribution/*',
+    exact: true,
+    page: <Distribution />,
+  },
 ];
 
 const managerMenuItems = [
@@ -26,7 +32,13 @@ const managerMenuItems = [
     name: 'Revenue',
     path: '/revenue/*',
     page: <Revenue />,
-  }
+  },
+  {
+    name: 'Distribution',
+    path: '/distribution/*',
+    exact: true,
+    page: <Distribution />,
+  },
 ]
 
 

@@ -1,7 +1,6 @@
 import React from 'react';
 import HomePage from '../container/HomePage';
 import ProductSpace from '../container/ProductSpace';
-// import ForgotPassword from './../container/guestPlace/ForgotPassword';
 import DetailProduct from '../container/Product/DetailProduct';
 import { ForgotPassword } from '../components';
 import GuestCart from '../container/GuestCart';

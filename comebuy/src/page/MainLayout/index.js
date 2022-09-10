@@ -27,6 +27,7 @@ import ListItemAvatar from '@mui/material/ListItemAvatar';
 import { currentUser } from '../../redux/selectors';
 import CountertopsIcon from '@mui/icons-material/Countertops';
 import ReceiptIcon from '@mui/icons-material/Receipt';
+import MoveDownIcon from '@mui/icons-material/MoveDown';
 
 const MainLayout = props => {
   const _currentUser = useSelector(currentUser)
@@ -107,6 +108,7 @@ const MainLayout = props => {
               {route.name == 'Data Analysis' && <InsightsIcon />}
               {route.name == 'Workspace' && <CountertopsIcon />}
               {route.name == 'Invoice' && <ReceiptIcon />}
+              {route.name == 'Distribution' && <MoveDownIcon />}
             </ListItemIcon>
             <ListItemText sx={{ color: 'white' }} primary={route.name} />
           </ListItem>
