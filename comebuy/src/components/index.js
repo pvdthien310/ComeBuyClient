@@ -3,10 +3,8 @@ export { default as NavBar } from './NavBar/NavBar'
 export { default as Slider } from './Slider/Slider'
 export { default as BrandLine } from './BrandLine/BrandLine'
 export { default as FeatureBar } from './FeatureBar/FeatureBar'
-export { default as FeatureImage } from './FeatureImage/FeatureImage'
 export { default as BrandLineImage } from './BrandLineImage/BrandLineImage'
 export { default as LaptopImageLine } from './LaptopImageLine/LaptopImageLine'
-// export { default as ScrollButton } from './ScrollButton/ScrollButton'
 export { default as TextFieldForEdit } from './TextFieldForEdit'
 export { default as FeatureSelect } from './FeatureSelect'
 export { default as PreviewImagesModal } from './PreviewImagesModal'
@@ -54,6 +52,7 @@ export { default as MemberShipStepper } from './MemberShipStepper'
 export { default as ProductInFavorite } from './ProductInFavorite'
 export { default as OrderRow } from './OrderRow'
 export {default as NewProductLine} from './NewProductLine'
+export {default as LiveBanner} from './LiveBanner'
 
 
 

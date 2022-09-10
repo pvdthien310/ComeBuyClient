@@ -76,9 +76,6 @@ const ProductSpace = () => {
     };
 
     const handleSocket = () => {
-        socket.on("connect", () => {
-            console.log('Connect socket successfully!'); // x8WIv7-mJelg7on_ALbx
-        });
         socket.on("update-new-product", (message) => {
             console.log(message);
         })

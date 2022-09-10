@@ -5,13 +5,17 @@ import { Grid, Stack } from '@mui/material';
 import { Typography } from '@mui/material';
 import Button from '@mui/material/Button';
 import ArrowRightIcon from '@mui/icons-material/ArrowRight';
+import { Swiper, SwiperSlide } from "swiper/react";
+import { Autoplay, Pagination, Navigation } from "swiper";
+// Import Swiper styles
+import "swiper/css";
+import "swiper/css/pagination";
+import "swiper/css/navigation";
 
-
-
+import "./style.css";
 
 const ImgFeatureLine = styled('img')(({ theme }) => ({
-    width: '100%',
-    height: 450,
+    width: '70%',
     backgroundSize: 'cover',
     backgroundPosition: 'center',
     top: 0,
@@ -31,7 +35,7 @@ const ImgFeatureLine = styled('img')(({ theme }) => ({
 const Container = styled(Stack)(({ theme }) => ({
     spacing: 2,
     display: 'flex',
-    height: 500,
+    height: 650,
     position: 'relative',
     justifyContent: 'top',
     alignItems: 'center',
@@ -40,7 +44,7 @@ const Container = styled(Stack)(({ theme }) => ({
     p: 5,
     mt: 10,
     borderRadius: 10,
-    boxShadow:50
+    boxShadow: 50
 
 }))
 
@@ -72,16 +76,38 @@ const CustomButton = styled(Button)(({ theme }) => ({
     bottom: 0,
 }))
 
-
-
-export default function FeatureImage(props) {
+export default function LiveBanner(props) {
     return (
         <Container>
-            <ImgFeatureLine src={props.urlImage}></ImgFeatureLine>
-            {/* <Stack sx={{ position: 'absolute', alignItems: 'center' }}>
-                <Text xs={12} >{props.BigText}</Text>
-                <SmallText xs={12}>{props.SmallText}</SmallText>
-            </Stack> */}
+            <Swiper
+                spaceBetween={30}
+                centeredSlides={true}
+                autoplay={{
+                    delay: 2500,
+                    disableOnInteraction: false,
+                }}
+                pagination={{
+                    clickable: true,
+                }}
+                navigation={true}
+                modules={[Autoplay, Pagination, Navigation]}
+                className="mySwiper"
+            >
+                {
+                    props.banners.length > 0 ?
+                        props.banners.map(item => (
+                            <SwiperSlide>
+                                <ImgFeatureLine src={item.url}></ImgFeatureLine>
+                            </SwiperSlide>
+                        )
+                        )
+                        :
+                        <SwiperSlide>
+                            <ImgFeatureLine src={props.urlImage}></ImgFeatureLine>
+                        </SwiperSlide>
+                }
+            </Swiper>
+            {/* <ImgFeatureLine src={props.urlImage}></ImgFeatureLine> */}
             <CustomButton endIcon={<ArrowRightIcon />} onClick={props.onNavigate}>See More</CustomButton>
         </Container>
     )

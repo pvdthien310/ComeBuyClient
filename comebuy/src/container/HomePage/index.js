@@ -4,27 +4,32 @@ import { useDispatch, useSelector } from 'react-redux'
 import { getAccountWithID } from '../../redux/slices/accountSlice'
 import {
     BrandNavBar,
-    Slider,
     NavBar,
     BrandLine,
     FeatureBar,
-    FeatureImage,
     BrandLineImage,
     LaptopImageLine,
     BigFooter,
-    NewProductLine
+    NewProductLine,
+    LiveBanner
 } from '../../components'
 import { unwrapResult } from '@reduxjs/toolkit'
 import { cartSlice } from './../../redux/slices/cartSlice'
 import { getAllProduct } from '../../redux/slices/productSlice'
 import { productListSelector } from '../../redux/selectors'
 import { Box, Stack, Typography } from '@mui/material'
+import bannerApi from '../../api/bannerAPI'
+import { WS_URL } from '../../constant'
+import io from "socket.io-client"
 
 const HomePage = () => {
+    const socket = io(WS_URL, {
+        transports: ["websocket"]
+    });
     const _productList = useSelector(productListSelector)
     const navigate = useNavigate()
     const dispatch = useDispatch()
-    // const [numberItemsInCart, setNumberItemsInCart] = useState(JSON.parse(localStorage.getItem('cart')).length)
+    const [liveBanner, SetLiveBanner] = useState([])
 
     useEffect(async () => {
         if (localStorage.getItem('idUser') != "") {
@@ -43,6 +48,7 @@ const HomePage = () => {
             const value = JSON.parse(localStorage.getItem('cart'))
             dispatch(cartSlice.actions.cartListChange(value))
         }
+        handleSocket()
         await dispatch(getAllProduct())
             .unwrap()
             .then((originalPromiseResult) => {
@@ -51,11 +57,29 @@ const HomePage = () => {
             .catch((rejectedValueOrSerializedError) => {
                 console.log("Error load product")
             })
-        return () => {
-
-        }
-
+        await LoadBanner();
+        return () => {}
     }, [])
+
+    const handleSocket = () => {
+        socket.on("connect", () => {
+            console.log('Connect socket successfully!'); // x8WIv7-mJelg7on_ALbx
+        });
+        socket.on("update-new-banner", (message) => {
+            SetLiveBanner(prev => [JSON.parse(message), ...prev])
+        })
+    }
+
+    const LoadBanner = async () => {
+        const response = await bannerApi.getAll()
+        if (response.status == 200)
+            SetLiveBanner(response.data)
+        else console.log("Load banner failed!")
+    }
+
+    useEffect(() => {
+        console.log(liveBanner)
+    },[liveBanner])
 
 
     const brandList = [
@@ -98,13 +122,11 @@ const HomePage = () => {
             <Box sx={{ height: 2, m: 2, mt: 10, width: '95%', backgroundColor: 'black' }}></Box>
             <BrandNavBar brandLine={brandList} ></BrandNavBar>
             <Stack sx={{ p: 2 }} spacing={5}>
-
-                <FeatureImage
+                <LiveBanner
                     onNavigate={() => navigate('/productSpace')}
                     urlImage='https://store.storeimages.cdn-apple.com/4982/as-images.apple.com/is/mac-compare-202206?wid=1806&hei=642&fmt=jpeg&qlt=90&.v=1652989686485'
-                    BigText='Which one is right for you?'
-                    SmallText='ComeBuy Store. The best way to buy the products you love.'
-                ></FeatureImage>
+                    banners = {liveBanner}
+                ></LiveBanner>
                 {
                     _productList.length > 0 && <NewProductLine />
                 }
