@@ -1,4 +1,5 @@
 import React from 'react';
+import BannerManage from '../container/BannerManage';
 import DataAnalysis from '../container/DataAnalysis';
 import Product from '../container/Product';
 import AddProduct from '../container/Product/AddProduct';
@@ -50,6 +51,11 @@ const adminRoutes = [
         path: '/dataAnalysis/*',
         page: <DataAnalysis />,
     },
+    {
+        name: 'Banner Manage',
+        path: '/bannerManage/*',
+        page: <BannerManage />,
+    },
 ]
 
 const adminMenuItems = [
@@ -77,6 +83,11 @@ const adminMenuItems = [
         name: 'Data Analysis',
         path: '/dataAnalysis/*',
         page: <DataAnalysis />,
+    },
+    {
+        name: 'Banner Manage',
+        path: '/bannerManage/*',
+        page: <BannerManage />,
     },
 ]
 

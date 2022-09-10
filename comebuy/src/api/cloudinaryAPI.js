@@ -8,5 +8,10 @@ const cloudinaryApi = {
             .catch(err => { return err.response })
         return res;
     },
+    uploadBigImages: async (data) => {
+        const res = await DatabaseClient.post('/' + baseURL + '/big', data)
+            .catch(err => { return err.response })
+        return res;
+    },
 }
 export default cloudinaryApi

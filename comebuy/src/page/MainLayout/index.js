@@ -28,6 +28,7 @@ import { currentUser } from '../../redux/selectors';
 import CountertopsIcon from '@mui/icons-material/Countertops';
 import ReceiptIcon from '@mui/icons-material/Receipt';
 import MoveDownIcon from '@mui/icons-material/MoveDown';
+import ViewCarouselIcon from '@mui/icons-material/ViewCarousel';
 
 const MainLayout = props => {
   const _currentUser = useSelector(currentUser)
@@ -109,6 +110,7 @@ const MainLayout = props => {
               {route.name == 'Workspace' && <CountertopsIcon />}
               {route.name == 'Invoice' && <ReceiptIcon />}
               {route.name == 'Distribution' && <MoveDownIcon />}
+              {route.name == 'Banner Manage' && <ViewCarouselIcon />}
             </ListItemIcon>
             <ListItemText sx={{ color: 'white' }} primary={route.name} />
           </ListItem>

@@ -68,6 +68,9 @@ const HomePage = () => {
         socket.on("update-new-banner", (message) => {
             SetLiveBanner(prev => [JSON.parse(message), ...prev])
         })
+        socket.on("delete-banner", async (message) => {
+            await LoadBanner();
+        })
     }
 
     const LoadBanner = async () => {

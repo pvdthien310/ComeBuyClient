@@ -8,10 +8,15 @@ const bannerApi = {
             .catch(err => { return err.response })
         return res;
     },
-    createNewBanner: async (id) => {
-        const res = DatabaseClient.get('/' + baseURL)
+    createNewBanner: async (data) => {
+        const res = DatabaseClient.post('/' + baseURL,data)
             .catch(err => { return err.response })
         return res;
-    }
+    },
+    deleteBannerById: async (id) => {
+        const res = await DatabaseClient.delete('/' + baseURL + '/' + id, id)
+            .catch(err => { return err.message })
+        return res;
+    },
 }
 export default bannerApi
