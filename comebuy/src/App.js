@@ -25,7 +25,7 @@ function App() {
   const role = localStorage.getItem('role');
   const navigate = useNavigate()
 
-  const _currentUser = useSelector(currentUser)
+  const _currentUser =  useSelector(currentUser)
 
   const LoadCurrentUser = async () => {
     if (localStorage.getItem('idUser') && localStorage.getItem('idUser') != "") {
