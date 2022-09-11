@@ -1,6 +1,7 @@
 import React from 'react';
 import BannerManage from '../container/BannerManage';
 import DataAnalysis from '../container/DataAnalysis';
+import ManagerHome from '../container/ManagerHome';
 import Product from '../container/Product';
 import AddProduct from '../container/Product/AddProduct';
 import EditProduct from '../container/Product/EditProduct';
@@ -56,6 +57,11 @@ const adminRoutes = [
         path: '/bannerManage/*',
         page: <BannerManage />,
     },
+    {
+        name: 'Manager Home',
+        path: '/',
+        page: <ManagerHome />
+    }
 ]
 
 const adminMenuItems = [

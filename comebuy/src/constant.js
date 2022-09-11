@@ -5,3 +5,4 @@ export const default_avatar = "https://images.unsplash.com/photo-1649777318304-2
 export const DELOYED_BASE_SERVER_URL = 'https://comebuyserver.herokuapp.com/api'
 export const DELOYED_AI_SERVER_URL = 'https://comebuyaiserver.herokuapp.com'
 export const WS_URL = 'http://localhost:8080/?'
+export const DEPLOYED_WS = 'http://comebuyws.herokuapp.com/'

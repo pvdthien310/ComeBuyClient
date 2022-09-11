@@ -22,14 +22,12 @@ const BannerManage = () => {
     }
 
     const HandleCreateNewBanner = async (url) => {
-        const response = await bannerApi.createNewBanner({url : url})
-        if (response.status = 200)
-        {
+        const response = await bannerApi.createNewBanner({ url: url })
+        if (response.status = 200) {
             SetLoading(false)
             await LoadNewData();
         }
-        else 
-        {
+        else {
             SetLoading(false)
             console.log.apply('Upload Image Failed')
         }
@@ -38,36 +36,37 @@ const BannerManage = () => {
     const DeleteBanner = async (id) => {
         SetLoading(true)
         const response = await bannerApi.deleteBannerById(id)
-        if (response.status = 200)
-            {
-                SetLoading(false)
-                await LoadNewData();
-            }
-        else    
-        {
+        if (response.status = 200) {
+            SetLoading(false)
+            await LoadNewData();
+        }
+        else {
             SetLoading(false)
             console.log.apply('Delete Banner Failed')
         }
     }
 
-    const UploadNewBanner = async (value) => {
+    const UploadNewBanner = async (value1, value2) => {
         SetOpenModal(false)
         SetLoading(true)
-        const data = [value]
-        try {
-            const response = await cloudinaryApi.uploadBigImages(JSON.stringify({ data: data }))
-            if (response.status = 200) {
-                await HandleCreateNewBanner(response.data[0])
+        if (type == 2) {
+            const data = [value1]
+            try {
+                const response = await cloudinaryApi.uploadBigImages(JSON.stringify({ data: data }))
+                if (response.status = 200) {
+                    await HandleCreateNewBanner(response.data[0])
+                }
+                else {
+                    console.log('Upload to Cloudinary Failed')
+                    SetLoading(false)
+                }
             }
-            else {
-                console.log('Upload to Cloudinary Failed')
+            catch (err) {
+                console.log(err);
                 SetLoading(false)
             }
         }
-        catch (err) {
-            console.log(err);
-            SetLoading(false)
-        }
+        else await HandleCreateNewBanner(value2)
     }
     return (
         <Stack

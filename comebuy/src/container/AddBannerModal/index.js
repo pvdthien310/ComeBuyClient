@@ -8,11 +8,12 @@ import InputLabel from '@mui/material/InputLabel';
 import MenuItem from '@mui/material/MenuItem';
 import FormControl from '@mui/material/FormControl';
 import Select from '@mui/material/Select';
-import { Input, Stack } from '@mui/material';
+import { Stack, TextField } from '@mui/material';
 
 
 export default function AddBannerModal(props) {
     const [image, SetImage] = useState(null)
+    const [imageFromURL, SetImageFromURL] = useState(null)
 
     const HandleImage = (e) => {
         let reader = new FileReader();
@@ -29,7 +30,7 @@ export default function AddBannerModal(props) {
             aria-describedby="modal-modal-description"
         >
             <Stack sx={style.container}>
-                <Typography id="modal-modal-title" variant="h6" component="h2">
+                <Typography id="modal-modal-title" variant="h6" component="h2" fontWeight={'bold'}>
                     New Banner
                 </Typography>
                 <Box sx={{ minWidth: 120 }}>
@@ -49,14 +50,17 @@ export default function AddBannerModal(props) {
                 </Box>
                 {
                     props.type == 1 ?
-                        <Input sx={{ p: 2, m: 1 }}></Input>
+                        <Stack sx={{ p: 2, m: 1 }}>
+                            <TextField sx={{ minWidth: 550 }} onChange={(e) => SetImageFromURL(e.target.value)}></TextField>
+                            {imageFromURL && <img src={imageFromURL} style={{ height: 300, width: 500, alignSelf:'center' }}></img>}
+                        </Stack>
                         :
                         <Stack>
                             <input style={{ padding: 2, margin: 5 }} accept="image/*" type={'file'} onChange={HandleImage}></input>
                             {image && <img src={image} style={{ height: 300, width: 400 }}></img>}
                         </Stack>
                 }
-                <Button onClick={async () => props.UploadNewBanner(image)}>Submit</Button>
+                <Button onClick={async () => props.UploadNewBanner(image, imageFromURL)}>Submit</Button>
                 <Button onClick={() => props.SetOpenModal(false)}>Close</Button>
             </Stack>
         </Modal>

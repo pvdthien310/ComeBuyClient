@@ -122,17 +122,6 @@ const MainLayout = props => {
           <ListItemText sx={{ color: 'white' }} primary={'Log Out'} />
         </ListItem>
       </List>
-      {/* <Divider />
-      <List>
-        {['Log Out'].map((text, index) => (
-          <ListItem button key={text} onClick={ItemClick}>
-            <ListItemIcon>
-              <LogoutIcon />
-            </ListItemIcon>
-            <ListItemText primary={text} />
-          </ListItem>
-        ))}
-      </List> */}
     </Box>
   );
   return (

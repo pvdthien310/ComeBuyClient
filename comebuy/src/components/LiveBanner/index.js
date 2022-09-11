@@ -96,7 +96,7 @@ export default function LiveBanner(props) {
                 {
                     props.banners.length > 0 ?
                         props.banners.map(item => (
-                            <SwiperSlide>
+                            <SwiperSlide key={item.url}>
                                 <ImgFeatureLine src={item.url}></ImgFeatureLine>
                             </SwiperSlide>
                         )

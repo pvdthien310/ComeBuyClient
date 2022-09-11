@@ -19,11 +19,11 @@ import { getAllProduct } from '../../redux/slices/productSlice'
 import { productListSelector } from '../../redux/selectors'
 import { Box, Stack, Typography } from '@mui/material'
 import bannerApi from '../../api/bannerAPI'
-import { WS_URL } from '../../constant'
+import { WS_URL, DEPLOYED_WS } from '../../constant'
 import io from "socket.io-client"
 
 const HomePage = () => {
-    const socket = io(WS_URL, {
+    const socket = io(DEPLOYED_WS, {
         transports: ["websocket"]
     });
     const _productList = useSelector(productListSelector)
@@ -58,7 +58,7 @@ const HomePage = () => {
                 console.log("Error load product")
             })
         await LoadBanner();
-        return () => {}
+        return () => { }
     }, [])
 
     const handleSocket = () => {
@@ -66,7 +66,10 @@ const HomePage = () => {
             console.log('Connect socket successfully!'); // x8WIv7-mJelg7on_ALbx
         });
         socket.on("update-new-banner", (message) => {
-            SetLiveBanner(prev => [JSON.parse(message), ...prev])
+            const data = JSON.parse(message)
+            if (liveBanner.find(ite => ite.bannerID == data.bannerID) == undefined)
+                SetLiveBanner(prev => [data, ...prev])
+
         })
         socket.on("delete-banner", async (message) => {
             await LoadBanner();
@@ -79,10 +82,6 @@ const HomePage = () => {
             SetLiveBanner(response.data)
         else console.log("Load banner failed!")
     }
-
-    useEffect(() => {
-        console.log(liveBanner)
-    },[liveBanner])
 
 
     const brandList = [
@@ -128,7 +127,7 @@ const HomePage = () => {
                 <LiveBanner
                     onNavigate={() => navigate('/productSpace')}
                     urlImage='https://store.storeimages.cdn-apple.com/4982/as-images.apple.com/is/mac-compare-202206?wid=1806&hei=642&fmt=jpeg&qlt=90&.v=1652989686485'
-                    banners = {liveBanner}
+                    banners={liveBanner}
                 ></LiveBanner>
                 {
                     _productList.length > 0 && <NewProductLine />
