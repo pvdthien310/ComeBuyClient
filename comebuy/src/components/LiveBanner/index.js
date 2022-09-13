@@ -80,6 +80,7 @@ export default function LiveBanner(props) {
     return (
         <Container>
             <Swiper
+                className='swiper-livebanner'
                 spaceBetween={30}
                 centeredSlides={true}
                 autoplay={{
@@ -91,18 +92,17 @@ export default function LiveBanner(props) {
                 }}
                 navigation={true}
                 modules={[Autoplay, Pagination, Navigation]}
-                className="mySwiper"
             >
                 {
                     props.banners.length > 0 ?
                         props.banners.map(item => (
-                            <SwiperSlide key={item.url}>
+                            <SwiperSlide className='swiper-slide-livebanner' key={item.url}>
                                 <ImgFeatureLine src={item.url}></ImgFeatureLine>
                             </SwiperSlide>
                         )
                         )
                         :
-                        <SwiperSlide>
+                        <SwiperSlide className='swiper-slide-livebanner'>
                             <ImgFeatureLine src={props.urlImage}></ImgFeatureLine>
                         </SwiperSlide>
                 }
