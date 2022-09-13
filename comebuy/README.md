@@ -26,7 +26,7 @@ Of course, our project will no  serve all since you needs may be different. So w
 Thanks for conducting from our teacher
 
 - Server repo: https://github.com/pvdthien310/ComeBuyServer
-- Website: https://comebuy-site-offical.netlify.app/
+- Website: https://come-buy-client.vercel.app/
 
 ### Main Features
  - Product management
