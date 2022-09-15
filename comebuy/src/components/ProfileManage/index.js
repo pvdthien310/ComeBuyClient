@@ -1,11 +1,11 @@
+/* eslint-disable no-unused-vars */
 import React, { useState, useEffect } from 'react';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { unwrapResult } from '@reduxjs/toolkit';
 
 import { Avatar, Button, IconButton, Link, Modal, Stack, TextField, Typography } from '@mui/material';
 import AddPhotoAlternateTwoToneIcon from '@mui/icons-material/AddPhotoAlternateTwoTone';
 import Box from '@mui/material/Box';
-import InputLabel from '@mui/material/InputLabel';
 import MenuItem from '@mui/material/MenuItem';
 import FormControl from '@mui/material/FormControl';
 import Select from '@mui/material/Select';
@@ -21,10 +21,8 @@ import KeyboardArrowLeft from '@mui/icons-material/KeyboardArrowLeft';
 import KeyboardArrowRight from '@mui/icons-material/KeyboardArrowRight';
 import SwipeableViews from 'react-swipeable-views';
 import { autoPlay } from 'react-swipeable-views-utils';
-
 import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
-import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import { MobileDatePicker } from '@mui/x-date-pickers/MobileDatePicker';
 import { useTheme } from '@mui/material/styles';
 import MobileStepper from '@mui/material/MobileStepper';
@@ -34,8 +32,6 @@ import 'react-datepicker/dist/react-datepicker.css';
 
 import { useFilePicker } from 'use-file-picker';
 
-import { useSelector } from 'react-redux';
-
 import { useNavigate } from 'react-router';
 
 import NavBar from '../NavBar/NavBar';
@@ -43,7 +39,7 @@ import { currentUser } from '../../redux/selectors';
 import * as Validation from '../../container/LoginAndRegister/ValidationDataForAccount';
 import { updateAccount, getAccountWithID } from '../../redux/slices/accountSlice';
 import cloudinaryApi from '../../api/cloudinaryAPI';
-import BigFooter from './../BigFooter/index';
+import BigFooter from '../BigFooter/index';
 import MemberShipStepper from '../MemberShipStepper';
 
 const AutoPlaySwipeableViews = autoPlay(SwipeableViews);
@@ -67,18 +63,18 @@ const images = [
     },
 ];
 
-const ProfileManage = () => {
+function ProfileManage() {
     const navigate = useNavigate();
 
-    function handleClick(event) {
+    const handleClick = (event) => {
         event.preventDefault();
         navigate('/myplace');
-    }
+    };
 
-    function handleClickToHome(event) {
+    const handleClickToHome = (event) => {
         event.preventDefault();
         navigate('/');
-    }
+    };
     const breadcrumbs = [
         <Link underline="hover" key="2" style={{ color: 'black' }} href="/myplace" onClick={handleClickToHome}>
             Home
@@ -93,6 +89,7 @@ const ProfileManage = () => {
 
     const _currentUser = useSelector(currentUser);
     const [dataForUpdate, setDataForUpdate] = useState(_currentUser);
+    const [isLoading, setIsLoading] = useState(true);
     const dispatch = useDispatch();
 
     const fetchUser = async () => {
@@ -102,10 +99,10 @@ const ProfileManage = () => {
             setDataForUpdate(originalPromiseResult);
             setIsLoading(false);
         } catch (rejectedValueOrSerializedError) {
+            // eslint-disable-next-line no-useless-return
             return;
         }
     };
-    const [isLoading, setIsLoading] = useState(true);
     useEffect(() => {
         if (isLoading === true) {
             fetchUser();
@@ -113,57 +110,56 @@ const ProfileManage = () => {
     }, [isLoading]);
 
     const [havePhoneNumber, setHavePhoneNumber] = useState(() => {
+        // eslint-disable-next-line eqeqeq
         if (dataForUpdate.phoneNumber != '' || dataForUpdate.phoneNumber != null) {
             return true;
-        } else {
-            return false;
         }
+        return false;
     });
 
     const [haveAddress, setHaveAddress] = useState(() => {
+        // eslint-disable-next-line eqeqeq
         if (dataForUpdate.address != '' || dataForUpdate.address != null) {
             return true;
-        } else {
-            return false;
         }
     });
     const [haveGender, setHaveGender] = useState(() => {
+        // eslint-disable-next-line eqeqeq
         if (dataForUpdate.sex != '' || dataForUpdate.sex != null) {
             return true;
-        } else {
-            return false;
         }
+        return false;
     });
 
-    //Modal change name
     const [name, setName] = useState(dataForUpdate.name);
     const [openModalChangeName, setOpenModalChangeName] = useState(false);
     const handleCloseModalChangeName = () => {
         setOpenModalChangeName(false);
     };
 
+    const [toggleSaveBtn, setToggleSaveBtn] = useState(false);
     const handleOpenModalChangeName = () => {
         setOpenModalChangeName(true);
         setToggleSaveBtn(false);
     };
 
-    //modal change contact
     const [contact, setContact] = useState(dataForUpdate.phoneNumber);
     const [openModalChangeContact, setOpenModalChangeContact] = useState(false);
     const handleCloseModalChangeContact = () => {
         setOpenModalChangeContact(false);
     };
+    const [toggleSaveContactBtn, setToggleSaveContactBtn] = useState(false);
     const handleOpenModalChangeContact = () => {
         setToggleSaveContactBtn(false);
         setOpenModalChangeContact(true);
     };
 
-    //modal change address
     const [address, setAddress] = useState(dataForUpdate.address);
     const [openModalChangeAddress, setOpenModalChangeAddress] = useState(false);
     const handleCloseModalChangeAddress = () => {
         setOpenModalChangeAddress(false);
     };
+    const [toggleSaveAddressBtn, setToggleSaveAddressBtn] = useState(false);
     const handleOpenModalChangeAddress = () => {
         setToggleSaveAddressBtn(false);
         setOpenModalChangeAddress(true);
@@ -177,30 +173,18 @@ const ProfileManage = () => {
 
     const [selectedDate, setSelectedDate] = useState(new Date(dataForUpdate.dob));
 
-    //save name button
-    const [toggleSaveBtn, setToggleSaveBtn] = useState(false);
-
     const handleToggleSaveButton = () => setToggleSaveBtn(true);
-
-    //save contact button
-    const [toggleSaveContactBtn, setToggleSaveContactBtn] = useState(false);
 
     const handleToggleSaveContactButton = () => setToggleSaveContactBtn(true);
 
-    //save address button
-    const [toggleSaveAddressBtn, setToggleSaveAddressBtn] = useState(false);
-
     const handleToggleSaveAddressButton = () => setToggleSaveAddressBtn(true);
 
-    //success snack bar
     const [openSuccess, setOpenSuccess] = useState(false);
     const handleCloseSuccess = () => setOpenSuccess(false);
 
-    //failed snack bar
     const [openFailed, setOpenFailed] = useState(false);
     const handleCloseFailed = () => setOpenFailed(false);
 
-    //for open backdrop
     const [openBackdrop, setOpenBackdrop] = React.useState(false);
     const handleCloseBackdrop = () => {
         setOpenBackdrop(false);
@@ -210,6 +194,9 @@ const ProfileManage = () => {
     };
 
     const [updating, setUpdating] = React.useState(false);
+    const [openNameWrong, setOpenNameWrong] = useState(false);
+    const [openContactWrong, setOpenContactWrong] = useState(false);
+    const [openPreview, setOpenModalPreview] = useState(false);
 
     useEffect(() => {
         if (updating === true) {
@@ -228,7 +215,7 @@ const ProfileManage = () => {
             setUpdating(true);
             const temp = {
                 ...dataForUpdate,
-                name: name,
+                name,
             };
             try {
                 const resultAction = await dispatch(updateAccount(temp));
@@ -244,7 +231,6 @@ const ProfileManage = () => {
         }
     };
 
-    // change contact
     const handleChangeContact = async () => {
         if (Validation.CheckPhoneNumber(contact)) {
             setUpdating(true);
@@ -269,12 +255,11 @@ const ProfileManage = () => {
         }
     };
 
-    // change address
     const handleChangeAddress = async () => {
         setUpdating(true);
         const temp = {
             ...dataForUpdate,
-            address: address,
+            address,
         };
         try {
             const resultAction = await dispatch(updateAccount(temp));
@@ -310,7 +295,10 @@ const ProfileManage = () => {
         }
     };
 
-    //change avatar
+    const openModalPreviewAvatar = () => {
+        setOpenModalPreview(true);
+    };
+
     const [stateAvt, setStateAvt] = useState(dataForUpdate.avatar);
     const [openFileSelector, { filesContent, loading, errors }] = useFilePicker({
         readAs: 'DataURL',
@@ -344,17 +332,8 @@ const ProfileManage = () => {
         }
     };
 
-    const [openPreview, setOpenModalPreview] = useState(false);
-    const openModalPreviewAvatar = () => {
-        setOpenModalPreview(true);
-    };
-    const handleCloseModalPreviewAvt = () => {
-        filesContent.splice(0, filesContent.length);
-        setStateAvt(dataForUpdate.avatar);
-        setOpenModalPreview(false);
-    };
-
     useEffect(() => {
+        // eslint-disable-next-line eqeqeq
         if (filesContent.length != 0) {
             openModalPreviewAvatar();
         } else {
@@ -366,7 +345,7 @@ const ProfileManage = () => {
         setUpdating(true);
         const data = [filesContent[0].content];
         try {
-            const response = await cloudinaryApi.uploadImages(JSON.stringify({ data: data }));
+            const response = await cloudinaryApi.uploadImages(JSON.stringify({ data }));
             if (response) {
                 response.data.map((imgurl) => {
                     updateAvt(imgurl);
@@ -384,8 +363,11 @@ const ProfileManage = () => {
         }
     };
 
-    //wrong name
-    const [openNameWrong, setOpenNameWrong] = useState(false);
+    const handleCloseModalPreviewAvt = () => {
+        filesContent.splice(0, filesContent.length);
+        setStateAvt(dataForUpdate.avatar);
+        setOpenModalPreview(false);
+    };
 
     const handleCloseNameWrong = (event, reason) => {
         if (reason === 'clickaway') {
@@ -394,9 +376,6 @@ const ProfileManage = () => {
         setOpenNameWrong(false);
     };
 
-    //wrong contact
-    const [openContactWrong, setOpenContactWrong] = useState(false);
-
     const handleCloseContactWrong = (event, reason) => {
         if (reason === 'clickaway') {
             return;
@@ -404,7 +383,6 @@ const ProfileManage = () => {
         setOpenContactWrong(false);
     };
 
-    //for modal display rule of membership and discount
     const theme = useTheme();
     const [activeStep, setActiveStep] = React.useState(0);
     const maxSteps = images.length;
@@ -436,7 +414,7 @@ const ProfileManage = () => {
                 backgroundColor: '#F2EBDF',
             }}
         >
-            <NavBar></NavBar>
+            <NavBar />
             <Stack direction="row" spacing={3} style={{ marginLeft: '15%', marginTop: '1%' }}>
                 <Breadcrumbs separator="›" style={{ color: 'black' }} aria-label="breadcrumb">
                     {breadcrumbs}
@@ -453,9 +431,7 @@ const ProfileManage = () => {
             >
                 Your information
             </Typography>
-            <div style={{ marginLeft: '15%', height: '1px', backgroundColor: 'black', width: '60%' }}></div>
-
-            {/* name & Avatar */}
+            <div style={{ marginLeft: '15%', height: '1px', backgroundColor: 'black', width: '60%' }} />
             <Stack
                 direction="row"
                 width="100%"
@@ -466,6 +442,7 @@ const ProfileManage = () => {
                     paddingBottom: '1%',
                 }}
             >
+                {/* eslint-disable-next-line eqeqeq */}
                 {filesContent.length != 0 ? (
                     filesContent.map((file, index) => (
                         <Avatar
@@ -493,6 +470,7 @@ const ProfileManage = () => {
                         }}
                     />
                 )}
+                {/* eslint-disable-next-line eqeqeq */}
                 {filesContent.length != 0 ? (
                     <IconButton
                         onClick={handleChangeAvt}
@@ -594,7 +572,7 @@ const ProfileManage = () => {
                         marginTop: '0%',
                         marginLeft: '15%',
                     }}
-                ></div>
+                />
                 <Typography
                     style={{
                         color: '#8FA1A6',
@@ -676,7 +654,7 @@ const ProfileManage = () => {
                         marginTop: '0%',
                         marginLeft: '15%',
                     }}
-                ></div>
+                />
                 <Typography
                     style={{
                         color: '#8FA1A6',
@@ -759,7 +737,7 @@ const ProfileManage = () => {
                         width: '40%',
                         marginTop: '0%',
                     }}
-                ></div>
+                />
                 <Typography
                     style={{
                         color: '#8FA1A6',
@@ -798,8 +776,8 @@ const ProfileManage = () => {
                             value={gender === 'male' ? 'male' : 'female'}
                             onChange={handleChangeGender}
                         >
-                            <MenuItem value={'male'}>Male</MenuItem>
-                            <MenuItem value={'female'}>Female</MenuItem>
+                            <MenuItem value="male">Male</MenuItem>
+                            <MenuItem value="female">Female</MenuItem>
                         </Select>
                     </FormControl>
                     <Button
@@ -867,6 +845,7 @@ const ProfileManage = () => {
                         <Button onClick={handleCloseModalChangeName}>Cancel</Button>
                     )}
                     {/* Backdrop for updating */}
+                    {/* eslint-disable-next-line no-shadow */}
                     <Backdrop sx={{ color: '#fff', zIndex: (theme) => theme.zIndex.drawer + 1 }} open={openBackdrop}>
                         <CircularProgress color="inherit" />
                     </Backdrop>
@@ -918,6 +897,7 @@ const ProfileManage = () => {
                         <Button onClick={handleCloseModalChangeContact}>Cancel</Button>
                     )}
                     {/* Backdrop for updating */}
+                    {/* eslint-disable-next-line no-shadow */}
                     <Backdrop sx={{ color: '#fff', zIndex: (theme) => theme.zIndex.drawer + 1 }} open={openBackdrop}>
                         <CircularProgress color="inherit" />
                     </Backdrop>
@@ -969,6 +949,7 @@ const ProfileManage = () => {
                         <Button onClick={handleCloseModalChangeAddress}>Cancel</Button>
                     )}
                     {/* Backdrop for updating */}
+                    {/* eslint-disable-next-line no-shadow */}
                     <Backdrop sx={{ color: '#fff', zIndex: (theme) => theme.zIndex.drawer + 1 }} open={openBackdrop}>
                         <CircularProgress color="inherit" />
                     </Backdrop>
@@ -1034,6 +1015,7 @@ const ProfileManage = () => {
                         </Button>
                     </Stack>
                     {/* Backdrop for updating */}
+                    {/* eslint-disable-next-line no-shadow */}
                     <Backdrop sx={{ color: '#fff', zIndex: (theme) => theme.zIndex.drawer + 1 }} open={openBackdrop}>
                         <CircularProgress color="inherit" />
                     </Backdrop>
@@ -1121,7 +1103,6 @@ const ProfileManage = () => {
                 </Box>
             </Modal>
 
-            {/*Snackbar*/}
             {/* name wrong */}
             <Snackbar open={openNameWrong} autoHideDuration={6000} onClose={handleCloseNameWrong}>
                 <Alert onClose={handleCloseNameWrong} severity="error" sx={{ width: '100%' }}>
@@ -1152,12 +1133,13 @@ const ProfileManage = () => {
             </Snackbar>
 
             {/* Backdrop for updating */}
+            {/* eslint-disable-next-line no-shadow */}
             <Backdrop sx={{ color: '#fff', zIndex: (theme) => theme.zIndex.drawer + 1 }} open={openBackdrop}>
                 <CircularProgress color="inherit" />
             </Backdrop>
             <BigFooter />
         </Stack>
     );
-};
+}
 
 export default ProfileManage;
