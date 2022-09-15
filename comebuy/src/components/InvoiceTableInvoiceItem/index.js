@@ -1,41 +1,40 @@
-import React, { useState, useEffect } from "react"
-import { useDispatch } from "react-redux"
-import { unwrapResult } from "@reduxjs/toolkit"
-import { getProductWithID } from "../../redux/slices/productSlice"
+import React, { useState, useEffect } from 'react';
+import { useDispatch } from 'react-redux';
+import { unwrapResult } from '@reduxjs/toolkit';
+import { getProductWithID } from '../../redux/slices/productSlice';
 
 export default function TableInvoiceItem({ list, total }) {
+    const [listProduct, setListProduct] = useState([]);
 
-    const [listProduct, setListProduct] = useState([])
-
-    const dispatch = useDispatch()
+    const dispatch = useDispatch();
     const fetchListProduct = async () => {
-        let listTemp = []
+        let listTemp = [];
         for (let i = 0; i < list.length; i++) {
             if (list[i].productid === null) {
                 let price = list[i].total / list[i].amount;
                 let temp = {
                     productID: null,
-                    name: "This product might not be on shop anymore",
-                    price: price
-                }
-                listTemp = [...listTemp, temp]
+                    name: 'This product might not be on shop anymore',
+                    price: price,
+                };
+                listTemp = [...listTemp, temp];
             } else {
-                const resultAction = await dispatch(getProductWithID(list[i].productid))
-                const originalPromiseResult = unwrapResult(resultAction)
+                const resultAction = await dispatch(getProductWithID(list[i].productid));
+                const originalPromiseResult = unwrapResult(resultAction);
                 // handle result here
-                listTemp = [...listTemp, originalPromiseResult]
+                listTemp = [...listTemp, originalPromiseResult];
             }
         }
 
-        setListProduct(listTemp)
-        setReady(true)
-    }
-    const [ready, setReady] = useState(false)
+        setListProduct(listTemp);
+        setReady(true);
+    };
+    const [ready, setReady] = useState(false);
     useEffect(async () => {
         if (ready === false) {
-            fetchListProduct()
+            fetchListProduct();
         }
-    }, [ready])
+    }, [ready]);
 
     return (
         <>
@@ -53,25 +52,26 @@ export default function TableInvoiceItem({ list, total }) {
                         <tbody>
                             <tr>
                                 <td style={{ fontSize: '13px' }}>{p.name}</td>
-                                {
-                                    list.map((i) => (
-                                        p.productID === i.productid ? (
-                                            <td style={{ fontFamily: 'serif', display: 'flex', justifyContent: 'center', fontSize: '13px' }}>{i.amount}</td>
-                                        ) : (
-                                            null
-                                        )
-                                    ))
-                                }
+                                {list.map((i) =>
+                                    p.productID === i.productid ? (
+                                        <td
+                                            style={{
+                                                fontFamily: 'serif',
+                                                display: 'flex',
+                                                justifyContent: 'center',
+                                                fontSize: '13px',
+                                            }}
+                                        >
+                                            {i.amount}
+                                        </td>
+                                    ) : null,
+                                )}
                                 <td style={{ fontFamily: 'serif', width: 'auto' }}>💸{p.price}</td>
-                                {
-                                    list.map((i) => (
-                                        p.productID === i.productid ? (
-                                            <td style={{ fontFamily: 'serif' }}>💸{i.total}</td>
-                                        ) : (
-                                            null
-                                        )
-                                    ))
-                                }
+                                {list.map((i) =>
+                                    p.productID === i.productid ? (
+                                        <td style={{ fontFamily: 'serif' }}>💸{i.total}</td>
+                                    ) : null,
+                                )}
                             </tr>
                         </tbody>
                     </React.Fragment>
@@ -79,10 +79,18 @@ export default function TableInvoiceItem({ list, total }) {
             </table>
 
             <div>
-                <h2 style={{ display: 'flex', justifyContent: 'flex-end', justifyItems: 'flex-end', fontWeight: 'bold', fontFamily: 'serif' }}>
+                <h2
+                    style={{
+                        display: 'flex',
+                        justifyContent: 'flex-end',
+                        justifyItems: 'flex-end',
+                        fontWeight: 'bold',
+                        fontFamily: 'serif',
+                    }}
+                >
                     Total cost. {total} USD
                 </h2>
             </div>
         </>
-    )
+    );
 }

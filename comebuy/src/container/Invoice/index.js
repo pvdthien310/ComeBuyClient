@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { useDispatch } from 'react-redux'
+import { useDispatch } from 'react-redux';
 import { getAllInvoice } from '../../redux/slices/invoiceSlice';
 import { unwrapResult } from '@reduxjs/toolkit';
 import Row from '../../components/InvoiceRow';
@@ -31,25 +31,21 @@ import RemoveDoneIcon from '@mui/icons-material/RemoveDone';
 import SortIcon from '@mui/icons-material/Sort';
 import FilterListIcon from '@mui/icons-material/FilterList';
 
-
 const BGImg = styled('img')({
     height: '100%',
     width: '100%',
     position: 'fixed',
-
-})
+});
 
 const actions = [
     { icon: <CheckCircleIcon />, name: 'Show done orders' },
     { icon: <RemoveDoneIcon />, name: 'Show not done orders' },
     { icon: <SortIcon />, name: 'Show increased orders' },
-    { icon: <FilterListIcon />, name: 'Show decreased orders' }
-
+    { icon: <FilterListIcon />, name: 'Show decreased orders' },
 ];
 
 const Invoice = () => {
-
-    const [invoiceList, setInvoiceList] = React.useState([])
+    const [invoiceList, setInvoiceList] = React.useState([]);
 
     const dispatch = useDispatch();
 
@@ -66,160 +62,169 @@ const Invoice = () => {
 
     React.useEffect(() => {
         async function fetchInvoice() {
-            let temp = []
+            let temp = [];
             if (invoiceList.length === 0) {
                 try {
-                    const resultAction = await dispatch(getAllInvoice())
-                    const originalPromiseResult = unwrapResult(resultAction)
-                    let tempList = []
+                    const resultAction = await dispatch(getAllInvoice());
+                    const originalPromiseResult = unwrapResult(resultAction);
+                    let tempList = [];
                     originalPromiseResult.map((invoice) => {
-                        let t = 0
-                        invoice.invoiceitem.map(i => {
-                            t = t + Number(i.total)
-                        })
+                        let t = 0;
+                        invoice.invoiceitem.map((i) => {
+                            t = t + Number(i.total);
+                        });
                         let obj = {
                             ...invoice,
-                            total: t
-                        }
-                        tempList.push(obj)
-                    })
-                    setInvoiceList(tempList)
+                            total: t,
+                        };
+                        tempList.push(obj);
+                    });
+                    setInvoiceList(tempList);
                 } catch (rejectedValueOrSerializedError) {
                     console.log(rejectedValueOrSerializedError);
                 }
             }
         }
-        fetchInvoice()
+        fetchInvoice();
         return () => {
             setInvoiceList({});
         };
-    }, [])
+    }, []);
 
     const [fromDate, setFromDate] = React.useState('');
-    const [toDate, setToDate] = React.useState('')
+    const [toDate, setToDate] = React.useState('');
 
     const makeDate = (ostr) => {
-        let index = ostr.indexOf(' ', 0)
-        let str = ostr.slice(0, index)
-        let i1 = str.indexOf('/', 0)
-        let i2 = str.indexOf('/', i1 + 1)
-        let day = str.slice(0, i1)
-        let month = str.slice(i1 + 1, i2)
-        let year = str.slice(i2 + 1, str.length)
-        let here = new Date(year + '-' + month + '-' + day)
+        let index = ostr.indexOf(' ', 0);
+        let str = ostr.slice(0, index);
+        let i1 = str.indexOf('/', 0);
+        let i2 = str.indexOf('/', i1 + 1);
+        let day = str.slice(0, i1);
+        let month = str.slice(i1 + 1, i2);
+        let year = str.slice(i2 + 1, str.length);
+        let here = new Date(year + '-' + month + '-' + day);
         return here;
-    }
+    };
 
-    const [output, setOutput] = React.useState([])
-    const [changeDataBySearch, setChangeDataBySearch] = React.useState(false)
+    const [output, setOutput] = React.useState([]);
+    const [changeDataBySearch, setChangeDataBySearch] = React.useState(false);
 
-    const [openSnackbar, setOpenSnackbar] = React.useState(false)
+    const [openSnackbar, setOpenSnackbar] = React.useState(false);
 
-    const handleCloseSnackbar = () => setOpenSnackbar(false)
-
+    const handleCloseSnackbar = () => setOpenSnackbar(false);
 
     const handleSearch = () => {
-        let temp = []
+        let temp = [];
         if (new Date(fromDate) > new Date(toDate)) {
-            setOpenSnackbar(true)
+            setOpenSnackbar(true);
         } else {
             invoiceList.map((i) => {
                 if (fromDate != '') {
                     if (toDate != '') {
-                        if ((makeDate(i.date) >= new Date(fromDate)) && (makeDate(i.date) <= new Date(toDate))) {
-                            temp.push(i)
+                        if (makeDate(i.date) >= new Date(fromDate) && makeDate(i.date) <= new Date(toDate)) {
+                            temp.push(i);
                         }
                     } else {
                         if (makeDate(i.date) >= new Date(fromDate)) {
-                            temp.push(i)
+                            temp.push(i);
                         }
                     }
                 } else {
                     if (toDate != '') {
                         if (makeDate(i.date) <= new Date(toDate)) {
-                            temp.push(i)
+                            temp.push(i);
                         }
                     } else {
-                        setChangeDataBySearch(false)
+                        setChangeDataBySearch(false);
                     }
                 }
-            })
-            setOutput(temp)
-            setChangeDataBySearch(true)
+            });
+            setOutput(temp);
+            setChangeDataBySearch(true);
         }
-    }
+    };
 
     const handleRefresh = () => {
-        setFromDate('')
-        setToDate('')
-        setChangeDataBySearch(false)
-    }
+        setFromDate('');
+        setToDate('');
+        setChangeDataBySearch(false);
+    };
 
     const handleSpeedDialClick = (action) => {
         if (action.name === 'Show done orders') {
-            let temp = []
+            let temp = [];
             invoiceList.map((i) => {
                 if (i.isPaid === true && i.isChecked === true) {
-                    temp.push(i)
+                    temp.push(i);
                 }
-            })
-            setOutput(temp)
-            setChangeDataBySearch(true)
+            });
+            setOutput(temp);
+            setChangeDataBySearch(true);
         } else if (action.name === 'Show not done orders') {
-            let temp = []
+            let temp = [];
             invoiceList.map((i) => {
                 if (i.isPaid === false || i.isChecked === false) {
-                    temp.push(i)
+                    temp.push(i);
                 }
-            })
-            setOutput(temp)
-            setChangeDataBySearch(true)
+            });
+            setOutput(temp);
+            setChangeDataBySearch(true);
         } else if (action.name === 'Show increased orders') {
-            let temp = invoiceList
+            let temp = invoiceList;
             temp.sort((a, b) => {
-                return a.total - b.total
-            })
-            setOutput(temp)
-            setChangeDataBySearch(true)
+                return a.total - b.total;
+            });
+            setOutput(temp);
+            setChangeDataBySearch(true);
         } else {
-            let temp = invoiceList
+            let temp = invoiceList;
             temp.sort((a, b) => {
-                return b.total - a.total
-            })
-            setOutput(temp)
-            setChangeDataBySearch(true)
+                return b.total - a.total;
+            });
+            setOutput(temp);
+            setChangeDataBySearch(true);
         }
-    }
-
+    };
 
     return (
-        <Stack direction="column" sx={{
-            width: "100%",
-            height: "100%",
-            justifyItems: 'center',
-            alignItems: 'center',
-            backgroundColor: 'grey',
-            overflowY: 'auto'
-        }}>
-            {console.log(invoiceList)}
-            <Box sx={{
-                width: "90%",
-                height: "95%",
-                boxShadow: 10,
-                borderRadius: 3,
-                alignItems: 'center',
+        <Stack
+            direction="column"
+            sx={{
+                width: '100%',
+                height: '100%',
                 justifyItems: 'center',
-                backgroundColor: 'white'
-            }}>
-                <Stack sx={{
-                    width: "100%",
-                    height: "100%"
-                }}>
-                    <Stack direction="row" spacing={2} sx={{
-                        mt: 3,
-                        mb: 2,
-                        ml: 11
-                    }}>
+                alignItems: 'center',
+                backgroundColor: 'grey',
+                overflowY: 'auto',
+            }}
+        >
+            {console.log(invoiceList)}
+            <Box
+                sx={{
+                    width: '90%',
+                    height: '95%',
+                    boxShadow: 10,
+                    borderRadius: 3,
+                    alignItems: 'center',
+                    justifyItems: 'center',
+                    backgroundColor: 'white',
+                }}
+            >
+                <Stack
+                    sx={{
+                        width: '100%',
+                        height: '100%',
+                    }}
+                >
+                    <Stack
+                        direction="row"
+                        spacing={2}
+                        sx={{
+                            mt: 3,
+                            mb: 2,
+                            ml: 11,
+                        }}
+                    >
                         <TextField
                             id="date"
                             label="From"
@@ -228,12 +233,12 @@ const Invoice = () => {
                             value={fromDate}
                             sx={{
                                 width: 220,
-                                fontSize: '8px'
+                                fontSize: '8px',
                             }}
                             InputLabelProps={{
                                 shrink: true,
                             }}
-                            onChange={e => setFromDate(e.target.value)}
+                            onChange={(e) => setFromDate(e.target.value)}
                         />
                         <TextField
                             id="date"
@@ -243,12 +248,12 @@ const Invoice = () => {
                             size="small"
                             sx={{
                                 width: 220,
-                                fontSize: '8px'
+                                fontSize: '8px',
                             }}
                             InputLabelProps={{
                                 shrink: true,
                             }}
-                            onChange={e => setToDate(e.target.value)}
+                            onChange={(e) => setToDate(e.target.value)}
                         />
                         <Button onClick={handleSearch} color="success" variant="outlined" startIcon={<SearchIcon />}>
                             Search
@@ -266,31 +271,53 @@ const Invoice = () => {
                         }}
                         component={Paper}
                     >
-                        <Table stickyHeader aria-label="sticky table" >
+                        <Table stickyHeader aria-label="sticky table">
                             <TableHead style={{ backgroundColor: 'white', borderRadius: '15px' }}>
                                 <TableRow>
                                     <TableCell />
-                                    <TableCell style={{ color: '#0D0D0D', fontWeight: 'bold', fontSize: '13px' }}>Invoice ID</TableCell>
-                                    <TableCell align="center" style={{ color: '#0D0D0D', fontWeight: 'bold', fontSize: '13px' }}>Customer ID</TableCell>
-                                    <TableCell align="center" style={{ color: '#0D0D0D', fontWeight: 'bold', fontSize: '13px' }}>Date</TableCell>
-                                    <TableCell align="center" style={{ color: '#0D0D0D', fontWeight: 'bold', fontSize: '13px' }}>Total&nbsp;(USD)</TableCell>
-                                    <TableCell align="center" style={{ color: '#0D0D0D', fontWeight: 'bold', fontSize: '13px' }}>Status</TableCell>
-                                    <TableCell align="center" style={{ color: '#0D0D0D', fontWeight: 'bold', fontSize: '13px' }}>Print out</TableCell>
+                                    <TableCell style={{ color: '#0D0D0D', fontWeight: 'bold', fontSize: '13px' }}>
+                                        Invoice ID
+                                    </TableCell>
+                                    <TableCell
+                                        align="center"
+                                        style={{ color: '#0D0D0D', fontWeight: 'bold', fontSize: '13px' }}
+                                    >
+                                        Customer ID
+                                    </TableCell>
+                                    <TableCell
+                                        align="center"
+                                        style={{ color: '#0D0D0D', fontWeight: 'bold', fontSize: '13px' }}
+                                    >
+                                        Date
+                                    </TableCell>
+                                    <TableCell
+                                        align="center"
+                                        style={{ color: '#0D0D0D', fontWeight: 'bold', fontSize: '13px' }}
+                                    >
+                                        Total&nbsp;(USD)
+                                    </TableCell>
+                                    <TableCell
+                                        align="center"
+                                        style={{ color: '#0D0D0D', fontWeight: 'bold', fontSize: '13px' }}
+                                    >
+                                        Status
+                                    </TableCell>
+                                    <TableCell
+                                        align="center"
+                                        style={{ color: '#0D0D0D', fontWeight: 'bold', fontSize: '13px' }}
+                                    >
+                                        Print out
+                                    </TableCell>
                                 </TableRow>
                             </TableHead>
                             <TableBody>
-                                {changeDataBySearch != true ? (
-                                    invoiceList.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-                                        .map((row) => (
-                                            <Row key={row.invoiceID} row={row} />
-                                        ))
-
-                                ) : (
-                                    output.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-                                        .map((row) => (
-                                            <Row key={row.invoiceID} row={row} />
-                                        ))
-                                )}
+                                {changeDataBySearch != true
+                                    ? invoiceList
+                                          .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
+                                          .map((row) => <Row key={row.invoiceID} row={row} />)
+                                    : output
+                                          .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
+                                          .map((row) => <Row key={row.invoiceID} row={row} />)}
                             </TableBody>
                         </Table>
                         <TablePagination
@@ -321,12 +348,16 @@ const Invoice = () => {
                             ))}
                         </SpeedDial>
                     </Box>
-
                 </Stack>
             </Box>
 
-            <SnackBarAlert open={openSnackbar} handleClose={handleCloseSnackbar} severity="error" message="From date can not be greater than To Date" />
+            <SnackBarAlert
+                open={openSnackbar}
+                handleClose={handleCloseSnackbar}
+                severity="error"
+                message="From date can not be greater than To Date"
+            />
         </Stack>
-    )
-}
+    );
+};
 export default Invoice;

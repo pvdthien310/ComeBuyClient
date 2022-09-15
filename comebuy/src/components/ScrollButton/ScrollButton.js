@@ -3,23 +3,21 @@ import ArrowCircleUpSharpIcon from '@mui/icons-material/ArrowCircleUpSharp';
 import { Button } from './style';
 
 const ScrollButton = () => {
-
-    const [visible, setVisible] = useState(false)
+    const [visible, setVisible] = useState(false);
 
     const toggleVisible = () => {
         const scrolled = document.documentElement.scrollTop;
         if (scrolled > 300) {
-            setVisible(true)
-        }
-        else if (scrolled <= 300) {
-            setVisible(false)
+            setVisible(true);
+        } else if (scrolled <= 300) {
+            setVisible(false);
         }
     };
 
     const scrollToTop = () => {
         window.scrollTo({
             top: 0,
-            behavior: 'smooth'
+            behavior: 'smooth',
             /* you can also use 'auto' behaviour
                 in place of 'smooth' */
         });
@@ -29,10 +27,19 @@ const ScrollButton = () => {
 
     return (
         <Button>
-            <ArrowCircleUpSharpIcon onClick={scrollToTop}
-                style={{ color: 'black', borderRadius: '50px', backgroundColor: 'white', width: '50px', height: '50px', display: visible ? 'inline' : 'none' }} />
+            <ArrowCircleUpSharpIcon
+                onClick={scrollToTop}
+                style={{
+                    color: 'black',
+                    borderRadius: '50px',
+                    backgroundColor: 'white',
+                    width: '50px',
+                    height: '50px',
+                    display: visible ? 'inline' : 'none',
+                }}
+            />
         </Button>
     );
-}
+};
 
-export default ScrollButton
+export default ScrollButton;

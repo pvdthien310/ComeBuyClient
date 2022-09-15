@@ -1,5 +1,4 @@
-import { Alert, Snackbar } from "@mui/material";
-
+import { Alert, Snackbar } from '@mui/material';
 
 const SnackBarAlert = (props) => {
     return (
@@ -8,7 +7,7 @@ const SnackBarAlert = (props) => {
                 {props.message}
             </Alert>
         </Snackbar>
-    )
-}
+    );
+};
 
 export default SnackBarAlert;

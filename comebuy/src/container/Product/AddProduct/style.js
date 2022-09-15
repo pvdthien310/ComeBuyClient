@@ -6,7 +6,7 @@ const style = {
         width: '100%',
         justifyContent: 'center',
         alignItems: 'center',
-        backgroundColor: '#6260A6'
+        backgroundColor: '#6260A6',
     },
     boxInfor: {
         height: 'auto',
@@ -18,7 +18,6 @@ const style = {
         borderRadius: '10px',
         boxShadow: 10,
         padding: 2,
-
     },
     boxDes: {
         height: 'auto',
@@ -31,58 +30,56 @@ const style = {
         padding: 2,
     },
     boxDes_Stack: {
-        alignItems: 'center'
+        alignItems: 'center',
     },
     BoxDes_Grid: {
         alignItems: 'center',
-        justifyContent: 'center'
+        justifyContent: 'center',
     },
     boxInfor_Stack: {
-        alignItems: 'center'
+        alignItems: 'center',
     },
     boxInfor_Line: {
         height: 5,
         width: '100%',
         backgroundColor: '#233059',
         marginTop: '10px',
-        marginBottom: '10px'
-
+        marginBottom: '10px',
     },
     boxinfor_Stack_Line: {
         height: 3,
         width: '100%',
         backgroundColor: '#012030',
         marginTop: '10px',
-        marginBottom: '20px'
+        marginBottom: '20px',
     },
     AddImageButton: {
         backgroundColor: 'black',
         fontWeight: 'bold',
         color: 'white',
         height: '50px',
-        width:'100%',
+        width: '100%',
         marginTop: 2,
-        justifyContent:'center',
-        alignItems:'center',
+        justifyContent: 'center',
+        alignItems: 'center',
         '&:hover': {
-            backgroundColor: '#A6A6A4'
-        }
+            backgroundColor: '#A6A6A4',
+        },
     },
-    SaveButton:{
+    SaveButton: {
         alignSelf: 'center',
-        backgroundColor: "#008080",
+        backgroundColor: '#008080',
         '&:hover': {
-            backgroundColor: '#027373'
-        }
+            backgroundColor: '#027373',
+        },
     },
-    BackButton:{
+    BackButton: {
         alignSelf: 'center',
-        backgroundColor: "#404040",
+        backgroundColor: '#404040',
         '&:hover': {
-            backgroundColor: '#323E40'
-        }
-    }
-
+            backgroundColor: '#323E40',
+        },
+    },
 };
 
 export default style;

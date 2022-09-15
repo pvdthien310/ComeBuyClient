@@ -20,13 +20,9 @@ const ConfirmDialog = (props) => {
                 onClose={props.handleClose}
                 aria-labelledby="responsive-dialog-title"
             >
-                <DialogTitle id="responsive-dialog-title">
-                    {props.title}
-                </DialogTitle>
+                <DialogTitle id="responsive-dialog-title">{props.title}</DialogTitle>
                 <DialogContent>
-                    <DialogContentText>
-                        {props.body}
-                    </DialogContentText>
+                    <DialogContentText>{props.body}</DialogContentText>
                 </DialogContent>
                 <DialogActions>
                     <Button autoFocus onClick={props.handleClose}>
@@ -39,5 +35,5 @@ const ConfirmDialog = (props) => {
             </Dialog>
         </div>
     );
-}
+};
 export default ConfirmDialog;

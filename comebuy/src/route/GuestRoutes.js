@@ -7,38 +7,38 @@ import GuestCart from '../container/GuestCart';
 import { CheckoutPage } from '../container/Checkout';
 
 const guestRoutes = [
-  {
-    name: 'Guest Cart',
-    path: '/guestCart',
-    page: <GuestCart />,
-  },
-  {
-    name: 'Product Space',
-    path: '/productSpace',
-    page: <ProductSpace />,
-  },
-  {
-    name: 'Home',
-    path: '/',
-    page: <HomePage />,
-  },
-  {
-    name: 'ForgotPassword',
-    path: '/myplace/resetpassword',
-    page: <ForgotPassword />,
-  },
-  {
-    name: 'DetailProduct',
-    path: '/productSpace/:id',
-    page: <DetailProduct />
-  },
-  {
-    name: 'Check out cart',
-    path: '/myplace/mycart/checkout',
-    page: <CheckoutPage />
-  }
+    {
+        name: 'Guest Cart',
+        path: '/guestCart',
+        page: <GuestCart />,
+    },
+    {
+        name: 'Product Space',
+        path: '/productSpace',
+        page: <ProductSpace />,
+    },
+    {
+        name: 'Home',
+        path: '/',
+        page: <HomePage />,
+    },
+    {
+        name: 'ForgotPassword',
+        path: '/myplace/resetpassword',
+        page: <ForgotPassword />,
+    },
+    {
+        name: 'DetailProduct',
+        path: '/productSpace/:id',
+        page: <DetailProduct />,
+    },
+    {
+        name: 'Check out cart',
+        path: '/myplace/mycart/checkout',
+        page: <CheckoutPage />,
+    },
 ];
 
-const guestMenuItems = []
+const guestMenuItems = [];
 
 export { guestRoutes, guestMenuItems };

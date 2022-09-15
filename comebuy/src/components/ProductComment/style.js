@@ -1,4 +1,4 @@
-import { StickyNote2 } from "@mui/icons-material";
+import { StickyNote2 } from '@mui/icons-material';
 
 const style = {
     boxContainer: {
@@ -7,7 +7,7 @@ const style = {
         bgcolor: 'background.paper',
         padding: 4,
         maxHeight: '100%',
-        height: 'auto'
+        height: 'auto',
     },
     boxInfor1: {
         height: 'auto',
@@ -18,7 +18,6 @@ const style = {
         borderRadius: '10px',
         boxShadow: 10,
         padding: 2,
-
     },
     boxInfor: {
         height: 'auto',
@@ -29,7 +28,6 @@ const style = {
         borderRadius: '10px',
         boxShadow: 10,
         padding: 2,
-
     },
     boxHandle: {
         position: 'sticky',
@@ -64,7 +62,6 @@ const style = {
         borderRadius: '10px',
         m: 4,
         boxShadow: 10,
-       
     },
     boxDes: {
         height: 'auto',
@@ -77,30 +74,29 @@ const style = {
         padding: 2,
     },
     boxDes_Stack: {
-        alignItems: 'center'
+        alignItems: 'center',
     },
     BoxDes_Grid: {
         display: 'flex',
         alignItems: 'center',
-        justifyContent: 'center'
+        justifyContent: 'center',
     },
     boxInfor_Stack: {
-        alignItems: 'center'
+        alignItems: 'center',
     },
     boxInfor_Line: {
         height: 5,
         width: '100%',
         backgroundColor: '#B360E6',
         marginTop: '10px',
-        marginBottom: '10px'
-
+        marginBottom: '10px',
     },
     boxinfor_Stack_Line: {
         height: 3,
         width: '100%',
         backgroundColor: '#B360E6',
         marginTop: '10px',
-        marginBottom: '20px'
+        marginBottom: '20px',
     },
     buttonFeature: {
         marginBottom: 2,
@@ -122,8 +118,7 @@ const style = {
         borderRadius: 5,
         boxShadow: 24,
         p: 4,
-    }
-
+    },
 };
 
 export default style;

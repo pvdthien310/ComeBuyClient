@@ -1,12 +1,13 @@
-import DatabaseClient from './baseAPI.js'
+import DatabaseClient from './baseAPI.js';
 
-const baseURL = 'invoiceItem'
+const baseURL = 'invoiceItem';
 
 const invoiceItemAPI = {
     addInvoiceItem: async (invoiceItem) => {
-        const res = await DatabaseClient.post('/' + baseURL, invoiceItem)
-            .catch(err => { return err.response })
-        return res
-    }
-}
-export default invoiceItemAPI
+        const res = await DatabaseClient.post('/' + baseURL, invoiceItem).catch((err) => {
+            return err.response;
+        });
+        return res;
+    },
+};
+export default invoiceItemAPI;

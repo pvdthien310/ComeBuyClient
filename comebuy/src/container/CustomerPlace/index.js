@@ -1,4 +1,4 @@
-import React from 'react'
+import React from 'react';
 import Stack from '@mui/material/Stack';
 import Card from '@mui/material/Card';
 import CardContent from '@mui/material/CardContent';
@@ -7,41 +7,38 @@ import Typography from '@mui/material/Typography';
 import { CardActionArea, CardActions } from '@mui/material';
 import NavigateNextIcon from '@mui/icons-material/NavigateNext';
 import Button from '@mui/material/Button';
-import { useNavigate } from 'react-router-dom'
-import { useSelector } from 'react-redux'
-
+import { useNavigate } from 'react-router-dom';
+import { useSelector } from 'react-redux';
 
 import NavBar from './../../components/NavBar/NavBar';
 
-import { currentUser } from './../../redux/selectors'
+import { currentUser } from './../../redux/selectors';
 import { BigFooter } from '../../components';
 
-
 const CustomerPlace = () => {
-
-    const navigate = useNavigate()
+    const navigate = useNavigate();
     const gotoProfile = () => {
-        navigate('/profile')
-    }
+        navigate('/profile');
+    };
     const gotoCart = () => {
-        navigate('/myplace/mycart')
-    }
+        navigate('/myplace/mycart');
+    };
     const gotoFavorite = () => {
-        navigate('/myplace/myfavorite')
-    }
+        navigate('/myplace/myfavorite');
+    };
 
     const gotoOrder = () => {
-        navigate('/myplace/myorders')
-    }
+        navigate('/myplace/myorders');
+    };
 
     return (
         <div style={{ height: '100%', width: '100%' }}>
-            <NavBar  ></NavBar>
+            <NavBar></NavBar>
             <div style={{ height: '100%', width: '100%' }}>
                 <Stack
                     direction={{ xs: 'column', sm: 'row' }}
                     spacing={{ xs: 12, sm: 12, md: 12 }}
-                    style={{ marginTop: '9%', marginLeft: '3%', marginRight: '3%', flex: '1', }}
+                    style={{ marginTop: '9%', marginLeft: '3%', marginRight: '3%', flex: '1' }}
                 >
                     {/* item 1 */}
                     <Card sx={{ width: 340, borderRadius: '15px', borderWidth: '2px', backgroundColor: 'black' }}>
@@ -53,7 +50,12 @@ const CustomerPlace = () => {
                                 alt="centered image"
                             />
                             <CardContent>
-                                <Typography gutterBottom variant="h5" component="div" style={{ color: 'white', fontWeight: 'bold' }}>
+                                <Typography
+                                    gutterBottom
+                                    variant="h5"
+                                    component="div"
+                                    style={{ color: 'white', fontWeight: 'bold' }}
+                                >
                                     Your Orders
                                 </Typography>
                                 <Typography variant="body2" color="text.secondary" style={{ color: 'white' }}>
@@ -62,7 +64,11 @@ const CustomerPlace = () => {
                             </CardContent>
                         </CardActionArea>
                         <CardActions style={{ justifyContent: 'flex-end' }}>
-                            <Button onClick={gotoOrder} style={{ color: 'white', fontWeight: 'bold' }} endIcon={<NavigateNextIcon />}>
+                            <Button
+                                onClick={gotoOrder}
+                                style={{ color: 'white', fontWeight: 'bold' }}
+                                endIcon={<NavigateNextIcon />}
+                            >
                                 Go to
                             </Button>
                         </CardActions>
@@ -78,7 +84,12 @@ const CustomerPlace = () => {
                                 alt="centered image"
                             />
                             <CardContent>
-                                <Typography gutterBottom variant="h5" component="div" style={{ color: 'white', fontWeight: 'bold' }}>
+                                <Typography
+                                    gutterBottom
+                                    variant="h5"
+                                    component="div"
+                                    style={{ color: 'white', fontWeight: 'bold' }}
+                                >
                                     Your Cart
                                 </Typography>
                                 <Typography variant="body2" color="text.secondary" style={{ color: 'white' }}>
@@ -87,7 +98,11 @@ const CustomerPlace = () => {
                             </CardContent>
                         </CardActionArea>
                         <CardActions style={{ justifyContent: 'flex-end' }}>
-                            <Button onClick={gotoCart} style={{ color: 'white', fontWeight: 'bold' }} endIcon={<NavigateNextIcon />}>
+                            <Button
+                                onClick={gotoCart}
+                                style={{ color: 'white', fontWeight: 'bold' }}
+                                endIcon={<NavigateNextIcon />}
+                            >
                                 Go to
                             </Button>
                         </CardActions>
@@ -103,7 +118,12 @@ const CustomerPlace = () => {
                                 alt="centered image"
                             />
                             <CardContent>
-                                <Typography gutterBottom variant="h5" component="div" style={{ color: 'white', fontWeight: 'bold' }}>
+                                <Typography
+                                    gutterBottom
+                                    variant="h5"
+                                    component="div"
+                                    style={{ color: 'white', fontWeight: 'bold' }}
+                                >
                                     Your favorite
                                 </Typography>
                                 <Typography variant="body2" color="text.secondary" style={{ color: 'white' }}>
@@ -112,7 +132,11 @@ const CustomerPlace = () => {
                             </CardContent>
                         </CardActionArea>
                         <CardActions style={{ justifyContent: 'flex-end' }}>
-                            <Button onClick={gotoFavorite} style={{ color: 'white', fontWeight: 'bold' }} endIcon={<NavigateNextIcon />}>
+                            <Button
+                                onClick={gotoFavorite}
+                                style={{ color: 'white', fontWeight: 'bold' }}
+                                endIcon={<NavigateNextIcon />}
+                            >
                                 Go to
                             </Button>
                         </CardActions>
@@ -128,7 +152,12 @@ const CustomerPlace = () => {
                                 alt="centered image"
                             />
                             <CardContent>
-                                <Typography gutterBottom variant="h5" component="div" style={{ color: 'white', fontWeight: 'bold' }}>
+                                <Typography
+                                    gutterBottom
+                                    variant="h5"
+                                    component="div"
+                                    style={{ color: 'white', fontWeight: 'bold' }}
+                                >
                                     Your Profile
                                 </Typography>
                                 <Typography variant="body2" color="text.secondary" style={{ color: 'white' }}>
@@ -137,7 +166,11 @@ const CustomerPlace = () => {
                             </CardContent>
                         </CardActionArea>
                         <CardActions style={{ justifyContent: 'flex-end' }}>
-                            <Button onClick={gotoProfile} style={{ color: 'white', fontWeight: 'bold' }} endIcon={<NavigateNextIcon />}>
+                            <Button
+                                onClick={gotoProfile}
+                                style={{ color: 'white', fontWeight: 'bold' }}
+                                endIcon={<NavigateNextIcon />}
+                            >
                                 Go to
                             </Button>
                         </CardActions>
@@ -146,8 +179,7 @@ const CustomerPlace = () => {
             </div>
             <BigFooter />
         </div>
+    );
+};
 
-    )
-}
-
-export default CustomerPlace
+export default CustomerPlace;

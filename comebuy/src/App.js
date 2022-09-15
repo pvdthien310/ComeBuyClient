@@ -17,60 +17,57 @@ import { getAccountWithID } from './redux/slices/accountSlice';
 import SetUpFunction from './lib/utils/setUpFunction';
 
 function App() {
- 
-  /// For the first open website
-  SetUpFunction()
-  
-  const dispatch = useDispatch()
-  const role = localStorage.getItem('role');
-  const navigate = useNavigate()
+    /// For the first open website
+    SetUpFunction();
 
-  const _currentUser =  useSelector(currentUser)
+    const dispatch = useDispatch();
+    const role = localStorage.getItem('role');
+    const navigate = useNavigate();
 
-  const LoadCurrentUser = async () => {
-    if (localStorage.getItem('idUser') && localStorage.getItem('idUser') != "") {
-      try {
-           await dispatch(getAccountWithID(localStorage.getItem('idUser')))
-      } catch (rejectedValueOrSerializedError) {
-          // handle error here
-          console.log(rejectedValueOrSerializedError.message);
-      }
-  }
-  }
+    const _currentUser = useSelector(currentUser);
 
-  useEffect(async () => {
-    await LoadCurrentUser()
-    navigate('/')
-  }, [role])
+    const LoadCurrentUser = async () => {
+        if (localStorage.getItem('idUser') && localStorage.getItem('idUser') != '') {
+            try {
+                await dispatch(getAccountWithID(localStorage.getItem('idUser')));
+            } catch (rejectedValueOrSerializedError) {
+                // handle error here
+                console.log(rejectedValueOrSerializedError.message);
+            }
+        }
+    };
 
-  const renderRoutes = () => {
+    useEffect(async () => {
+        await LoadCurrentUser();
+        navigate('/');
+    }, [role]);
 
-    const token = localStorage.getItem('accessToken');
+    const renderRoutes = () => {
+        const token = localStorage.getItem('accessToken');
 
-    if (token) {
-      switch (role) {
-        case 'manager':
-          return <MainLayout routes={managerRoutes} itemRoutes={managerMenuItems} />;
-        case 'staff':
-          return <MainLayout routes={staffRoutes} itemRoutes={staffMenuItems} />;
-        case 'admin':
-          return <MainLayout routes={adminRoutes} itemRoutes={adminMenuItems} />;
-        case 'customer':
-          return <GuestLayout routes={customerRoutes} itemRoutes={customerMenuItems} />;
-        default:
-          return <GuestLayout routes={guestRoutes} itemRoutes={guestMenuItems} />; // Guest/Customer 
-      }
-    }
-  };
+        if (token) {
+            switch (role) {
+                case 'manager':
+                    return <MainLayout routes={managerRoutes} itemRoutes={managerMenuItems} />;
+                case 'staff':
+                    return <MainLayout routes={staffRoutes} itemRoutes={staffMenuItems} />;
+                case 'admin':
+                    return <MainLayout routes={adminRoutes} itemRoutes={adminMenuItems} />;
+                case 'customer':
+                    return <GuestLayout routes={customerRoutes} itemRoutes={customerMenuItems} />;
+                default:
+                    return <GuestLayout routes={guestRoutes} itemRoutes={guestMenuItems} />; // Guest/Customer
+            }
+        }
+    };
 
-
-  return (
-    <Routes>
-       {/* <Route path="/" element={<HomePage />} /> */}
-      <Route path="/login" element={<LoginRegister />} />
-      <Route path="*" element={renderRoutes()} />
-      <Route path="/forgetpasswordinlogin" element={<ForgotPasswordInLogin />} />
-    </Routes>
-  );
+    return (
+        <Routes>
+            {/* <Route path="/" element={<HomePage />} /> */}
+            <Route path="/login" element={<LoginRegister />} />
+            <Route path="*" element={renderRoutes()} />
+            <Route path="/forgetpasswordinlogin" element={<ForgotPasswordInLogin />} />
+        </Routes>
+    );
 }
 export default App;

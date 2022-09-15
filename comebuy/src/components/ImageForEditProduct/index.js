@@ -8,7 +8,7 @@ import DialogTitle from '@mui/material/DialogTitle';
 import DeleteIcon from '@mui/icons-material/Delete';
 import { Box, Grid, styled } from '@mui/material';
 
-import style from './style.js'
+import style from './style.js';
 
 const DeleteButton = styled(Button)(({ theme }) => ({
     alignSelf: 'flex-start',
@@ -16,28 +16,30 @@ const DeleteButton = styled(Button)(({ theme }) => ({
     backgroundColor: '#F51B06',
     '&:hover': {
         backgroundColor: '#A81B06',
-    }
-}))
+    },
+}));
 
 const ProductImage = styled('img')(({ theme }) => ({
     alignSelf: 'center',
     position: 'absolute',
     width: '100%',
-    height: '100%'
-}))
+    height: '100%',
+}));
 
 const ImageForEditProduct = (props) => {
     const [open, setOpen] = React.useState(false);
-    const handleClickOpen = () => setOpen(true)
-    const handleClose = () => setOpen(false)
+    const handleClickOpen = () => setOpen(true);
+    const handleClose = () => setOpen(false);
     const handleDelete = () => {
-        props.deleteImage(props.image)
-        handleClose()
-    }
+        props.deleteImage(props.image);
+        handleClose();
+    };
     return (
         <Grid sx={style.container}>
             <ProductImage item="true" xs={12} src={props.image.imageURL}></ProductImage>
-            <DeleteButton item="true" variant="contained" onClick={handleClickOpen} startIcon={<DeleteIcon />}>Delete</DeleteButton>
+            <DeleteButton item="true" variant="contained" onClick={handleClickOpen} startIcon={<DeleteIcon />}>
+                Delete
+            </DeleteButton>
             <Dialog
                 item="true"
                 open={open}
@@ -45,12 +47,11 @@ const ImageForEditProduct = (props) => {
                 aria-labelledby="alert-dialog-title"
                 aria-describedby="alert-dialog-description"
             >
-                <DialogTitle id="alert-dialog-title">
-                    {"Do you really want to delete this photo?"}
-                </DialogTitle>
+                <DialogTitle id="alert-dialog-title">{'Do you really want to delete this photo?'}</DialogTitle>
                 <DialogContent>
                     <DialogContentText id="alert-dialog-description">
-                       You have just deleted this photo. Please confirm again for reliability because this action is not allowed to redo?
+                        You have just deleted this photo. Please confirm again for reliability because this action is
+                        not allowed to redo?
                     </DialogContentText>
                 </DialogContent>
                 <DialogActions>
@@ -61,7 +62,7 @@ const ImageForEditProduct = (props) => {
                 </DialogActions>
             </Dialog>
         </Grid>
-    )
-}
+    );
+};
 
 export default ImageForEditProduct;

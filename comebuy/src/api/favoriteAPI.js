@@ -1,11 +1,12 @@
-import DatabaseClient from './baseAPI.js'
+import DatabaseClient from './baseAPI.js';
 
-const baseURL = 'favorite'
+const baseURL = 'favorite';
 
 const favoriteApi = {
     getAll: async () => {
-        const res = DatabaseClient.get('/' + baseURL)
-            .catch(err => { return err.response })
+        const res = DatabaseClient.get('/' + baseURL).catch((err) => {
+            return err.response;
+        });
         return res;
     },
     // updateCart: async (data) => {
@@ -14,14 +15,16 @@ const favoriteApi = {
     //     return res;
     // },
     deleteFavoriteById: async (id) => {
-        const res = await DatabaseClient.delete('/' + baseURL + '/' + id, id)
-            .catch(err => { return err.message })
+        const res = await DatabaseClient.delete('/' + baseURL + '/' + id, id).catch((err) => {
+            return err.message;
+        });
         return res;
     },
     addFavorite: async (data) => {
-        const res = await DatabaseClient.post('/' + baseURL, data)
-            .catch(err => { return err.response })
+        const res = await DatabaseClient.post('/' + baseURL, data).catch((err) => {
+            return err.response;
+        });
         return res;
-    }
-}
-export default favoriteApi
+    },
+};
+export default favoriteApi;

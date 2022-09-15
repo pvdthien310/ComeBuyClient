@@ -1,27 +1,24 @@
-import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
-import invoiceItemAPI from "../../api/invoiceItemAPI";
+import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
+import invoiceItemAPI from '../../api/invoiceItemAPI';
 
-export const addInvoiceItem = createAsyncThunk(
-    "invoiceItem/addInvoiceItem",
-    async (data, { rejectWithValue }) => {
-        try {
-            const response = await invoiceItemAPI.addInvoiceItem(data);
-            if (!response) {
-                return rejectWithValue();
-            } else {
-                return response;
-            }
-        } catch (error) {
-            console.log(error);
+export const addInvoiceItem = createAsyncThunk('invoiceItem/addInvoiceItem', async (data, { rejectWithValue }) => {
+    try {
+        const response = await invoiceItemAPI.addInvoiceItem(data);
+        if (!response) {
+            return rejectWithValue();
+        } else {
+            return response;
         }
-    })
-
+    } catch (error) {
+        console.log(error);
+    }
+});
 
 export const invoiceItemSlice = createSlice({
     name: 'invoiceItem',
     initialState: {
         invoiceItemList: [],
-        loading: false
+        loading: false,
     },
     extraReducers: {
         // [updateInvoice.pending]: (state) => {
@@ -41,6 +38,6 @@ export const invoiceItemSlice = createSlice({
         },
         [addInvoiceItem.rejected]: (state, action) => {
             state.loading = false;
-        }
-    }
-})
+        },
+    },
+});

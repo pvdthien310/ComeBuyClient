@@ -5,7 +5,6 @@ import FormControl from '@mui/material/FormControl';
 import Select from '@mui/material/Select';
 
 const BranchSelect = (props) => {
-
     return (
         <FormControl sx={{ m: 1, minWidth: 120 }} size="small">
             <InputLabel id="demo-select-small">Select existed branch</InputLabel>
@@ -16,13 +15,13 @@ const BranchSelect = (props) => {
                 label="Select existed branch"
                 onChange={props.handleChange}
             >
-                {
-                    props.branchList.map((item) => (
-                        <MenuItem key={item.branchID} value={item.branchID}>{item.address}</MenuItem>
-                    ))
-                }
+                {props.branchList.map((item) => (
+                    <MenuItem key={item.branchID} value={item.branchID}>
+                        {item.address}
+                    </MenuItem>
+                ))}
             </Select>
         </FormControl>
     );
-}
-export default BranchSelect
+};
+export default BranchSelect;

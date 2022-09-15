@@ -7,7 +7,7 @@ import MenuItem from '@mui/material/MenuItem';
 import FormControl from '@mui/material/FormControl';
 import Select from '@mui/material/Select';
 import Chip from '@mui/material/Chip';
-import { useEffect, useState } from 'react'
+import { useEffect, useState } from 'react';
 import { Stack } from '@mui/material';
 
 const ITEM_HEIGHT = 48;
@@ -24,18 +24,16 @@ const MenuProps = {
 function getStyles(name, personName, theme) {
     return {
         fontWeight:
-            personName.indexOf(name) === -1
-                ? theme.typography.fontWeightRegular
-                : theme.typography.fontWeightMedium,
+            personName.indexOf(name) === -1 ? theme.typography.fontWeightRegular : theme.typography.fontWeightMedium,
     };
 }
 
 const FeatureSelect = (props) => {
     const theme = useTheme();
     return (
-        <Stack item="true" sx={{ marginLeft: 2}}>
+        <Stack item="true" sx={{ marginLeft: 2 }}>
             <FormControl sx={{ m: 1 }}>
-                <InputLabel >Product's Feature</InputLabel>
+                <InputLabel>Product's Feature</InputLabel>
                 <Select
                     multiple
                     value={props.currentFeature}
@@ -51,11 +49,7 @@ const FeatureSelect = (props) => {
                     MenuProps={MenuProps}
                 >
                     {props.features.map((item) => (
-                        <MenuItem
-                            key={item.name}
-                            value={item.name}
-                            style={getStyles(item.name, props.features, theme)}
-                        >
+                        <MenuItem key={item.name} value={item.name} style={getStyles(item.name, props.features, theme)}>
                             {item.name}
                         </MenuItem>
                     ))}
@@ -63,5 +57,5 @@ const FeatureSelect = (props) => {
             </FormControl>
         </Stack>
     );
-}
+};
 export default FeatureSelect;

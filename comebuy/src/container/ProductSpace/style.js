@@ -26,7 +26,7 @@ const marks = [
 const PrettoSlider = styled(Slider)({
     color: '#2D2059',
     height: 8,
-    marks: marks ,
+    marks: marks,
     '& .MuiSlider-track': {
         border: 'none',
     },
@@ -73,7 +73,7 @@ const AirbnbThumbComponent = (props) => {
             <span className="airbnb-bar" />
         </SliderThumb>
     );
-}
+};
 
 AirbnbThumbComponent.propTypes = {
     children: PropTypes.node,
@@ -129,17 +129,17 @@ const AirbnbSlider = styled(Slider)(({ theme }) => ({
 }));
 function valuetext(value) {
     return `${value}°C`;
-  }
+}
 const ExampleSlider = () => {
     return (
         <Slider
-          getAriaLabel={() => 'Temperature'}
-        //   orientation="vertical"
-          getAriaValueText={valuetext}
-          defaultValue={[20, 37]}
-          marks={marks}
+            getAriaLabel={() => 'Temperature'}
+            //   orientation="vertical"
+            getAriaValueText={valuetext}
+            defaultValue={[20, 37]}
+            marks={marks}
         />
     );
-  }
+};
 
-export { PrettoSlider, AirbnbThumbComponent, AirbnbSlider, ExampleSlider }
+export { PrettoSlider, AirbnbThumbComponent, AirbnbSlider, ExampleSlider };

@@ -17,11 +17,7 @@ function TabPanel(props) {
             aria-labelledby={`simple-tab-${index}`}
             {...other}
         >
-            {value === index && (
-                <Box sx={{ p: 3 }}>
-                    {children}
-                </Box>
-            )}
+            {value === index && <Box sx={{ p: 3 }}>{children}</Box>}
         </div>
     );
 }
@@ -32,12 +28,8 @@ TabPanel.propTypes = {
     value: PropTypes.number.isRequired,
 };
 
-
 const StyledTabs = styled((props) => (
-    <Tabs
-        {...props}
-        TabIndicatorProps={{ children: <span className="MuiTabs-indicatorSpan" /> }}
-    />
+    <Tabs {...props} TabIndicatorProps={{ children: <span className="MuiTabs-indicatorSpan" /> }} />
 ))({
     '& .MuiTabs-indicator': {
         display: 'flex',
@@ -67,4 +59,4 @@ const StyledTab = styled((props) => <Tab disableRipple icon={<StoreIcon />} icon
     }),
 );
 
-export {StyledTab, StyledTabs, TabPanel}
+export { StyledTab, StyledTabs, TabPanel };

@@ -1,52 +1,42 @@
-import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
-import invoiceAPI from "../../api/invoiceAPI";
+import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
+import invoiceAPI from '../../api/invoiceAPI';
 
-export const getAllInvoice = createAsyncThunk(
-    'invoice/getAll',
-    async (data, { rejectWithValue }) => {
-        const response = await invoiceAPI.getAll()
+export const getAllInvoice = createAsyncThunk('invoice/getAll', async (data, { rejectWithValue }) => {
+    const response = await invoiceAPI.getAll();
+    if (!response) {
+        return rejectWithValue('Get All Failed');
+    } else {
+        return response;
+    }
+});
+
+export const updateInvoice = createAsyncThunk('invoice/updateInvoice', async (data, { rejectedWithValue }) => {
+    const response = await invoiceAPI.updateInvoice(data);
+    if (!response) {
+        return rejectedWithValue('Updated failed !');
+    } else {
+        return response;
+    }
+});
+
+export const addInvoice = createAsyncThunk('invoice/addInvoice', async (data, { rejectWithValue }) => {
+    try {
+        const response = await invoiceAPI.addInvoice(data);
         if (!response) {
-            return rejectWithValue("Get All Failed");
-        }
-        else {
+            return rejectWithValue();
+        } else {
             return response;
         }
+    } catch (error) {
+        console.log(error);
     }
-);
-
-export const updateInvoice = createAsyncThunk(
-    'invoice/updateInvoice',
-    async (data, { rejectedWithValue }) => {
-        const response = await invoiceAPI.updateInvoice(data)
-        if (!response) {
-            return rejectedWithValue("Updated failed !")
-        } else {
-            return response
-        }
-    }
-);
-
-export const addInvoice = createAsyncThunk(
-    "invoice/addInvoice",
-    async (data, { rejectWithValue }) => {
-        try {
-            const response = await invoiceAPI.addInvoice(data);
-            if (!response) {
-                return rejectWithValue();
-            } else {
-                return response;
-            }
-        } catch (error) {
-            console.log(error);
-        }
-    })
-
+});
 
 export const invoiceSlice = createSlice({
     name: 'invoice',
     initialState: {
         invoiceList: [],
-        loading: false
+        loading: false,
     },
     reducers: {
         invoiceListChange: (state, action) => {
@@ -56,7 +46,7 @@ export const invoiceSlice = createSlice({
             state.loading = action.payload;
         },
         addInvoice: (state, action) => {
-            state.invoiceList.push(action.payload)
+            state.invoiceList.push(action.payload);
         },
     },
     extraReducers: {
@@ -77,6 +67,6 @@ export const invoiceSlice = createSlice({
         },
         [addInvoice.rejected]: (state, action) => {
             state.loading = false;
-        }
-    }
-})
+        },
+    },
+});

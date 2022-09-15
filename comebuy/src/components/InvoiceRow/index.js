@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { useDispatch } from 'react-redux'
+import { useDispatch } from 'react-redux';
 import ReactToPrint from 'react-to-print';
 import { updateInvoice } from '../../redux/slices/invoiceSlice';
 import { unwrapResult } from '@reduxjs/toolkit';
@@ -51,11 +51,11 @@ const Alert = React.forwardRef(function Alert(props, ref) {
 const steps = ['Checked', 'Delivered'];
 
 const Row = (props) => {
-    const componentRef = React.useRef()
+    const componentRef = React.useRef();
     const handlePrint = () => {
-        window.print()
-    }
-    const _currentUser = useSelector(currentUser)
+        window.print();
+    };
+    const _currentUser = useSelector(currentUser);
 
     const { row } = props;
     const [open, setOpen] = React.useState(false);
@@ -94,8 +94,8 @@ const Row = (props) => {
     //Get product information
     const [anchorEl2, setAnchorEl2] = React.useState(null);
     const handleClickProductId = (event) => {
-        setAnchorEl2(event.currentTarget)
-    }
+        setAnchorEl2(event.currentTarget);
+    };
     const handleProductPopoverOpen = (event) => {
         setAnchorEl2(event.currentTarget);
     };
@@ -105,21 +105,20 @@ const Row = (props) => {
     const openProductHover = Boolean(anchorEl2);
     const id2 = open ? 'simple-popover' : undefined;
 
-
     //Execute process of managing invoice
-    const [disablePaid, setDisablePaid] = React.useState(false)
-    const [disableCheck, setDisableCheck] = React.useState(false)
+    const [disablePaid, setDisablePaid] = React.useState(false);
+    const [disableCheck, setDisableCheck] = React.useState(false);
 
-    const [isChecked, setIsChecked] = React.useState(row.isChecked)
-    const [isPaid, setIsPaid] = React.useState(row.isPaid)
+    const [isChecked, setIsChecked] = React.useState(row.isChecked);
+    const [isPaid, setIsPaid] = React.useState(row.isPaid);
 
     const [dataForUpdate, setDataForUpdate] = React.useState({
         invoiceID: row.invoiceID,
         moneyReceived: row.moneyReceived,
         total: row.total,
         isChecked: row.isChecked,
-        isPaid: row.isPaid
-    })
+        isPaid: row.isPaid,
+    });
 
     //for snackbar
     const [openSnackbar, setOpenSnackbar] = React.useState(false);
@@ -130,91 +129,91 @@ const Row = (props) => {
         setOpenSnackbar(false);
     };
 
-    const [updating, setUpdating] = React.useState(false)
+    const [updating, setUpdating] = React.useState(false);
 
-    const dispatch = useDispatch()
+    const dispatch = useDispatch();
 
     React.useEffect(() => {
         if (updating === true) {
-            setOpenBackdrop(true)
+            setOpenBackdrop(true);
         } else {
-            setOpenBackdrop(false)
+            setOpenBackdrop(false);
         }
-    }, [updating])
+    }, [updating]);
 
     const handleClickPaidInvoice = async () => {
-        setUpdating(true)
-        let temp = dataForUpdate
+        setUpdating(true);
+        let temp = dataForUpdate;
         try {
             if (temp.isChecked === true) {
                 temp = {
                     ...temp,
                     isPaid: true,
-                    moneyReceived: invoiceTotal
-                }
+                    moneyReceived: invoiceTotal,
+                };
             } else {
                 temp = {
                     ...temp,
                     isChecked: true,
-                }
+                };
             }
-            const resultAction = await dispatch(updateInvoice(temp))
-            const originalPromiseResult = unwrapResult(resultAction)
-            setDataForUpdate(temp)
-            console.log("temp:" + temp)
-            console.log("dataforup:" + dataForUpdate)
-            setActiveStep(activeStep + 1)
-            setUpdating(false)
-            setOpenSnackbar(true)
+            const resultAction = await dispatch(updateInvoice(temp));
+            const originalPromiseResult = unwrapResult(resultAction);
+            setDataForUpdate(temp);
+            console.log('temp:' + temp);
+            console.log('dataforup:' + dataForUpdate);
+            setActiveStep(activeStep + 1);
+            setUpdating(false);
+            setOpenSnackbar(true);
         } catch (rejectedValueOrSerializedError) {
             // handle error here
             console.log(rejectedValueOrSerializedError.message);
         }
-    }
+    };
 
     function Total() {
         let total = 0;
         for (let i = 0; i < row.invoiceitem.length; i++) {
-            total = total + Number(row.invoiceitem[i].total)
+            total = total + Number(row.invoiceitem[i].total);
         }
         return total;
     }
 
-    const [invoiceTotal, setInvoiceTotal] = React.useState(0)
+    const [invoiceTotal, setInvoiceTotal] = React.useState(0);
 
     React.useEffect(() => {
         if (invoiceTotal === 0) {
-            setInvoiceTotal(Total())
+            setInvoiceTotal(Total());
         }
-    }, [])
+    }, []);
 
-    const [openModalBill, setOpenModalBill] = React.useState(false)
+    const [openModalBill, setOpenModalBill] = React.useState(false);
     const closeModalBill = () => {
-        setOpenModalBill(false)
-    }
+        setOpenModalBill(false);
+    };
 
     const [activeStep, setActiveStep] = React.useState(0);
 
     React.useEffect(() => {
-        let t = false
+        let t = false;
         const setActive = () => {
             if (Boolean(row.isChecked) === true) {
                 if (Boolean(row.isPaid) === true) {
-                    setActiveStep(2)
+                    setActiveStep(2);
                 } else {
-                    setActiveStep(1)
+                    setActiveStep(1);
                 }
             } else {
-                setActiveStep(0)
+                setActiveStep(0);
             }
-        }
+        };
         if (t === false) {
-            setActive()
-            t = true
+            setActive();
+            t = true;
         }
-    }, [])
+    }, []);
     return (
-        <React.Fragment >
+        <React.Fragment>
             <TableRow sx={{ '& > *': { borderBottom: 'set', backgroundColor: 'white' } }}>
                 <TableCell>
                     <IconButton
@@ -223,20 +222,22 @@ const Row = (props) => {
                         size="small"
                         onClick={() => setOpen(!open)}
                     >
-                        {open ? <KeyboardArrowUpIcon style={{ color: 'black' }} /> : <KeyboardArrowDownIcon style={{ color: 'black' }} />}
+                        {open ? (
+                            <KeyboardArrowUpIcon style={{ color: 'black' }} />
+                        ) : (
+                            <KeyboardArrowDownIcon style={{ color: 'black' }} />
+                        )}
                     </IconButton>
                 </TableCell>
                 <TableCell scope="row">
                     <Box>
-                        <Typography style={{ color: 'black', fontWeight: 'bold', fontSize: '13px' }}>{row.invoiceID}</Typography>
+                        <Typography style={{ color: 'black', fontWeight: 'bold', fontSize: '13px' }}>
+                            {row.invoiceID}
+                        </Typography>
                     </Box>
                 </TableCell>
                 <TableCell align="center">
-                    <Button
-                        aria-describedby={id}
-                        onClick={handleClick}
-                        sx={{ fontSize: '13px', color: 'green' }}
-                    >
+                    <Button aria-describedby={id} onClick={handleClick} sx={{ fontSize: '13px', color: 'green' }}>
                         {row.account.userid}
                     </Button>
                     <Popover
@@ -252,13 +253,17 @@ const Row = (props) => {
                         <CusInfo userID={row.account.userid} />
                     </Popover>
                 </TableCell>
-                <TableCell align="center" style={{ color: 'black', fontSize: '13px' }}>{row.date}</TableCell>
-                <TableCell align="center" style={{ color: 'black', fontWeight: 'bold', fontSize: '13px' }}>{invoiceTotal}</TableCell>
+                <TableCell align="center" style={{ color: 'black', fontSize: '13px' }}>
+                    {row.date}
+                </TableCell>
+                <TableCell align="center" style={{ color: 'black', fontWeight: 'bold', fontSize: '13px' }}>
+                    {invoiceTotal}
+                </TableCell>
                 <TableCell align="center">
                     <Box sx={{ width: '100%' }}>
                         <Stepper activeStep={activeStep} alternativeLabel>
                             {steps.map((label) => (
-                                <Step color='success' key={label}>
+                                <Step color="success" key={label}>
                                     <StepLabel sx={{ fontSize: '7px' }}>{label}</StepLabel>
                                 </Step>
                             ))}
@@ -268,12 +273,10 @@ const Row = (props) => {
                                 <Box sx={{ display: 'flex', flexDirection: 'row', pt: 2 }}>
                                     <Box sx={{ flex: '1 1 auto' }} />
                                     {activeStep !== steps.length ? (
-                                        <Button onClick={handleClickPaidInvoice} sx={{ fontSize: '9px' }} >
+                                        <Button onClick={handleClickPaidInvoice} sx={{ fontSize: '9px' }}>
                                             Done
                                         </Button>
-                                    ) : (
-                                        null
-                                    )}
+                                    ) : null}
                                 </Box>
                             </React.Fragment>
                         </div>
@@ -281,7 +284,9 @@ const Row = (props) => {
                 </TableCell>
                 {dataForUpdate.isPaid ? (
                     <TableCell align="center">
-                        <Button sx={{ fontSize: '13px' }} onClick={() => setOpenModalBill(true)}>Print</Button>
+                        <Button sx={{ fontSize: '13px' }} onClick={() => setOpenModalBill(true)}>
+                            Print
+                        </Button>
                     </TableCell>
                 ) : (
                     <TableCell align="center">
@@ -290,32 +295,59 @@ const Row = (props) => {
                 )}
             </TableRow>
             <TableRow sx={{ '& > *': { borderBottom: 'set', backgroundColor: 'white' } }}>
-                <TableCell style={{ paddingBottom: 0, paddingTop: 0, backgroundColor: 'white', marginLeft: '10%' }} colSpan={6}>
+                <TableCell
+                    style={{ paddingBottom: 0, paddingTop: 0, backgroundColor: 'white', marginLeft: '10%' }}
+                    colSpan={6}
+                >
                     <Collapse in={open} timeout="auto" unmountOnExit>
                         <Box sx={{ margin: 1 }}>
-                            <Typography variant="h7" style={{ fontSize: '13px', fontWeight: 'bold', color: 'black', textDecoration: 'underline' }} gutterBottom component="div">
+                            <Typography
+                                variant="h7"
+                                style={{
+                                    fontSize: '13px',
+                                    fontWeight: 'bold',
+                                    color: 'black',
+                                    textDecoration: 'underline',
+                                }}
+                                gutterBottom
+                                component="div"
+                            >
                                 Details:
                             </Typography>
-                            <Typography variant="h8" style={{ fontSize: '13px', fontWeight: 'bold', color: 'black' }} gutterBottom component="div">
+                            <Typography
+                                variant="h8"
+                                style={{ fontSize: '13px', fontWeight: 'bold', color: 'black' }}
+                                gutterBottom
+                                component="div"
+                            >
                                 Ship to: {row.address}
                             </Typography>
                             <Table size="small" aria-label="purchases">
                                 <TableHead>
                                     <TableRow>
                                         <TableCell style={{ color: 'black', fontSize: '13px' }}>Product ID</TableCell>
-                                        <TableCell align="center" style={{ color: 'black', fontSize: '13px' }}>Amount</TableCell>
-                                        <TableCell align="center" style={{ color: 'black', fontSize: '13px' }}>Total price (USD)</TableCell>
+                                        <TableCell align="center" style={{ color: 'black', fontSize: '13px' }}>
+                                            Amount
+                                        </TableCell>
+                                        <TableCell align="center" style={{ color: 'black', fontSize: '13px' }}>
+                                            Total price (USD)
+                                        </TableCell>
                                     </TableRow>
                                 </TableHead>
                                 <TableBody>
-                                    {row.invoiceitem.map((detailsRow) => (
+                                    {row.invoiceitem.map((detailsRow) =>
                                         detailsRow.productid != null ? (
                                             <TableRow key={detailsRow.productid}>
                                                 <TableCell component="th" scope="row">
                                                     <Button
                                                         aria-describedby={id}
                                                         onClick={handleProductPopoverOpen}
-                                                        style={{ fontSize: '13px', fontWeight: 'bold', color: '#52BF04', fontStyle: 'italic' }}
+                                                        style={{
+                                                            fontSize: '13px',
+                                                            fontWeight: 'bold',
+                                                            color: '#52BF04',
+                                                            fontStyle: 'italic',
+                                                        }}
                                                     >
                                                         {detailsRow.productid}
                                                     </Button>
@@ -328,18 +360,22 @@ const Row = (props) => {
                                                             horizontal: 'right',
                                                         }}
                                                         onClose={handleProductPopoverClose}
-                                                    // disableRestoreFocus
+                                                        // disableRestoreFocus
                                                     >
                                                         <ProdInfo productID={detailsRow.productid} />
                                                     </Popover>
                                                 </TableCell>
-                                                <TableCell align="center" style={{ fontSize: '13px', color: 'black' }}>{detailsRow.amount}</TableCell>
-                                                <TableCell align="center" style={{ fontSize: '13px', fontWeight: 'bold', color: 'black' }}>{detailsRow.total}</TableCell>
+                                                <TableCell align="center" style={{ fontSize: '13px', color: 'black' }}>
+                                                    {detailsRow.amount}
+                                                </TableCell>
+                                                <TableCell
+                                                    align="center"
+                                                    style={{ fontSize: '13px', fontWeight: 'bold', color: 'black' }}
+                                                >
+                                                    {detailsRow.total}
+                                                </TableCell>
                                             </TableRow>
-                                        ) : (
-                                            null
-                                        )
-                                    )
+                                        ) : null,
                                     )}
                                 </TableBody>
                             </Table>
@@ -347,10 +383,7 @@ const Row = (props) => {
                     </Collapse>
                 </TableCell>
             </TableRow>
-            <Backdrop
-                sx={{ color: '#fff', zIndex: (theme) => theme.zIndex.drawer + 1 }}
-                open={openBackdrop}
-            >
+            <Backdrop sx={{ color: '#fff', zIndex: (theme) => theme.zIndex.drawer + 1 }} open={openBackdrop}>
                 <CircularProgress color="inherit" />
             </Backdrop>
 
@@ -359,32 +392,27 @@ const Row = (props) => {
                     Updated successfully !
                 </Alert>
             </Snackbar>
-            <Modal
-                open={openModalBill}
-                onClose={closeModalBill}
-
-            >
-                <Box sx={{
-                    position: 'absolute',
-                    top: '50%',
-                    left: '50%',
-                    transform: 'translate(-50%, -50%)',
-                    width: '45%',
-                    height: 'auto',
-                    bgcolor: 'background.paper',
-                    border: '2px solid #000',
-                    p: 4,
-                    boxShadow: 5,
-                    borderRadius: 10,
-                }}
+            <Modal open={openModalBill} onClose={closeModalBill}>
+                <Box
+                    sx={{
+                        position: 'absolute',
+                        top: '50%',
+                        left: '50%',
+                        transform: 'translate(-50%, -50%)',
+                        width: '45%',
+                        height: 'auto',
+                        bgcolor: 'background.paper',
+                        border: '2px solid #000',
+                        p: 4,
+                        boxShadow: 5,
+                        borderRadius: 10,
+                    }}
                 >
                     <Stack ref={componentRef} sx={{ paddingTop: '3rem' }} direction="column" width="100%">
                         <Stack direction="row" width="100%" sx={{ marginRight: '2rem', backgroundColor: 'grey' }}>
                             <Stack direction="column" width="100%">
                                 <Header handlePrint={handlePrint} />
-                                <Dates
-                                    invoiceDate={row.date}
-                                />
+                                <Dates invoiceDate={row.date} />
                             </Stack>
                             <Stack direction="column" width="100%">
                                 <h1
@@ -392,7 +420,7 @@ const Row = (props) => {
                                         fontSize: '30px',
                                         fontWeight: 'bold',
                                         letterSpacing: '0.1rem',
-                                        marginTop: '1.2rem'
+                                        marginTop: '1.2rem',
                                     }}
                                 >
                                     ComeBuy
@@ -402,7 +430,7 @@ const Row = (props) => {
                                         marginTop: '-7%',
                                         fontSize: '13px',
                                         color: 'grey',
-                                        marginLeft: '2rem'
+                                        marginLeft: '2rem',
                                     }}
                                 >
                                     invoice at branch
@@ -410,30 +438,33 @@ const Row = (props) => {
                             </Stack>
                         </Stack>
                         {/* <div style={{ height: '0.5px', backgroundColor: 'grey', marginLeft: '3rem', marginRight: '3rem' }}> </div> */}
-                        <Stack direction="row" width="100%" sx={{ marginRight: '2rem', marginTop: '1.5rem', backgroundColor: 'grey' }}>
+                        <Stack
+                            direction="row"
+                            width="100%"
+                            sx={{ marginRight: '2rem', marginTop: '1.5rem', backgroundColor: 'grey' }}
+                        >
                             <Stack width="50%">
-                                <ClientDetails
-                                    clientName={row.account.name}
-                                    clientAddress={row.account.address}
-                                />
+                                <ClientDetails clientName={row.account.name} clientAddress={row.account.address} />
                             </Stack>
                             <Stack>
-                                <MainDetails contact={_currentUser.phoneNumber} name={"Printed by " + _currentUser.name}
-                                    address={"ComeBuy Store"} />
+                                <MainDetails
+                                    contact={_currentUser.phoneNumber}
+                                    name={'Printed by ' + _currentUser.name}
+                                    address={'ComeBuy Store'}
+                                />
                             </Stack>
                         </Stack>
 
-                        <TableInvoiceItem
-                            list={row.invoiceitem}
-                            total={invoiceTotal}
-                        />
+                        <TableInvoiceItem list={row.invoiceitem} total={invoiceTotal} />
                         <Notes notes="Online" />
-                        <div style={{ marginLeft: '2rem', marginRight: '2rem', height: '1px', backgroundColor: 'grey' }}></div>
+                        <div
+                            style={{ marginLeft: '2rem', marginRight: '2rem', height: '1px', backgroundColor: 'grey' }}
+                        ></div>
                         <Footer
-                            name={"Printed by " + _currentUser.name}
-                            address={"ComeBuy Store"}
-                            email={"Printer Email: " + _currentUser.email}
-                            phone={"Printer phone: " + _currentUser.phoneNumber}
+                            name={'Printed by ' + _currentUser.name}
+                            address={'ComeBuy Store'}
+                            email={'Printer Email: ' + _currentUser.email}
+                            phone={'Printer phone: ' + _currentUser.phoneNumber}
                         />
                     </Stack>
                     <ReactToPrint
@@ -443,12 +474,12 @@ const Row = (props) => {
                             </Button>
                         )}
                         content={() => componentRef.current}
-                    // onAfterPrint={() => AfterPrint()}
+                        // onAfterPrint={() => AfterPrint()}
                     />
                 </Box>
             </Modal>
-        </React.Fragment >
+        </React.Fragment>
     );
-}
+};
 
-export default Row
+export default Row;

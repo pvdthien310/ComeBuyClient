@@ -1,18 +1,17 @@
-import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
+import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import branchApi from './../../api/branchAPI';
 
 export const getAllBranch = createAsyncThunk(
     'branch/getAll',
     // Code async logic, tham số đầu tiên data là dữ liệu truyền vào khi gọi action
     async (data, { rejectWithValue }) => {
-        const response = await branchApi.getAll()
+        const response = await branchApi.getAll();
         if (!response) {
-            return rejectWithValue("Get All Failed");
-        }
-        else {
+            return rejectWithValue('Get All Failed');
+        } else {
             return response.data;
         }
-    }
+    },
 );
 
 // export const editbranch = createAsyncThunk(
@@ -45,7 +44,6 @@ export const getAllBranch = createAsyncThunk(
 //     }
 // );
 
-
 // export const getbranchWithID = createAsyncThunk(
 //     'branch/findOne',
 //     async (data, { rejectedWithValue }) => {
@@ -62,7 +60,7 @@ export const branchSlice = createSlice({
     name: 'branch',
     initialState: {
         branchList: [],
-        loading: false
+        loading: false,
     },
     reducers: {
         branchListChange: (state, action) => {
@@ -72,9 +70,8 @@ export const branchSlice = createSlice({
             state.loading = action.payload;
         },
         addbranch: (state, action) => {
-            state.branchList.push(action.payload)
-        }
-
+            state.branchList.push(action.payload);
+        },
     },
     extraReducers: {
         [getAllBranch.pending]: (state) => {
@@ -87,5 +84,5 @@ export const branchSlice = createSlice({
         [getAllBranch.rejected]: (state, action) => {
             state.loading = false;
         },
-    }
-})
+    },
+});

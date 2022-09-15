@@ -10,18 +10,17 @@ import FormControl from '@mui/material/FormControl';
 import Select from '@mui/material/Select';
 import { Stack, TextField } from '@mui/material';
 
-
 export default function AddBannerModal(props) {
-    const [image, SetImage] = useState(null)
-    const [imageFromURL, SetImageFromURL] = useState(null)
+    const [image, SetImage] = useState(null);
+    const [imageFromURL, SetImageFromURL] = useState(null);
 
     const HandleImage = (e) => {
         let reader = new FileReader();
-        reader.readAsDataURL(e.target.files[0])
+        reader.readAsDataURL(e.target.files[0]);
         reader.onloadend = () => {
-            SetImage(reader.result)
-        }
-    }
+            SetImage(reader.result);
+        };
+    };
     return (
         <Modal
             open={props.open}
@@ -48,18 +47,24 @@ export default function AddBannerModal(props) {
                         </Select>
                     </FormControl>
                 </Box>
-                {
-                    props.type == 1 ?
-                        <Stack sx={{ p: 2, m: 1 }}>
-                            <TextField sx={{ minWidth: 550 }} onChange={(e) => SetImageFromURL(e.target.value)}></TextField>
-                            {imageFromURL && <img src={imageFromURL} style={{ height: 300, width: 500, alignSelf:'center' }}></img>}
-                        </Stack>
-                        :
-                        <Stack>
-                            <input style={{ padding: 2, margin: 5 }} accept="image/*" type={'file'} onChange={HandleImage}></input>
-                            {image && <img src={image} style={{ height: 300, width: 400 }}></img>}
-                        </Stack>
-                }
+                {props.type == 1 ? (
+                    <Stack sx={{ p: 2, m: 1 }}>
+                        <TextField sx={{ minWidth: 550 }} onChange={(e) => SetImageFromURL(e.target.value)}></TextField>
+                        {imageFromURL && (
+                            <img src={imageFromURL} style={{ height: 300, width: 500, alignSelf: 'center' }}></img>
+                        )}
+                    </Stack>
+                ) : (
+                    <Stack>
+                        <input
+                            style={{ padding: 2, margin: 5 }}
+                            accept="image/*"
+                            type={'file'}
+                            onChange={HandleImage}
+                        ></input>
+                        {image && <img src={image} style={{ height: 300, width: 400 }}></img>}
+                    </Stack>
+                )}
                 <Button onClick={async () => props.UploadNewBanner(image, imageFromURL)}>Submit</Button>
                 <Button onClick={() => props.SetOpenModal(false)}>Close</Button>
             </Stack>

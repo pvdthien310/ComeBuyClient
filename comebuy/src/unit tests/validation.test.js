@@ -1,4 +1,4 @@
-import * as validation from '../container/LoginAndRegister/ValidationDataForAccount'
+import * as validation from '../container/LoginAndRegister/ValidationDataForAccount';
 
 // //test email
 // test("Check Email", () => {
@@ -32,25 +32,25 @@ import * as validation from '../container/LoginAndRegister/ValidationDataForAcco
 // })
 
 //test CheckPassword
-test("Check password", () => {
-  const result = validation.CheckPassword("Vongminhhuynh1880")
-  expect(result).toBe(true);
-})
+test('Check password', () => {
+    const result = validation.CheckPassword('Vongminhhuynh1880');
+    expect(result).toBe(true);
+});
 
-test("Check password", () => {
-  const result = validation.CheckPassword(" ")
-  expect(result).toBe(false);
-})
+test('Check password', () => {
+    const result = validation.CheckPassword(' ');
+    expect(result).toBe(false);
+});
 
-test("Check password", () => {
-  const result = validation.CheckPassword("vongminhhuynh1880")
-  expect(result).toBe(false);
-})
+test('Check password', () => {
+    const result = validation.CheckPassword('vongminhhuynh1880');
+    expect(result).toBe(false);
+});
 
-test("Check password", () => {
-  const result = validation.CheckPassword("VONGMINHHUYNH1880")
-  expect(result).toBe(false);
-})
+test('Check password', () => {
+    const result = validation.CheckPassword('VONGMINHHUYNH1880');
+    expect(result).toBe(false);
+});
 
 // //Check Username
 // test("Check Username", () => {

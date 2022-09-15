@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect } from 'react';
 import { currentUser } from '../../redux/selectors';
 import { useSelector, useDispatch } from 'react-redux';
 import Avatar from '@mui/material/Avatar';
@@ -14,9 +14,7 @@ import Snackbar from '@mui/material/Snackbar';
 import Alert from '@mui/material/Alert';
 import { styled } from '@mui/material/styles';
 
-
-import { unwrapResult } from '@reduxjs/toolkit'
-
+import { unwrapResult } from '@reduxjs/toolkit';
 
 import { login } from '../../redux/slices/accountSlice';
 import { useNavigate } from 'react-router';
@@ -28,21 +26,20 @@ const BGImg = styled('img')({
     width: '100%',
     position: 'absolute',
     resize: true,
-})
+});
 
 const Profile = () => {
-
-    const dispatch = useDispatch()
+    const dispatch = useDispatch();
 
     const [openBackdrop, setOpenBackdrop] = useState(false);
 
     const [canAccess, setCanAccess] = useState(false);
 
-    const _currentUser = useSelector(currentUser)
+    const _currentUser = useSelector(currentUser);
 
     const [passwordShown, setPasswordShown] = useState(false);
 
-    const [password, setPassword] = useState('')
+    const [password, setPassword] = useState('');
 
     const [openLoginFailed, setOpenLoginFailed] = useState(false);
 
@@ -61,31 +58,31 @@ const Profile = () => {
     //handle login function
     const handleLogin = async () => {
         if (password === null || password === '') {
-            setOpenLoginFailed(true)
+            setOpenLoginFailed(true);
         } else {
-            setOpenBackdrop(true)
+            setOpenBackdrop(true);
             try {
-                const resultAction = await dispatch(login({ email: _currentUser.email, password: password }))
-                const originalPromiseResult = unwrapResult(resultAction)
-                setOpenBackdrop(false)
-                setCanAccess(true)
+                const resultAction = await dispatch(login({ email: _currentUser.email, password: password }));
+                const originalPromiseResult = unwrapResult(resultAction);
+                setOpenBackdrop(false);
+                setCanAccess(true);
             } catch (rejectedValueOrSerializedError) {
                 if (rejectedValueOrSerializedError != null) {
-                    setOpenBackdrop(false)
-                    setOpenLoginFailed(true)
-                    setPassword("")
+                    setOpenBackdrop(false);
+                    setOpenLoginFailed(true);
+                    setPassword('');
                 }
             }
         }
-    }
+    };
 
     const navigate = useNavigate();
     const handleForgotPassword = () => {
         setTimeout(() => {
-            navigate('/myplace/resetpassword')
-        }, 1000)
-        setOpenBackdrop(true)
-    }
+            navigate('/myplace/resetpassword');
+        }, 1000);
+        setOpenBackdrop(true);
+    };
 
     return (
         <div>
@@ -93,14 +90,18 @@ const Profile = () => {
                 <ProfileManage />
             ) : (
                 // PasswordForm
-                <div style={{
-                    height: '100%',
-                    width: '100%',
-                    display: 'flex',
-                    justifyContent: 'center',
-                }}>
-                    <BGImg src='https://images.unsplash.com/photo-1490810194309-344b3661ba39?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1448&q=80' />
-                    <Stack direction="column" spacing={3}
+                <div
+                    style={{
+                        height: '100%',
+                        width: '100%',
+                        display: 'flex',
+                        justifyContent: 'center',
+                    }}
+                >
+                    <BGImg src="https://images.unsplash.com/photo-1490810194309-344b3661ba39?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1448&q=80" />
+                    <Stack
+                        direction="column"
+                        spacing={3}
                         style={{
                             width: 300,
                             height: 310,
@@ -109,21 +110,32 @@ const Profile = () => {
                             position: 'relative',
                             padding: '2%',
                             borderRadius: '25px',
-                            top: 200
-                        }}>
-                        <Stack direction="row" spacing={3} >
+                            top: 200,
+                        }}
+                    >
+                        <Stack direction="row" spacing={3}>
                             <Avatar alt="" src={_currentUser.avatar} sx={{ width: 100, height: 100 }} />
-                            <Typography style={{ marginTop: '13%', fontSize: '20px', fontWeight: 'bold', color: '#F2F1F0' }}>{_currentUser.name}</Typography>
+                            <Typography
+                                style={{ marginTop: '13%', fontSize: '20px', fontWeight: 'bold', color: '#F2F1F0' }}
+                            >
+                                {_currentUser.name}
+                            </Typography>
                         </Stack>
                         <Stack flexDirection="flex-start" direction="row" spacing={2}>
-                            <input style={{ backgroundColor: '#F2F1F0', borderRadius: '15px', fontSize: '17px', width: '450px', paddingLeft: '5%' }}
+                            <input
+                                style={{
+                                    backgroundColor: '#F2F1F0',
+                                    borderRadius: '15px',
+                                    fontSize: '17px',
+                                    width: '450px',
+                                    paddingLeft: '5%',
+                                }}
                                 id="outlined-basic"
-                                type={passwordShown ? "text" : "password"}
+                                type={passwordShown ? 'text' : 'password'}
                                 placeholder="Password"
                                 variant="standard"
                                 onChange={(e) => setPassword(e.target.value)}
-                            >
-                            </input>
+                            ></input>
                             {passwordShown ? (
                                 <IconButton onClick={togglePassword}>
                                     <VisibilityIcon color="success" />
@@ -133,20 +145,21 @@ const Profile = () => {
                                     <VisibilityOffIcon style={{ color: '#F2F1F0' }} />
                                 </IconButton>
                             )}
-
                         </Stack>
-                        <Button onClick={handleForgotPassword}
+                        <Button
+                            onClick={handleForgotPassword}
                             style={{
                                 fontSize: '11px',
                                 color: '#F2F1F0',
                                 textDecoration: 'underline',
-                                alignSelf: 'flex-start'
-                            }}>
+                                alignSelf: 'flex-start',
+                            }}
+                        >
                             Forgot password ?
                         </Button>
                         <Button
                             onClick={handleLogin}
-                            variant='outlined'
+                            variant="outlined"
                             size="small"
                             style={{
                                 borderRadius: '20px',
@@ -171,14 +184,11 @@ const Profile = () => {
                 </Alert>
             </Snackbar>
 
-            <Backdrop
-                sx={{ color: '#fff', zIndex: (theme) => theme.zIndex.drawer + 1 }}
-                open={openBackdrop}
-            >
+            <Backdrop sx={{ color: '#fff', zIndex: (theme) => theme.zIndex.drawer + 1 }} open={openBackdrop}>
                 <CircularProgress color="inherit" />
             </Backdrop>
         </div>
-    )
-}
+    );
+};
 
-export default Profile
+export default Profile;

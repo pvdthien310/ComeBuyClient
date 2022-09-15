@@ -7,7 +7,7 @@ import Select from '@mui/material/Select';
 
 const RoleSelect = (props) => {
     return (
-        <Box sx={{ minWidth: 120}}>
+        <Box sx={{ minWidth: 120 }}>
             <FormControl fullWidth>
                 <InputLabel id="demo-simple-select-label">Role</InputLabel>
                 <Select
@@ -17,11 +17,11 @@ const RoleSelect = (props) => {
                     label="Role"
                     onChange={props.handleChange}
                 >
-                    <MenuItem value='staff'>Staff</MenuItem>
-                    <MenuItem value='manager'>Manager</MenuItem>
+                    <MenuItem value="staff">Staff</MenuItem>
+                    <MenuItem value="manager">Manager</MenuItem>
                 </Select>
             </FormControl>
         </Box>
     );
-}
+};
 export default RoleSelect;

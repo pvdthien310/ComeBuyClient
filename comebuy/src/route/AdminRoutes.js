@@ -10,7 +10,6 @@ import Staff from '../container/Staff';
 import AddStaff from '../container/Staff/AddStaff';
 import Stock from '../container/Stock';
 
-
 const adminRoutes = [
     {
         name: 'Product',
@@ -60,9 +59,9 @@ const adminRoutes = [
     {
         name: 'Manager Home',
         path: '/',
-        page: <ManagerHome />
-    }
-]
+        page: <ManagerHome />,
+    },
+];
 
 const adminMenuItems = [
     {
@@ -95,7 +94,6 @@ const adminMenuItems = [
         path: '/bannerManage/*',
         page: <BannerManage />,
     },
-]
-
+];
 
 export { adminRoutes, adminMenuItems };

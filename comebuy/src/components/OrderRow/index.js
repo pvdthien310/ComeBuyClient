@@ -1,5 +1,5 @@
 import { Button, IconButton, TableRow } from '@mui/material';
-import * as React from 'react'
+import * as React from 'react';
 import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp';
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 import ProdInfo from '../InvoiceProdInfo';
@@ -43,8 +43,8 @@ const OrderRow = (props) => {
     //Get product information
     const [anchorEl2, setAnchorEl2] = React.useState(null);
     const handleClickProductId = (event) => {
-        setAnchorEl2(event.currentTarget)
-    }
+        setAnchorEl2(event.currentTarget);
+    };
     const handleProductPopoverOpen = (event) => {
         setAnchorEl2(event.currentTarget);
     };
@@ -54,64 +54,63 @@ const OrderRow = (props) => {
     const openProductHover = Boolean(anchorEl2);
     const id2 = open ? 'simple-popover' : undefined;
 
-
     //Execute process of managing invoice
-    const [disablePaid, setDisablePaid] = React.useState(false)
-    const [disableCheck, setDisableCheck] = React.useState(false)
+    const [disablePaid, setDisablePaid] = React.useState(false);
+    const [disableCheck, setDisableCheck] = React.useState(false);
 
-    const [isChecked, setIsChecked] = React.useState(row.isChecked)
-    const [isPaid, setIsPaid] = React.useState(row.isPaid)
+    const [isChecked, setIsChecked] = React.useState(row.isChecked);
+    const [isPaid, setIsPaid] = React.useState(row.isPaid);
 
     const [dataForUpdate, setDataForUpdate] = React.useState({
         invoiceID: row.invoiceID,
         moneyReceived: row.moneyReceived,
         total: row.total,
         isChecked: row.isChecked,
-        isPaid: row.isPaid
-    })
+        isPaid: row.isPaid,
+    });
 
-    const [updating, setUpdating] = React.useState(false)
+    const [updating, setUpdating] = React.useState(false);
 
-    const dispatch = useDispatch()
+    const dispatch = useDispatch();
 
     function Total() {
         let total = 0;
         for (let i = 0; i < row.invoiceitem.length; i++) {
-            total = total + Number(row.invoiceitem[i].total)
+            total = total + Number(row.invoiceitem[i].total);
         }
         return total;
     }
 
-    const [invoiceTotal, setInvoiceTotal] = React.useState(0)
+    const [invoiceTotal, setInvoiceTotal] = React.useState(0);
 
     React.useEffect(() => {
         if (invoiceTotal === 0) {
-            setInvoiceTotal(Total())
+            setInvoiceTotal(Total());
         }
-    }, [])
+    }, []);
 
     const [activeStep, setActiveStep] = React.useState(0);
 
     React.useEffect(() => {
-        let t = false
+        let t = false;
         const setActive = () => {
             if (Boolean(row.isChecked) === true) {
                 if (Boolean(row.isPaid) === true) {
-                    setActiveStep(2)
+                    setActiveStep(2);
                 } else {
-                    setActiveStep(1)
+                    setActiveStep(1);
                 }
             } else {
-                setActiveStep(0)
+                setActiveStep(0);
             }
-        }
+        };
         if (t === false) {
-            setActive()
-            t = true
+            setActive();
+            t = true;
         }
-    }, [])
+    }, []);
     return (
-        <React.Fragment >
+        <React.Fragment>
             <TableRow sx={{ '& > *': { borderBottom: 'set', backgroundColor: 'white' } }}>
                 <TableCell>
                     <IconButton
@@ -120,31 +119,31 @@ const OrderRow = (props) => {
                         size="small"
                         onClick={() => setOpen(!open)}
                     >
-                        {open ? <KeyboardArrowUpIcon sx={{ color: 'black' }} /> : <KeyboardArrowDownIcon sx={{ color: 'black' }} />}
+                        {open ? (
+                            <KeyboardArrowUpIcon sx={{ color: 'black' }} />
+                        ) : (
+                            <KeyboardArrowDownIcon sx={{ color: 'black' }} />
+                        )}
                     </IconButton>
                 </TableCell>
                 <TableCell scope="row">
-                    <Typography
-                        sx={{ fontSize: '13px' }}
-                        aria-describedby={id}
-                    >
+                    <Typography sx={{ fontSize: '13px' }} aria-describedby={id}>
                         #{row.invoiceID}
                     </Typography>
                 </TableCell>
                 <TableCell align="center">
-                    <Typography
-                        sx={{ fontSize: '13px' }}
-                        aria-describedby={id}
-                    >
+                    <Typography sx={{ fontSize: '13px' }} aria-describedby={id}>
                         {row.date}
                     </Typography>
                 </TableCell>
-                <TableCell align="center" style={{ color: 'black', fontWeight: 'bold', fontSize: '14px' }}>{invoiceTotal}</TableCell>
+                <TableCell align="center" style={{ color: 'black', fontWeight: 'bold', fontSize: '14px' }}>
+                    {invoiceTotal}
+                </TableCell>
                 <TableCell align="center" style={{ color: 'black', fontSize: '14px' }}>
                     <Box sx={{ width: '100%' }}>
                         <Stepper activeStep={activeStep} alternativeLabel>
                             {steps.map((label) => (
-                                <Step color='success' key={label}>
+                                <Step color="success" key={label}>
                                     <StepLabel sx={{ fontSize: '7px' }}>{label}</StepLabel>
                                 </Step>
                             ))}
@@ -153,32 +152,54 @@ const OrderRow = (props) => {
                 </TableCell>
             </TableRow>
             <TableRow sx={{ '& > *': { borderBottom: 'set', backgroundColor: 'white' } }}>
-                <TableCell style={{ paddingBottom: 0, paddingTop: 0, backgroundColor: 'white', marginLeft: '10%' }} colSpan={6}>
+                <TableCell
+                    style={{ paddingBottom: 0, paddingTop: 0, backgroundColor: 'white', marginLeft: '10%' }}
+                    colSpan={6}
+                >
                     <Collapse in={open} timeout="auto" unmountOnExit>
                         <Box sx={{ margin: 1 }}>
-                            <Typography variant="h7" style={{ fontWeight: 'bold', color: 'black', textDecoration: 'underline' }} gutterBottom component="div">
+                            <Typography
+                                variant="h7"
+                                style={{ fontWeight: 'bold', color: 'black', textDecoration: 'underline' }}
+                                gutterBottom
+                                component="div"
+                            >
                                 Details:
                             </Typography>
-                            <Typography variant="h8" style={{ fontSize: '14px', fontWeight: 'bold', color: 'black' }} gutterBottom component="div">
+                            <Typography
+                                variant="h8"
+                                style={{ fontSize: '14px', fontWeight: 'bold', color: 'black' }}
+                                gutterBottom
+                                component="div"
+                            >
                                 Receive at: {row.address}
                             </Typography>
                             <Table size="small" aria-label="purchases">
                                 <TableHead>
                                     <TableRow>
                                         <TableCell style={{ color: 'black' }}>Product ID</TableCell>
-                                        <TableCell align="center" style={{ color: 'black' }}>Amount</TableCell>
-                                        <TableCell align="center" style={{ color: 'black' }}>Total price (USD)</TableCell>
+                                        <TableCell align="center" style={{ color: 'black' }}>
+                                            Amount
+                                        </TableCell>
+                                        <TableCell align="center" style={{ color: 'black' }}>
+                                            Total price (USD)
+                                        </TableCell>
                                     </TableRow>
                                 </TableHead>
                                 <TableBody>
-                                    {row.invoiceitem.map((detailsRow) => (
+                                    {row.invoiceitem.map((detailsRow) =>
                                         detailsRow.productid != null ? (
                                             <TableRow key={detailsRow.productid}>
                                                 <TableCell component="th" scope="row">
                                                     <Button
                                                         aria-describedby={id}
                                                         onClick={handleProductPopoverOpen}
-                                                        style={{ fontWeight: 'bold', fontSize: '14px', color: 'black', fontStyle: 'italic' }}
+                                                        style={{
+                                                            fontWeight: 'bold',
+                                                            fontSize: '14px',
+                                                            color: 'black',
+                                                            fontStyle: 'italic',
+                                                        }}
                                                     >
                                                         {detailsRow.productid}
                                                     </Button>
@@ -191,18 +212,22 @@ const OrderRow = (props) => {
                                                             horizontal: 'right',
                                                         }}
                                                         onClose={handleProductPopoverClose}
-                                                    // disableRestoreFocus
+                                                        // disableRestoreFocus
                                                     >
                                                         <ProdInfo productID={detailsRow.productid} />
                                                     </Popover>
                                                 </TableCell>
-                                                <TableCell align="center" sx={{ fontSize: '13px' }}>{detailsRow.amount}</TableCell>
-                                                <TableCell align="center" style={{ fontWeight: 'bold', color: 'black', fontSize: '13px' }}>{detailsRow.total}</TableCell>
+                                                <TableCell align="center" sx={{ fontSize: '13px' }}>
+                                                    {detailsRow.amount}
+                                                </TableCell>
+                                                <TableCell
+                                                    align="center"
+                                                    style={{ fontWeight: 'bold', color: 'black', fontSize: '13px' }}
+                                                >
+                                                    {detailsRow.total}
+                                                </TableCell>
                                             </TableRow>
-                                        ) : (
-                                            null
-                                        )
-                                    )
+                                        ) : null,
                                     )}
                                 </TableBody>
                             </Table>
@@ -210,8 +235,8 @@ const OrderRow = (props) => {
                     </Collapse>
                 </TableCell>
             </TableRow>
-        </React.Fragment >
-    )
-}
+        </React.Fragment>
+    );
+};
 
 export default OrderRow;

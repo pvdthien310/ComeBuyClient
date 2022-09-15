@@ -40,34 +40,28 @@ const no_feature = [
         A: 0,
         B: 0,
         fullMark: 150,
-    }
-
-
-
+    },
 ];
 
-
 const FeatureChart = (props) => {
-    const featureList = useSelector(featureListSelector)
-    const dispatch = useDispatch()
-    if (featureList.length == 0)
-    {
-        dispatch(getAllFeature())
+    const featureList = useSelector(featureListSelector);
+    const dispatch = useDispatch();
+    if (featureList.length == 0) {
+        dispatch(getAllFeature());
     }
     const convertData = (featureProduct) => {
-        const res = []
+        const res = [];
 
         if (featureProduct.length == 0) {
-            return no_feature
-        }
-        else {
+            return no_feature;
+        } else {
             for (let i = 0; i < featureProduct.length; i++)
                 res.push({
                     subject: featureProduct[i],
                     A: 150,
                     B: 150,
                     fullMark: 160,
-                })
+                });
             for (let j = 0; j < featureList.length; j++)
                 if (!featureProduct.includes(featureList[j].name))
                     res.push({
@@ -75,11 +69,10 @@ const FeatureChart = (props) => {
                         A: 0,
                         B: 0,
                         fullMark: 160,
-                    })
+                    });
         }
-        return res
-    }
-   
+        return res;
+    };
 
     return (
         <ResponsiveContainer width="100%" height={300}>
@@ -91,6 +84,5 @@ const FeatureChart = (props) => {
             </RadarChart>
         </ResponsiveContainer>
     );
-
-}
+};
 export default FeatureChart;

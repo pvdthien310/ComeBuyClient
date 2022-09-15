@@ -1,10 +1,8 @@
-
 import { styled } from '@mui/material/styles';
 import { Grid } from '@mui/material';
 import Typography from '@mui/material/Typography';
 import Button from '@mui/material/Button';
 import ArrowRightIcon from '@mui/icons-material/ArrowRight';
-
 
 const ImgFeatureLine = styled('img')(({ theme }) => ({
     width: '100%',
@@ -17,12 +15,10 @@ const ImgFeatureLine = styled('img')(({ theme }) => ({
     right: 0,
     position: 'absolute',
     item: true,
-    
 
     [theme.breakpoints.down('sm')]: {
         display: 'none',
     },
-
 }));
 
 const Container = styled(Grid)(({ theme }) => ({
@@ -32,8 +28,8 @@ const Container = styled(Grid)(({ theme }) => ({
     justifyContent: 'top',
     alignItems: 'flex-end',
     flexDirection: 'column',
-    backgroundColor:'white'
-}))
+    backgroundColor: 'white',
+}));
 
 const Text = styled(Typography)(({ theme }) => ({
     color: 'black',
@@ -48,19 +44,16 @@ const Text = styled(Typography)(({ theme }) => ({
     marginRight: '3%',
     display: 'flex',
     wordWrap: 'break-word',
-    
-}))
+}));
 const SmallText = styled(Typography)(({ theme }) => ({
-    
     color: 'coral',
     zIndex: '3',
     height: 100,
     width: 150,
     fontSize: '20px',
     fontWeight: 'bold',
-    wordWrap: 'break-word'
-    
-}))
+    wordWrap: 'break-word',
+}));
 
 const CustomButton = styled(Button)(({ theme }) => ({
     variant: 'outlined',
@@ -70,10 +63,8 @@ const CustomButton = styled(Button)(({ theme }) => ({
     border: '2px solid black',
     marginRight: '3%',
     marginTop: '2%',
-    bottom: 0
-}))
-
-
+    bottom: 0,
+}));
 
 export default function BrandLineImage(props) {
     return (
@@ -82,5 +73,5 @@ export default function BrandLineImage(props) {
             <Text>{props.BigText}</Text>
             <CustomButton endIcon={<ArrowRightIcon />}>See More</CustomButton>
         </Container>
-    )
+    );
 }

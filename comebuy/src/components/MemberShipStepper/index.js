@@ -40,11 +40,7 @@ function QontoStepIcon(props) {
 
     return (
         <QontoStepIconRoot ownerState={{ active }} className={className}>
-            {completed ? (
-                <Check className="QontoStepIcon-completedIcon" />
-            ) : (
-                <div className="QontoStepIcon-circle" />
-            )}
+            {completed ? <Check className="QontoStepIcon-completedIcon" /> : <div className="QontoStepIcon-circle" />}
         </QontoStepIconRoot>
     );
 }
@@ -84,8 +80,7 @@ const ColorlibConnector = styled(StepConnector)(({ theme }) => ({
     [`& .${stepConnectorClasses.line}`]: {
         height: 3,
         border: 0,
-        backgroundColor:
-            theme.palette.mode === 'dark' ? theme.palette.grey[800] : '#797C8C',
+        backgroundColor: theme.palette.mode === 'dark' ? theme.palette.grey[800] : '#797C8C',
         borderRadius: 1,
     },
 }));
@@ -118,10 +113,16 @@ function ColorlibStepIcon(props) {
 
     const icons = {
         // 1: <SettingsIcon />,
-        1: <Avatar src='https://www.isaca.org/-/media/images/isacadp/project/isaca/membership-levels/badge-bronze.png' />,
-        2: <Avatar src='https://www.isaca.org/-/media/images/isacadp/project/isaca/membership-levels/silver-badge.png' />,
-        3: <Avatar src='https://www.isaca.org/-/media/images/isacadp/project/isaca/membership-levels/gold-badge.png' />,
-        4: <Avatar src='https://www.isaca.org/-/media/images/isacadp/project/isaca/membership-levels/platinum-badge.png' />,
+        1: (
+            <Avatar src="https://www.isaca.org/-/media/images/isacadp/project/isaca/membership-levels/badge-bronze.png" />
+        ),
+        2: (
+            <Avatar src="https://www.isaca.org/-/media/images/isacadp/project/isaca/membership-levels/silver-badge.png" />
+        ),
+        3: <Avatar src="https://www.isaca.org/-/media/images/isacadp/project/isaca/membership-levels/gold-badge.png" />,
+        4: (
+            <Avatar src="https://www.isaca.org/-/media/images/isacadp/project/isaca/membership-levels/platinum-badge.png" />
+        ),
     };
 
     return (
@@ -152,28 +153,27 @@ ColorlibStepIcon.propTypes = {
 const steps = ['Rare member', 'Silver member', 'Golden member', 'Diamond member'];
 
 const MemberShipStepper = () => {
-
-    const _currentUser = useSelector(currentUser)
+    const _currentUser = useSelector(currentUser);
 
     const [activeStep, setActiveStep] = React.useState(0);
 
     React.useEffect(() => {
         const Identify = () => {
-            console.log(_currentUser.score)
+            console.log(_currentUser.score);
             if (_currentUser.score < 2000) {
-                setActiveStep(0)
+                setActiveStep(0);
             } else if (_currentUser.score >= 2000 && _currentUser.score < 5000) {
-                setActiveStep(1)
+                setActiveStep(1);
             } else if (_currentUser.score >= 5000 && _currentUser.score < 20000) {
-                setActiveStep(2)
+                setActiveStep(2);
             } else {
-                setActiveStep(3)
+                setActiveStep(3);
             }
-        }
+        };
         if (activeStep === 0) {
-            Identify()
+            Identify();
         }
-    }, [])
+    }, []);
 
     return (
         <Stack sx={{ width: '50%', marginLeft: '10%' }} spacing={4}>
@@ -186,5 +186,5 @@ const MemberShipStepper = () => {
             </Stepper>
         </Stack>
     );
-}
+};
 export default MemberShipStepper;

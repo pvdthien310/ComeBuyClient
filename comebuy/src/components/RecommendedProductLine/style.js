@@ -1,4 +1,4 @@
-import { StickyNote2 } from "@mui/icons-material";
+import { StickyNote2 } from '@mui/icons-material';
 
 const style = {
     boxContainer: {
@@ -7,7 +7,7 @@ const style = {
         bgcolor: 'background.paper',
         padding: 4,
         maxHeight: '100%',
-        height: 'auto'
+        height: 'auto',
     },
     boxInfor1: {
         height: 'auto',
@@ -18,7 +18,6 @@ const style = {
         borderRadius: '10px',
         boxShadow: 10,
         padding: 2,
-
     },
     boxInfor: {
         height: 'auto',
@@ -29,7 +28,6 @@ const style = {
         borderRadius: '10px',
         boxShadow: 10,
         padding: 2,
-
     },
     boxHandle: {
         position: 'sticky',
@@ -52,8 +50,8 @@ const style = {
         alignSelf: 'center',
         backgroundColor: 'white',
         borderRadius: '10px',
-        ml:4,
-        mr:4,
+        ml: 4,
+        mr: 4,
         boxShadow: 10,
     },
     boxComment: {
@@ -63,7 +61,7 @@ const style = {
         alignSelf: 'center',
         backgroundColor: 'white',
         borderRadius: '10px',
-        m:4,
+        m: 4,
         boxShadow: 10,
     },
     boxDes: {
@@ -77,42 +75,40 @@ const style = {
         padding: 2,
     },
     boxDes_Stack: {
-        alignItems: 'center'
+        alignItems: 'center',
     },
     BoxDes_Grid: {
         display: 'flex',
         alignItems: 'center',
-        justifyContent: 'center'
+        justifyContent: 'center',
     },
     boxInfor_Stack: {
-        alignItems: 'center'
+        alignItems: 'center',
     },
     boxInfor_Line: {
         height: 5,
         width: '100%',
         backgroundColor: '#B360E6',
         marginTop: '10px',
-        marginBottom: '10px'
-
+        marginBottom: '10px',
     },
     boxinfor_Stack_Line: {
         height: 3,
         width: '100%',
         backgroundColor: '#B360E6',
         marginTop: '10px',
-        marginBottom: '20px'
+        marginBottom: '20px',
     },
     buttonFeature: {
         marginBottom: 2,
         alignSelf: 'center',
         borderRadius: 5,
         backgroundColor: '#9D4DE8',
-        paddingTop : 1,
-        paddingBottom : 1,
+        paddingTop: 1,
+        paddingBottom: 1,
         paddingLeft: 5,
         paddingRight: 5,
-    }
-
+    },
 };
 
 export default style;
