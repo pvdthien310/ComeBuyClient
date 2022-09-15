@@ -1,8 +1,9 @@
+/* eslint-disable react/jsx-one-expression-per-line */
+/* eslint-disable react/jsx-props-no-spreading */
 import * as React from 'react';
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import Typography from '@mui/material/Typography';
-import Modal from '@mui/material/Modal';
 import { Chip, CircularProgress, Grid, Radio, Stack } from '@mui/material';
 import { Swiper, SwiperSlide } from 'swiper/react';
 import 'swiper/css';
@@ -10,7 +11,6 @@ import 'swiper/css/pagination';
 import { Pagination } from 'swiper';
 import { styled } from '@mui/material/styles';
 import BallotIcon from '@mui/icons-material/Ballot';
-import style from './style.js';
 import MemoryIcon from '@mui/icons-material/Memory';
 import ScreenshotMonitorIcon from '@mui/icons-material/ScreenshotMonitor';
 import InventoryIcon from '@mui/icons-material/Inventory';
@@ -22,8 +22,6 @@ import ScaleIcon from '@mui/icons-material/Scale';
 import DescriptionIcon from '@mui/icons-material/Description';
 import { useParams } from 'react-router';
 import { useEffect, useState } from 'react';
-import productAPI from '../../../api/productAPI';
-import { FeatureChart, NavBar, TechInforLine, BreadCrumb, BoxShopInfo, BigFooter } from '../../../components';
 import DoneIcon from '@mui/icons-material/Done';
 import ChangeCircleIcon from '@mui/icons-material/ChangeCircle';
 import AddTaskIcon from '@mui/icons-material/AddTask';
@@ -32,15 +30,17 @@ import LocalPhoneIcon from '@mui/icons-material/LocalPhone';
 import Backdrop from '@mui/material/Backdrop';
 import Snackbar from '@mui/material/Snackbar';
 import MuiAlert from '@mui/material/Alert';
-import { cartListSelector, currentUser } from '../../../redux/selectors.js';
 import { useDispatch, useSelector } from 'react-redux';
+import { unwrapResult } from '@reduxjs/toolkit';
+import FavoriteIcon from '@mui/icons-material/Favorite';
+import { cartListSelector, currentUser } from '../../../redux/selectors.js';
 import { addCart, cartSlice, updateCart } from '../../../redux/slices/cartSlice.js';
 import ProductComment from '../../../components/ProductComment/index.js';
 import RecommendedProductLine from '../../../components/RecommendedProductLine/index.js';
-import { unwrapResult } from '@reduxjs/toolkit';
-import FavoriteIcon from '@mui/icons-material/Favorite';
-import { addFavorite } from './../../../redux/slices/favoriteSlice';
-import { TramRounded } from '@mui/icons-material';
+import { addFavorite } from '../../../redux/slices/favoriteSlice';
+import { FeatureChart, NavBar, TechInforLine, BreadCrumb, BoxShopInfo, BigFooter } from '../../../components';
+import productAPI from '../../../api/productAPI';
+import style from './style.js';
 
 const ProductImage = styled('img')({
     height: 300,
@@ -61,18 +61,15 @@ const CustomButton1 = styled(Button)({
         color: 'white',
     },
 });
-const Alert = React.forwardRef(function Alert(props, ref) {
-    return <MuiAlert elevation={6} ref={ref} variant="filled" {...props} />;
-});
+const Alert = React.forwardRef((props, ref) => <MuiAlert elevation={6} ref={ref} variant="filled" {...props} />);
 
-const DetailProduct = () => {
+function DetailProduct() {
     const dispatch = useDispatch();
     const _cart = useSelector(cartListSelector);
     const _currentUser = useSelector(currentUser);
     const { id } = useParams();
     const [product, setProduct] = useState(null);
     const [error, setError] = useState(null);
-    const [startAdding, setStartAdding] = useState(false);
     const [openBackdrop, setOpenBackdrop] = useState(false);
     const [openSnackbar, setOpenSnackbar] = React.useState(false);
 
@@ -85,14 +82,13 @@ const DetailProduct = () => {
 
     const LoadData = async () => {
         const response = await productAPI.getProductWithID(id);
-        if (response.status == 200) setProduct(response.data);
+        if (response.status === 200) setProduct(response.data);
         else setError('Error Load Product!');
     };
 
     const updateAmount = async (item) => {
         try {
-            const resultAction = await dispatch(updateCart(item));
-            const originalPromiseResult = unwrapResult(resultAction);
+            await dispatch(updateCart(item));
             setOpenBackdrop(false);
             setOpenSnackbar(true);
         } catch (rejectedValueOrSerializedError) {
@@ -103,8 +99,7 @@ const DetailProduct = () => {
 
     const addNewCart = async (temp) => {
         try {
-            const resultAction = await dispatch(addCart(temp));
-            const originalPromiseResult = unwrapResult(resultAction);
+            await dispatch(addCart(temp));
             setOpenBackdrop(false);
             setOpenSnackbar(true);
         } catch (rejectedValueOrSerializedError) {
@@ -114,7 +109,7 @@ const DetailProduct = () => {
     };
     const handleAddToFavorite = async () => {
         setOpenBackdrop(true);
-        let temp = {
+        const temp = {
             productID: product.productID,
             userID: _currentUser.userID,
         };
@@ -130,25 +125,26 @@ const DetailProduct = () => {
     };
 
     const handleAddToCart = async () => {
-        if (localStorage.getItem('role') == 'customer') {
+        if (localStorage.getItem('role') === 'customer') {
             setOpenBackdrop(true);
             let isExisted = false;
             let newCart = [..._cart];
-            if (localStorage.getItem('idUser') != '') {
+            if (localStorage.getItem('idUser') !== '') {
                 newCart = newCart.map((item) => {
-                    if (item.productid == product.productID) {
+                    if (item.productid === product.productID) {
                         isExisted = true;
                         return {
                             productid: product.productID,
-                            amount: item['amount'] + 1,
+                            amount: item.amount + 1,
                         };
-                    } else return item;
+                    }
+                    return item;
                 });
                 dispatch(cartSlice.actions.cartListChange(newCart));
-                //Update amount if cart existed
+                // Update amount if cart existed
                 if (isExisted === true) {
                     newCart.map((item) => {
-                        if (item.productid == product.productID) {
+                        if (item.productid === product.productID) {
                             updateAmount(item);
                         }
                     });
@@ -161,7 +157,7 @@ const DetailProduct = () => {
                         },
                     ];
                     dispatch(cartSlice.actions.cartListChange(newCart));
-                    let temp = {
+                    const temp = {
                         userID: _currentUser.userID,
                         productID: product.productID,
                         amount: 1,
@@ -172,15 +168,16 @@ const DetailProduct = () => {
         } else {
             let isExisted = false;
             let newCart = [..._cart];
-            if (localStorage.getItem('idUser') == '') {
+            if (localStorage.getItem('idUser') === '') {
                 newCart = newCart.map((item) => {
-                    if (item.productid == product.productID) {
+                    if (item.productid === product.productID) {
                         isExisted = true;
                         return {
                             productid: product.productID,
-                            amount: item['amount'] + 1,
+                            amount: item.amount + 1,
                         };
-                    } else return item;
+                    }
+                    return item;
                 });
                 dispatch(cartSlice.actions.cartListChange(newCart));
             }
@@ -204,7 +201,7 @@ const DetailProduct = () => {
 
     return (
         <Stack sx={{ width: '100%', height: '100%' }}>
-            <NavBar></NavBar>
+            <NavBar />
             <Stack sx={{ pt: 2, pl: 2 }}>
                 <BreadCrumb />
             </Stack>
@@ -235,11 +232,11 @@ const DetailProduct = () => {
                                             variant="h6"
                                             component="h2"
                                         >
-                                            {'$ ' + product.price}
+                                            {`$ ${product.price}`}
                                         </Typography>
                                     </Grid>
                                 </Grid>
-                                <Box sx={style.boxInfor_Line}></Box>
+                                <Box sx={style.boxInfor_Line} />
                                 <Grid item container>
                                     <Typography
                                         sx={{ marginBottom: 2 }}
@@ -263,7 +260,7 @@ const DetailProduct = () => {
                                         {product.productimage.map((item, i) => (
                                             <SwiperSlide key={i}>
                                                 <Stack sx={{ width: '100%' }}>
-                                                    <ProductImage src={item.imageURL}></ProductImage>
+                                                    <ProductImage src={item.imageURL} />
                                                 </Stack>
                                             </SwiperSlide>
                                         ))}
@@ -344,58 +341,53 @@ const DetailProduct = () => {
                                     <Grid item xs={6} paddingLeft={2}>
                                         <Stack xs={12} spacing={2} padding={2}>
                                             <TechInforLine Icon={<MemoryIcon />} Text={product.cpu} Title="CPU" />
-                                            <Box sx={style.boxinfor_Stack_Line}></Box>
+                                            <Box sx={style.boxinfor_Stack_Line} />
                                             <TechInforLine
                                                 Icon={<ScreenshotMonitorIcon />}
-                                                Text={
-                                                    product.screenDimension +
-                                                    ' inch, ' +
-                                                    product.colorCoverage +
-                                                    ' RGBs'
-                                                }
+                                                Text={`${product.screenDimension} inch, ${product.colorCoverage} RGBs`}
                                                 Title="Screen Dimension"
                                             />
-                                            <Box sx={style.boxinfor_Stack_Line}></Box>
+                                            <Box sx={style.boxinfor_Stack_Line} />
                                             <TechInforLine
                                                 Icon={<InventoryIcon />}
-                                                Text={product.memory + ' SSD'}
+                                                Text={`${product.memory} SSD`}
                                                 Title="Store"
                                             />
-                                            <Box sx={style.boxinfor_Stack_Line}></Box>
+                                            <Box sx={style.boxinfor_Stack_Line} />
                                             <TechInforLine
                                                 Icon={<CableIcon />}
                                                 Text={product.externalIOPort}
                                                 Title="External IO Port"
                                             />
-                                            <Box sx={style.boxinfor_Stack_Line}></Box>
+                                            <Box sx={style.boxinfor_Stack_Line} />
                                         </Stack>
                                     </Grid>
                                     <Grid item xs={6} paddingLeft={2}>
                                         <Stack xs={12} spacing={2} padding={2}>
                                             <TechInforLine
                                                 Icon={<AutofpsSelectIcon />}
-                                                Text={product.ram + ' GB'}
+                                                Text={`${product.ram} GB`}
                                                 Title="RAM"
                                             />
-                                            <Box sx={style.boxinfor_Stack_Line}></Box>
+                                            <Box sx={style.boxinfor_Stack_Line} />
                                             <TechInforLine
                                                 Icon={<ChromeReaderModeIcon />}
                                                 Text={product.gpu}
                                                 Title="GPU"
                                             />
-                                            <Box sx={style.boxinfor_Stack_Line}></Box>
+                                            <Box sx={style.boxinfor_Stack_Line} />
                                             <TechInforLine
                                                 Icon={<Battery3BarIcon />}
-                                                Text={product.battery + 'Whr'}
+                                                Text={`${product.battery}Whr`}
                                                 Title="Battery"
                                             />
-                                            <Box sx={style.boxinfor_Stack_Line}></Box>
+                                            <Box sx={style.boxinfor_Stack_Line} />
                                             <TechInforLine
                                                 Icon={<ScaleIcon />}
-                                                Text={product.weight + ' kg'}
+                                                Text={`${product.weight} kg`}
                                                 Title="Weight"
                                             />
-                                            <Box sx={style.boxinfor_Stack_Line}></Box>
+                                            <Box sx={style.boxinfor_Stack_Line} />
                                         </Stack>
                                     </Grid>
                                 </Grid>
@@ -410,7 +402,7 @@ const DetailProduct = () => {
                                 <Grid container sx={style.BoxDes_Grid} paddingLeft={4} paddingRight={4}>
                                     <Stack xs={12}>
                                         {product.productimage.length > 0 && (
-                                            <ProductImage xs={12} src={product.productimage[0].imageURL}></ProductImage>
+                                            <ProductImage xs={12} src={product.productimage[0].imageURL} />
                                         )}
                                         <Typography xs={12} sx={{ marginBottom: 2 }} variant="body1">
                                             {product.description}
@@ -432,13 +424,13 @@ const DetailProduct = () => {
                                     label="Comebuy is a reputable retailer in Vietnam"
                                     icon={<DoneIcon />}
                                 />
-                                <Typography variant="h6" fontWeight={'bold'} padding={1}>
+                                <Typography variant="h6" fontWeight="bold" padding={1}>
                                     {product.name}
                                 </Typography>
-                                <Typography variant="body2" fontWeight={'bold'} sx={{ color: '#778899', pl: 1 }}>
+                                <Typography variant="body2" fontWeight="bold" sx={{ color: '#778899', pl: 1 }}>
                                     ID: {product.productID}
                                 </Typography>
-                                <Typography variant="h6" fontWeight={'bold'} sx={{ color: '#F23E2E', pl: 1 }}>
+                                <Typography variant="h6" fontWeight="bold" sx={{ color: '#F23E2E', pl: 1 }}>
                                     $ {product.price}
                                 </Typography>
                                 <Box sx={{ p: 3, backgroundColor: '#FFFFF7', borderRadius: 2, boxShadow: 1, mt: 1 }}>
@@ -454,20 +446,20 @@ const DetailProduct = () => {
                                     />
                                 </Box>
                                 <Stack direction="row" sx={{ alignItems: 'center' }}>
-                                    <Typography variant="body1" fontWeight={'bold'} padding={1}>
+                                    <Typography variant="body1" fontWeight="bold" padding={1}>
                                         Version
                                     </Typography>
                                     <InfoIcon />
                                 </Stack>
                                 <Box sx={{ p: 1, backgroundColor: 'white', borderRadius: 2, boxShadow: 1, mt: 1 }}>
                                     <Stack direction="row" spacing={1} sx={{ alignItems: 'center' }}>
-                                        <Radio checked={true} value="a" name="radio-buttons" />
-                                        <Typography variant="body2" fontWeight={'bold'}>
+                                        <Radio checked value="a" name="radio-buttons" />
+                                        <Typography variant="body2" fontWeight="bold">
                                             {product.screenDimension}", {product.colorCoverage}% RGB, {product.battery}{' '}
                                             Whr
                                         </Typography>
                                     </Stack>
-                                    <Typography variant="body2" fontWeight={'bold'} sx={{ color: '#F23E2E', pl: 6 }}>
+                                    <Typography variant="body2" fontWeight="bold" sx={{ color: '#F23E2E', pl: 6 }}>
                                         ${product.price}
                                     </Typography>
                                     <Stack direction="row" spacing={1} sx={{ color: '#F23E2E', pt: 1, pl: 3 }}>
@@ -483,7 +475,7 @@ const DetailProduct = () => {
                                 >
                                     Add To Cart
                                 </CustomButton>
-                                {localStorage.getItem('idUser') != '' && (
+                                {localStorage.getItem('idUser') !== '' && (
                                     <CustomButton
                                         onClick={handleAddToFavorite}
                                         variant="filled"
@@ -503,14 +495,14 @@ const DetailProduct = () => {
                             </Stack>
                         ) : (
                             <Stack sx={{ width: '100%', height: '100%' }}>
-                                <CircularProgress></CircularProgress>
+                                <CircularProgress />
                             </Stack>
                         )}
                     </Box>
                 </Grid>
                 <RecommendedProductLine productID={id} />
-                <BoxShopInfo></BoxShopInfo>
-                <ProductComment productID={id}></ProductComment>
+                <BoxShopInfo />
+                <ProductComment productID={id} />
                 <BigFooter />
             </Grid>
             <Backdrop sx={{ color: '#fff', zIndex: (theme) => theme.zIndex.drawer + 1 }} open={openBackdrop}>
@@ -523,6 +515,6 @@ const DetailProduct = () => {
             </Snackbar>
         </Stack>
     );
-};
+}
 
 export default DetailProduct;

@@ -1,3 +1,6 @@
+/* eslint-disable function-paren-newline */
+/* eslint-disable implicit-arrow-linebreak */
+/* eslint-disable no-confusing-arrow */
 import React, { useState, useEffect } from 'react';
 import { useDispatch } from 'react-redux';
 import { unwrapResult } from '@reduxjs/toolkit';
@@ -5,17 +8,18 @@ import { getProductWithID } from '../../redux/slices/productSlice';
 
 export default function TableInvoiceItem({ list, total }) {
     const [listProduct, setListProduct] = useState([]);
+    const [ready, setReady] = useState(false);
 
     const dispatch = useDispatch();
     const fetchListProduct = async () => {
         let listTemp = [];
         for (let i = 0; i < list.length; i++) {
             if (list[i].productid === null) {
-                let price = list[i].total / list[i].amount;
-                let temp = {
+                const price = list[i].total / list[i].amount;
+                const temp = {
                     productID: null,
                     name: 'This product might not be on shop anymore',
-                    price: price,
+                    price,
                 };
                 listTemp = [...listTemp, temp];
             } else {
@@ -29,7 +33,7 @@ export default function TableInvoiceItem({ list, total }) {
         setListProduct(listTemp);
         setReady(true);
     };
-    const [ready, setReady] = useState(false);
+
     useEffect(async () => {
         if (ready === false) {
             fetchListProduct();
@@ -48,33 +52,31 @@ export default function TableInvoiceItem({ list, total }) {
                     </tr>
                 </thead>
                 {listProduct.map((p) => (
-                    <React.Fragment>
-                        <tbody>
-                            <tr>
-                                <td style={{ fontSize: '13px' }}>{p.name}</td>
-                                {list.map((i) =>
-                                    p.productID === i.productid ? (
-                                        <td
-                                            style={{
-                                                fontFamily: 'serif',
-                                                display: 'flex',
-                                                justifyContent: 'center',
-                                                fontSize: '13px',
-                                            }}
-                                        >
-                                            {i.amount}
-                                        </td>
-                                    ) : null,
-                                )}
-                                <td style={{ fontFamily: 'serif', width: 'auto' }}>💸{p.price}</td>
-                                {list.map((i) =>
-                                    p.productID === i.productid ? (
-                                        <td style={{ fontFamily: 'serif' }}>💸{i.total}</td>
-                                    ) : null,
-                                )}
-                            </tr>
-                        </tbody>
-                    </React.Fragment>
+                    <tbody>
+                        <tr>
+                            <td style={{ fontSize: '13px' }}>{p.name}</td>
+                            {list.map((i) =>
+                                p.productID === i.productid ? (
+                                    <td
+                                        style={{
+                                            fontFamily: 'serif',
+                                            display: 'flex',
+                                            justifyContent: 'center',
+                                            fontSize: '13px',
+                                        }}
+                                    >
+                                        {i.amount}
+                                    </td>
+                                ) : null,
+                            )}
+                            <td style={{ fontFamily: 'serif', width: 'auto' }}>💸{p.price}</td>
+                            {list.map((i) =>
+                                p.productID === i.productid ? (
+                                    <td style={{ fontFamily: 'serif' }}>💸{i.total}</td>
+                                ) : null,
+                            )}
+                        </tr>
+                    </tbody>
                 ))}
             </table>
 

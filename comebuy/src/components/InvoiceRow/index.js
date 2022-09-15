@@ -1,20 +1,10 @@
+/* eslint-disable function-paren-newline */
+/* eslint-disable implicit-arrow-linebreak */
+/* eslint-disable react/jsx-no-undef */
+/* eslint-disable no-confusing-arrow */
+/* eslint-disable react/no-unstable-nested-components */
 import * as React from 'react';
-import { useDispatch } from 'react-redux';
-import ReactToPrint from 'react-to-print';
-import { updateInvoice } from '../../redux/slices/invoiceSlice';
-import { unwrapResult } from '@reduxjs/toolkit';
-import { useSelector } from 'react-redux';
-
-import CusInfo from './../InvoiceCusInfo/index';
-
-import Header from '../CounterHeader';
-import MainDetails from '../CounterMainDetails';
-import ClientDetails from '../CounterClientDetails';
-import Dates from '../CounterDates';
-import TablePrint from '../CounterTablePrint';
-import Notes from '../CounterNotes';
-import Footer from '../CounterFooter';
-
+import { useDispatch, useSelector } from 'react-redux';
 import Stepper from '@mui/material/Stepper';
 import Step from '@mui/material/Step';
 import StepLabel from '@mui/material/StepLabel';
@@ -33,24 +23,24 @@ import Backdrop from '@mui/material/Backdrop';
 import CircularProgress from '@mui/material/CircularProgress';
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp';
-import FormControlLabel from '@mui/material/FormControlLabel';
-import FormGroup from '@mui/material/FormGroup';
-import Popover from '@mui/material/Popover';
-import Button from '@mui/material/Button';
-import { Modal } from '@mui/material';
-import { Stack } from '@mui/material';
+import { Modal, Stack, Button, Popover } from '@mui/material';
 import TableInvoiceItem from '../InvoiceTableInvoiceItem';
 import { currentUser } from '../../redux/selectors';
-import ProdInfo from './../InvoiceProdInfo/index';
-import IOSSwitch from './../InvoiceIOSSwitch/index';
-import ReceiptIcon from '@mui/icons-material/Receipt';
-const Alert = React.forwardRef(function Alert(props, ref) {
-    return <MuiAlert elevation={6} ref={ref} variant="filled" {...props} />;
-});
+import ProdInfo from '../InvoiceProdInfo/index';
+import Footer from '../CounterFooter';
+import Notes from '../CounterNotes';
+import Dates from '../CounterDates';
+import ClientDetails from '../CounterClientDetails';
+import MainDetails from '../CounterMainDetails';
+import Header from '../CounterHeader';
+import { updateInvoice } from '../../redux/slices/invoiceSlice';
+import CusInfo from '../InvoiceCusInfo/index';
+
+const Alert = React.forwardRef((props, ref) => <MuiAlert elevation={6} ref={ref} variant="filled" {...props} />);
 
 const steps = ['Checked', 'Delivered'];
 
-const Row = (props) => {
+function Row(props) {
     const componentRef = React.useRef();
     const handlePrint = () => {
         window.print();
@@ -59,17 +49,12 @@ const Row = (props) => {
 
     const { row } = props;
     const [open, setOpen] = React.useState(false);
+    const [invoiceTotal, setInvoiceTotal] = React.useState(0);
 
-    //for open backdrop
+    // for open backdrop
     const [openBackdrop, setOpenBackdrop] = React.useState(false);
-    const handleCloseBackdrop = () => {
-        setOpenBackdrop(false);
-    };
-    const handleToggleBackdrop = () => {
-        setOpenBackdrop(!openBackdrop);
-    };
 
-    //Get customer information
+    // Get customer information
     const [anchorEl, setAnchorEl] = React.useState(null);
     const handleClick = (event) => {
         setAnchorEl(event.currentTarget);
@@ -80,22 +65,10 @@ const Row = (props) => {
     const openHover = Boolean(anchorEl);
     const id = open ? 'simple-popover' : undefined;
 
-    //Get invoice detail (address)
-    const [anchorE3, setAnchorE3] = React.useState(null);
-    const handleClickInvoiceID = (event) => {
-        setAnchorE3(event.currentTarget);
-    };
-    const handleCloseInvoiceID = () => {
-        setAnchorE3(null);
-    };
-    const openHoverInvoiceID = Boolean(anchorE3);
-    const id3 = open ? 'simple-popover' : undefined;
+    // Get invoice detail (address)
 
-    //Get product information
+    // Get product information
     const [anchorEl2, setAnchorEl2] = React.useState(null);
-    const handleClickProductId = (event) => {
-        setAnchorEl2(event.currentTarget);
-    };
     const handleProductPopoverOpen = (event) => {
         setAnchorEl2(event.currentTarget);
     };
@@ -103,14 +76,6 @@ const Row = (props) => {
         setAnchorEl2(null);
     };
     const openProductHover = Boolean(anchorEl2);
-    const id2 = open ? 'simple-popover' : undefined;
-
-    //Execute process of managing invoice
-    const [disablePaid, setDisablePaid] = React.useState(false);
-    const [disableCheck, setDisableCheck] = React.useState(false);
-
-    const [isChecked, setIsChecked] = React.useState(row.isChecked);
-    const [isPaid, setIsPaid] = React.useState(row.isPaid);
 
     const [dataForUpdate, setDataForUpdate] = React.useState({
         invoiceID: row.invoiceID,
@@ -120,7 +85,7 @@ const Row = (props) => {
         isPaid: row.isPaid,
     });
 
-    //for snackbar
+    // for snackbar
     const [openSnackbar, setOpenSnackbar] = React.useState(false);
     const handleCloseSnackbar = (event, reason) => {
         if (reason === 'clickaway') {
@@ -130,7 +95,7 @@ const Row = (props) => {
     };
 
     const [updating, setUpdating] = React.useState(false);
-
+    const [activeStep, setActiveStep] = React.useState(0);
     const dispatch = useDispatch();
 
     React.useEffect(() => {
@@ -157,11 +122,10 @@ const Row = (props) => {
                     isChecked: true,
                 };
             }
-            const resultAction = await dispatch(updateInvoice(temp));
-            const originalPromiseResult = unwrapResult(resultAction);
+            await dispatch(updateInvoice(temp));
             setDataForUpdate(temp);
-            console.log('temp:' + temp);
-            console.log('dataforup:' + dataForUpdate);
+            console.log(`temp:${temp}`);
+            console.log(`dataforup:${dataForUpdate}`);
             setActiveStep(activeStep + 1);
             setUpdating(false);
             setOpenSnackbar(true);
@@ -174,12 +138,10 @@ const Row = (props) => {
     function Total() {
         let total = 0;
         for (let i = 0; i < row.invoiceitem.length; i++) {
-            total = total + Number(row.invoiceitem[i].total);
+            total += Number(row.invoiceitem[i].total);
         }
         return total;
     }
-
-    const [invoiceTotal, setInvoiceTotal] = React.useState(0);
 
     React.useEffect(() => {
         if (invoiceTotal === 0) {
@@ -191,8 +153,6 @@ const Row = (props) => {
     const closeModalBill = () => {
         setOpenModalBill(false);
     };
-
-    const [activeStep, setActiveStep] = React.useState(0);
 
     React.useEffect(() => {
         let t = false;
@@ -213,7 +173,7 @@ const Row = (props) => {
         }
     }, []);
     return (
-        <React.Fragment>
+        <>
             <TableRow sx={{ '& > *': { borderBottom: 'set', backgroundColor: 'white' } }}>
                 <TableCell>
                     <IconButton
@@ -269,16 +229,14 @@ const Row = (props) => {
                             ))}
                         </Stepper>
                         <div>
-                            <React.Fragment>
-                                <Box sx={{ display: 'flex', flexDirection: 'row', pt: 2 }}>
-                                    <Box sx={{ flex: '1 1 auto' }} />
-                                    {activeStep !== steps.length ? (
-                                        <Button onClick={handleClickPaidInvoice} sx={{ fontSize: '9px' }}>
-                                            Done
-                                        </Button>
-                                    ) : null}
-                                </Box>
-                            </React.Fragment>
+                            <Box sx={{ display: 'flex', flexDirection: 'row', pt: 2 }}>
+                                <Box sx={{ flex: '1 1 auto' }} />
+                                {activeStep !== steps.length ? (
+                                    <Button onClick={handleClickPaidInvoice} sx={{ fontSize: '9px' }}>
+                                        Done
+                                    </Button>
+                                ) : null}
+                            </Box>
                         </div>
                     </Box>
                 </TableCell>
@@ -449,8 +407,8 @@ const Row = (props) => {
                             <Stack>
                                 <MainDetails
                                     contact={_currentUser.phoneNumber}
-                                    name={'Printed by ' + _currentUser.name}
-                                    address={'ComeBuy Store'}
+                                    name={`Printed by ${_currentUser.name}`}
+                                    address="ComeBuy Store"
                                 />
                             </Stack>
                         </Stack>
@@ -459,12 +417,12 @@ const Row = (props) => {
                         <Notes notes="Online" />
                         <div
                             style={{ marginLeft: '2rem', marginRight: '2rem', height: '1px', backgroundColor: 'grey' }}
-                        ></div>
+                        />
                         <Footer
-                            name={'Printed by ' + _currentUser.name}
-                            address={'ComeBuy Store'}
-                            email={'Printer Email: ' + _currentUser.email}
-                            phone={'Printer phone: ' + _currentUser.phoneNumber}
+                            name={`Printed by ${_currentUser.name}`}
+                            address="ComeBuy Store"
+                            email={`Printer Email: ${_currentUser.email}`}
+                            phone={`Printer phone: ${_currentUser.phoneNumber}`}
                         />
                     </Stack>
                     <ReactToPrint
@@ -478,8 +436,8 @@ const Row = (props) => {
                     />
                 </Box>
             </Modal>
-        </React.Fragment>
+        </>
     );
-};
+}
 
 export default Row;

@@ -1,18 +1,16 @@
-import React, { useState, useEffect, useCallback } from 'react';
+/* eslint-disable react/button-has-type */
+/* eslint-disable no-shadow */
+/* eslint-disable react/jsx-props-no-spreading */
+import React, { useState, useEffect } from 'react';
 import { AiOutlineDelete, AiOutlineEdit } from 'react-icons/ai';
-import { v4 as uuidv4 } from 'uuid';
 import { Stack, TextField, Button } from '@mui/material';
 import { useSelector } from 'react-redux';
 import Autocomplete, { createFilterOptions } from '@mui/material/Autocomplete';
-import Popover from '@mui/material/Popover';
-import Typography from '@mui/material/Typography';
 import { productListSelector } from '../../redux/selectors';
-import ProdInfo from '../InvoiceProdInfo';
-import { OptionUnstyled } from '@mui/base';
 import { DetailProductModal } from '..';
 
 const filter = createFilterOptions();
-const TableForm = ({
+function TableForm({
     description,
     setDescription,
     quantity,
@@ -25,11 +23,8 @@ const TableForm = ({
     setList,
     total,
     setTotal,
-}) => {
-    const [isEditing, setIsEditing] = useState(false);
-
+}) {
     const _productList = useSelector(productListSelector); // list get from store
-    const [listProduct, setListProduct] = useState(_productList);
 
     // Submit form function
     const handleSubmit = (e) => {
@@ -50,7 +45,6 @@ const TableForm = ({
             setPrice('');
             setAmount('');
             setList([...list, newItems]);
-            setIsEditing(false);
         }
     };
     const [openModal, setOpenModal] = useState(false);
@@ -63,7 +57,7 @@ const TableForm = ({
 
     // Calculate items amount function
     useEffect(() => {
-        const calculateAmount = (amount) => {
+        const calculateAmount = () => {
             setAmount(quantity * price);
         };
         calculateAmount(amount);
@@ -75,7 +69,7 @@ const TableForm = ({
         let sum = 0;
 
         for (let i = 0; i < list.length; i++) {
-            sum += parseInt(list[i].amount);
+            sum += parseInt(list[i].amount, 10);
             setTotal(sum);
         }
     }, [list]);
@@ -84,7 +78,6 @@ const TableForm = ({
     const editRow = (id) => {
         const editingRow = list.find((row) => row.id === id);
         setList(list.filter((row) => row.id !== id));
-        setIsEditing(true);
         setDescription(editingRow.description);
         setQuantity(editingRow.quantity);
         setPrice(editingRow.price);
@@ -133,7 +126,7 @@ const TableForm = ({
                     clearOnBlur
                     handleHomeEndKeys
                     id="free-solo-with-text-demo"
-                    options={listProduct}
+                    options={_productList}
                     getOptionLabel={(option) => {
                         // Value selected with enter, right from the input
                         if (typeof option === 'string') {
@@ -213,6 +206,6 @@ const TableForm = ({
             </div>
         </>
     );
-};
+}
 
 export default TableForm;

@@ -1,5 +1,5 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
-import favoriteApi from './../../api/favoriteAPI';
+import favoriteApi from '../../api/favoriteAPI';
 
 export const getAllFavorite = createAsyncThunk(
     'favorite/getAll',
@@ -8,9 +8,8 @@ export const getAllFavorite = createAsyncThunk(
         const response = await favoriteApi.getAll();
         if (!response) {
             return rejectWithValue('Get All Failed');
-        } else {
-            return response.data;
         }
+        return response.data;
     },
 );
 
@@ -30,18 +29,16 @@ export const deleteFavoriteById = createAsyncThunk('favorite/deleteFavoriteById'
     const response = await favoriteApi.deleteFavoriteById(id);
     if (!response) {
         return rejectedWithValue('Deleted failed !');
-    } else {
-        return response;
     }
+    return response;
 });
 
 export const addFavorite = createAsyncThunk('favorite/addFavorite', async (data, { rejectedWithValue }) => {
     const response = await favoriteApi.addFavorite(data);
     if (!response) {
         return rejectedWithValue('Add favorite failed');
-    } else {
-        return response;
     }
+    return response;
 });
 
 export const favoriteSlice = createSlice({
@@ -70,7 +67,7 @@ export const favoriteSlice = createSlice({
             state.loading = false;
             state.branchList = action.payload;
         },
-        [getAllFavorite.rejected]: (state, action) => {
+        [getAllFavorite.rejected]: (state) => {
             state.loading = false;
         },
         // [updateFavorite.pending]: (state) => {
@@ -90,27 +87,27 @@ export const favoriteSlice = createSlice({
             state.loading = true;
             console.log(' pending...');
         },
-        [deleteFavoriteById.fulfilled]: (state, action) => {
+        [deleteFavoriteById.fulfilled]: (state) => {
             state.loading = false;
             console.log('fulfilled...');
         },
         [deleteFavoriteById.rejected]: (state, action) => {
             state.loading = false;
             state.errorMessage = action.payload;
-            console.log('rejected: ' + state.errorMessage);
+            console.log(`rejected: ${state.errorMessage}`);
         },
         [addFavorite.pending]: (state) => {
             state.loading = true;
             console.log(' pending...');
         },
-        [addFavorite.fulfilled]: (state, action) => {
+        [addFavorite.fulfilled]: (state) => {
             state.loading = false;
             console.log('fulfilled...');
         },
         [addFavorite.rejected]: (state, action) => {
             state.loading = false;
             state.errorMessage = action.payload;
-            console.log('rejected: ' + state.errorMessage);
+            console.log(`rejected: ${state.errorMessage}`);
         },
     },
 });

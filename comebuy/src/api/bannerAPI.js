@@ -4,21 +4,15 @@ const baseURL = 'banner';
 
 const bannerApi = {
     getAll: async () => {
-        const res = DatabaseClient.get('/' + baseURL).catch((err) => {
-            return err.response;
-        });
+        const res = DatabaseClient.get(`/${baseURL}`).catch((err) => err.response);
         return res;
     },
     createNewBanner: async (data) => {
-        const res = DatabaseClient.post('/' + baseURL, data).catch((err) => {
-            return err.response;
-        });
+        const res = DatabaseClient.post(`/${baseURL}`, data).catch((err) => err.response);
         return res;
     },
     deleteBannerById: async (id) => {
-        const res = await DatabaseClient.delete('/' + baseURL + '/' + id, id).catch((err) => {
-            return err.message;
-        });
+        const res = await DatabaseClient.delete(`/${baseURL}/${id}`, id).catch((err) => err.message);
         return res;
     },
 };

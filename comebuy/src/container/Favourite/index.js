@@ -1,14 +1,25 @@
-//importation from libs
+/* eslint-disable no-await-in-loop */
+/* eslint-disable react/jsx-props-no-spreading */
+// importation from libs
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router';
 import { useDispatch, useSelector } from 'react-redux';
 import { unwrapResult } from '@reduxjs/toolkit';
 
-//Importation from mui
+// Importation from mui
 import styled from 'styled-components';
 import { ShoppingCartCheckoutOutlined } from '@mui/icons-material';
-import { Add, DeleteForeverOutlined, Remove } from '@material-ui/icons';
-import { Typography, Link, Stack, Breadcrumbs, Button, createFilterOptions, TextField } from '@mui/material';
+import { DeleteForeverOutlined } from '@material-ui/icons';
+import {
+    Typography,
+    Link,
+    Stack,
+    Breadcrumbs,
+    Button,
+    createFilterOptions,
+    TextField,
+    Autocomplete,
+} from '@mui/material';
 import Backdrop from '@mui/material/Backdrop';
 import CircularProgress from '@mui/material/CircularProgress';
 import Dialog from '@mui/material/Dialog';
@@ -23,17 +34,16 @@ import SpeedDial from '@mui/material/SpeedDial';
 import SpeedDialIcon from '@mui/material/SpeedDialIcon';
 import SpeedDialAction from '@mui/material/SpeedDialAction';
 
-//Importation from component
+// Importation from component
 import NavBar from '../../components/NavBar/NavBar';
 import { BigFooter, ProductInFavorite } from '../../components';
 import { mobile } from './responsive';
 
-//Importation from slices, api,...
-import { getAllFavorite, deleteFavoriteById } from './../../redux/slices/favoriteSlice';
+// Importation from slices, api,...
+import { getAllFavorite, deleteFavoriteById } from '../../redux/slices/favoriteSlice';
 import { currentUser } from '../../redux/selectors';
 import { getProductWithID } from '../../redux/slices/productSlice';
 import { addCart } from '../../redux/slices/cartSlice';
-import { Autocomplete } from '@mui/material';
 
 const Container = styled.div`
     background-color: white;
@@ -61,28 +71,14 @@ const TopTexts = styled.div`
     ${mobile({ display: 'none' })}
 `;
 
-const TopText = styled.span`
-    text-decoration: underline;
-    cursor: pointer;
-    margin: 0px 10px;
-`;
-
 const Bottom = styled.div`
     display: flex;
     justify-content: center, ${mobile({ flexDirection: 'column' })};
 `;
 
-const SummaryItemText = styled.span``;
+const Transition = React.forwardRef((props, ref) => <Slide direction="d" ref={ref} {...props} />);
 
-const SummaryItemPrice = styled.span``;
-
-const Transition = React.forwardRef(function Transition(props, ref) {
-    return <Slide direction="d" ref={ref} {...props} />;
-});
-
-const Alert = React.forwardRef(function Alert(props, ref) {
-    return <MuiAlert elevation={6} ref={ref} variant="filled" {...props} />;
-});
+const Alert = React.forwardRef((props, ref) => <MuiAlert elevation={6} ref={ref} variant="filled" {...props} />);
 
 const actions = [
     { icon: <ShoppingCartCheckoutOutlined />, name: 'Get all to cart' },
@@ -91,16 +87,16 @@ const actions = [
 
 const filter = createFilterOptions();
 
-const FavoritePlace = () => {
-    //dispatch, selector, navigate,..
+function FavoritePlace() {
+    // dispatch, selector, navigate,..
     const dispatch = useDispatch();
     const _currentUser = useSelector(currentUser);
     const navigate = useNavigate();
 
-    //data state
+    // data state
     const [favoriteList, setFavoriteList] = useState([]);
 
-    //process situation states
+    // process situation states
     const [isLoading, setIsLoading] = useState(true);
     const [open, setOpen] = useState(false);
     const [openSnackbar, setOpenSnackbar] = useState(false);
@@ -110,16 +106,12 @@ const FavoritePlace = () => {
     const [openMoveAllSuccess, setOpenMoveAllSuccess] = useState(false);
     const [openConfirmDelete, setOpenConfirmDelete] = useState(false);
     const [openConfirmMove, setOpenConfirmMove] = useState(false);
-    const [subTotal, setSubTotal] = useState(0);
-    const [prodList, setProdList] = useState([]);
 
-    //function middle handler
+    // function middle handler
     const handleCloseMovingToCart = () => {
         setIsMovingToCart(false);
     };
-    const handleToggleIsMovingToCart = () => {
-        setIsMovingToCart(!isMovingToCart);
-    };
+
     const handleCloseSnackbar = (event, reason) => {
         if (reason === 'clickaway') {
             return;
@@ -135,11 +127,20 @@ const FavoritePlace = () => {
     const handleCloseMoveAllSuccess = () => setOpenMoveAllSuccess(false);
     const handleCloseConfirmDelete = () => setOpenConfirmDelete(false);
     const handleCloseConfirmMove = () => setOpenConfirmMove(false);
-    const handleAgree = async (item) => {
+    const handleAgree = async () => {
         alert('dislike this product');
     };
 
-    //task function
+    // const CountTotal = async (_favorite, prList) => {
+    //     // let newTotal = 0;
+    //     await _favorite.map((item) => {
+    //         const rs = prList.find((ite) => ite.productID === item.productid);
+    //         if (rs !== undefined) newTotal += Number(Number(rs.price) * Number(item.amount));
+    //     });
+    //     // setSubTotal(newTotal);
+    // };
+
+    // task function
     const fetchYourFavorite = async (listFavorite, listProduct) => {
         let temp = [];
         try {
@@ -155,26 +156,17 @@ const FavoritePlace = () => {
                 }
             }
             setIsLoading(false);
-            await CountTotal(listFavorite, listProduct);
+            // await CountTotal(listFavorite, listProduct);
         } catch (rejectedValueOrSerializedError) {
             return rejectedValueOrSerializedError;
         }
-    };
-    const CountTotal = async (_favorite, prList) => {
-        let newTotal = 0;
-        await _favorite.map((item) => {
-            let rs = prList.find((ite) => ite.productID == item.productid);
-            if (rs != undefined) newTotal = newTotal + Number(Number(rs.price) * Number(item.amount));
-        });
-        setSubTotal(newTotal);
     };
 
     const handleDeleteOneFav = async (value) => {
         setIsMovingToCart(true);
         try {
-            const resultAction = await dispatch(deleteFavoriteById(value.favoriteID));
-            const originalPromiseResult = unwrapResult(resultAction);
-            var index = favoriteList.indexOf(value);
+            await dispatch(deleteFavoriteById(value.favoriteID));
+            const index = favoriteList.indexOf(value);
             if (index !== -1) {
                 favoriteList.splice(index, 1);
             }
@@ -187,12 +179,12 @@ const FavoritePlace = () => {
 
     const handleMoveItemToMyCart = async (value) => {
         setIsMovingToCart(true);
-        let newCart = {
+        const newCart = {
             userID: _currentUser.userID,
             productID: value.productid,
             amount: 1,
         };
-        //addCart to db
+        // addCart to db
         try {
             const resultAction = await dispatch(addCart(newCart));
             const originalPromiseResult = unwrapResult(resultAction);
@@ -200,11 +192,10 @@ const FavoritePlace = () => {
         } catch (rejectedValueOrSerializedError) {
             alert(rejectedValueOrSerializedError);
         }
-        //delete favorite
+        // delete favorite
         try {
-            const resultAction = await dispatch(deleteFavoriteById(value.favoriteID));
-            const originalPromiseResult = unwrapResult(resultAction);
-            var index = favoriteList.indexOf(value);
+            await dispatch(deleteFavoriteById(value.favoriteID));
+            const index = favoriteList.indexOf(value);
             if (index !== -1) {
                 favoriteList.splice(index, 1);
             }
@@ -215,7 +206,7 @@ const FavoritePlace = () => {
         }
     };
     const handleDeleteAllFavorite = () => {
-        setIsMovingToCart(true); //backdrop
+        setIsMovingToCart(true); // backdrop
         favoriteList.map((i) => {
             dispatch(deleteFavoriteById(i.favoriteID));
         });
@@ -225,7 +216,7 @@ const FavoritePlace = () => {
         setOpenDeleteAllSuccess(true);
     };
     const handlePlaceAllToCart = () => {
-        setIsMovingToCart(true); //backdrop
+        setIsMovingToCart(true); // backdrop
         favoriteList.map((i) => {
             dispatch(
                 addCart({
@@ -242,38 +233,35 @@ const FavoritePlace = () => {
     };
     const handleSpeedDialClick = (action) => {
         if (action.name === 'Get all to cart') {
-            if (favoriteList.length != 0) {
+            if (favoriteList.length !== 0) {
                 setOpenConfirmMove(true);
             }
-        } else {
-            if (favoriteList.length != 0) {
-                setOpenConfirmDelete(true);
-            }
+        } else if (favoriteList.length !== 0) {
+            setOpenConfirmDelete(true);
         }
     };
-    function handleClick(event) {
+    const handleClick = (event) => {
         event.preventDefault();
         navigate('/myplace');
-    }
+    };
 
     const handleClickToHome = (event) => {
         event.preventDefault();
         navigate('/');
     };
-    const gotoProductScreen = () => navigate('/productSpace');
 
-    //useEffect..
+    // useEffect..
     useEffect(() => {
         if (isLoading === true) {
-            let listFavorite = [];
-            let listProduct = [];
+            const listFavorite = [];
+            const listProduct = [];
             fetchYourFavorite(listFavorite, listProduct);
             setFavoriteList(listFavorite);
-            setProdList(listProduct);
+            // setProdList(listProduct);
         }
     }, []);
 
-    //Breadcrumb
+    // Breadcrumb
     const breadcrumbs = [
         <Link underline="hover" key="2" style={{ color: '#000D0A' }} href="/myplace" onClick={handleClickToHome}>
             Home
@@ -302,15 +290,15 @@ const FavoritePlace = () => {
                             onChange={(event, newValue) => {
                                 if (typeof newValue === 'string') {
                                     return newValue;
-                                } else if (newValue && newValue.inputValue) {
-                                    return newValue.inputValue;
-                                } else {
-                                    // setDescription(newValue);
-                                    // setPrice(newValue.price)
-                                    // setCurrentProduct(newValue)
-                                    // setOpenModal(true)
-                                    navigate('/productSpace/' + newValue.productid);
                                 }
+                                if (newValue && newValue.inputValue) {
+                                    return newValue.inputValue;
+                                }
+                                // setDescription(newValue);
+                                // setPrice(newValue.price)
+                                // setCurrentProduct(newValue)
+                                // setOpenModal(true)
+                                navigate(`/productSpace/${newValue.productid}`);
                             }}
                             filterOptions={(options, params) => {
                                 const filtered = filter(options, params);
@@ -372,14 +360,14 @@ const FavoritePlace = () => {
                                     handleDeleteOneFavorite={handleDeleteOneFav}
                                     handleMoveItemToCart={handleMoveItemToMyCart}
                                     productInFavorite={item}
-                                ></ProductInFavorite>
+                                />
                                 <Dialog
                                     open={open}
                                     TransitionComponent={Transition}
                                     keepMounted
                                     aria-describedby="alert-dialog-slide-description"
                                 >
-                                    <DialogTitle>{'Discart'}</DialogTitle>
+                                    <DialogTitle>Discart</DialogTitle>
                                     <DialogContent>
                                         <DialogContentText id="alert-dialog-slide-description">
                                             Are you sure want de-Favorite this product ?
@@ -465,6 +453,6 @@ const FavoritePlace = () => {
             </Dialog>
         </Container>
     );
-};
+}
 
 export default FavoritePlace;

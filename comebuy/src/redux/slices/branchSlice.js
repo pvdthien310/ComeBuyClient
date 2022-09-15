@@ -1,5 +1,5 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
-import branchApi from './../../api/branchAPI';
+import branchApi from '../../api/branchAPI';
 
 export const getAllBranch = createAsyncThunk(
     'branch/getAll',
@@ -8,9 +8,8 @@ export const getAllBranch = createAsyncThunk(
         const response = await branchApi.getAll();
         if (!response) {
             return rejectWithValue('Get All Failed');
-        } else {
-            return response.data;
         }
+        return response.data;
     },
 );
 
@@ -81,7 +80,7 @@ export const branchSlice = createSlice({
             state.loading = false;
             state.branchList = action.payload;
         },
-        [getAllBranch.rejected]: (state, action) => {
+        [getAllBranch.rejected]: (state) => {
             state.loading = false;
         },
     },

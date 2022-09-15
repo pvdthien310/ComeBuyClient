@@ -1,3 +1,5 @@
+/* eslint-disable operator-linebreak */
+/* eslint-disable no-unused-expressions */
 import * as React from 'react';
 import { useEffect, useState } from 'react';
 import Accordion from '@mui/material/Accordion';
@@ -5,19 +7,18 @@ import AccordionDetails from '@mui/material/AccordionDetails';
 import AccordionSummary from '@mui/material/AccordionSummary';
 import Typography from '@mui/material/Typography';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
-import { Button, CircularProgress, Stack } from '@mui/material';
-import ButtonGroup from '@mui/material/ButtonGroup';
 import Box from '@mui/material/Box';
 import Checkbox from '@mui/material/Checkbox';
 import FormControlLabel from '@mui/material/FormControlLabel';
-import { SplitFeatureFromList } from './function';
-import { ConstructionOutlined } from '@mui/icons-material';
+import { CircularProgress, Stack } from '@mui/material';
+import SplitFeatureFromList from './function';
 import productAPI from '../../api/productAPI';
-const CheckBoxList = (props) => {
+
+function CheckBoxList(props) {
     const [checkedBox, setCheckedBox] = useState([]);
     const handleCheck = (value) => {
         checkedBox.includes(value)
-            ? setCheckedBox((prev) => prev.filter((item) => item != value))
+            ? setCheckedBox((prev) => prev.filter((item) => item !== value))
             : setCheckedBox((prev) => [...prev, value]);
     };
     useEffect(() => {
@@ -42,9 +43,9 @@ const CheckBoxList = (props) => {
                 ))}
         </Box>
     );
-};
+}
 
-const FilterAccordion = (props) => {
+function FilterAccordion(props) {
     const [expanded, setExpanded] = useState(false);
     const [brandOptions, setBrandOptions] = useState({ loading: false, options: [] });
     const [ramOptions, setRAMOptions] = useState({ loading: false, options: [] });
@@ -66,7 +67,7 @@ const FilterAccordion = (props) => {
     ]);
     useEffect(async () => {
         const response = await productAPI.getProductFilterOptions();
-        if (response.status == 200)
+        if (response.status === 200) {
             await SplitFeatureFromList(
                 response.data,
                 setBrandOptions,
@@ -78,7 +79,7 @@ const FilterAccordion = (props) => {
                 setMemoryOptions,
                 setYearOptions,
             );
-        else console.log('Load Feature Failed');
+        } else console.log('Load Feature Failed');
     }, []);
 
     useEffect(() => {
@@ -129,12 +130,12 @@ const FilterAccordion = (props) => {
                             </Stack>
                         ) : (
                             <Stack
-                                direction={'row'}
+                                direction="row"
                                 sx={{ width: '100%', justifyContent: 'center', alignItems: 'center' }}
                                 spacing={2}
                             >
                                 <CircularProgress sx={{ width: '100%', alignSelf: 'center' }} color="secondary" />
-                                <Typography variant="body1" color={'secondary'}>
+                                <Typography variant="body1" color="secondary">
                                     {' '}
                                     Loading...
                                 </Typography>
@@ -145,5 +146,5 @@ const FilterAccordion = (props) => {
             ))}
         </div>
     );
-};
+}
 export default FilterAccordion;

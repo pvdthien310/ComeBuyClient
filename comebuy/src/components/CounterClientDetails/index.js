@@ -1,5 +1,6 @@
 import { Typography } from '@mui/material';
-const ClientDetails = ({ clientName, clientAddress }) => {
+
+function ClientDetails({ clientName, clientAddress }) {
     return (
         <div
             style={{
@@ -34,5 +35,5 @@ const ClientDetails = ({ clientName, clientAddress }) => {
             </Typography>
         </div>
     );
-};
+}
 export default ClientDetails;

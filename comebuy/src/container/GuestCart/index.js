@@ -1,47 +1,29 @@
+/* eslint-disable react/jsx-one-expression-per-line */
+/* eslint-disable consistent-return */
 import * as React from 'react';
 
 import Typography from '@mui/material/Typography';
-import Modal from '@mui/material/Modal';
-import { Box, Button, Chip, CircularProgress, Grid, Stack } from '@mui/material';
+import { Box, Button, CircularProgress, Grid, Stack } from '@mui/material';
 import 'swiper/css';
 import 'swiper/css/pagination';
-import { styled } from '@mui/material/styles';
-import { useParams } from 'react-router';
-import {
-    FeatureChart,
-    NavBar,
-    TechInforLine,
-    BreadCrumb,
-    BoxShopInfo,
-    ProductInCart,
-    BigFooter,
-} from '../../components';
 import { useDispatch, useSelector } from 'react-redux';
-import { cartListSelector } from '../../redux/selectors.js';
 import { useState, useEffect } from 'react';
-import style from './style.js';
 import AddShoppingCartIcon from '@mui/icons-material/AddShoppingCart';
-import { getAllProduct } from '../../redux/slices/productSlice';
 import PaymentsIcon from '@mui/icons-material/Payments';
-import { cartSlice } from '../../redux/slices/cartSlice';
 import { useNavigate } from 'react-router-dom';
 import CheckIcon from '@mui/icons-material/Check';
 import ClearIcon from '@mui/icons-material/Clear';
+import { cartSlice } from '../../redux/slices/cartSlice';
+import { getAllProduct } from '../../redux/slices/productSlice';
+import style from './style.js';
+import { cartListSelector } from '../../redux/selectors.js';
+import { NavBar, BreadCrumb, BoxShopInfo, ProductInCart, BigFooter } from '../../components';
 
-const ProductImage = styled('img')({
-    height: 300,
-    width: 'auto',
-    maxWidth: 500,
-    alignSelf: 'center',
-    backgroundSize: 'cover',
-});
-
-const GuestCart = () => {
+function GuestCart() {
     const dispatch = useDispatch();
     const navigate = useNavigate();
     const _cart = useSelector(cartListSelector);
     const [cart, setCart] = useState(_cart);
-    const [error, setError] = useState(null);
     const [total, setTotal] = useState(0);
     const [productList, setProductList] = useState([]);
     const [loading, setLoading] = useState(true);
@@ -49,37 +31,39 @@ const GuestCart = () => {
     const CountTotal = async (prList) => {
         let newTotal = 0;
         await _cart.map((item) => {
-            let rs = prList.find((ite) => ite.productID == item.productid);
-            if (rs != undefined) newTotal = newTotal + Number(Number(rs.price) * Number(item.amount));
+            const rs = prList.find((ite) => ite.productID === item.productid);
+            if (rs !== undefined) newTotal += Number(Number(rs.price) * Number(item.amount));
         });
         setTotal(newTotal);
     };
 
     const handleChangeAmount = (value, actionType) => {
         let newCart = [...cart];
-        if (actionType == 'increase') {
+        if (actionType === 'increase') {
             newCart = cart.map((element) => {
-                if (element.productid == value) {
+                if (element.productid === value) {
                     return {
                         productid: element.productid,
                         amount: Number(element.amount) + 1,
                     };
-                } else return element;
+                }
+                return element;
             });
-            dispatch(cartSlice.actions.cartListChange(newCart.filter((item) => item != undefined)));
-        } else if (actionType == 'decrease') {
+            dispatch(cartSlice.actions.cartListChange(newCart.filter((item) => item !== undefined)));
+        } else if (actionType === 'decrease') {
             newCart = cart.map((element) => {
-                if (element.productid == value) {
-                    let rs = Number(element.amount) - 1;
-                    if (rs > 0)
+                if (element.productid === value) {
+                    const rs = Number(element.amount) - 1;
+                    if (rs > 0) {
                         return {
                             productid: element.productid,
                             amount: Number(element.amount) - 1,
                         };
+                    }
                 } else return element;
             });
 
-            dispatch(cartSlice.actions.cartListChange(newCart.filter((item) => item != undefined)));
+            dispatch(cartSlice.actions.cartListChange(newCart.filter((item) => item !== undefined)));
         }
     };
 
@@ -113,18 +97,18 @@ const GuestCart = () => {
 
     return (
         <Stack sx={{ width: '100%', height: '100%' }}>
-            <NavBar hiddenCartLabel={false}></NavBar>
+            <NavBar hiddenCartLabel={false} />
             <Stack sx={{ pt: 2, pl: 2 }}>
                 <BreadCrumb />
             </Stack>
             <Grid container sx={{ width: '100%', height: '100%' }}>
                 <Grid container item xs={8} sx={{ p: 4 }}>
-                    {loading == false ? (
+                    {loading === false ? (
                         <Box sx={style.boxInfor1}>
                             <Stack direction="row" spacing={1} padding={1} sx={{ alignItems: 'center', ml: 2, mb: 2 }}>
                                 <AddShoppingCartIcon />
                                 <Typography variant="h6" fontWeight="bold">
-                                    Cart ({cart.length})
+                                    Cart {cart.length}
                                 </Typography>
                             </Stack>
                             {cart.length > 0 ? (
@@ -133,7 +117,7 @@ const GuestCart = () => {
                                         key={i}
                                         productInCart={item}
                                         handleChangeAmount={handleChangeAmount}
-                                    ></ProductInCart>
+                                    />
                                 ))
                             ) : (
                                 <Stack sx={{ height: '100%', width: '100%' }}>
@@ -158,24 +142,24 @@ const GuestCart = () => {
                                             Order
                                         </Typography>
                                     </Stack>
-                                    <Box sx={{ height: 3, width: '100%', backgroundColor: '#B360A0', mt: 2 }}></Box>
+                                    <Box sx={{ height: 3, width: '100%', backgroundColor: '#B360A0', mt: 2 }} />
                                     <Stack direction="row" sx={{ justifyContent: 'space-between', p: 2 }}>
                                         <Typography variant="body1">Temporary Total:</Typography>
-                                        <Typography variant="body1" fontWeight={'bold'} color="error">
-                                            ${total}
+                                        <Typography variant="body1" fontWeight="bold" color="error">
+                                            {total}
                                         </Typography>
                                     </Stack>
                                     <Stack direction="row" sx={{ justifyContent: 'space-between', p: 2 }}>
                                         <Typography variant="body1">Promotion:</Typography>
-                                        <Typography variant="body1" fontWeight={'bold'} color="error">
+                                        <Typography variant="body1" fontWeight="bold" color="error">
                                             $0
                                         </Typography>
                                     </Stack>
-                                    <Box sx={{ height: 3, width: '100%', backgroundColor: '#B360A0' }}></Box>
+                                    <Box sx={{ height: 3, width: '100%', backgroundColor: '#B360A0' }} />
                                     <Stack direction="row" sx={{ justifyContent: 'space-between', p: 2 }}>
                                         <Typography variant="body1">Total:</Typography>
-                                        <Typography variant="body1" fontWeight={'bold'} color="error">
-                                            ${total}
+                                        <Typography variant="body1" fontWeight="bold" color="error">
+                                            {total}
                                         </Typography>
                                     </Stack>
                                     <Button
@@ -198,7 +182,7 @@ const GuestCart = () => {
                                                 backgroundColor: '#C6FABC',
                                             }}
                                         >
-                                            <Stack direction={'row'} spacing={1}>
+                                            <Stack direction="row" spacing={1}>
                                                 <CheckIcon />
                                                 <Typography>
                                                     Orders are eligible for free shipping upon prepayment.
@@ -217,7 +201,7 @@ const GuestCart = () => {
                                                 backgroundColor: '#D97557',
                                             }}
                                         >
-                                            <Stack direction={'row'} spacing={1}>
+                                            <Stack direction="row" spacing={1}>
                                                 <ClearIcon />
                                                 <Typography>
                                                     Orders are not eligible for free shipping. Invoices need to be over
@@ -229,17 +213,17 @@ const GuestCart = () => {
                                 </Stack>
                             ) : (
                                 <Stack sx={{ width: '100%', height: '100%' }}>
-                                    <CircularProgress></CircularProgress>
+                                    <CircularProgress />
                                 </Stack>
                             )}
                         </Box>
                     )}
                 </Grid>
-                <BoxShopInfo></BoxShopInfo>
+                <BoxShopInfo />
                 <BigFooter />
             </Grid>
         </Stack>
     );
-};
+}
 
 export default GuestCart;

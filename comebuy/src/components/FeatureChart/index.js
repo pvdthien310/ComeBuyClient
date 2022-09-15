@@ -1,10 +1,10 @@
 import React from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { Radar, RadarChart, PolarGrid, PolarAngleAxis, PolarRadiusAxis, ResponsiveContainer } from 'recharts';
+import { Radar, RadarChart, PolarGrid, PolarAngleAxis, ResponsiveContainer } from 'recharts';
 import { featureListSelector } from '../../redux/selectors';
 import { getAllFeature } from '../../redux/slices/featureSlice';
 
-const no_feature = [
+const noFeature = [
     {
         subject: 'Thin-Light',
         A: 0,
@@ -43,34 +43,37 @@ const no_feature = [
     },
 ];
 
-const FeatureChart = (props) => {
+function FeatureChart(props) {
     const featureList = useSelector(featureListSelector);
     const dispatch = useDispatch();
-    if (featureList.length == 0) {
+    if (featureList.length === 0) {
         dispatch(getAllFeature());
     }
     const convertData = (featureProduct) => {
         const res = [];
 
-        if (featureProduct.length == 0) {
-            return no_feature;
-        } else {
-            for (let i = 0; i < featureProduct.length; i++)
+        if (featureProduct.length === 0) {
+            return noFeature;
+        }
+        for (let i = 0; i < featureProduct.length; i++) {
+            res.push({
+                subject: featureProduct[i],
+                A: 150,
+                B: 150,
+                fullMark: 160,
+            });
+        }
+        for (let j = 0; j < featureList.length; j++) {
+            if (!featureProduct.includes(featureList[j].name)) {
                 res.push({
-                    subject: featureProduct[i],
-                    A: 150,
-                    B: 150,
+                    subject: featureList[j].name,
+                    A: 0,
+                    B: 0,
                     fullMark: 160,
                 });
-            for (let j = 0; j < featureList.length; j++)
-                if (!featureProduct.includes(featureList[j].name))
-                    res.push({
-                        subject: featureList[j].name,
-                        A: 0,
-                        B: 0,
-                        fullMark: 160,
-                    });
+            }
         }
+
         return res;
     };
 
@@ -84,5 +87,5 @@ const FeatureChart = (props) => {
             </RadarChart>
         </ResponsiveContainer>
     );
-};
+}
 export default FeatureChart;

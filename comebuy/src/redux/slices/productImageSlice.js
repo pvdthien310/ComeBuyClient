@@ -5,9 +5,8 @@ export const getProductImageWithID = createAsyncThunk('product/findOne', async (
     const response = await productImageAPI.getProductImageWithID(data);
     if (!response) {
         return rejectedWithValue(' Find product image failed');
-    } else {
-        return response.data;
     }
+    return response.data;
 });
 
 export const productImageSlice = createSlice({
@@ -32,11 +31,11 @@ export const productImageSlice = createSlice({
             state.loading = true;
             console.log('Start slice');
         },
-        [getProductImageWithID.fulfilled]: (state, action) => {
+        [getProductImageWithID.fulfilled]: (state) => {
             state.loading = false;
             console.log('Successfully');
         },
-        [getProductImageWithID.rejected]: (state, action) => {
+        [getProductImageWithID.rejected]: (state) => {
             state.loading = false;
         },
     },

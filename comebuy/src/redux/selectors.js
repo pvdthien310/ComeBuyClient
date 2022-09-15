@@ -1,3 +1,4 @@
+/* eslint-disable camelcase */
 export const currentUser = (state) => state.account.user;
 export const loading_user = (state) => state.account.loading;
 export const isSignedIn_user = (state) => state.account.isSignedIn;

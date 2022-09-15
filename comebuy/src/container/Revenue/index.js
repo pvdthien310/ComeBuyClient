@@ -1,11 +1,12 @@
+/* eslint-disable operator-linebreak */
 import * as React from 'react';
 import Box from '@mui/material/Box';
 import { useState, useEffect } from 'react';
-import branchApi from '../../api/branchAPI';
-import { SnackBarAlert, StockInBranch, RevenueChart } from '../../components';
-import { StyledTab, StyledTabs, TabPanel } from './child';
 import { useSelector } from 'react-redux';
-import { currentUser } from './../../redux/selectors';
+import branchApi from '../../api/branchAPI';
+import { SnackBarAlert, RevenueChart } from '../../components';
+import { StyledTab, StyledTabs, TabPanel } from './child';
+import { currentUser } from '../../redux/selectors';
 
 export default function Revenue() {
     const _currentUser = useSelector(currentUser);
@@ -24,10 +25,10 @@ export default function Revenue() {
     async function LoadData() {
         try {
             const response = await branchApi.getAll();
-            if (response.status == 200) {
-                if (localStorage.getItem('role') == 'admin') setBranchList(response.data);
-                else if (localStorage.getItem('role') == 'manager') {
-                    setBranchList(response.data.filter((ite) => ite.branchID == _currentUser.branch.branchid));
+            if (response.status === 200) {
+                if (localStorage.getItem('role') === 'admin') setBranchList(response.data);
+                else if (localStorage.getItem('role') === 'manager') {
+                    setBranchList(response.data.filter((ite) => ite.branchID === _currentUser.branch.branchid));
                 }
                 setMessageSuccess('Load Branch Successfully');
                 setOpenSuccessAlert(true);
@@ -63,7 +64,7 @@ export default function Revenue() {
             {branchList.length > 0 &&
                 branchList.map((item, _index) => (
                     <TabPanel style={{ width: '100%', height: '100%' }} key={_index} value={value} index={_index}>
-                        <RevenueChart branchID={item.branchID}></RevenueChart>
+                        <RevenueChart branchID={item.branchID} />
                     </TabPanel>
                 ))}
             <SnackBarAlert

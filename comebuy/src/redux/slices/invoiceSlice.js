@@ -5,18 +5,16 @@ export const getAllInvoice = createAsyncThunk('invoice/getAll', async (data, { r
     const response = await invoiceAPI.getAll();
     if (!response) {
         return rejectWithValue('Get All Failed');
-    } else {
-        return response;
     }
+    return response;
 });
 
 export const updateInvoice = createAsyncThunk('invoice/updateInvoice', async (data, { rejectedWithValue }) => {
     const response = await invoiceAPI.updateInvoice(data);
     if (!response) {
         return rejectedWithValue('Updated failed !');
-    } else {
-        return response;
     }
+    return response;
 });
 
 export const addInvoice = createAsyncThunk('invoice/addInvoice', async (data, { rejectWithValue }) => {
@@ -24,9 +22,8 @@ export const addInvoice = createAsyncThunk('invoice/addInvoice', async (data, { 
         const response = await invoiceAPI.addInvoice(data);
         if (!response) {
             return rejectWithValue();
-        } else {
-            return response;
         }
+        return response;
     } catch (error) {
         console.log(error);
     }
@@ -53,19 +50,19 @@ export const invoiceSlice = createSlice({
         [updateInvoice.pending]: (state) => {
             state.loading = true;
         },
-        [updateInvoice.fulfilled]: (state, action) => {
+        [updateInvoice.fulfilled]: (state) => {
             state.loading = false;
         },
-        [updateInvoice.rejected]: (state, action) => {
+        [updateInvoice.rejected]: (state) => {
             state.loading = false;
         },
         [addInvoice.pending]: (state) => {
             state.loading = true;
         },
-        [addInvoice.fulfilled]: (state, action) => {
+        [addInvoice.fulfilled]: (state) => {
             state.loading = false;
         },
-        [addInvoice.rejected]: (state, action) => {
+        [addInvoice.rejected]: (state) => {
             state.loading = false;
         },
     },

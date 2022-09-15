@@ -6,9 +6,8 @@ export const addInvoiceItem = createAsyncThunk('invoiceItem/addInvoiceItem', asy
         const response = await invoiceItemAPI.addInvoiceItem(data);
         if (!response) {
             return rejectWithValue();
-        } else {
-            return response;
         }
+        return response;
     } catch (error) {
         console.log(error);
     }
@@ -33,10 +32,10 @@ export const invoiceItemSlice = createSlice({
         [addInvoiceItem.pending]: (state) => {
             state.loading = true;
         },
-        [addInvoiceItem.fulfilled]: (state, action) => {
+        [addInvoiceItem.fulfilled]: (state) => {
             state.loading = false;
         },
-        [addInvoiceItem.rejected]: (state, action) => {
+        [addInvoiceItem.rejected]: (state) => {
             state.loading = false;
         },
     },

@@ -8,9 +8,8 @@ export const getAllFeature = createAsyncThunk(
         const response = await FeatureAPI.getAll();
         if (!response) {
             return rejectWithValue('Get All Failed');
-        } else {
-            return response;
         }
+        return response;
     },
 );
 
@@ -19,11 +18,10 @@ export const editFeature = createAsyncThunk(
     // Code async logic, tham số đầu tiên data là dữ liệu truyền vào khi gọi action
     async (data, { rejectWithValue }) => {
         const response = await FeatureAPI.edit(data);
-        if (response.status != 200 && response != 'Feature was updated successfully.') {
+        if (response.status !== 200 && response !== 'Feature was updated successfully.') {
             return rejectWithValue('Get All Failed');
-        } else {
-            return data;
         }
+        return data;
     },
 );
 
@@ -52,19 +50,16 @@ export const featureSlice = createSlice({
             state.loading = false;
             state.featureList = action.payload;
         },
-        [getAllFeature.rejected]: (state, action) => {
+        [getAllFeature.rejected]: (state) => {
             state.loading = false;
-        },
-        [editFeature.pending]: (state) => {
-            /// Nothing
         },
         [editFeature.fulfilled]: (state, action) => {
             state.featureList = state.FeatureList.map((member) => {
-                if (member.featureID == action.payload.featureID) return action.payload;
-                else return member;
+                if (member.featureID === action.payload.featureID) return action.payload;
+                return member;
             });
         },
-        [editFeature.rejected]: (state, action) => {
+        [editFeature.rejected]: (state) => {
             state.loading = false;
         },
     },

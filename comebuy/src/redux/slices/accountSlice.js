@@ -29,13 +29,12 @@ export const login = createAsyncThunk(
         const response = await JWTApi.login(data.email, data.password);
         if (!response.accessToken) {
             return rejectWithValue('Login Failed');
-        } else {
-            const jsonData = await accountApi.getAccountbyEmail(data.email);
-            localStorage.setItem('idUser', jsonData.userID);
-            localStorage.setItem('role', jsonData.role);
-            localStorage.setItem('cart', JSON.stringify(jsonData.cart));
-            return jsonData;
         }
+        const jsonData = await accountApi.getAccountbyEmail(data.email);
+        localStorage.setItem('idUser', jsonData.userID);
+        localStorage.setItem('role', jsonData.role);
+        localStorage.setItem('cart', JSON.stringify(jsonData.cart));
+        return jsonData;
     },
 );
 
@@ -46,28 +45,25 @@ export const edit = createAsyncThunk(
         const response = await accountApi.edit(data);
         if (!response.accessToken) {
             return rejectWithValue('Login Failed');
-        } else {
-            return response;
         }
+        return response;
     },
 );
 
 export const getAccountWithID = createAsyncThunk('account/findOne', async (data, { rejectedWithValue }) => {
     const response = await accountApi.getAccountWithID(data);
-    if (response.status != 200) {
+    if (response.status !== 200) {
         return rejectedWithValue(' Find account failed');
-    } else {
-        return response.data;
     }
+    return response.data;
 });
 
-export const getAccountWithEmail = createAsyncThunk('account/findOneWithEmail', async (data, { rejectedWithValue }) => {
+export const getAccountWithEmail = createAsyncThunk('account/findOneWithEmail', async (data) => {
     const response = await accountApi.getAccountbyEmail(data);
     if (!response) {
         return false;
-    } else {
-        return response;
     }
+    return response;
 });
 
 export const register = createAsyncThunk('account/register', async ({ dataForReg }, { rejectWithValue }) => {
@@ -75,9 +71,8 @@ export const register = createAsyncThunk('account/register', async ({ dataForReg
         const response = await accountApi.register(dataForReg);
         if (!response) {
             return rejectWithValue();
-        } else {
-            return response;
         }
+        return response;
     } catch (error) {
         console.log(error);
     }
@@ -87,18 +82,16 @@ export const updateAccount = createAsyncThunk('account/update', async (data, { r
     const response = await accountApi.updateAccount(data);
     if (!response) {
         return rejectedWithValue(false);
-    } else {
-        return response.data;
     }
+    return response.data;
 });
 
 export const updatePassword = createAsyncThunk('account/resetPassword', async (data, { rejectedWithValue }) => {
     const response = await accountApi.updatePasswordForAccount(data.password, data.userID);
     if (!response) {
         return rejectedWithValue(false);
-    } else {
-        return response.data;
     }
+    return response.data;
 });
 
 export const accountSlice = createSlice({
@@ -117,7 +110,7 @@ export const accountSlice = createSlice({
         },
     },
     extraReducers: {
-        [register.pending]: (state, action) => {
+        [register.pending]: (state) => {
             state.loading = true;
             state.isRegSuccess = false;
         },
@@ -144,7 +137,7 @@ export const accountSlice = createSlice({
             state.loading = false;
             state.errorMessage = action.payload;
         },
-        [getAccountWithID.pending]: (state, action) => {
+        [getAccountWithID.pending]: (state) => {
             state.loading = true;
             state.isRegSuccess = false;
         },
@@ -158,13 +151,13 @@ export const accountSlice = createSlice({
             state.error = action.payload.message;
             state.isRegSuccess = false;
         },
-        [getAccountWithEmail.pending]: (state, action) => {
+        [getAccountWithEmail.pending]: (state) => {
             state.loading = true;
         },
-        [getAccountWithEmail.fulfilled]: (state, action) => {
+        [getAccountWithEmail.fulfilled]: (state) => {
             state.loading = false;
         },
-        [getAccountWithEmail.rejected]: (state, action) => {
+        [getAccountWithEmail.rejected]: (state) => {
             state.loading = false;
         },
         [updateAccount.pending]: (state) => {
@@ -174,25 +167,25 @@ export const accountSlice = createSlice({
         [updateAccount.fulfilled]: (state, action) => {
             state.loading = false;
             state.user = action.payload;
-            console.log(' fulfilled: ' + state.user);
+            console.log(` fulfilled: ${state.user}`);
         },
         [updateAccount.rejected]: (state, action) => {
             state.loading = false;
             state.errorMessage = action.payload;
-            console.log('rejected: ' + state.errorMessage);
+            console.log(`rejected: ${state.errorMessage}`);
         },
         [updatePassword.pending]: (state) => {
             state.loading = true;
             console.log(' pending...');
         },
-        [updatePassword.fulfilled]: (state, action) => {
+        [updatePassword.fulfilled]: (state) => {
             state.loading = false;
-            console.log(' fulfilled: ' + state.user);
+            console.log(` fulfilled: ${state.user}`);
         },
         [updatePassword.rejected]: (state, action) => {
             state.loading = false;
             state.errorMessage = action.payload;
-            console.log('rejected: ' + state.errorMessage);
+            console.log(`rejected: ${state.errorMessage}`);
         },
     },
 });

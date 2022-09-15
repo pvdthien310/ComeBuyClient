@@ -1,3 +1,4 @@
+/* eslint-disable react/jsx-one-expression-per-line */
 import * as React from 'react';
 import Box from '@mui/material/Box';
 import Drawer from '@mui/material/Drawer';
@@ -6,13 +7,9 @@ import Divider from '@mui/material/Divider';
 import ListItem from '@mui/material/ListItem';
 import ListItemIcon from '@mui/material/ListItemIcon';
 import ListItemText from '@mui/material/ListItemText';
-import InboxIcon from '@mui/icons-material/MoveToInbox';
-import MailIcon from '@mui/icons-material/Mail';
-import { useState, useEffect } from 'react';
+// import { useState, useEffect } from 'react';
 import { Route, Routes, Navigate, useNavigate } from 'react-router-dom';
-import NotFound from '../../container/NotFound';
 import { useDispatch, useSelector } from 'react-redux';
-import { accountSlice } from '../../redux/slices/accountSlice';
 import { Grid, IconButton, Stack, Typography } from '@mui/material';
 import MenuIcon from '@mui/icons-material/Menu';
 import ComputerIcon from '@mui/icons-material/Computer';
@@ -22,30 +19,29 @@ import AssessmentIcon from '@mui/icons-material/Assessment';
 import InsightsIcon from '@mui/icons-material/Insights';
 import LogoutIcon from '@mui/icons-material/Logout';
 import Avatar from '@mui/material/Avatar';
-import ImageIcon from '@mui/icons-material/Image';
 import ListItemAvatar from '@mui/material/ListItemAvatar';
-import { currentUser } from '../../redux/selectors';
 import CountertopsIcon from '@mui/icons-material/Countertops';
 import ReceiptIcon from '@mui/icons-material/Receipt';
 import MoveDownIcon from '@mui/icons-material/MoveDown';
 import ViewCarouselIcon from '@mui/icons-material/ViewCarousel';
+import { currentUser } from '../../redux/selectors';
+import { accountSlice } from '../../redux/slices/accountSlice';
+import NotFound from '../../container/NotFound';
 
-const MainLayout = (props) => {
+function MainLayout(props) {
     const _currentUser = useSelector(currentUser);
-    const [pathname, setPathname] = useState(window.location.pathname);
+    // const [pathname, setPathname] = useState(window.location.pathname);
     const navigate = useNavigate();
     const dispatch = useDispatch();
-    useEffect(() => {
-        const path = window.location.pathname;
-        setPathname(path);
-    });
+    // useEffect(() => {
+    //     const path = window.location.pathname;
+    //     setPathname(path);
+    // });
 
     const showRoutes = (routes) => {
-        var result = null;
+        let result = null;
         if (routes.length > 0) {
-            result = routes.map((route, index) => {
-                return <Route key={index} path={route.path} element={route.page} />;
-            });
+            result = routes.map((route, index) => <Route key={index} path={route.path} element={route.page} />);
         }
         result.push(<Route key={routes.length} path="/error" element={<NotFound />} />);
         return result;
@@ -54,17 +50,16 @@ const MainLayout = (props) => {
     const [state, setState] = React.useState(false);
 
     const ItemClick = async (e) => {
-        if (e.target.innerText == 'Log Out') {
+        if (e.target.innerText === 'Log Out') {
             dispatch(accountSlice.actions.logout());
             localStorage.setItem('role', '');
             localStorage.setItem('idUser', '');
             localStorage.setItem('cart', JSON.stringify([]));
             navigate('/');
-            return;
         } else {
             let matchPath = null;
             props.routes.find((element) => {
-                if (element.name == e.target.innerText) matchPath = element.path;
+                if (element.name === e.target.innerText) matchPath = element.path;
             });
             if (matchPath != null) navigate(matchPath.replace('/*', ''));
             else navigate('*');
@@ -99,36 +94,36 @@ const MainLayout = (props) => {
                     <ListItemText sx={{ color: 'white' }} primary={_currentUser ? _currentUser.name : 'Admin'} />
                 </ListItem>
                 <Divider />
-                {props.itemRoutes.map((route, index) => (
+                {props.itemRoutes.map((route) => (
                     <ListItem sx={{ backgroundColor: '#593940' }} button key={route.name} onClick={ItemClick}>
                         <ListItemIcon sx={{ color: 'white' }}>
                             {/* {index % 2 === 0 ? <InboxIcon /> : <MailIcon />} */}
-                            {route.name == 'Product' && <ComputerIcon />}
-                            {route.name == 'Staff' && <PeopleIcon />}
-                            {route.name == 'Stock' && <InventoryIcon />}
-                            {route.name == 'Revenue' && <AssessmentIcon />}
-                            {route.name == 'Data Analysis' && <InsightsIcon />}
-                            {route.name == 'Workspace' && <CountertopsIcon />}
-                            {route.name == 'Invoice' && <ReceiptIcon />}
-                            {route.name == 'Distribution' && <MoveDownIcon />}
-                            {route.name == 'Banner Manage' && <ViewCarouselIcon />}
+                            {route.name === 'Product' && <ComputerIcon />}
+                            {route.name === 'Staff' && <PeopleIcon />}
+                            {route.name === 'Stock' && <InventoryIcon />}
+                            {route.name === 'Revenue' && <AssessmentIcon />}
+                            {route.name === 'Data Analysis' && <InsightsIcon />}
+                            {route.name === 'Workspace' && <CountertopsIcon />}
+                            {route.name === 'Invoice' && <ReceiptIcon />}
+                            {route.name === 'Distribution' && <MoveDownIcon />}
+                            {route.name === 'Banner Manage' && <ViewCarouselIcon />}
                         </ListItemIcon>
                         <ListItemText sx={{ color: 'white' }} primary={route.name} />
                     </ListItem>
                 ))}
-                <ListItem button key={'Log Out'} onClick={ItemClick}>
+                <ListItem button key="Log Out" onClick={ItemClick}>
                     <ListItemIcon sx={{ color: 'white' }}>
                         <LogoutIcon />
                     </ListItemIcon>
-                    <ListItemText sx={{ color: 'white' }} primary={'Log Out'} />
+                    <ListItemText sx={{ color: 'white' }} primary="Log Out" />
                 </ListItem>
             </List>
         </Box>
     );
     return (
         <Stack sx={{ height: window.innerHeight }}>
-            <React.Fragment key={'left'}>
-                <Stack direction={'row'} sx={{ width: '100%', backgroundColor: '#2E1534' }}>
+            <React.Fragment key="left">
+                <Stack direction="row" sx={{ width: '100%', backgroundColor: '#2E1534' }}>
                     <Grid container sx={{ width: '100%' }}>
                         <Grid item xs={10}>
                             <IconButton sx={{ color: 'white' }} size="large" onClick={toggleDrawer('left', true)}>
@@ -137,25 +132,25 @@ const MainLayout = (props) => {
                         </Grid>
                         <Grid item xs={2} sx={{ alignItems: 'end', mt: 2 }}>
                             {_currentUser && (
-                                <Typography variant="body2" sx={{ color: 'white' }} fontWeight={'bold'}>
+                                <Typography variant="body2" sx={{ color: 'white' }} fontWeight="bold">
                                     Hi, {_currentUser.name}
                                 </Typography>
                             )}
                         </Grid>
                     </Grid>
                 </Stack>
-                <Drawer anchor={'left'} open={state} onClose={toggleDrawer('left', false)}>
+                <Drawer anchor="left" open={state} onClose={toggleDrawer('left', false)}>
                     {list('left')}
                 </Drawer>
                 <Stack sx={{ height: '100%', width: '100%', mt: 2, backgroundColor: 'grey' }}>
                     <Routes>
                         {showRoutes(props.routes)}
-                        <Route element={<Navigate replace to={{ pathname: '/' }} />}></Route>
+                        <Route element={<Navigate replace to={{ pathname: '/' }} />} />
                     </Routes>
                 </Stack>
             </React.Fragment>
         </Stack>
     );
-};
+}
 
 export default MainLayout;

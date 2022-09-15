@@ -1,12 +1,11 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import './index.css';
+import { Provider } from 'react-redux';
+import { BrowserRouter } from 'react-router-dom';
 import App from './App';
 import reportWebVitals from './reportWebVitals';
-import { Provider } from 'react-redux';
 import store from './redux/store.js';
-import { BrowserRouter } from 'react-router-dom';
-import ScrollButton from './components/ScrollButton/ScrollButton';
 
 ReactDOM.render(
     <Provider store={store}>

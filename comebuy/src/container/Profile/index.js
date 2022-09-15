@@ -1,25 +1,19 @@
-import React, { useState, useEffect } from 'react';
-import { currentUser } from '../../redux/selectors';
+import React, { useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import Avatar from '@mui/material/Avatar';
 import Stack from '@mui/material/Stack';
 import Typography from '@mui/material/Typography';
-import { Box, Button } from '@mui/material';
-import { Backdrop } from '@mui/material';
-import { CircularProgress } from '@mui/material';
+import { Button, Backdrop, CircularProgress } from '@mui/material';
 import IconButton from '@mui/material/IconButton';
 import VisibilityIcon from '@mui/icons-material/Visibility';
 import VisibilityOffIcon from '@mui/icons-material/VisibilityOff';
 import Snackbar from '@mui/material/Snackbar';
 import Alert from '@mui/material/Alert';
 import { styled } from '@mui/material/styles';
-
-import { unwrapResult } from '@reduxjs/toolkit';
-
-import { login } from '../../redux/slices/accountSlice';
 import { useNavigate } from 'react-router';
-import ProfileManage from './../../components/ProfileManage/index';
-import { BigFooter } from '../../components';
+import { login } from '../../redux/slices/accountSlice';
+import { currentUser } from '../../redux/selectors';
+import ProfileManage from '../../components/ProfileManage/index';
 
 const BGImg = styled('img')({
     height: '100%',
@@ -28,7 +22,7 @@ const BGImg = styled('img')({
     resize: true,
 });
 
-const Profile = () => {
+function Profile() {
     const dispatch = useDispatch();
 
     const [openBackdrop, setOpenBackdrop] = useState(false);
@@ -55,15 +49,14 @@ const Profile = () => {
         setPasswordShown(!passwordShown);
     };
 
-    //handle login function
+    // handle login function
     const handleLogin = async () => {
         if (password === null || password === '') {
             setOpenLoginFailed(true);
         } else {
             setOpenBackdrop(true);
             try {
-                const resultAction = await dispatch(login({ email: _currentUser.email, password: password }));
-                const originalPromiseResult = unwrapResult(resultAction);
+                await dispatch(login({ email: _currentUser.email, password }));
                 setOpenBackdrop(false);
                 setCanAccess(true);
             } catch (rejectedValueOrSerializedError) {
@@ -133,9 +126,8 @@ const Profile = () => {
                                 id="outlined-basic"
                                 type={passwordShown ? 'text' : 'password'}
                                 placeholder="Password"
-                                variant="standard"
                                 onChange={(e) => setPassword(e.target.value)}
-                            ></input>
+                            />
                             {passwordShown ? (
                                 <IconButton onClick={togglePassword}>
                                     <VisibilityIcon color="success" />
@@ -177,7 +169,7 @@ const Profile = () => {
                     </Stack>
                 </div>
             )}
-            {/*Snackbar*/}
+            {/* Snackbar */}
             <Snackbar open={openLoginFailed} autoHideDuration={6000} onClose={handleCloseLoginFailed}>
                 <Alert onClose={handleCloseLoginFailed} severity="error" sx={{ width: '100%' }}>
                     Something went wrong ! Please check your password.
@@ -189,6 +181,6 @@ const Profile = () => {
             </Backdrop>
         </div>
     );
-};
+}
 
 export default Profile;

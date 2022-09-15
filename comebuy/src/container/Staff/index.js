@@ -1,32 +1,24 @@
 import * as React from 'react';
+import AccountCircleIcon from '@mui/icons-material/AccountCircle';
 import { DataGrid, GridActionsCellItem } from '@mui/x-data-grid';
 import DeleteIcon from '@mui/icons-material/Delete';
-import { renderStatus } from '../../GridDataCellTemplate/StatusTag';
-import { renderAvatar } from '../../GridDataCellTemplate/Avatar';
 import { useEffect, useState } from 'react';
-import SnackBarAlert from '../../components/SnackBarAlert';
-import accountApi from '../../api/accountAPI';
-import { Button, Stack, styled, Typography } from '@mui/material';
-import { ConfirmDialog, UserInfoPopOver } from '../../components';
+import { Button, Stack, styled, Typography, Box } from '@mui/material';
 import { useNavigate } from 'react-router';
-import { Box } from '@mui/system';
-import ImportantDevicesIcon from '@mui/icons-material/ImportantDevices';
-import AccountCircleIcon from '@mui/icons-material/AccountCircle';
+import { ConfirmDialog, UserInfoPopOver } from '../../components';
+import accountApi from '../../api/accountAPI';
+import SnackBarAlert from '../../components/SnackBarAlert';
+import renderAvatar from '../../GridDataCellTemplate/Avatar';
+import renderStatus from '../../GridDataCellTemplate/StatusTag';
 
-const BGImg = styled('img')({
-    height: '100%',
-    width: '100%',
-    position: 'absolute',
-    resize: true,
-});
-const ProductTable = styled(DataGrid)(({ theme }) => ({
+const ProductTable = styled(DataGrid)(() => ({
     height: 700,
     width: 1200,
     alignSelf: 'center',
     backgroundColor: 'white',
 }));
 
-const Staff = () => {
+function Staff() {
     const navigate = useNavigate();
     const [accountList, setAccountList] = useState([]);
     const [openSuccessAlert, setOpenSuccessAlert] = useState(false);
@@ -45,7 +37,7 @@ const Staff = () => {
     async function LoadData() {
         try {
             const response = await accountApi.getAll();
-            if (response.status == 200) {
+            if (response.status === 200) {
                 setAccountList(response.data);
                 setMessageSuccess('Load Account Successfully');
                 setOpenSuccessAlert(true);
@@ -62,17 +54,17 @@ const Staff = () => {
     }, []);
 
     const handleDeleteUser = async () => {
-        if (selectedAccount.row.role == 'customer' || selectedAccount.row.role == 'admin') {
-            setMessageError("you are not allowed to deleted Customer's account or Admin :((");
+        if (selectedAccount.row.role === 'customer' || selectedAccount.row.role === 'admin') {
+            setMessageError('you are not allowed to deleted Customers account or Admin :((');
             setOpenErrorAlert(true);
             handleClose();
             return;
         }
 
         const response = await accountApi.deleteAccount(selectedAccount.id);
-        if (response.status == 200) {
+        if (response.status === 200) {
             /// Type this to set new vlue for state
-            setAccountList((prevList) => prevList.filter((item) => item.userID != selectedAccount.id));
+            setAccountList((prevList) => prevList.filter((item) => item.userID !== selectedAccount.id));
             setMessageSuccess('Delete Account Successfully');
             setOpenSuccessAlert(true);
             handleClose();
@@ -118,7 +110,7 @@ const Staff = () => {
                 headerName: 'Contact',
                 width: 200,
                 valueFormatter: (params) => {
-                    if (params.value == '') {
+                    if (params.value === '') {
                         return 'Have not updated yet';
                     }
                     return params.value;
@@ -180,7 +172,7 @@ const Staff = () => {
                 >
                     <Stack
                         sx={{ alignItems: 'center', justifyItems: 'center', pl: 2, pt: 2 }}
-                        direction={'row'}
+                        direction="row"
                         spacing={2}
                     >
                         <AccountCircleIcon />
@@ -231,11 +223,11 @@ const Staff = () => {
                         handleClose={handleClose}
                         message={messageError}
                     />
-                    <Box sx={{ height: 20 }}></Box>
+                    <Box sx={{ height: 20 }} />
                 </Stack>
             </Box>
         </Stack>
     );
-};
+}
 
 export default Staff;

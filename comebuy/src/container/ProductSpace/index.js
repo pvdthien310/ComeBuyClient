@@ -1,26 +1,12 @@
-import { Backdrop, Button, CircularProgress, Grid, Pagination, Stack, Typography } from '@mui/material';
-import { Box } from '@mui/system';
+import { Backdrop, CircularProgress, Grid, Pagination, Stack, Typography, Box } from '@mui/material';
 import { useEffect, useState } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
-import {
-    BreadCrumb,
-    FeatureSelect,
-    FilterColumn,
-    NavBar,
-    ProductItem,
-    SearchBar,
-    SnackBarAlert,
-} from '../../components';
-import { getAllProduct } from '../../redux/slices/productSlice';
-import FilterListIcon from '@mui/icons-material/FilterList';
-import { getAllFeature } from '../../redux/slices/featureSlice';
-import { AirbnbSlider, AirbnbThumbComponent, ExampleSlider, PrettoSlider } from './style';
 import io from 'socket.io-client';
+import { BreadCrumb, FilterColumn, NavBar, ProductItem, SearchBar, SnackBarAlert } from '../../components';
 
-import { cartListSelector, productListSelector } from '../../redux/selectors';
 import { WS_URL } from '../../constant';
 import productAPI from '../../api/productAPI';
-const ProductSpace = () => {
+
+function ProductSpace() {
     const socket = io(WS_URL, {
         transports: ['websocket'],
     });
@@ -45,7 +31,7 @@ const ProductSpace = () => {
     const [total, SetTotal] = useState(0);
 
     const handleFilter = (value) => {
-        let newFilterOptions = Object.assign({}, filterOptions); // Shallow copy for the reference value as object
+        const newFilterOptions = { ...filterOptions }; // Shallow copy for the reference value as object
         newFilterOptions[value.name.toLowerCase()] = value.option;
         setFilterOptions(newFilterOptions);
     };
@@ -53,10 +39,10 @@ const ProductSpace = () => {
     const LoadRecords = async (offset) => {
         setLoading(true);
         const response = await productAPI.getRecordsFilter(
-            Object.assign(filterOptions, { prices: selectedPrices }, { demand: currentFeature }, { offset: offset }),
+            Object.assign(filterOptions, { prices: selectedPrices }, { demand: currentFeature }, { offset }),
         );
 
-        if (response.status == 200) {
+        if (response.status === 200) {
             setProductList(response.data.data);
             SetTotal(response.data.total);
             setMessageSuccess('Load Product Successfully');
@@ -101,7 +87,7 @@ const ProductSpace = () => {
     return (
         <div style={{ width: '100%', height: '100%' }}>
             <Stack sx={{ width: '100%', height: '100%' }}>
-                <NavBar></NavBar>
+                <NavBar />
                 <Stack sx={{ pt: 2, pl: 2 }}>
                     <BreadCrumb />
                 </Stack>
@@ -121,17 +107,17 @@ const ProductSpace = () => {
                                     <SearchBar productList={productList} />
                                 </Stack>
                             )}
-                            <Typography variant="h6" fontWeight={'bold'} sx={{ alignSelf: 'center', m: 1 }}>
+                            <Typography variant="h6" fontWeight="bold" sx={{ alignSelf: 'center', m: 1 }}>
                                 Our Product
                             </Typography>
-                            <Box sx={{ backgroundColor: '#C69AD9', height: 5, width: '100%' }}></Box>
+                            <Box sx={{ backgroundColor: '#C69AD9', height: 5, width: '100%' }} />
                             <Stack
-                                direction={'row'}
-                                flexWrap={'wrap'}
+                                direction="row"
+                                flexWrap="wrap"
                                 sx={{ alignSelf: 'center', m: 2, justifyContent: 'center', alignItems: 'center' }}
                             >
                                 {productList.length > 0 ? (
-                                    productList.map((item, i) => <ProductItem key={i} product={item}></ProductItem>)
+                                    productList.map((item, i) => <ProductItem key={i} product={item} />)
                                 ) : (
                                     <Typography variant="h6"> No Records</Typography>
                                 )}
@@ -167,6 +153,6 @@ const ProductSpace = () => {
             </Backdrop>
         </div>
     );
-};
+}
 
 export default ProductSpace;

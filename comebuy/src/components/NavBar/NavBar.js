@@ -1,3 +1,7 @@
+/* eslint-disable operator-linebreak */
+/* eslint-disable jsx-a11y/no-noninteractive-element-interactions */
+/* eslint-disable camelcase */
+/* eslint-disable no-unused-vars */
 import React, { useEffect, useState } from 'react';
 import { styled, alpha } from '@mui/material/styles';
 import AppBar from '@mui/material/AppBar';
@@ -13,15 +17,14 @@ import AccountCircle from '@mui/icons-material/AccountCircle';
 import MailIcon from '@mui/icons-material/Mail';
 import NotificationsIcon from '@mui/icons-material/Notifications';
 import MoreIcon from '@mui/icons-material/MoreVert';
-import logo from '../../assets/img/logo-removebg.png';
 import { useNavigate } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
-import { cartListSelector, currentUser, isSignedIn_user } from './../../redux/selectors';
-import { accountSlice } from './../../redux/slices/accountSlice';
 import ShoppingCartIcon from '@mui/icons-material/ShoppingCart';
 import { Button, Typography } from '@mui/material';
 import MenuIcon from '@mui/icons-material/Menu';
-import './style';
+import { accountSlice } from '../../redux/slices/accountSlice';
+import { cartListSelector, currentUser, isSignedIn_user } from '../../redux/selectors';
+import logo from '../../assets/img/logo-removebg.png';
 import style from './style';
 
 const CartButton = styled(Button)(({ theme }) => ({
@@ -38,7 +41,7 @@ export default function NavBar(props) {
     const currentPath = window.location.pathname;
 
     const _currentUser = useSelector(currentUser);
-    let isSignedIn = localStorage.getItem('role') !== '' ? true : false;
+    const isSignedIn = localStorage.getItem('role') !== '';
     const _cart = useSelector(cartListSelector);
 
     const navigate = useNavigate();
@@ -67,8 +70,8 @@ export default function NavBar(props) {
     };
 
     const navigateToCart = () => {
-        if (localStorage.getItem('role') == '') navigate('/guestCart');
-        else if (localStorage.getItem('role') == 'customer') {
+        if (localStorage.getItem('role') === '') navigate('/guestCart');
+        else if (localStorage.getItem('role') === 'customer') {
             navigate('/myplace/mycart');
         }
     };
@@ -190,7 +193,7 @@ export default function NavBar(props) {
     );
 
     return (
-        <Box sx={currentPath != '/' ? style.base : style.homeNavbar}>
+        <Box sx={currentPath !== '/' ? style.base : style.homeNavbar}>
             <AppBar position="static" style={{ backgroundColor: 'white', padding: 2 }}>
                 <Toolbar>
                     {/* <Typography variant="h5" fontWeight={'bold'} sx={{
@@ -203,14 +206,15 @@ export default function NavBar(props) {
                         onClick={() => navigate("/")}>
                         ComeBuy</Typography> */}
                     <img
+                        alt=""
                         style={{ width: 120, backgroundSize: 'cover', cursor: 'pointer' }}
                         onClick={() => navigate('/')}
                         src={logo}
-                    ></img>
+                    />
 
                     <Box sx={{ flexGrow: 1 }} />
-                    {(localStorage.getItem('role') == 'customer' ||
-                        (localStorage.getItem('role') == '' && props.hiddenCartLabel != false)) && (
+                    {(localStorage.getItem('role') === 'customer' ||
+                        (localStorage.getItem('role') === '' && props.hiddenCartLabel !== false)) && (
                         <CartButton onClick={navigateToCart} variant="contained" endIcon={<ShoppingCartIcon />}>
                             {numberCart}
                         </CartButton>
@@ -225,7 +229,7 @@ export default function NavBar(props) {
                             onClick={handleProfileMenuOpen}
                             sx={{ color: 'gray', borderColor: 'black', fontWeight: 'bold' }}
                         >
-                            <MenuIcon></MenuIcon>
+                            <MenuIcon />
                         </Button>
                     </Box>
                     <Box sx={{ display: { xs: 'flex', md: 'none' } }}>

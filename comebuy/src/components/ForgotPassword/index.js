@@ -1,23 +1,31 @@
+/* eslint-disable no-use-before-define */
 import React, { useState, useRef, useEffect } from 'react';
 
-import { Stack, Modal, Typography, Button, Box } from '@mui/material';
-import { Snackbar, Alert, IconButton } from '@mui/material';
+import {
+    Stack,
+    Modal,
+    Typography,
+    Button,
+    Box,
+    Snackbar,
+    Alert,
+    IconButton,
+    Backdrop,
+    CircularProgress,
+    Dialog,
+    DialogTitle,
+} from '@mui/material';
 import VisibilityIcon from '@mui/icons-material/Visibility';
 import VisibilityOffIcon from '@mui/icons-material/VisibilityOff';
-import { Backdrop, CircularProgress } from '@mui/material';
 import { styled } from '@mui/material/styles';
-import { Dialog, DialogTitle } from '@mui/material';
 
 import { useNavigate } from 'react-router';
-//Beside
+// Beside
 import clsx from 'clsx';
-import { current, unwrapResult } from '@reduxjs/toolkit';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 
 import { makeStyles } from '@material-ui/core';
 import { Autorenew } from '@material-ui/icons';
-
-import { useSelector } from 'react-redux';
 
 import CountDown from '../../container/LoginAndRegister/CountDown';
 import { CheckEmail, CheckPassword } from '../../container/LoginAndRegister/ValidationDataForAccount';
@@ -25,8 +33,8 @@ import emailApi from '../../api/emailAPI';
 import { updatePassword } from '../../redux/slices/accountSlice';
 import { currentUser } from '../../redux/selectors';
 
-//Style for refresh button in verify modal
-const useStyles = makeStyles((theme) => ({
+// Style for refresh button in verify modal
+const useStyles = makeStyles(() => ({
     refresh: {
         marginRight: '10px',
         marginTop: '7px',
@@ -54,7 +62,7 @@ const BGImg = styled('img')({
     resize: true,
 });
 
-const ForgotPassword = () => {
+function ForgotPassword() {
     const [email, setEmail] = useState('');
 
     const _currentUser = useSelector(currentUser);
@@ -67,13 +75,13 @@ const ForgotPassword = () => {
 
     const [confirmNewPassword, setConfirmNewPassword] = useState('');
 
-    //For modal verify
+    // For modal verify
     const [openModalVerify, setOpenModalVerify] = useState(false);
 
-    //For toggle refresh button
+    // For toggle refresh button
     const [toggleRefresh, setToggleRefresh] = useState(false);
 
-    //For show password
+    // For show password
     const [passwordShown, setPasswordShown] = useState(false);
 
     // Password toggle handler
@@ -83,7 +91,7 @@ const ForgotPassword = () => {
         setPasswordShown(!passwordShown);
     };
 
-    //For show password
+    // For show password
     const [cfPasswordShown, setCfPasswordShown] = useState(false);
 
     // Password toggle handler
@@ -93,7 +101,7 @@ const ForgotPassword = () => {
         setCfPasswordShown(!cfPasswordShown);
     };
 
-    //For countdown caution
+    // For countdown caution
     const onTimesup = () => {
         setToggleRefresh(true);
     };
@@ -105,34 +113,34 @@ const ForgotPassword = () => {
             setToggleRefresh(false);
         }, 2000);
         setOpenBackdrop(!openBackdrop);
-        let temp = generateOTP();
+        const temp = generateOTP();
         setVerifyCode(temp);
     };
 
-    //UseState for auto focusing
+    // UseState for auto focusing
     const [pin1, setPin1] = useState('');
     const [pin2, setPin2] = useState('');
     const [pin3, setPin3] = useState('');
     const [pin4, setPin4] = useState('');
     const [pin5, setPin5] = useState('');
 
-    //useRef for auto focusing in verify code modal
+    // useRef for auto focusing in verify code modal
     const pin1Ref = useRef(null);
     const pin2Ref = useRef(null);
     const pin3Ref = useRef(null);
     const pin4Ref = useRef(null);
     const pin5Ref = useRef(null);
 
-    //For animation refresh in verify
+    // For animation refresh in verify
     const [spin, setSpin] = useState(false);
     const classes = useStyles();
 
-    //for backdrop
+    // for backdrop
     const [openBackdrop, setOpenBackdrop] = useState(false);
 
-    //generate verify code
+    // generate verify code
     function generateOTP() {
-        let num = '1234567890';
+        const num = '1234567890';
         let OTP = '';
         for (let i = 0; i < 5; i++) {
             OTP += num[Math.floor(Math.random() * 10)];
@@ -148,42 +156,36 @@ const ForgotPassword = () => {
     };
 
     useEffect(() => {
-        if (verifyCode != '') {
+        if (verifyCode !== '') {
             emailApi
                 .sendEmail({
                     to: email,
                     subject: 'Please use OTP code below to reset password ',
                     text: verifyCode,
                 })
-                .then((data) => {
+                .then(() => {
                     handleOpenModalVerify();
                     setOpenBackdrop(false);
                 })
                 .catch((err) => console.log(err));
-        } else {
-            return;
         }
     }, [verifyCode]);
 
     const handleReset = () => {
         if (email === '' || CheckEmail(email) === false) {
             setOpenEmailWrong(true);
+        } else if (newPassword === '' || CheckPassword(newPassword) === false) {
+            setOpenPasswordWrong(true);
+        } else if (confirmNewPassword === '' || newPassword !== confirmNewPassword) {
+            setOpenPasswordNotMatch(true);
         } else {
-            if (newPassword === '' || CheckPassword(newPassword) === false) {
-                setOpenPasswordWrong(true);
-            } else {
-                if (confirmNewPassword === '' || newPassword != confirmNewPassword) {
-                    setOpenPasswordNotMatch(true);
-                } else {
-                    setOpenBackdrop(true);
-                    let temp = generateOTP();
-                    setVerifyCode(temp);
-                }
-            }
+            setOpenBackdrop(true);
+            const temp = generateOTP();
+            setVerifyCode(temp);
         }
     };
 
-    //for dialog alert that you reg successfully or not
+    // for dialog alert that you reg successfully or not
     const [openDialogRegSuccessfully, setOpenDialogRegSuccessfully] = useState(false);
     const [openDialogRegFailed, setOpenDialogRegFailed] = useState(false);
 
@@ -231,9 +233,7 @@ const ForgotPassword = () => {
     const [isRegistering, setIsRegistering] = useState(0);
 
     useEffect(() => {
-        if (isRegistering === 0) {
-            return;
-        } else if (isRegistering === 1) {
+        if (isRegistering === 1) {
             setOpenBackdrop(false);
             setOpenDialogRegSuccessfully(true);
         } else {
@@ -251,7 +251,7 @@ const ForgotPassword = () => {
     };
 
     const handleVerifyAndResetPassword = async () => {
-        let here = pin1 + pin2 + pin3 + pin4 + pin5;
+        const here = pin1 + pin2 + pin3 + pin4 + pin5;
         const data = {
             userID: _currentUser.userID,
             password: newPassword,
@@ -259,8 +259,7 @@ const ForgotPassword = () => {
         try {
             if (here === verifyCode) {
                 setOpenBackdrop(true);
-                const resultAction = await dispatch(updatePassword(data));
-                const originalPromiseResult = unwrapResult(resultAction);
+                await dispatch(updatePassword(data));
                 handleCloseModalVerify();
                 setOpenDialogRegFailed(false);
                 setIsRegistering(1);
@@ -322,9 +321,8 @@ const ForgotPassword = () => {
                     id="outlined-basic"
                     type="text"
                     placeholder="Your email here..."
-                    variant="standard"
                     onChange={(e) => setEmail(e.target.value)}
-                ></input>
+                />
                 <Stack direction="row" spacing={2}>
                     <input
                         style={{
@@ -338,9 +336,8 @@ const ForgotPassword = () => {
                         id="outlined-basic"
                         type={passwordShown ? 'text' : 'password'}
                         placeholder="New password..."
-                        variant="standard"
                         onChange={(e) => setNewPassword(e.target.value)}
-                    ></input>
+                    />
                     {passwordShown ? (
                         <IconButton onClick={togglePassword}>
                             <VisibilityIcon color="success" />
@@ -365,9 +362,8 @@ const ForgotPassword = () => {
                         id="outlined-basic"
                         type={cfPasswordShown ? 'text' : 'password'}
                         placeholder="Confirm Password..."
-                        variant="standard"
                         onChange={(e) => setConfirmNewPassword(e.target.value)}
-                    ></input>
+                    />
                     {cfPasswordShown ? (
                         <IconButton onClick={toggleCfPassword}>
                             <VisibilityIcon color="success" />
@@ -435,8 +431,8 @@ const ForgotPassword = () => {
                         We sent a verified code. Please check your email
                     </Typography>
 
-                    <div class="container-modal-verify">
-                        <div class="userInput-modal-verify">
+                    <div className="container-modal-verify">
+                        <div className="userInput-modal-verify">
                             <input
                                 ref={pin1Ref}
                                 className="input-verify"
@@ -508,7 +504,7 @@ const ForgotPassword = () => {
                                     <Autorenew
                                         className={clsx({
                                             [classes.refresh]: true,
-                                            spin: spin,
+                                            spin,
                                         })}
                                         onClick={() => {
                                             refreshCanvas();
@@ -560,7 +556,7 @@ const ForgotPassword = () => {
                 </Box>
             </Modal>
 
-            {/*Dialog for having registered successfully or email existed */}
+            {/* Dialog for having registered successfully or email existed */}
             {openDialogRegFailed ? (
                 <Dialog open={openDialogRegFailed} onClose={handleCloseDialogRegFailed}>
                     <DialogTitle color="error">Reset password failed</DialogTitle>
@@ -608,14 +604,14 @@ const ForgotPassword = () => {
                 </Dialog>
             ) : null}
 
-            {/*Snackbar*/}
+            {/* Snackbar */}
             <Snackbar open={openEmailWrong} autoHideDuration={6000} onClose={handleCloseEmailWrong}>
                 <Alert onClose={handleCloseEmailWrong} severity="error" sx={{ width: '100%' }}>
                     Please check your email first.
                 </Alert>
             </Snackbar>
 
-            {/*Snackbar for password invalid*/}
+            {/* Snackbar for password invalid */}
             <Snackbar open={openPasswordWrong} autoHideDuration={6000} onClose={handleClosePasswordWrong}>
                 <Alert onClose={handleClosePasswordWrong} severity="error" sx={{ width: '100%' }}>
                     Password has to have at least 8 letters, one number, one lowercase and one uppercase letter. Try
@@ -623,14 +619,14 @@ const ForgotPassword = () => {
                 </Alert>
             </Snackbar>
 
-            {/*Snackbar for password not match*/}
+            {/* Snackbar for password not match */}
             <Snackbar open={openPasswordNotMatch} autoHideDuration={6000} onClose={handleClosePasswordNotMatch}>
                 <Alert onClose={handleClosePasswordNotMatch} severity="error" sx={{ width: '100%' }}>
                     Password is not match. Try again
                 </Alert>
             </Snackbar>
 
-            {/*Snackbar*/}
+            {/* Snackbar */}
             <Snackbar open={openWrongVerify} autoHideDuration={6000} onClose={handleCloseWrongVerify}>
                 <Alert onClose={handleCloseWrongVerify} severity="error" sx={{ width: '100%' }}>
                     Wrong verify code. Please try again.
@@ -642,6 +638,6 @@ const ForgotPassword = () => {
             </Backdrop>
         </div>
     );
-};
+}
 
 export default ForgotPassword;

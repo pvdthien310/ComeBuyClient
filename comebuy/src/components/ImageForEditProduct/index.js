@@ -6,11 +6,11 @@ import DialogContent from '@mui/material/DialogContent';
 import DialogContentText from '@mui/material/DialogContentText';
 import DialogTitle from '@mui/material/DialogTitle';
 import DeleteIcon from '@mui/icons-material/Delete';
-import { Box, Grid, styled } from '@mui/material';
+import { Grid, styled } from '@mui/material';
 
 import style from './style.js';
 
-const DeleteButton = styled(Button)(({ theme }) => ({
+const DeleteButton = styled(Button)(() => ({
     alignSelf: 'flex-start',
     margin: 10,
     backgroundColor: '#F51B06',
@@ -19,14 +19,14 @@ const DeleteButton = styled(Button)(({ theme }) => ({
     },
 }));
 
-const ProductImage = styled('img')(({ theme }) => ({
+const ProductImage = styled('img')(() => ({
     alignSelf: 'center',
     position: 'absolute',
     width: '100%',
     height: '100%',
 }));
 
-const ImageForEditProduct = (props) => {
+function ImageForEditProduct(props) {
     const [open, setOpen] = React.useState(false);
     const handleClickOpen = () => setOpen(true);
     const handleClose = () => setOpen(false);
@@ -36,7 +36,7 @@ const ImageForEditProduct = (props) => {
     };
     return (
         <Grid sx={style.container}>
-            <ProductImage item="true" xs={12} src={props.image.imageURL}></ProductImage>
+            <ProductImage item="true" xs={12} src={props.image.imageURL} />
             <DeleteButton item="true" variant="contained" onClick={handleClickOpen} startIcon={<DeleteIcon />}>
                 Delete
             </DeleteButton>
@@ -47,7 +47,7 @@ const ImageForEditProduct = (props) => {
                 aria-labelledby="alert-dialog-title"
                 aria-describedby="alert-dialog-description"
             >
-                <DialogTitle id="alert-dialog-title">{'Do you really want to delete this photo?'}</DialogTitle>
+                <DialogTitle id="alert-dialog-title">Do you really want to delete this photo?</DialogTitle>
                 <DialogContent>
                     <DialogContentText id="alert-dialog-description">
                         You have just deleted this photo. Please confirm again for reliability because this action is
@@ -63,6 +63,6 @@ const ImageForEditProduct = (props) => {
             </Dialog>
         </Grid>
     );
-};
+}
 
 export default ImageForEditProduct;

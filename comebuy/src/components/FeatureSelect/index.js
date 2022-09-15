@@ -7,7 +7,6 @@ import MenuItem from '@mui/material/MenuItem';
 import FormControl from '@mui/material/FormControl';
 import Select from '@mui/material/Select';
 import Chip from '@mui/material/Chip';
-import { useEffect, useState } from 'react';
 import { Stack } from '@mui/material';
 
 const ITEM_HEIGHT = 48;
@@ -28,7 +27,7 @@ function getStyles(name, personName, theme) {
     };
 }
 
-const FeatureSelect = (props) => {
+function FeatureSelect(props) {
     const theme = useTheme();
     return (
         <Stack item="true" sx={{ marginLeft: 2 }}>
@@ -57,5 +56,5 @@ const FeatureSelect = (props) => {
             </FormControl>
         </Stack>
     );
-};
+}
 export default FeatureSelect;

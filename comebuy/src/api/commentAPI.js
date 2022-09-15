@@ -4,16 +4,12 @@ const baseURL = 'comment';
 
 const commentApi = {
     getCommentsWithID: async (id) => {
-        const res = DatabaseClient.get('/' + baseURL + `/findByProductID/${id}`).catch((err) => {
-            return err.response;
-        });
+        const res = DatabaseClient.get(`/${baseURL}/findByProductID/${id}`).catch((err) => err.response);
         return res;
     },
 
     postNewComment: async (data) => {
-        const res = DatabaseClient.post('/' + baseURL, data).catch((err) => {
-            return err.response;
-        });
+        const res = DatabaseClient.post(`/${baseURL}`, data).catch((err) => err.response);
         return res;
     },
 };

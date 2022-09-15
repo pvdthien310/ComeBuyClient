@@ -1,3 +1,4 @@
+/* eslint-disable import/named */
 import React from 'react';
 import HomePage from '../container/HomePage';
 import ProductSpace from '../container/ProductSpace';

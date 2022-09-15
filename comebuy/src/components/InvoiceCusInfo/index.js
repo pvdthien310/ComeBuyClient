@@ -1,13 +1,13 @@
 import * as React from 'react';
 import { useDispatch } from 'react-redux';
 import { unwrapResult } from '@reduxjs/toolkit';
-import { getAccountWithID } from '../../redux/slices/accountSlice';
 import CircularProgress from '@mui/material/CircularProgress';
 import Avatar from '@mui/material/Avatar';
 import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
+import { getAccountWithID } from '../../redux/slices/accountSlice';
 
-const CusInfo = (props) => {
+function CusInfo(props) {
     const [customer, setCustomer] = React.useState([]);
 
     const { userID } = props;
@@ -31,14 +31,9 @@ const CusInfo = (props) => {
         };
     }, []);
 
-    React.useEffect(() => {
-        if (customer.length != 0) {
-        }
-    }, [customer]);
-
     return (
         <div>
-            {customer != 0 ? (
+            {customer !== 0 ? (
                 <div
                     style={{
                         width: '100%',
@@ -88,6 +83,6 @@ const CusInfo = (props) => {
             )}
         </div>
     );
-};
+}
 
 export default CusInfo;

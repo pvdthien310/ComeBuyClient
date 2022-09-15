@@ -1,16 +1,14 @@
-const Header = ({ handlePrint }) => {
+function Header() {
     return (
-        <>
-            <h1
-                style={{
-                    fontWeight: 'bold',
-                    fontSize: '30px',
-                    marginLeft: '3rem',
-                }}
-            >
-                INVOICE
-            </h1>
-        </>
+        <h1
+            style={{
+                fontWeight: 'bold',
+                fontSize: '30px',
+                marginLeft: '3rem',
+            }}
+        >
+            INVOICE
+        </h1>
     );
-};
+}
 export default Header;

@@ -4,7 +4,7 @@ const baseURL = 'authentication';
 
 const JWTApi = {
     login: async (email, password) => {
-        const res = await DatabaseClient.post('/' + baseURL, { email: email, password: password });
+        const res = await DatabaseClient.post(`/${baseURL}`, { email, password });
         try {
             await localStorage.setItem('accessToken', res.data.accessToken);
         } catch (e) {
@@ -18,11 +18,11 @@ const JWTApi = {
         return res.data;
     },
     RefreshToken: async (refToken) => {
-        const res = await DatabaseClient.post('/' + baseURL + '/refreshToken', { token: refToken });
+        const res = await DatabaseClient.post(`/${baseURL}/refreshToken`, { token: refToken });
         return res.data;
     },
     logout: async (refToken) => {
-        const res = await DatabaseClient.post('/' + baseURL + 'logout', { token: refToken });
+        const res = await DatabaseClient.post(`/${baseURL}logout`, { token: refToken });
         return res.data;
     },
 };

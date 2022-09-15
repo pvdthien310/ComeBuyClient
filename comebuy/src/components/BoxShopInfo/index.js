@@ -1,5 +1,4 @@
 import { Grid, Stack, Typography, Box, Button, styled } from '@mui/material';
-import style from './style';
 import AddCircleIcon from '@mui/icons-material/AddCircle';
 import CurrencyExchangeIcon from '@mui/icons-material/CurrencyExchange';
 import InfoIcon from '@mui/icons-material/Info';
@@ -7,6 +6,7 @@ import LocalPhoneIcon from '@mui/icons-material/LocalPhone';
 import StoreMallDirectoryIcon from '@mui/icons-material/StoreMallDirectory';
 import LocalShippingIcon from '@mui/icons-material/LocalShipping';
 import AttachMoneyIcon from '@mui/icons-material/AttachMoney';
+import style from './style';
 
 const CustomButton = styled(Button)({
     color: 'white',
@@ -23,19 +23,19 @@ const CustomButton = styled(Button)({
     },
 });
 
-const BoxShopInfo = () => {
+function BoxShopInfo() {
     return (
         <Grid container item xs={10} sx={style.boxShopInfo}>
             <Grid container item xs={8}>
                 <Stack>
-                    <Typography variant="h5" fontWeight={'bold'}>
+                    <Typography variant="h5" fontWeight="bold">
                         Shop with confidence with Comebuy
                     </Typography>
                     <Grid container sx={{ p: 3 }}>
                         <Grid container item xs={6} sx={{ p: 2 }}>
                             <Stack spacing={2}>
                                 <AddCircleIcon />
-                                <Typography variant="h6" fontWeight={'bold'}>
+                                <Typography variant="h6" fontWeight="bold">
                                     Safety warranty
                                 </Typography>
                                 <Typography variant="body1">
@@ -48,7 +48,7 @@ const BoxShopInfo = () => {
                         <Grid container item xs={6} sx={{ p: 2 }}>
                             <Stack spacing={2}>
                                 <CurrencyExchangeIcon />
-                                <Typography variant="h6" fontWeight={'bold'}>
+                                <Typography variant="h6" fontWeight="bold">
                                     Support 1-1 exchange
                                 </Typography>
                                 <Typography variant="body1">
@@ -58,12 +58,12 @@ const BoxShopInfo = () => {
                             </Stack>
                         </Grid>
                         <Grid container xs={12} item>
-                            <Box sx={{ height: 3, width: '90%', backgroundColor: 'black', mt: 4, ml: 4, mr: 4 }}></Box>
+                            <Box sx={{ height: 3, width: '90%', backgroundColor: 'black', mt: 4, ml: 4, mr: 4 }} />
                         </Grid>
                         <Grid container xs={12} item>
                             <Stack sx={{ width: '100%', p: 4 }} spacing={2}>
                                 <InfoIcon />
-                                <Typography variant="h6" fontWeight={'bold'}>
+                                <Typography variant="h6" fontWeight="bold">
                                     Useful Information
                                 </Typography>
                                 <Grid container item xs={12}>
@@ -98,10 +98,10 @@ const BoxShopInfo = () => {
                 </Stack>
             </Grid>
             <Grid container item xs={4}>
-                <img src="https://thinkpro.vn/_nuxt/img/thinkpro-footer.d5b4dbc.png"></img>
+                <img alt="" src="https://thinkpro.vn/_nuxt/img/thinkpro-footer.d5b4dbc.png" />
             </Grid>
         </Grid>
     );
-};
+}
 
 export default BoxShopInfo;

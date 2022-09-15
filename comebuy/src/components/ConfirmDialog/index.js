@@ -8,7 +8,7 @@ import DialogTitle from '@mui/material/DialogTitle';
 import useMediaQuery from '@mui/material/useMediaQuery';
 import { useTheme } from '@mui/material/styles';
 
-const ConfirmDialog = (props) => {
+function ConfirmDialog(props) {
     const theme = useTheme();
     const fullScreen = useMediaQuery(theme.breakpoints.down('md'));
 
@@ -35,5 +35,5 @@ const ConfirmDialog = (props) => {
             </Dialog>
         </div>
     );
-};
+}
 export default ConfirmDialog;

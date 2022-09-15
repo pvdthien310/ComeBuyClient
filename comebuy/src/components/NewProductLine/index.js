@@ -6,35 +6,28 @@ import CardContent from '@mui/material/CardContent';
 import CardMedia from '@mui/material/CardMedia';
 import Button from '@mui/material/Button';
 import Typography from '@mui/material/Typography';
-import { useState } from 'react';
-import { useEffect } from 'react';
-import { useDispatch } from 'react-redux';
-import { getAllProduct } from '../../redux/slices/productSlice';
-import { useNavigate } from 'react-router';
+import { useState, useEffect } from 'react';
 import { useSelector } from 'react-redux';
+import { useNavigate } from 'react-router';
 import { productListSelector } from '../../redux/selectors';
 
-const NewProductLine = () => {
+function NewProductLine() {
     const _productList = useSelector(productListSelector);
     const [data, setData] = useState(null);
-    const dispatch = useDispatch();
     const navigate = useNavigate();
 
     useEffect(() => {
         let isCancel = false;
         if (isCancel) return;
-        else {
-            let listPr = _productList.slice().sort((a, b) => {
-                return a.keyIndex - b.keyIndex;
-            });
-            console.log(listPr);
-            const newData = [];
-            for (var i = listPr.length - 1; i >= 0; i--) {
-                if (listPr[i].isPublished == true) newData.push(listPr[i]);
-                if (newData.length == 2) break;
-            }
-            setData(newData);
+
+        const listPr = _productList.slice().sort((a, b) => a.keyIndex - b.keyIndex);
+        console.log(listPr);
+        const newData = [];
+        for (let i = listPr.length - 1; i >= 0; i--) {
+            if (listPr[i].isPublished === true) newData.push(listPr[i]);
+            if (newData.length === 2) break;
         }
+        setData(newData);
 
         return () => {
             setData({});
@@ -43,19 +36,19 @@ const NewProductLine = () => {
     }, []);
 
     return (
-        <Stack direction={'row'} sx={{ width: '100%', p: 3 }} spacing={2}>
+        <Stack direction="row" sx={{ width: '100%', p: 3 }} spacing={2}>
             {data &&
                 data.map((ite, i) => (
                     <Card key={i} sx={{ width: '45%', p: 3, display: 'flex', boxShadow: 2 }}>
                         <Box>
                             <CardContent>
-                                <Typography gutterBottom variant="h5" fontWeight={'bold'}>
+                                <Typography gutterBottom variant="h5" fontWeight="bold">
                                     {ite.name.split(' (')[0]}
                                 </Typography>
                                 <Typography
                                     gutterBottom
                                     variant="subtitle1"
-                                    fontStyle={'italic'}
+                                    fontStyle="italic"
                                     sx={{ color: 'teal', cursor: 'pointer', textDecoration: 'underline' }}
                                 >
                                     New
@@ -69,7 +62,7 @@ const NewProductLine = () => {
                                 <Button
                                     size="small"
                                     sx={{ textDecoration: 'underline' }}
-                                    onClick={() => navigate('/productSpace/' + ite.productID)}
+                                    onClick={() => navigate(`/productSpace/${ite.productID}`)}
                                 >
                                     Learn More
                                 </Button>
@@ -80,5 +73,5 @@ const NewProductLine = () => {
                 ))}
         </Stack>
     );
-};
+}
 export default NewProductLine;

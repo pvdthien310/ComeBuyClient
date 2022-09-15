@@ -1,9 +1,7 @@
-import { ContactSupportOutlined } from '@material-ui/icons';
-import { Button, Grid, Stack, styled, Typography } from '@mui/material';
-import { Box } from '@mui/system';
+import { Button, Stack, styled, Typography, Box } from '@mui/material';
 import { useEffect, useState } from 'react';
 import { useDispatch } from 'react-redux';
-import { FeatureSelect } from '../../components';
+import { FeatureSelect } from '..';
 import { getAllFeature } from '../../redux/slices/featureSlice';
 import FilterAccordion from '../FilterAccordion';
 import { AirbnbSlider, AirbnbThumbComponent } from './style';
@@ -20,7 +18,7 @@ const FilerByPriceBtn = styled(Button)({
     },
 });
 
-const FilterColumn = (props) => {
+function FilterColumn(props) {
     const dispatch = useDispatch();
     const [currentFeature, setCurrentFeature] = useState([]);
     const [featureList, setFeatureList] = useState([]);
@@ -55,7 +53,7 @@ const FilterColumn = (props) => {
             .then((_originalPromiseResult) => {
                 setFeatureList(_originalPromiseResult);
             })
-            .catch((_rejectedValueOrSerializedError) => {
+            .catch(() => {
                 console.log('Error load product');
             });
         return () => {
@@ -72,23 +70,23 @@ const FilterColumn = (props) => {
     };
     return (
         <Stack sx={{ backgroundColor: '#C69AD9', justifyContent: 'center' }}>
-            <Typography variant="h6" sx={{ m: 1, color: 'white', width: '100%' }} fontWeight={'bold'}>
+            <Typography variant="h6" sx={{ m: 1, color: 'white', width: '100%' }} fontWeight="bold">
                 Filter
             </Typography>
-            <Box sx={{ backgroundColor: 'white', height: 5, width: '100%' }}></Box>
+            <Box sx={{ backgroundColor: 'white', height: 5, width: '100%' }} />
             <Stack sx={{ p: 2 }}>
-                <Typography variant="h6" fontWeight={'bold'} color={'white'} sx={{ pb: 1 }}>
+                <Typography variant="h6" fontWeight="bold" color="white" sx={{ pb: 1 }}>
                     Demand
                 </Typography>
                 <FeatureSelect
                     features={featureList}
                     currentFeature={currentFeature}
                     handleFeatureChange={handleFeatureChosen}
-                ></FeatureSelect>
-                <Box sx={{ backgroundColor: 'white', height: 2, width: '100%' }}></Box>
+                />
+                <Box sx={{ backgroundColor: 'white', height: 2, width: '100%' }} />
             </Stack>
             <Stack sx={{ pr: 2, pl: 2 }}>
-                <Typography variant="h6" fontWeight={'bold'} color={'white'} sx={{ pb: 1 }}>
+                <Typography variant="h6" fontWeight="bold" color="white" sx={{ pb: 1 }}>
                     Price
                 </Typography>
                 <AirbnbSlider
@@ -100,19 +98,19 @@ const FilterColumn = (props) => {
                     step={10}
                     marks={marks}
                 />
-                <Box sx={{ backgroundColor: 'white', height: 2, marginTop: 2, width: '100%' }}></Box>
+                <Box sx={{ backgroundColor: 'white', height: 2, marginTop: 2, width: '100%' }} />
             </Stack>
             <Stack sx={{ p: 2 }}>
-                <Typography variant="h6" fontWeight={'bold'} color={'white'} sx={{ pb: 1 }}>
+                <Typography variant="h6" fontWeight="bold" color="white" sx={{ pb: 1 }}>
                     Choose With Your Option
                 </Typography>
                 <FilterAccordion handleFilter={props.handleFilter} />
-                <Box sx={{ backgroundColor: 'white', height: 2, width: '100%' }}></Box>
+                <Box sx={{ backgroundColor: 'white', height: 2, width: '100%' }} />
             </Stack>
             <FilerByPriceBtn onClick={() => props.getRecords(1)} variant="contained" sx={{ p: 1, m: 2 }}>
                 Filter
             </FilerByPriceBtn>
         </Stack>
     );
-};
+}
 export default FilterColumn;

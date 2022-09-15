@@ -1,18 +1,11 @@
-import { Button, Typography } from '@mui/material';
+import { Button, Typography, Grid, Stack, TextField } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
-import { Grid, Stack, TextField } from '@mui/material';
 import { useDispatch, useSelector } from 'react-redux';
 import { memo, useEffect, useState } from 'react';
-import style from './style.js';
 import Box from '@mui/material/Box';
 import { Swiper, SwiperSlide } from 'swiper/react';
 import { Pagination } from 'swiper';
-import { featureListSelector } from '../../../redux/selectors';
-import { getAllFeature } from '../../../redux/slices/featureSlice';
-import { getAllProduct } from '../../../redux/slices/productSlice';
-import SnackBarAlert from '../../../components/SnackBarAlert';
-import cloudinaryApi from '../../../api/cloudinaryAPI';
-//icon styles
+// icon styles
 import AddBoxIcon from '@mui/icons-material/AddBox';
 import MemoryIcon from '@mui/icons-material/Memory';
 import ScreenshotMonitorIcon from '@mui/icons-material/ScreenshotMonitor';
@@ -29,19 +22,23 @@ import LanguageIcon from '@mui/icons-material/Language';
 import AddModeratorIcon from '@mui/icons-material/AddModerator';
 import DriveFileRenameOutlineIcon from '@mui/icons-material/DriveFileRenameOutline';
 import CottageIcon from '@mui/icons-material/Cottage';
-import ImageForEditProduct from '../../../components/ImageForEditProduct';
-import FeatureSelect from '../../../components/FeatureSelect/index.js';
 import AddPhotoAlternateIcon from '@mui/icons-material/AddPhotoAlternate';
 import AccessTimeIcon from '@mui/icons-material/AccessTime';
+import ImageForEditProduct from '../../../components/ImageForEditProduct';
+import FeatureSelect from '../../../components/FeatureSelect/index.js';
+import cloudinaryApi from '../../../api/cloudinaryAPI';
+import SnackBarAlert from '../../../components/SnackBarAlert';
+import { getAllProduct } from '../../../redux/slices/productSlice';
+import { getAllFeature } from '../../../redux/slices/featureSlice';
+import { featureListSelector } from '../../../redux/selectors';
+import style from './style.js';
 import productImageAPI from '../../../api/productImageAPI';
 import PreviewImagesModal from '../../../components/PreviewImagesModal';
-import { productAPI } from '../../../api';
+import productAPI from '../../../api/productAPI';
 import TextFieldForAdd from '../../../components/TextFieldForAdd';
 import { ConfirmDialog } from '../../../components';
-import accountApi from '../../../api/accountAPI.js';
-import { accountSlice } from '../../../redux/slices/accountSlice.js';
 
-const AddProduct = () => {
+function AddProduct() {
     const dispatch = useDispatch();
     const _featureList = useSelector(featureListSelector);
     const [openSuccessAlert, setOpenSuccessAlert] = useState(false);
@@ -50,7 +47,7 @@ const AddProduct = () => {
     const [messageError, setMessageError] = useState('No Error');
     const [messageSuccess, setMessageSuccess] = useState('Notification');
     const [featureList, setFeatureList] = useState(_featureList); /// All of features
-    const [currentFeature, setCurrentFeature] = useState([]); ///feature of current product
+    const [currentFeature, setCurrentFeature] = useState([]); /// feature of current product
     const navigate = useNavigate();
 
     const handleClose = (event, reason) => {
@@ -85,11 +82,11 @@ const AddProduct = () => {
         if (e.target.files) {
             const listFile = [];
             for (let i = 0; i < e.target.files.length; i++) {
-                let reader = new FileReader();
+                const reader = new FileReader();
                 reader.readAsDataURL(e.target.files[i]);
                 reader.onloadend = () => {
                     listFile.push(reader.result);
-                    if (i == e.target.files.length - 1) SetPreviewSource(listFile);
+                    if (i === e.target.files.length - 1) SetPreviewSource(listFile);
                 };
             }
         }
@@ -176,13 +173,15 @@ const AddProduct = () => {
             case 'Year':
                 SetYear(event.target.value);
                 break;
+            default:
+                break;
         }
     };
 
     const deleteImage = (image) => {
         SetProductImages(
             productImages.filter((img) => {
-                if (img.imageURL != image.imageURL) return img;
+                if (img.imageURL !== image.imageURL);
             }),
         );
     };
@@ -194,67 +193,64 @@ const AddProduct = () => {
         setCurrentFeature(typeof value === 'string' ? value.split(',') : value);
     };
 
-    const AddImages = async (productID, images) => {
+    const AddImages = async (images) => {
         const response = await productImageAPI.addMany(images);
-        return response.status == 200 ? true : false;
+        return response.status === 200;
     };
 
-    const ConvertToFeatureIDList = (_featureList) => {
-        const converted_List = currentFeature.map((value) => {
-            return featureList.filter((item) => item.name == value)[0].featureID;
-        });
-        return converted_List;
+    const ConvertToFeatureIDList = () => {
+        const convertedList = currentFeature.map(
+            (value) => featureList.filter((item) => item.name === value)[0].featureID,
+        );
+        return convertedList;
     };
 
     const AddFeature = async (productID) => {
         const response = await productAPI.deleteAndUpdate_Feature(productID, ConvertToFeatureIDList(currentFeature));
-        if (response.status == 200) {
+        if (response.status === 200) {
             return true;
-        } else {
-            console.log('Add Feature Failed');
-            return false;
         }
+        console.log('Add Feature Failed');
+        return false;
     };
 
     const ClearDataAndUpdateStore = () => {
         dispatch(getAllProduct())
             .unwrap()
-            .then((originalPromiseResult) => {
+            .then(() => {
                 navigate('/product');
             })
-            .catch((rejectedValueOrSerializedError) => {});
+            .catch(() => {});
     };
 
     const handleAddProduct = async () => {
         setOpenConfirmDialog(false);
         const newProduct = {
-            ram: ram,
-            memory: memory,
-            gpu: gpu,
-            cpu: cpu,
-            name: name,
-            brand: brand,
-            description: description,
-            weight: weight,
-            origin: origin,
-            screenDimension: screenDimension,
-            colorCoverage: colorCoverage,
-            price: price,
-            externalIOPort: externalIOPort,
-            battery: battery,
-            warranty: warranty,
+            ram,
+            memory,
+            gpu,
+            cpu,
+            name,
+            brand,
+            description,
+            weight,
+            origin,
+            screenDimension,
+            colorCoverage,
+            price,
+            externalIOPort,
+            battery,
+            warranty,
             promotion: '0',
-            year: year,
+            year,
         };
 
         try {
             const result = await productAPI.createNewProduct(newProduct);
-            if (result.status == 200) {
-                const images = productImages.map((item) => {
-                    return { ...item, productid: result.data.productID };
-                });
+            if (result.status === 200) {
+                const images = productImages.map((item) => ({ ...item, productid: result.data.productID }));
                 if (await AddFeature(result.data.productID)) {
-                    if (await AddImages(result.data.productID, images)) {
+                    if (await AddImages(images)) {
                         setMessageSuccess('Add New Product Successfully');
                         setOpenSuccessAlert(true);
                         ClearDataAndUpdateStore();
@@ -283,7 +279,7 @@ const AddProduct = () => {
                 setMessageSuccess('Load Feature Successfully');
                 setOpenSuccessAlert(true);
             })
-            .catch((rejectedValueOrSerializedError) => {
+            .catch(() => {
                 setMessageError('Load Feature Failed');
                 setOpenErrorAlert(true);
             });
@@ -303,15 +299,15 @@ const AddProduct = () => {
                     onSubmit={handleUploadImages}
                     onClose={() => SetOpenPreviewModal(false)}
                     images={previewSource}
-                ></PreviewImagesModal>
-                <Box sx={{ backgroundColor: '#8F8EBF', height: 5, width: '100%' }}></Box>
+                />
+                <Box sx={{ backgroundColor: '#8F8EBF', height: 5, width: '100%' }} />
                 <Typography variant="h6" fontWeight="bold">
                     Images
                 </Typography>
                 {productImages.length > 0 ? (
-                    <Swiper slidesPerView={1} modules={[Pagination]} spaceBetween={30} pagination={true}>
-                        {productImages.map((item, i) => (
-                            <SwiperSlide key={i}>
+                    <Swiper slidesPerView={1} modules={[Pagination]} spaceBetween={30} pagination>
+                        {productImages.map((item) => (
+                            <SwiperSlide key={item.productImageID}>
                                 <ImageForEditProduct image={item} deleteImage={deleteImage} />
                             </SwiperSlide>
                         ))}
@@ -351,7 +347,7 @@ const AddProduct = () => {
                                 Title="Name"
                                 onChange={handleValueChange}
                             />
-                            <Box sx={style.boxinfor_Stack_Line}></Box>
+                            <Box sx={style.boxinfor_Stack_Line} />
                             <TextFieldForAdd
                                 inputConfig="text"
                                 Icon={<MemoryIcon />}
@@ -359,7 +355,7 @@ const AddProduct = () => {
                                 Title="CPU"
                                 onChange={handleValueChange}
                             />
-                            <Box sx={style.boxinfor_Stack_Line}></Box>
+                            <Box sx={style.boxinfor_Stack_Line} />
                             <TextFieldForAdd
                                 inputConfig="number"
                                 Icon={<ScreenshotMonitorIcon />}
@@ -367,7 +363,7 @@ const AddProduct = () => {
                                 Title="Screen Dimension (inch)"
                                 onChange={handleValueChange}
                             />
-                            <Box sx={style.boxinfor_Stack_Line}></Box>
+                            <Box sx={style.boxinfor_Stack_Line} />
                             <TextFieldForAdd
                                 inputConfig="number"
                                 Icon={<InventoryIcon />}
@@ -375,7 +371,7 @@ const AddProduct = () => {
                                 Title="Store (SSD)"
                                 onChange={handleValueChange}
                             />
-                            <Box sx={style.boxinfor_Stack_Line}></Box>
+                            <Box sx={style.boxinfor_Stack_Line} />
                             <TextFieldForAdd
                                 inputConfig="text"
                                 Icon={<CableIcon />}
@@ -383,7 +379,7 @@ const AddProduct = () => {
                                 Title="External IO Port"
                                 onChange={handleValueChange}
                             />
-                            <Box sx={style.boxinfor_Stack_Line}></Box>
+                            <Box sx={style.boxinfor_Stack_Line} />
                             <TextFieldForAdd
                                 inputConfig="text"
                                 Icon={<LanguageIcon />}
@@ -391,7 +387,7 @@ const AddProduct = () => {
                                 Title="Origin"
                                 onChange={handleValueChange}
                             />
-                            <Box sx={style.boxinfor_Stack_Line}></Box>
+                            <Box sx={style.boxinfor_Stack_Line} />
                             <TextFieldForAdd
                                 inputConfig="text"
                                 Icon={<AddModeratorIcon />}
@@ -399,7 +395,7 @@ const AddProduct = () => {
                                 Title="Warranty"
                                 onChange={handleValueChange}
                             />
-                            <Box sx={style.boxinfor_Stack_Line}></Box>
+                            <Box sx={style.boxinfor_Stack_Line} />
                         </Stack>
                     </Grid>
                     <Grid item xs={6} paddingLeft={2}>
@@ -411,7 +407,7 @@ const AddProduct = () => {
                                 Title="Brand"
                                 onChange={handleValueChange}
                             />
-                            <Box sx={style.boxinfor_Stack_Line}></Box>
+                            <Box sx={style.boxinfor_Stack_Line} />
                             <TextFieldForAdd
                                 inputConfig="number"
                                 Icon={<AutofpsSelectIcon />}
@@ -419,7 +415,7 @@ const AddProduct = () => {
                                 Title="RAM (GB)"
                                 onChange={handleValueChange}
                             />
-                            <Box sx={style.boxinfor_Stack_Line}></Box>
+                            <Box sx={style.boxinfor_Stack_Line} />
                             <TextFieldForAdd
                                 inputConfig="text"
                                 Icon={<ChromeReaderModeIcon />}
@@ -427,7 +423,7 @@ const AddProduct = () => {
                                 Title="GPU"
                                 onChange={handleValueChange}
                             />
-                            <Box sx={style.boxinfor_Stack_Line}></Box>
+                            <Box sx={style.boxinfor_Stack_Line} />
                             <TextFieldForAdd
                                 inputConfig="number"
                                 Icon={<Battery3BarIcon />}
@@ -435,7 +431,7 @@ const AddProduct = () => {
                                 Title="Battery (Whr)"
                                 onChange={handleValueChange}
                             />
-                            <Box sx={style.boxinfor_Stack_Line}></Box>
+                            <Box sx={style.boxinfor_Stack_Line} />
                             <TextFieldForAdd
                                 inputConfig="number"
                                 Icon={<ScaleIcon />}
@@ -443,7 +439,7 @@ const AddProduct = () => {
                                 Title="Weight (kg)"
                                 onChange={handleValueChange}
                             />
-                            <Box sx={style.boxinfor_Stack_Line}></Box>
+                            <Box sx={style.boxinfor_Stack_Line} />
                             <TextFieldForAdd
                                 inputConfig="number"
                                 Icon={<GradientIcon />}
@@ -451,7 +447,7 @@ const AddProduct = () => {
                                 Title="Color Coverage (RGBs)"
                                 onChange={handleValueChange}
                             />
-                            <Box sx={style.boxinfor_Stack_Line}></Box>
+                            <Box sx={style.boxinfor_Stack_Line} />
                             <TextFieldForAdd
                                 inputConfig="number"
                                 Icon={<PriceChangeIcon />}
@@ -459,7 +455,7 @@ const AddProduct = () => {
                                 Title="Price (USD)"
                                 onChange={handleValueChange}
                             />
-                            <Box sx={style.boxinfor_Stack_Line}></Box>
+                            <Box sx={style.boxinfor_Stack_Line} />
                             <TextFieldForAdd
                                 inputConfig="number"
                                 Icon={<AccessTimeIcon />}
@@ -467,7 +463,7 @@ const AddProduct = () => {
                                 Title="Year"
                                 onChange={handleValueChange}
                             />
-                            <Box sx={style.boxinfor_Stack_Line}></Box>
+                            <Box sx={style.boxinfor_Stack_Line} />
                         </Stack>
                     </Grid>
                     <Grid item xs={12} paddingLeft={2} paddingTop={2}>
@@ -480,15 +476,15 @@ const AddProduct = () => {
                                 name="Description"
                                 label="Description"
                                 multiline
-                                placeholder={''}
-                                defaultValue={''}
+                                placeholder=""
+                                defaultValue=""
                                 onChange={handleValueChange}
                                 variant="standard"
                             />
                         </Stack>
-                        <Box item="true" sx={style.boxinfor_Stack_Line}></Box>
+                        <Box item="true" sx={style.boxinfor_Stack_Line} />
                     </Grid>
-                    <Grid item xs={12} paddingLeft={2} paddingTop={2}></Grid>
+                    <Grid item xs={12} paddingLeft={2} paddingTop={2} />
                 </Grid>
                 <Stack sx={{ width: '100%', justifyContent: 'center' }} direction="row" spacing={3}>
                     <Button sx={style.BackButton} variant="contained" onClick={() => navigate('/product')}>
@@ -517,6 +513,6 @@ const AddProduct = () => {
             />
         </Stack>
     );
-};
+}
 
 export default memo(AddProduct);

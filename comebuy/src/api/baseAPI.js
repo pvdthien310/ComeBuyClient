@@ -1,5 +1,7 @@
+/* eslint-disable import/no-cycle */
+/* eslint-disable camelcase */
 import axios from 'axios';
-import { DELOYED_BASE_SERVER_URL, local_base_URL } from '../constant.js';
+import { local_base_URL } from '../constant.js';
 import JWTApi from './JWTAPI.js';
 
 const DatabaseClient = axios.create({
@@ -12,21 +14,17 @@ const DatabaseClient = axios.create({
 
 DatabaseClient.interceptors.request.use(
     async (config) => {
-        let token = await localStorage.getItem('accessToken');
+        const token = await localStorage.getItem('accessToken');
         if (token) {
             config.headers['x-access-token'] = token;
         }
         return config;
     },
-    (error) => {
-        return Promise.reject(error);
-    },
+    (error) => Promise.reject(error),
 );
 
 DatabaseClient.interceptors.response.use(
-    (res) => {
-        return res;
-    },
+    (res) => res,
     async (err) => {
         if (err.response) {
             const originalConfig = err.config;

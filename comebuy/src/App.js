@@ -1,14 +1,12 @@
 import './App.css';
-import LoginRegister from './container/LoginAndRegister/LoginRegister';
 import { Route, Routes, useNavigate } from 'react-router-dom';
-import HomePage from './container/HomePage';
+import { useEffect } from 'react';
+import { useDispatch } from 'react-redux';
+import LoginRegister from './container/LoginAndRegister/LoginRegister';
 import MainLayout from './page/MainLayout';
 import { adminRoutes, adminMenuItems } from './route/AdminRoutes';
 import { staffMenuItems, staffRoutes } from './route/StaffRoutes';
 import { managerRoutes, managerMenuItems } from './route/ManagerRoutes';
-import { useEffect } from 'react';
-import { currentUser } from './redux/selectors';
-import { useDispatch, useSelector } from 'react-redux';
 import { customerMenuItems, customerRoutes } from './route/CustomerRoutes';
 import GuestLayout from './page/GuestLayout';
 import { ForgotPasswordInLogin } from './components';
@@ -24,10 +22,8 @@ function App() {
     const role = localStorage.getItem('role');
     const navigate = useNavigate();
 
-    const _currentUser = useSelector(currentUser);
-
     const LoadCurrentUser = async () => {
-        if (localStorage.getItem('idUser') && localStorage.getItem('idUser') != '') {
+        if (localStorage.getItem('idUser') && localStorage.getItem('idUser') !== '') {
             try {
                 await dispatch(getAccountWithID(localStorage.getItem('idUser')));
             } catch (rejectedValueOrSerializedError) {

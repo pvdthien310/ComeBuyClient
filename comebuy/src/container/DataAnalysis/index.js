@@ -1,29 +1,18 @@
+/* eslint-disable no-shadow */
+/* eslint-disable camelcase */
 import { CircularProgress, Stack, Typography } from '@mui/material';
-import { useEffect, useState } from 'react';
-import aiApi from '../../api/aiAPI';
-import React, { PureComponent } from 'react';
-import {
-    ComposedChart,
-    Line,
-    Area,
-    Bar,
-    XAxis,
-    YAxis,
-    CartesianGrid,
-    Tooltip,
-    Legend,
-    ResponsiveContainer,
-    LineChart,
-} from 'recharts';
+import React, { useEffect, useState } from 'react';
+import { ComposedChart, Line, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
 import { useDispatch, useSelector } from 'react-redux';
-import { getAllProduct } from '../../redux/slices/productSlice';
-import { productListSelector } from '../../redux/selectors';
 import InputLabel from '@mui/material/InputLabel';
 import MenuItem from '@mui/material/MenuItem';
 import FormControl from '@mui/material/FormControl';
 import Select from '@mui/material/Select';
+import { productListSelector } from '../../redux/selectors';
+import aiApi from '../../api/aiAPI';
+import { getAllProduct } from '../../redux/slices/productSlice';
 
-const CustomizedAxisTick = (props) => {
+function CustomizedAxisTick(props) {
     const { x, y, payload, width, maxChars, lineHeight, fontSize, fill } = props;
     const rx = new RegExp(`.{1,${maxChars}}`, 'g');
     const chunks = payload.value
@@ -43,7 +32,7 @@ const CustomizedAxisTick = (props) => {
             </text>
         </g>
     );
-};
+}
 
 CustomizedAxisTick.defaultProps = {
     width: 50,
@@ -53,35 +42,28 @@ CustomizedAxisTick.defaultProps = {
     fill: '#333',
 };
 
-const DataAnalysis = () => {
+function DataAnalysis() {
     const dispatch = useDispatch();
     const _productList = useSelector(productListSelector);
     const [result, setResult] = useState(null);
     const [loading, setLoading] = useState(true);
     const [selectedMonth, setSelectedMonth] = useState(new Date().getMonth() + 1);
-    let sortedListPr = _productList.slice().sort((a, b) => {
-        return a.keyIndex - b.keyIndex;
-    });
+    const sortedListPr = _productList.slice().sort((a, b) => a.keyIndex - b.keyIndex);
 
     const handleChange = (event) => {
         setSelectedMonth(event.target.value);
     };
-    useEffect(async () => {
-        await AnalysisNewData();
-    }, [selectedMonth]);
 
-    const prepareData = (listPr, _month) => {
-        let data_block_num_list = [];
-        let branch_id_list = [];
-        let item_id_list = [];
-        let item_feature_id_list = [];
-        let item_price_list = [];
-        let month = [];
-        let year = [];
-        let searching = [];
-        listPr = listPr.slice().sort((a, b) => {
-            return a.keyIndex - b.keyIndex;
-        });
+    const prepareData = (listPr) => {
+        const data_block_num_list = [];
+        const branch_id_list = [];
+        const item_id_list = [];
+        const item_feature_id_list = [];
+        const item_price_list = [];
+        const month = [];
+        const year = [];
+        const searching = [];
+        listPr = listPr.slice().sort((a, b) => a.keyIndex - b.keyIndex);
         listPr.map((ite) => {
             data_block_num_list.push(Math.floor(Math.random() * 30) + 1);
             branch_id_list.push(1); // main brach is 1
@@ -99,17 +81,17 @@ const DataAnalysis = () => {
             item_id: item_id_list,
             item_feature_id: item_feature_id_list,
             item_price: item_price_list,
-            month: month,
-            year: year,
-            searching: searching,
+            month,
+            year,
+            searching,
         };
     };
     const AnalysisNewData = async () => {
         const response = await aiApi.dataAnalysis(prepareData(_productList, selectedMonth));
-        if (response.status == 200) {
-            let tempData = [];
+        if (response.status === 200) {
+            const tempData = [];
             await JSON.parse(response.data.result).map((ite, i) => {
-                const pr = sortedListPr.filter((ite, j) => j == i);
+                const pr = sortedListPr.filter((ite, j) => j === i);
                 const namePr = pr[0].name.split(' (')[0];
                 tempData.push({
                     name: namePr,
@@ -125,6 +107,10 @@ const DataAnalysis = () => {
     };
 
     useEffect(async () => {
+        await AnalysisNewData();
+    }, [selectedMonth]);
+
+    useEffect(async () => {
         let cancel = false;
         if (sortedListPr.length === 0) {
             if (cancel) return;
@@ -132,11 +118,11 @@ const DataAnalysis = () => {
                 .unwrap()
                 .then(async (originalPromiseResult) => {
                     const response = await aiApi.dataAnalysis(prepareData(originalPromiseResult, selectedMonth));
-                    if (response.status == 200) {
+                    if (response.status === 200) {
                         if (cancel) return;
-                        let tempData = [];
+                        const tempData = [];
                         await JSON.parse(response.data.result).map((ite, i) => {
-                            const pr = sortedListPr.filter((ite, j) => j == i);
+                            const pr = sortedListPr.filter((ite, j) => j === i);
                             const namePr = pr[0].name.split(' (')[0];
                             tempData.push({
                                 name: namePr,
@@ -150,18 +136,18 @@ const DataAnalysis = () => {
                         setLoading(false);
                     }
                 })
-                .catch((rejectedValueOrSerializedError) => {
+                .catch(() => {
                     console.log('Error load product');
                     // setMessageError("Error Load Product List")
                     // setOpenErrorAlert(true)
                 });
         } else {
             const response = await aiApi.dataAnalysis(prepareData(_productList, selectedMonth));
-            if (response.status == 200) {
+            if (response.status === 200) {
                 if (cancel) return;
-                let tempData = [];
+                const tempData = [];
                 await JSON.parse(response.data.result).map((ite, i) => {
-                    const pr = sortedListPr.filter((ite, j) => j == i);
+                    const pr = sortedListPr.filter((ite, j) => j === i);
                     const namePr = pr[0].name.split(' (')[0];
                     tempData.push({
                         name: namePr,
@@ -176,7 +162,7 @@ const DataAnalysis = () => {
                 setLoading(false);
             }
         }
-        return () => (cancel = true);
+        cancel = true;
     }, []);
     return (
         <Stack sx={{ height: '100%', width: '100%' }}>
@@ -208,7 +194,7 @@ const DataAnalysis = () => {
             ) : (
                 <Stack sx={{ height: '90%', width: '100%' }}>
                     {result == null ? (
-                        <Typography>Can't Get Result :(((</Typography>
+                        <Typography>Can Not Get Result :(((</Typography>
                     ) : (
                         <ResponsiveContainer width="100%" height="100%">
                             <ComposedChart
@@ -245,5 +231,5 @@ const DataAnalysis = () => {
             )}
         </Stack>
     );
-};
+}
 export default DataAnalysis;

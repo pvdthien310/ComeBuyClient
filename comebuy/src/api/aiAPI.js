@@ -1,5 +1,5 @@
-import { ai_server_URL, DELOYED_AI_SERVER_URL } from '../constant.js';
 import axios from 'axios';
+import { DELOYED_AI_SERVER_URL } from '../constant.js';
 
 const AIServer = axios.create({
     // baseURL: "http://127.0.0.1:5000",
@@ -18,9 +18,7 @@ const aiApi = {
         return res;
     },
     dataAnalysis: async (data) => {
-        const res = await AIServer.post('/', data).catch((err) => {
-            return err.response;
-        });
+        const res = await AIServer.post('/', data).catch((err) => err.response);
         return res;
     },
 };

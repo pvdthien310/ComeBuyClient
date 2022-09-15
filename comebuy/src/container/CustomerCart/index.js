@@ -1,12 +1,8 @@
+/* eslint-disable react/jsx-one-expression-per-line */
+/* eslint-disable react/jsx-props-no-spreading */
 import React, { useState, useEffect } from 'react';
-import { Add, Remove } from '@material-ui/icons';
 import styled from 'styled-components';
-import NavBar from '../../components/NavBar/NavBar';
-import { BigFooter, ProductInCart } from '../../components';
-import { mobile } from './responsive';
-
-import { Typography, Link, Autocomplete, createFilterOptions, InputBase, Paper } from '@mui/material';
-import { Stack, Breadcrumbs, TextField } from '@mui/material';
+import { Typography, Link, Stack, Breadcrumbs, TextField, Button } from '@mui/material';
 import Backdrop from '@mui/material/Backdrop';
 import CircularProgress from '@mui/material/CircularProgress';
 import Dialog from '@mui/material/Dialog';
@@ -15,14 +11,15 @@ import DialogContent from '@mui/material/DialogContent';
 import DialogContentText from '@mui/material/DialogContentText';
 import DialogTitle from '@mui/material/DialogTitle';
 import Slide from '@mui/material/Slide';
-import { Button } from '@mui/material';
 import Snackbar from '@mui/material/Snackbar';
 import MuiAlert from '@mui/material/Alert';
-
 import { useNavigate } from 'react-router';
-import { getAllCart, updateCart, deleteCartById } from './../../redux/slices/cartSlice';
 import { useDispatch, useSelector } from 'react-redux';
 import { unwrapResult } from '@reduxjs/toolkit';
+import { getAllCart, updateCart, deleteCartById } from '../../redux/slices/cartSlice';
+import { mobile } from './responsive';
+import { BigFooter, ProductInCart } from '../../components';
+import NavBar from '../../components/NavBar/NavBar';
 import { currentUser } from '../../redux/selectors';
 import { getProductWithID } from '../../redux/slices/productSlice';
 
@@ -57,15 +54,6 @@ const TopButton = styled.button`
     color: ${(props) => props.type === 'filled' && 'white'};
 `;
 
-const TopTexts = styled.div`
-    ${mobile({ display: 'none' })}
-`;
-const TopText = styled.span`
-    text-decoration: underline;
-    cursor: pointer;
-    margin: 0px 10px;
-`;
-
 const Bottom = styled.div`
     display: flex;
     justify-content: space-between;
@@ -98,17 +86,11 @@ const SummaryItemText = styled.span``;
 
 const SummaryItemPrice = styled.span``;
 
-const Transition = React.forwardRef(function Transition(props, ref) {
-    return <Slide direction="d" ref={ref} {...props} />;
-});
+const Transition = React.forwardRef((props, ref) => <Slide direction="d" ref={ref} {...props} />);
 
-const Alert = React.forwardRef(function Alert(props, ref) {
-    return <MuiAlert elevation={6} ref={ref} variant="filled" {...props} />;
-});
+const Alert = React.forwardRef((props, ref) => <MuiAlert elevation={6} ref={ref} variant="filled" {...props} />);
 
-const filter = createFilterOptions();
-
-const CustomerCart = () => {
+function CustomerCart() {
     const dispatch = useDispatch();
     const _currentUser = useSelector(currentUser);
     const navigate = useNavigate();
@@ -118,17 +100,20 @@ const CustomerCart = () => {
     const [prodList, setProdList] = useState([]);
     const [subTotal, setSubTotal] = useState(0);
     const [openSnackbar, setOpenSnackbar] = useState(false);
-    const [input, setInput] = useState('');
-    const [output, setOutput] = useState([]);
+    const [search, setSearch] = React.useState('');
+    const [masterData, setmasterData] = React.useState([]);
+    const [open, setOpen] = useState(false);
+    // const [input, setInput] = useState('');
+    // const [output, setOutput] = useState([]);
 
-    useEffect(() => {
-        setOutput([]);
-        cartList.filter((val) => {
-            if (val.product.name.toLowerCase().includes(input.toLowerCase())) {
-                setOutput((output) => [...output, val]);
-            }
-        });
-    }, [input]);
+    // useEffect(() => {
+    //     setOutput([]);
+    //     cartList.filter((val) => {
+    //         if (val.product.name.toLowerCase().includes(input.toLowerCase())) {
+    //             setOutput(prev => [...output, val]);
+    //         }
+    //     });
+    // }, [input]);
 
     const handleCloseSnackbar = (event, reason) => {
         if (reason === 'clickaway') {
@@ -136,6 +121,15 @@ const CustomerCart = () => {
         }
 
         setOpenSnackbar(false);
+    };
+
+    const CountTotal = async (_cart, prList) => {
+        let newTotal = 0;
+        await _cart.map((item) => {
+            const rs = prList.find((ite) => ite.productID === item.productid);
+            if (rs !== undefined) newTotal += Number(Number(rs.price) * Number(item.amount));
+        });
+        setSubTotal(newTotal);
     };
 
     const fetchYourCart = async (listCart, listProduct) => {
@@ -159,20 +153,10 @@ const CustomerCart = () => {
         }
     };
 
-    const CountTotal = async (_cart, prList) => {
-        let newTotal = 0;
-        await _cart.map((item) => {
-            let rs = prList.find((ite) => ite.productID == item.productid);
-            if (rs != undefined) newTotal = newTotal + Number(Number(rs.price) * Number(item.amount));
-        });
-        setSubTotal(newTotal);
-    };
-
     useEffect(() => {
         if (isLoading === true) {
-            let listCart = [];
-            let listProduct = [];
-            let tempSubTotal = 0;
+            const listCart = [];
+            const listProduct = [];
             fetchYourCart(listCart, listProduct);
             setCartList(listCart);
             setmasterData(listCart);
@@ -180,14 +164,9 @@ const CustomerCart = () => {
         }
     }, []);
 
-    const [open, setOpen] = useState(false);
-
     const handleClose = () => {
         setOpen(false);
     };
-
-    const [search, setSearch] = React.useState('');
-    const [masterData, setmasterData] = React.useState([]);
 
     const searchFilter = (text) => {
         if (text) {
@@ -204,28 +183,28 @@ const CustomerCart = () => {
         }
     };
 
-    //handling change amount
+    // handling change amount
     const handleChangeAmount = async (value, actionType) => {
         let newListCart = cartList;
         console.log(actionType);
         console.log(newListCart);
         console.log(value);
-        if (actionType == 'increase') {
+        if (actionType === 'increase') {
             newListCart = newListCart.map((element) => {
                 // let dataForUpdate = { ...element }
-                if (element.productid == value) {
+                if (element.productid === value) {
                     return {
                         ...element,
                         productid: element.productid,
                         amount: Number(element.amount) + 1,
                     };
-                } else return element;
+                }
+                return element;
             });
             newListCart.map(async (item) => {
-                if (item.productid == value) {
+                if (item.productid === value) {
                     try {
-                        const resultAction = await dispatch(updateCart(item));
-                        const originalPromiseResult = unwrapResult(resultAction);
+                        await dispatch(updateCart(item));
                     } catch (rejectedValueOrSerializedError) {
                         alert(rejectedValueOrSerializedError);
                     }
@@ -235,10 +214,10 @@ const CustomerCart = () => {
             await CountTotal(newListCart, prodList);
         } else if (actionType === 'decrease') {
             let sign = 1;
-            //sign 1: run updateCart when amount not = 0
-            //sign 0: don't run anything
+            // sign 1: run updateCart when amount not = 0
+            // sign 0: don't run anything
             newListCart = newListCart.map((element) => {
-                if (element.productid == value) {
+                if (element.productid === value) {
                     if (element.amount === 0) {
                         sign = 0;
                         setOpen(true);
@@ -254,10 +233,9 @@ const CustomerCart = () => {
             });
             if (sign === 1) {
                 newListCart.map(async (item) => {
-                    if (item.productid == value) {
+                    if (item.productid === value) {
                         try {
-                            const resultAction = await dispatch(updateCart(item));
-                            const originalPromiseResult = unwrapResult(resultAction);
+                            await dispatch(updateCart(item));
                         } catch (rejectedValueOrSerializedError) {
                             alert(rejectedValueOrSerializedError);
                         }
@@ -265,13 +243,11 @@ const CustomerCart = () => {
                 });
                 setCartList(newListCart);
                 await CountTotal(newListCart, prodList);
-            } else {
-                return;
             }
         }
     };
 
-    //handle agree dis-cart
+    // handle agree dis-cart
     const handleAgree = async (item) => {
         try {
             const resultAction = await dispatch(deleteCartById(item));
@@ -296,15 +272,15 @@ const CustomerCart = () => {
         }
     };
 
-    function handleClick(event) {
+    const handleClick = (event) => {
         event.preventDefault();
         navigate('/myplace');
-    }
+    };
 
-    function handleClickToHome(event) {
+    const handleClickToHome = (event) => {
         event.preventDefault();
         navigate('/');
-    }
+    };
 
     const breadcrumbs = [
         <Link underline="hover" key="2" style={{ color: '#000D0A' }} href="/myplace" onClick={handleClickToHome}>
@@ -319,7 +295,6 @@ const CustomerCart = () => {
     ];
 
     const gotoProductScreen = () => navigate('/productSpace');
-    const [num, setNum] = useState(2);
 
     return (
         <Container>
@@ -349,18 +324,14 @@ const CustomerCart = () => {
                     <Stack sx={{ m: 2, p: 2 }}>
                         {cartList.map((item, i) => (
                             <>
-                                <ProductInCart
-                                    key={i}
-                                    productInCart={item}
-                                    handleChangeAmount={handleChangeAmount}
-                                ></ProductInCart>
+                                <ProductInCart key={i} productInCart={item} handleChangeAmount={handleChangeAmount} />
                                 <Dialog
                                     open={open}
                                     TransitionComponent={Transition}
                                     keepMounted
                                     aria-describedby="alert-dialog-slide-description"
                                 >
-                                    <DialogTitle>{'Discart'}</DialogTitle>
+                                    <DialogTitle>Discart</DialogTitle>
                                     <DialogContent>
                                         <DialogContentText id="alert-dialog-slide-description">
                                             Are you sure want discart this product ?
@@ -388,7 +359,7 @@ const CustomerCart = () => {
                             <SummaryItemText>Shipping Discount (Temporary)</SummaryItemText>
                             <SummaryItemPrice>$ -2</SummaryItemPrice>
                         </SummaryItem>
-                        <div style={{ height: '1px', width: '100%', backgroundColor: 'black' }}></div>
+                        <div style={{ height: '1px', width: '100%', backgroundColor: 'black' }} />
                         <SummaryItem type="total">
                             <SummaryItemText>Total</SummaryItemText>
                             <SummaryItemPrice>${subTotal}</SummaryItemPrice>
@@ -421,6 +392,6 @@ const CustomerCart = () => {
             </Snackbar>
         </Container>
     );
-};
+}
 
 export default CustomerCart;

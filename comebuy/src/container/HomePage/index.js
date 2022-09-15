@@ -1,6 +1,10 @@
+/* eslint-disable operator-linebreak */
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
+import { unwrapResult } from '@reduxjs/toolkit';
+import { Box, Stack, Typography } from '@mui/material';
+import io from 'socket.io-client';
 import { getAccountWithID } from '../../redux/slices/accountSlice';
 import {
     BrandNavBar,
@@ -13,16 +17,13 @@ import {
     NewProductLine,
     LiveBanner,
 } from '../../components';
-import { unwrapResult } from '@reduxjs/toolkit';
-import { cartSlice } from './../../redux/slices/cartSlice';
+import { cartSlice } from '../../redux/slices/cartSlice';
 import { getAllProduct } from '../../redux/slices/productSlice';
 import { productListSelector } from '../../redux/selectors';
-import { Box, Stack, Typography } from '@mui/material';
 import bannerApi from '../../api/bannerAPI';
-import { WS_URL, DEPLOYED_WS } from '../../constant';
-import io from 'socket.io-client';
+import { DEPLOYED_WS } from '../../constant';
 
-const HomePage = () => {
+function HomePage() {
     const socket = io(DEPLOYED_WS, {
         transports: ['websocket'],
     });
@@ -31,8 +32,29 @@ const HomePage = () => {
     const dispatch = useDispatch();
     const [liveBanner, SetLiveBanner] = useState([]);
 
+    const LoadBanner = async () => {
+        const response = await bannerApi.getAll();
+        if (response.status === 200) SetLiveBanner(response.data);
+        else console.log('Load banner failed!');
+    };
+
+    const handleSocket = () => {
+        socket.on('connect', () => {
+            console.log('Connect socket successfully!'); // x8WIv7-mJelg7on_ALbx
+        });
+        socket.on('update-new-banner', (message) => {
+            const data = JSON.parse(message);
+            if (liveBanner.find((ite) => ite.bannerID === data.bannerID) === undefined) {
+                SetLiveBanner((prev) => [data, ...prev]);
+            }
+        });
+        socket.on('delete-banner', async () => {
+            await LoadBanner();
+        });
+    };
+
     useEffect(async () => {
-        if (localStorage.getItem('idUser') != '') {
+        if (localStorage.getItem('idUser') !== '') {
             try {
                 const resultAction = await dispatch(getAccountWithID(localStorage.getItem('idUser')));
                 const originalPromiseResult = unwrapResult(resultAction);
@@ -50,33 +72,13 @@ const HomePage = () => {
         handleSocket();
         await dispatch(getAllProduct())
             .unwrap()
-            .then((originalPromiseResult) => {})
-            .catch((rejectedValueOrSerializedError) => {
+            .then(() => {})
+            .catch(() => {
                 console.log('Error load product');
             });
         await LoadBanner();
         return () => {};
     }, []);
-
-    const handleSocket = () => {
-        socket.on('connect', () => {
-            console.log('Connect socket successfully!'); // x8WIv7-mJelg7on_ALbx
-        });
-        socket.on('update-new-banner', (message) => {
-            const data = JSON.parse(message);
-            if (liveBanner.find((ite) => ite.bannerID == data.bannerID) == undefined)
-                SetLiveBanner((prev) => [data, ...prev]);
-        });
-        socket.on('delete-banner', async (message) => {
-            await LoadBanner();
-        });
-    };
-
-    const LoadBanner = async () => {
-        const response = await bannerApi.getAll();
-        if (response.status == 200) SetLiveBanner(response.data);
-        else console.log('Load banner failed!');
-    };
 
     const brandList = [
         {
@@ -114,45 +116,45 @@ const HomePage = () => {
     ];
     return (
         <Stack>
-            <NavBar></NavBar>
-            <Box sx={{ height: 2, m: 2, mt: 10, width: '95%', backgroundColor: 'black' }}></Box>
-            <BrandNavBar brandLine={brandList}></BrandNavBar>
+            <NavBar />
+            <Box sx={{ height: 2, m: 2, mt: 10, width: '95%', backgroundColor: 'black' }} />
+            <BrandNavBar brandLine={brandList} />
             <Stack sx={{ p: 2 }} spacing={5}>
                 <LiveBanner
                     onNavigate={() => navigate('/productSpace')}
                     urlImage="https://store.storeimages.cdn-apple.com/4982/as-images.apple.com/is/mac-compare-202206?wid=1806&hei=642&fmt=jpeg&qlt=90&.v=1652989686485"
                     banners={liveBanner}
-                ></LiveBanner>
+                />
                 {_productList.length > 0 && <NewProductLine />}
-                <FeatureBar></FeatureBar>
+                <FeatureBar />
                 <BrandLineImage
                     urlImage="https://images.unsplash.com/photo-1615750173609-2fbf12fd1d2d?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1170&q=80"
                     BigText="CHOOSE AND GET YOUR WORK EFFECTIVELY"
                     SmallText="ComeBuy Store. The best way to buy the products you love."
-                ></BrandLineImage>
-                <Typography variant="h4" fontWeight={'bold'} sx={{ alignSelf: 'center' }}>
+                />
+                <Typography variant="h4" fontWeight="bold" sx={{ alignSelf: 'center' }}>
                     Our store.
-                    <Typography variant="h4" fontWeight={'bold'} sx={{ color: '#BCBFB0' }}>
+                    <Typography variant="h4" fontWeight="bold" sx={{ color: '#BCBFB0' }}>
                         The best way to buy the products you love.
                     </Typography>
                 </Typography>
                 <div>
                     {_productList.length > 0 &&
                         brandList.map((item, i) => {
-                            const stringID = 'Line_' + item.title;
-                            return <BrandLine key={i} id={stringID} brandName={item.title} url={item.url}></BrandLine>;
+                            const stringID = `Line_${item.title}`;
+                            return <BrandLine key={i} id={stringID} brandName={item.title} url={item.url} />;
                         })}
                 </div>
-                <Typography variant="h4" fontWeight={'bold'} sx={{ alignSelf: 'center' }}>
+                <Typography variant="h4" fontWeight="bold" sx={{ alignSelf: 'center' }}>
                     Feedback.
-                    <Typography variant="h4" fontWeight={'bold'} sx={{ color: '#BCBFB0' }}>
-                        Here's where the fun begins.
+                    <Typography variant="h4" fontWeight="bold" sx={{ color: '#BCBFB0' }}>
+                        Here is where the fun begins.
                     </Typography>
                 </Typography>
-                <LaptopImageLine></LaptopImageLine>
+                <LaptopImageLine />
             </Stack>
             <BigFooter />
         </Stack>
     );
-};
+}
 export default HomePage;

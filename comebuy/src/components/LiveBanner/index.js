@@ -1,7 +1,5 @@
-import { BrandNavBar, Slider, NavBar, BrandLine, FeatureBar } from '../../components';
 import { styled } from '@mui/material/styles';
-import { Grid, Stack } from '@mui/material';
-import { Typography } from '@mui/material';
+import { Stack } from '@mui/material';
 import Button from '@mui/material/Button';
 import ArrowRightIcon from '@mui/icons-material/ArrowRight';
 import { Swiper, SwiperSlide } from 'swiper/react';
@@ -29,7 +27,7 @@ const ImgFeatureLine = styled('img')(({ theme }) => ({
     },
 }));
 
-const Container = styled(Stack)(({ theme }) => ({
+const Container = styled(Stack)(() => ({
     spacing: 2,
     display: 'flex',
     height: 650,
@@ -44,24 +42,7 @@ const Container = styled(Stack)(({ theme }) => ({
     boxShadow: 50,
 }));
 
-const Text = styled(Typography)(({ theme }) => ({
-    color: 'white',
-    zIndex: '3',
-    height: 'auto',
-    fontSize: '50px',
-    fontWeight: 'bold',
-    marginTop: '4%',
-    display: 'flex',
-}));
-const SmallText = styled(Typography)(({ theme }) => ({
-    color: 'darkgrey',
-    zIndex: '3',
-    height: 70,
-    fontSize: '15px',
-    fontWeight: 'bold',
-}));
-
-const CustomButton = styled(Button)(({ theme }) => ({
+const CustomButton = styled(Button)(() => ({
     variant: 'outlined',
     color: 'black',
     zIndex: '3',
@@ -77,7 +58,7 @@ export default function LiveBanner(props) {
             <Swiper
                 className="swiper-livebanner"
                 spaceBetween={30}
-                centeredSlides={true}
+                centeredSlides
                 autoplay={{
                     delay: 2500,
                     disableOnInteraction: false,
@@ -85,18 +66,18 @@ export default function LiveBanner(props) {
                 pagination={{
                     clickable: true,
                 }}
-                navigation={true}
+                navigation
                 modules={[Autoplay, Pagination, Navigation]}
             >
                 {props.banners.length > 0 ? (
                     props.banners.map((item) => (
                         <SwiperSlide className="swiper-slide-livebanner" key={item.url}>
-                            <ImgFeatureLine src={item.url}></ImgFeatureLine>
+                            <ImgFeatureLine src={item.url} />
                         </SwiperSlide>
                     ))
                 ) : (
                     <SwiperSlide className="swiper-slide-livebanner">
-                        <ImgFeatureLine src={props.urlImage}></ImgFeatureLine>
+                        <ImgFeatureLine src={props.urlImage} />
                     </SwiperSlide>
                 )}
             </Swiper>

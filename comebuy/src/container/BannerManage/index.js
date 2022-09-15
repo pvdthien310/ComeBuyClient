@@ -1,28 +1,29 @@
-import { Backdrop, Button, CircularProgress, Grid, Stack, Typography } from '@mui/material';
+import { Backdrop, Button, CircularProgress, Stack, Typography } from '@mui/material';
 import { useEffect, useState } from 'react';
 import bannerApi from '../../api/bannerAPI';
 import cloudinaryApi from '../../api/cloudinaryAPI';
 import AddBannerModal from '../AddBannerModal';
 import BannerItem from './child';
 
-const BannerManage = () => {
+function BannerManage() {
     const [banners, SetBanners] = useState([]);
     const [openModal, SetOpenModal] = useState(false);
     const [type, SetType] = useState(1);
     const [loading, SetLoading] = useState(false);
+
+    const LoadNewData = async () => {
+        const response = await bannerApi.getAll();
+        if (response.status === 200) SetBanners(response.data);
+        else console.log('Load banner failed');
+    };
+
     useEffect(async () => {
         await LoadNewData();
     }, []);
 
-    const LoadNewData = async () => {
-        const response = await bannerApi.getAll();
-        if (response.status == 200) SetBanners(response.data);
-        else console.log('Load banner failed');
-    };
-
     const HandleCreateNewBanner = async (url) => {
-        const response = await bannerApi.createNewBanner({ url: url });
-        if ((response.status = 200)) {
+        const response = await bannerApi.createNewBanner({ url });
+        if (response.status === 200) {
             SetLoading(false);
             await LoadNewData();
         } else {
@@ -34,7 +35,7 @@ const BannerManage = () => {
     const DeleteBanner = async (id) => {
         SetLoading(true);
         const response = await bannerApi.deleteBannerById(id);
-        if ((response.status = 200)) {
+        if (response.status === 200) {
             SetLoading(false);
             await LoadNewData();
         } else {
@@ -46,11 +47,11 @@ const BannerManage = () => {
     const UploadNewBanner = async (value1, value2) => {
         SetOpenModal(false);
         SetLoading(true);
-        if (type == 2) {
+        if (type === 2) {
             const data = [value1];
             try {
-                const response = await cloudinaryApi.uploadBigImages(JSON.stringify({ data: data }));
-                if ((response.status = 200)) {
+                const response = await cloudinaryApi.uploadBigImages(JSON.stringify({ data }));
+                if (response.status === 200) {
                     await HandleCreateNewBanner(response.data[0]);
                 } else {
                     console.log('Upload to Cloudinary Failed');
@@ -64,7 +65,7 @@ const BannerManage = () => {
     };
     return (
         <Stack justifyContent="center" alignItems="center">
-            <Typography variant="h5" fontWeight={'bold'}>
+            <Typography variant="h5" fontWeight="bold">
                 Banner Management
             </Typography>
             <Button
@@ -87,15 +88,15 @@ const BannerManage = () => {
                 Add Banner
             </Button>
             <Stack
-                direction={'row'}
+                direction="row"
                 justifyContent="center"
-                flexWrap={'wrap'}
+                flexWrap="wrap"
                 rowGap={3}
                 spacing={3}
                 sx={{ width: '100%' }}
             >
                 {banners.map((item) => (
-                    <BannerItem HandleDelete={DeleteBanner} key={item.bannerID} item={item}></BannerItem>
+                    <BannerItem HandleDelete={DeleteBanner} key={item.bannerID} item={item} />
                 ))}
             </Stack>
             {openModal && (
@@ -112,5 +113,5 @@ const BannerManage = () => {
             </Backdrop>
         </Stack>
     );
-};
+}
 export default BannerManage;

@@ -1,6 +1,6 @@
 import React from 'react';
 
-const TablePrint = ({ list, total }) => {
+function TablePrint({ list, total }) {
     return (
         <>
             <table width="100%" style={{ marginLeft: '1.5rem', marginTop: '1.5rem' }}>
@@ -50,6 +50,6 @@ const TablePrint = ({ list, total }) => {
             </div>
         </>
     );
-};
+}
 
 export default TablePrint;

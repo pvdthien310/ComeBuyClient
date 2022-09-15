@@ -1,11 +1,9 @@
-import React, { useState, useEffect } from 'react';
+import React from 'react';
 import Box from '@mui/material/Box';
-import Button from '@mui/material/Button';
 import { styled } from '@mui/material/styles';
-import ButtonBase from '@mui/material/ButtonBase';
 import Typography from '@mui/material/Typography';
 
-const Title = styled(Typography)(({ theme }) => ({
+const Title = styled(Typography)(() => ({
     position: 'relative',
     color: 'black',
     letterSpacing: '2px',
@@ -29,10 +27,10 @@ const ImageMarked = styled('span')(({ theme }) => ({
 }));
 
 const NavigateBrandLine = (value) => {
-    window.location.replace('#Line_' + value);
+    window.location.replace(`#Line_${value}`);
 };
 function BrandNavBar(props) {
-    const brandLine = props.brandLine;
+    const { brandLine } = props;
     return (
         <Box sx={{ flexGrow: 1, display: { xs: 'none', md: 'flex', justifyContent: 'space-evenly' } }}>
             {brandLine.map((brand, i) => (

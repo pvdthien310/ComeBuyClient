@@ -1,5 +1,12 @@
+/* eslint-disable react/no-unstable-nested-components */
 import { useState, useRef, useEffect } from 'react';
-
+import ReactToPrint from 'react-to-print';
+import { Stack, Grid, Box, Typography, TextField, Button } from '@mui/material';
+import moment from 'moment';
+import DeleteForeverIcon from '@mui/icons-material/DeleteForever';
+import TextareaAutosize from '@mui/material/TextareaAutosize';
+import { useSelector, useDispatch } from 'react-redux';
+import { unwrapResult } from '@reduxjs/toolkit';
 import ClientDetails from '../../components/CounterClientDetails';
 import Dates from '../../components/CounterDates';
 import Footer from '../../components/CounterFooter';
@@ -10,31 +17,12 @@ import TablePrint from '../../components/CounterTablePrint';
 import TableForm from '../../components/CounterTableForm';
 import { currentUser } from '../../redux/selectors';
 import { getAllBranch } from '../../redux/slices/branchSlice';
-import logo from '../../assets/img/logo.png';
-
-import ReactToPrint from 'react-to-print';
-import { Stack, Grid, Box, Typography, TextField, Button, IconButton } from '@mui/material';
-import moment from 'moment';
-
-import DeleteForeverIcon from '@mui/icons-material/DeleteForever';
-import BackspaceSharpIcon from '@mui/icons-material/BackspaceSharp';
-import TextareaAutosize from '@mui/material/TextareaAutosize';
-import { styled } from '@mui/material/styles';
-import { useSelector, useDispatch } from 'react-redux';
-import { unwrapResult } from '@reduxjs/toolkit';
 import { BigFooter, SnackBarAlert } from '../../components';
 import { getAccountWithID } from '../../redux/slices/accountSlice';
 import { addInvoice } from '../../redux/slices/invoiceSlice';
 import { addInvoiceItem } from '../../redux/slices/invoiceItemSlice';
 
-const BGImg = styled('img')({
-    height: '100%',
-    width: '100%',
-    position: 'absolute',
-    resize: true,
-});
-
-const CounterForManager = () => {
+function CounterForManager() {
     const _currentUser = useSelector(currentUser);
     const dispatch = useDispatch();
     const [listBranch, setListBranch] = useState([]);
@@ -44,15 +32,10 @@ const CounterForManager = () => {
     const [phone, setPhone] = useState(_currentUser.phoneNumber);
     const [clientName, setClientName] = useState('');
     const [clientAddress, setClientAddress] = useState('');
-    const [invoiceNumber, setInvoiceNumber] = useState('');
-    const [invoiceDate, setInvoiceDate] = useState(
-        String(new Date().getDate()).padStart(2, '0') +
-            '/' +
-            String(new Date().getMonth() + 1).padStart(2, '0') +
-            '/' +
-            new Date().getFullYear(),
-    );
-    const [dueDate, setDueDate] = useState('');
+    const invoiceDate = `${String(new Date().getDate()).padStart(2, '0')}/${String(new Date().getMonth() + 1).padStart(
+        2,
+        '0',
+    )}/${new Date().getFullYear()}`;
     const [notes, setNotes] = useState('');
     const [description, setDescription] = useState(null);
     const [quantity, setQuantity] = useState('');
@@ -61,6 +44,9 @@ const CounterForManager = () => {
     const [list, setList] = useState([]);
     const [total, setTotal] = useState(0);
     const [width] = useState(641);
+    const [listItem, setListItem] = useState([]);
+    const [startAddInvoiceItem, setStartAddInvoiceItem] = useState(false);
+    const [openSnackbar, setOpenSnackbar] = useState(false);
 
     const LoadData = async () => {
         try {
@@ -75,7 +61,7 @@ const CounterForManager = () => {
     };
 
     useEffect(() => {
-        if (_currentUser.userID == '00000000-0000-0000-0000-000000000000') LoadData();
+        if (_currentUser.userID === '00000000-0000-0000-0000-000000000000') LoadData();
     }, []);
 
     const componentRef = useRef();
@@ -103,10 +89,10 @@ const CounterForManager = () => {
         // setTotal(0)
         // await MakeInvoice()
         // console.log(list)
-        var m = moment().format('H mm');
-        var date = moment().format('D/M/YYYY');
-        let temp = {
-            date: date + ' ' + m,
+        const m = moment().format('H mm');
+        const date = moment().format('D/M/YYYY');
+        const temp = {
+            date: `${date} ${m}`,
             moneyReceived: total,
             isChecked: true,
             isPaid: true,
@@ -131,18 +117,10 @@ const CounterForManager = () => {
         }
     }, [startAddInvoice]);
 
-    useEffect(async () => {
-        if (invoiceId != ' ') {
-            _addInvoiceItem(invoiceId);
-        }
-    }, [invoiceId]);
-
-    const [listItem, setListItem] = useState([]);
-
     const _addInvoiceItem = async (_invoiceId) => {
-        let t = [];
+        const t = [];
         for (let i = 0; i < list.length; i++) {
-            let item = {
+            const item = {
                 invoiceID: _invoiceId,
                 productID: list[i].id,
                 amount: Number(list[i].quantity),
@@ -154,14 +132,17 @@ const CounterForManager = () => {
         setStartAddInvoiceItem(true);
     };
 
-    const [startAddInvoiceItem, setStartAddInvoiceItem] = useState(false);
+    useEffect(async () => {
+        if (invoiceId !== ' ') {
+            _addInvoiceItem(invoiceId);
+        }
+    }, [invoiceId]);
 
     useEffect(() => {
         const addItem = async () => {
             for (let i = 0; i < listItem.length; i++) {
                 try {
-                    const resultAction = await dispatch(addInvoiceItem(listItem[i]));
-                    const originalPromiseResult = unwrapResult(resultAction);
+                    await dispatch(addInvoiceItem(listItem[i]));
                 } catch (rejectedValueOrSerializedError) {
                     console.log(rejectedValueOrSerializedError);
                 }
@@ -202,7 +183,6 @@ const CounterForManager = () => {
         }
     }, [width]);
 
-    const [openSnackbar, setOpenSnackbar] = useState(false);
     const handleCloseSnackbar = () => {
         setOpenSnackbar(false);
     };
@@ -337,7 +317,7 @@ const CounterForManager = () => {
                                 />
                             </Stack>
                         </Stack>
-                        <div style={{ width: '100%', height: '2px', backgroundColor: 'black' }}></div>
+                        <div style={{ width: '100%', height: '2px', backgroundColor: 'black' }} />
 
                         <TableForm
                             style={{ paddingLeft: '2%' }}
@@ -414,7 +394,7 @@ const CounterForManager = () => {
                             <Stack direction="row" width="100%" sx={{ marginRight: '2rem', backgroundColor: 'grey' }}>
                                 <Stack direction="column" width="100%">
                                     <Header handlePrint={handlePrint} />
-                                    <Dates invoiceDate={invoiceDate} dueDate={dueDate} />
+                                    <Dates invoiceDate={invoiceDate} />
                                 </Stack>
                                 <Stack direction="column" width="100%">
                                     <h1
@@ -472,7 +452,7 @@ const CounterForManager = () => {
                                     height: '1px',
                                     backgroundColor: 'grey',
                                 }}
-                            ></div>
+                            />
                             <Footer name={name} address={_currentUser.branch.address} email={email} phone={phone} />
                         </Stack>
                         <ReactToPrint
@@ -496,6 +476,6 @@ const CounterForManager = () => {
             <BigFooter />
         </Grid>
     );
-};
+}
 
 export default CounterForManager;

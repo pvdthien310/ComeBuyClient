@@ -1,6 +1,6 @@
-import { Stack, Typography } from '@mui/material';
+import { Typography } from '@mui/material';
 
-const MainDetails = ({ name, address, contact }) => {
+function MainDetails({ name, address, contact }) {
     return (
         <div
             style={{
@@ -37,5 +37,5 @@ const MainDetails = ({ name, address, contact }) => {
             </Typography>
         </div>
     );
-};
+}
 export default MainDetails;

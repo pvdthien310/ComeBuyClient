@@ -1,18 +1,12 @@
-import { Button, Typography } from '@mui/material';
+/* eslint-disable no-await-in-loop */
+import { Button, Typography, Grid, Stack, TextField } from '@mui/material';
 import { useLocation, useNavigate } from 'react-router-dom';
-import { Grid, Stack, TextField } from '@mui/material';
 import { useDispatch, useSelector } from 'react-redux';
-import { editProduct } from '../../../redux/slices/productSlice';
 import { memo, useEffect, useState } from 'react';
-import style from './style.js';
 import Box from '@mui/material/Box';
 import { Swiper, SwiperSlide } from 'swiper/react';
 import { Pagination } from 'swiper';
-import { featureListSelector } from '../../../redux/selectors';
-import { getAllFeature } from '../../../redux/slices/featureSlice';
-import SnackBarAlert from '../../../components/SnackBarAlert';
-import cloudinaryApi from '../../../api/cloudinaryAPI';
-//icon styles
+// icon styles
 import BallotIcon from '@mui/icons-material/Ballot';
 import MemoryIcon from '@mui/icons-material/Memory';
 import ScreenshotMonitorIcon from '@mui/icons-material/ScreenshotMonitor';
@@ -23,23 +17,27 @@ import ChromeReaderModeIcon from '@mui/icons-material/ChromeReaderMode';
 import Battery3BarIcon from '@mui/icons-material/Battery3Bar';
 import ScaleIcon from '@mui/icons-material/Scale';
 import DescriptionIcon from '@mui/icons-material/Description';
-import TextFieldForEdit from '../../../components/TextFieldForEdit';
 import GradientIcon from '@mui/icons-material/Gradient';
 import PriceChangeIcon from '@mui/icons-material/PriceChange';
 import LanguageIcon from '@mui/icons-material/Language';
 import AddModeratorIcon from '@mui/icons-material/AddModerator';
 import DriveFileRenameOutlineIcon from '@mui/icons-material/DriveFileRenameOutline';
 import CottageIcon from '@mui/icons-material/Cottage';
+import AddPhotoAlternateIcon from '@mui/icons-material/AddPhotoAlternate';
 import ImageForEditProduct from '../../../components/ImageForEditProduct';
 import FeatureSelect from '../../../components/FeatureSelect/index.js';
-import AddPhotoAlternateIcon from '@mui/icons-material/AddPhotoAlternate';
 import productImageAPI from '../../../api/productImageAPI';
 import PreviewImagesModal from '../../../components/PreviewImagesModal';
-import ImageNotSupportedIcon from '@mui/icons-material/ImageNotSupported';
-import { productAPI } from '../../../api';
-import { ConstructionOutlined } from '@mui/icons-material';
+import productAPI from '../../../api/productAPI';
+import TextFieldForEdit from '../../../components/TextFieldForEdit';
+import cloudinaryApi from '../../../api/cloudinaryAPI';
+import SnackBarAlert from '../../../components/SnackBarAlert';
+import { getAllFeature } from '../../../redux/slices/featureSlice';
+import { featureListSelector } from '../../../redux/selectors';
+import style from './style.js';
+import { editProduct } from '../../../redux/slices/productSlice';
 
-const EditProduct = () => {
+function EditProduct() {
     const location = useLocation();
     const product = location.state;
     const _featureList = useSelector(featureListSelector);
@@ -48,7 +46,7 @@ const EditProduct = () => {
     const [messageError, setMessageError] = useState('No Error');
     const [messageSuccess, setMessageSuccess] = useState('Notification');
     const [featureList, setFeatureList] = useState(_featureList); /// All of features
-    const [currentFeature, setCurrentFeature] = useState(product.feature.map((item) => item.name)); ///feature of current product
+    const [currentFeature, setCurrentFeature] = useState(product.feature.map((item) => item.name)); /// feature of current product
     const navigate = useNavigate();
     const dispatch = useDispatch();
 
@@ -83,11 +81,11 @@ const EditProduct = () => {
         if (e.target.files) {
             const listFile = [];
             for (let i = 0; i < e.target.files.length; i++) {
-                let reader = new FileReader();
+                const reader = new FileReader();
                 reader.readAsDataURL(e.target.files[i]);
                 reader.onloadend = () => {
                     listFile.push(reader.result);
-                    if (i == e.target.files.length - 1) SetPreviewSource(listFile);
+                    if (i === e.target.files.length - 1) SetPreviewSource(listFile);
                 };
             }
         }
@@ -175,13 +173,15 @@ const EditProduct = () => {
             case 'Year':
                 SetYear(event.target.value);
                 break;
+            default:
+                break;
         }
     };
 
     const deleteImage = (image) => {
         SetProductImages(
             productImages.filter((img) => {
-                if (img.productImageID != image.productImageID) return img;
+                if (img.productImageID !== image.productImageID);
             }),
         );
     };
@@ -195,99 +195,91 @@ const EditProduct = () => {
 
     const UpdateImages = async () => {
         const response = await productImageAPI.deleteImagesOfProduct(product.productID);
-        if (response != undefined && response.status == 200) {
-            const response_2 = await productImageAPI.addMany(
-                productImages.map((item) => {
-                    return Object.assign(item, { productid: product.productID });
-                }),
+        if (response !== undefined && response.status === 200) {
+            const response2 = await productImageAPI.addMany(
+                productImages.map((item) => Object.assign(item, { productid: product.productID })),
             );
-            return response_2.status == 200 ? true : false;
-        } else {
-            console.log('Error update images');
-            return false;
+            return response2.status === 200;
         }
+        console.log('Error update images');
+        return false;
     };
 
     const UpdateSpecifications = () => {
         const newProduct = {
             productID: product.productID,
-            ram: ram,
-            memory: memory,
-            gpu: gpu,
-            cpu: cpu,
-            name: name,
-            brand: brand,
-            description: description,
-            weight: weight,
-            origin: origin,
-            screenDimension: screenDimension,
-            colorCoverage: colorCoverage,
-            price: price,
-            externalIOPort: externalIOPort,
-            battery: battery,
-            warranty: warranty,
+            ram,
+            memory,
+            gpu,
+            cpu,
+            name,
+            brand,
+            description,
+            weight,
+            origin,
+            screenDimension,
+            colorCoverage,
+            price,
+            externalIOPort,
+            battery,
+            warranty,
             promotion: product.promotion,
-            year: year,
+            year,
         };
         dispatch(editProduct(newProduct))
             .unwrap()
-            .then((originalPromiseResult) => {
+            .then(() => {
                 setMessageSuccess('Edit Product Successfully');
                 setOpenSuccessAlert(true);
             })
-            .catch((rejectedValueOrSerializedError) => {
+            .catch(() => {
                 setMessageError('Edit Product Failed');
                 setOpenErrorAlert(true);
             });
     };
 
-    const ConvertToFeatureIDList = (_featureList) => {
-        const converted_List = currentFeature.map((value) => {
-            return featureList.filter((item) => item.name == value)[0].featureID;
-        });
-        return converted_List;
+    const ConvertToFeatureIDList = () => {
+        const convertedList = currentFeature.map(
+            (value) => featureList.filter((item) => item.name === value)[0].featureID,
+        );
+        return convertedList;
     };
 
     const UpdateFeature = async () => {
-        if (product.feature.length != currentFeature.length) {
+        if (product.feature.length !== currentFeature.length) {
             const response = await productAPI.deleteAndUpdate_Feature(
                 product.productID,
                 ConvertToFeatureIDList(currentFeature),
             );
-            if (response.status == 200) {
+            if (response.status === 200) {
                 console.log('Update Feature Successfully');
                 return true;
-            } else {
+            }
+            console.log('Update Feature Failed');
+            return false;
+        }
+        for (let i = 0; i < currentFeature.length; i++) {
+            if (currentFeature[i] !== product.feature[i]) {
+                const convertedList = ConvertToFeatureIDList(currentFeature);
+                const response = await productAPI.deleteAndUpdate_Feature(product.productID, convertedList);
+                if (response.status === 200) {
+                    console.log('Update Feature Successfully');
+                    return true;
+                }
                 console.log('Update Feature Failed');
                 return false;
             }
-        } else {
-            for (let i = 0; i < currentFeature.length; i++) {
-                if (currentFeature[i] != product.feature[i]) {
-                    const response = await productAPI.deleteAndUpdate_Feature(
-                        product.productID,
-                        ConvertToFeatureIDList(currentFeature),
-                    );
-                    if (response.status == 200) {
-                        console.log('Update Feature Successfully');
-                        return true;
-                    } else {
-                        console.log('Update Feature Failed');
-                        return false;
-                    }
-                }
-            }
-            return true;
         }
+        return true;
     };
 
     const SaveChange = async () => {
         let isCheck = true;
-        if (productImages.length == product.productimage.length && product.feature.length == currentFeature.length) {
+        if (productImages.length === product.productimage.length && product.feature.length === currentFeature.length) {
             for (let i = 0; i < productImages.length; i++) {
-                if (productImages[i] != product.productimage[i]) {
-                    ///// check status of updating images and features successfully or not
-                    //// Flow -> update images -> update feature -> update specification
+                if (productImages[i] !== product.productimage[i]) {
+                    /// // check status of updating images and features successfully or not
+                    /// / Flow -> update images -> update feature -> update specification
                     if (UpdateImages() && (await UpdateFeature())) {
                         isCheck = false;
                         UpdateSpecifications();
@@ -315,7 +307,7 @@ const EditProduct = () => {
                 setMessageSuccess('Load Feature Successfully');
                 setOpenSuccessAlert(true);
             })
-            .catch((rejectedValueOrSerializedError) => {
+            .catch(() => {
                 setMessageError('Load Feature Failed');
                 setOpenErrorAlert(true);
             });
@@ -356,13 +348,13 @@ const EditProduct = () => {
                     onSubmit={handleUploadImages}
                     onClose={() => SetOpenPreviewModal(false)}
                     images={previewSource}
-                ></PreviewImagesModal>
-                <Box sx={{ backgroundColor: '#8F8EBF', height: 5, width: '100%' }}></Box>
+                />
+                <Box sx={{ backgroundColor: '#8F8EBF', height: 5, width: '100%' }} />
                 <Typography variant="h6" fontWeight="bold">
                     Images
                 </Typography>
                 {productImages.length > 0 ? (
-                    <Swiper slidesPerView={1} modules={[Pagination]} spaceBetween={30} pagination={true}>
+                    <Swiper slidesPerView={1} modules={[Pagination]} spaceBetween={30} pagination>
                         {productImages.map((item, i) => (
                             <SwiperSlide key={i}>
                                 <ImageForEditProduct image={item} deleteImage={deleteImage} />
@@ -403,49 +395,49 @@ const EditProduct = () => {
                                 Title="Name"
                                 onChange={handleValueChange}
                             />
-                            <Box sx={style.boxinfor_Stack_Line}></Box>
+                            <Box sx={style.boxinfor_Stack_Line} />
                             <TextFieldForEdit
                                 Icon={<MemoryIcon />}
                                 Text={cpu}
                                 Title="CPU"
                                 onChange={handleValueChange}
                             />
-                            <Box sx={style.boxinfor_Stack_Line}></Box>
+                            <Box sx={style.boxinfor_Stack_Line} />
                             <TextFieldForEdit
                                 Icon={<ScreenshotMonitorIcon />}
                                 Text={screenDimension}
                                 Title="Screen Dimension (inch)"
                                 onChange={handleValueChange}
                             />
-                            <Box sx={style.boxinfor_Stack_Line}></Box>
+                            <Box sx={style.boxinfor_Stack_Line} />
                             <TextFieldForEdit
                                 Icon={<InventoryIcon />}
                                 Text={memory}
                                 Title="Store (SSD)"
                                 onChange={handleValueChange}
                             />
-                            <Box sx={style.boxinfor_Stack_Line}></Box>
+                            <Box sx={style.boxinfor_Stack_Line} />
                             <TextFieldForEdit
                                 Icon={<CableIcon />}
                                 Text={externalIOPort}
                                 Title="External IO Port"
                                 onChange={handleValueChange}
                             />
-                            <Box sx={style.boxinfor_Stack_Line}></Box>
+                            <Box sx={style.boxinfor_Stack_Line} />
                             <TextFieldForEdit
                                 Icon={<LanguageIcon />}
                                 Text={origin}
                                 Title="Origin"
                                 onChange={handleValueChange}
                             />
-                            <Box sx={style.boxinfor_Stack_Line}></Box>
+                            <Box sx={style.boxinfor_Stack_Line} />
                             <TextFieldForEdit
                                 Icon={<AddModeratorIcon />}
                                 Text={warranty}
                                 Title="Warranty"
                                 onChange={handleValueChange}
                             />
-                            <Box sx={style.boxinfor_Stack_Line}></Box>
+                            <Box sx={style.boxinfor_Stack_Line} />
                         </Stack>
                     </Grid>
                     <Grid item xs={6} paddingLeft={2}>
@@ -456,56 +448,56 @@ const EditProduct = () => {
                                 Title="Brand"
                                 onChange={handleValueChange}
                             />
-                            <Box sx={style.boxinfor_Stack_Line}></Box>
+                            <Box sx={style.boxinfor_Stack_Line} />
                             <TextFieldForEdit
                                 Icon={<AutofpsSelectIcon />}
                                 Text={ram}
                                 Title="RAM (GB)"
                                 onChange={handleValueChange}
                             />
-                            <Box sx={style.boxinfor_Stack_Line}></Box>
+                            <Box sx={style.boxinfor_Stack_Line} />
                             <TextFieldForEdit
                                 Icon={<ChromeReaderModeIcon />}
                                 Text={gpu}
                                 Title="GPU"
                                 onChange={handleValueChange}
                             />
-                            <Box sx={style.boxinfor_Stack_Line}></Box>
+                            <Box sx={style.boxinfor_Stack_Line} />
                             <TextFieldForEdit
                                 Icon={<Battery3BarIcon />}
                                 Text={battery}
                                 Title="Battery (Whr)"
                                 onChange={handleValueChange}
                             />
-                            <Box sx={style.boxinfor_Stack_Line}></Box>
+                            <Box sx={style.boxinfor_Stack_Line} />
                             <TextFieldForEdit
                                 Icon={<ScaleIcon />}
                                 Text={weight}
                                 Title="Weight (kg)"
                                 onChange={handleValueChange}
                             />
-                            <Box sx={style.boxinfor_Stack_Line}></Box>
+                            <Box sx={style.boxinfor_Stack_Line} />
                             <TextFieldForEdit
                                 Icon={<GradientIcon />}
                                 Text={colorCoverage}
                                 Title="Color Coverage (RGBs)"
                                 onChange={handleValueChange}
                             />
-                            <Box sx={style.boxinfor_Stack_Line}></Box>
+                            <Box sx={style.boxinfor_Stack_Line} />
                             <TextFieldForEdit
                                 Icon={<PriceChangeIcon />}
                                 Text={price}
                                 Title="Price (USD)"
                                 onChange={handleValueChange}
                             />
-                            <Box sx={style.boxinfor_Stack_Line}></Box>
+                            <Box sx={style.boxinfor_Stack_Line} />
                             <TextFieldForEdit
                                 Icon={<PriceChangeIcon />}
                                 Text={year}
                                 Title="Year"
                                 onChange={handleValueChange}
                             />
-                            <Box sx={style.boxinfor_Stack_Line}></Box>
+                            <Box sx={style.boxinfor_Stack_Line} />
                         </Stack>
                     </Grid>
                     <Grid item xs={12} paddingLeft={2} paddingTop={2}>
@@ -522,9 +514,9 @@ const EditProduct = () => {
                                 variant="standard"
                             />
                         </Stack>
-                        <Box item="true" sx={style.boxinfor_Stack_Line}></Box>
+                        <Box item="true" sx={style.boxinfor_Stack_Line} />
                     </Grid>
-                    <Grid item xs={12} paddingLeft={2} paddingTop={2}></Grid>
+                    <Grid item xs={12} paddingLeft={2} paddingTop={2} />
                 </Grid>
                 <Stack sx={{ width: '100%', justifyContent: 'center' }} direction="row" spacing={3}>
                     <Button sx={style.BackButton} variant="contained" onClick={() => navigate('/product')}>
@@ -546,6 +538,6 @@ const EditProduct = () => {
             <SnackBarAlert severity="error" open={openErrorAlert} handleClose={handleClose} message={messageError} />
         </Stack>
     );
-};
+}
 
 export default memo(EditProduct);

@@ -21,7 +21,7 @@ const ImgFeatureLine = styled('img')(({ theme }) => ({
     },
 }));
 
-const Container = styled(Grid)(({ theme }) => ({
+const Container = styled(Grid)(() => ({
     display: 'flex',
     height: 700,
     position: 'relative',
@@ -31,7 +31,7 @@ const Container = styled(Grid)(({ theme }) => ({
     backgroundColor: 'white',
 }));
 
-const Text = styled(Typography)(({ theme }) => ({
+const Text = styled(Typography)(() => ({
     color: 'black',
     zIndex: '3',
     height: 'auto',
@@ -45,17 +45,8 @@ const Text = styled(Typography)(({ theme }) => ({
     display: 'flex',
     wordWrap: 'break-word',
 }));
-const SmallText = styled(Typography)(({ theme }) => ({
-    color: 'coral',
-    zIndex: '3',
-    height: 100,
-    width: 150,
-    fontSize: '20px',
-    fontWeight: 'bold',
-    wordWrap: 'break-word',
-}));
 
-const CustomButton = styled(Button)(({ theme }) => ({
+const CustomButton = styled(Button)(() => ({
     variant: 'outlined',
     color: 'black',
     zIndex: '3',
@@ -69,7 +60,7 @@ const CustomButton = styled(Button)(({ theme }) => ({
 export default function BrandLineImage(props) {
     return (
         <Container>
-            <ImgFeatureLine src={props.urlImage}></ImgFeatureLine>
+            <ImgFeatureLine src={props.urlImage} />
             <Text>{props.BigText}</Text>
             <CustomButton endIcon={<ArrowRightIcon />}>See More</CustomButton>
         </Container>

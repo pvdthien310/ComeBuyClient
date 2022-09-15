@@ -1,3 +1,4 @@
+/* eslint-disable react/require-default-props */
 import * as React from 'react';
 import PropTypes from 'prop-types';
 import { styled } from '@mui/material/styles';
@@ -6,13 +7,10 @@ import Stepper from '@mui/material/Stepper';
 import Step from '@mui/material/Step';
 import StepLabel from '@mui/material/StepLabel';
 import Check from '@mui/icons-material/Check';
-import SettingsIcon from '@mui/icons-material/Settings';
-import GroupAddIcon from '@mui/icons-material/GroupAdd';
-import VideoLabelIcon from '@mui/icons-material/VideoLabel';
 import StepConnector, { stepConnectorClasses } from '@mui/material/StepConnector';
 import { Avatar } from '@mui/material';
 import { useSelector } from 'react-redux';
-import { currentUser } from './../../redux/selectors';
+import { currentUser } from '../../redux/selectors';
 
 const QontoStepIconRoot = styled('div')(({ theme, ownerState }) => ({
     color: theme.palette.mode === 'dark' ? theme.palette.grey[700] : '#797C8C',
@@ -152,7 +150,7 @@ ColorlibStepIcon.propTypes = {
 
 const steps = ['Rare member', 'Silver member', 'Golden member', 'Diamond member'];
 
-const MemberShipStepper = () => {
+function MemberShipStepper() {
     const _currentUser = useSelector(currentUser);
 
     const [activeStep, setActiveStep] = React.useState(0);
@@ -186,5 +184,5 @@ const MemberShipStepper = () => {
             </Stepper>
         </Stack>
     );
-};
+}
 export default MemberShipStepper;

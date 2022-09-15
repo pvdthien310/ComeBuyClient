@@ -1,21 +1,31 @@
+/* eslint-disable react/jsx-props-no-spreading */
+/* eslint-disable indent */
+/* eslint-disable function-paren-newline */
+/* eslint-disable no-confusing-arrow */
+/* eslint-disable implicit-arrow-linebreak */
+/* eslint-disable no-use-before-define */
+/* eslint-disable no-shadow */
+/* eslint-disable react/jsx-one-expression-per-line */
+/* eslint-disable jsx-a11y/alt-text */
+/* eslint-disable operator-linebreak */
+/* eslint-disable no-unused-vars */
+/* eslint-disable jsx-a11y/anchor-is-valid */
+/* eslint-disable no-nested-ternary */
+/* eslint-disable camelcase */
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router';
 import { useDispatch, useSelector } from 'react-redux';
 
-import Box from '@mui/material/Box';
-import Paper from '@mui/material/Paper';
 import Grid from '@mui/material/Grid';
-import { Button, Stack, Typography, Link, Breadcrumbs, TextField } from '@mui/material';
+import { Button, Stack, Typography, Link, Breadcrumbs, TextField, Avatar, Slide } from '@mui/material';
 import InputLabel from '@mui/material/InputLabel';
 import MenuItem from '@mui/material/MenuItem';
 import FormControl from '@mui/material/FormControl';
 import Select from '@mui/material/Select';
-import { Avatar } from '@mui/material';
 import Snackbar from '@mui/material/Snackbar';
 import MuiAlert from '@mui/material/Alert';
 import DiamondIcon from '@mui/icons-material/Diamond';
 import Radio from '@mui/material/Radio';
-import { Slide } from '@mui/material';
 import Dialog from '@mui/material/Dialog';
 import DialogActions from '@mui/material/DialogActions';
 import DialogContent from '@mui/material/DialogContent';
@@ -23,29 +33,22 @@ import DialogContentText from '@mui/material/DialogContentText';
 import DialogTitle from '@mui/material/DialogTitle';
 import Backdrop from '@mui/material/Backdrop';
 import CircularProgress from '@mui/material/CircularProgress';
-
-import Paypal from './../../components/Paypal/index';
-import { CheckEmail, CheckPhoneNumber } from './../LoginAndRegister/ValidationDataForAccount';
+import { unwrapResult } from '@reduxjs/toolkit';
+import moment from 'moment';
+import Paypal from '../../components/Paypal/index';
+import { CheckEmail, CheckPhoneNumber } from '../LoginAndRegister/ValidationDataForAccount';
 import { isSignedIn_user, currentUser, cartListSelector } from '../../redux/selectors';
 import { deleteCartById, getAllCart } from '../../redux/slices/cartSlice';
-import { unwrapResult } from '@reduxjs/toolkit';
-import { getAllProduct, getProductWithID } from '../../redux/slices/productSlice';
+import { getProductWithID } from '../../redux/slices/productSlice';
 import { accountSlice } from '../../redux/slices/accountSlice';
-import moment from 'moment';
 import { addInvoice } from '../../redux/slices/invoiceSlice';
 import { addInvoiceItem } from '../../redux/slices/invoiceItemSlice';
 import emailApi from '../../api/emailAPI';
 
-import logo from '../../assets/img/logoremovebg.png';
+const Alert = React.forwardRef((props, ref) => <MuiAlert elevation={6} ref={ref} variant="filled" {...props} />);
+const Transition = React.forwardRef((props, ref) => <Slide direction="up" ref={ref} {...props} />);
 
-const Alert = React.forwardRef(function Alert(props, ref) {
-    return <MuiAlert elevation={6} ref={ref} variant="filled" {...props} />;
-});
-const Transition = React.forwardRef(function Transition(props, ref) {
-    return <Slide direction="up" ref={ref} {...props} />;
-});
-
-export const CheckoutPage = () => {
+function CheckoutPage() {
     const navigate = useNavigate();
     const dispatch = useDispatch();
     const isSignedIn = useSelector(isSignedIn_user);
@@ -77,12 +80,77 @@ export const CheckoutPage = () => {
         }
     };
 
+    const MakePurchaseUnit = async (listCart, listProd) => {
+        if (localStorage.getItem('role') === 'customer') {
+            const sample = [];
+            let unitAmountObj = {
+                currency_code: 'USD',
+                value: ' ', // price
+            };
+
+            for (let i = 0; i < listCart.length; i++) {
+                for (let j = 0; j < listProd.length; j++) {
+                    if (listProd[j].productID === listCart[i].productid) {
+                        // amountObj = {
+                        //     ...amountObj,
+                        //     value: (Number(listCart[i].amount) * Number(listProd[j].price)) - Number(listCart[i].amount) * Number(listProd[j].price) * discount / 100
+                        // }
+                        unitAmountObj = {
+                            ...unitAmountObj,
+                            value: Number(listProd[j].price),
+                        };
+                        const temp = {
+                            name: listProd[j].name,
+                            unit_amount: unitAmountObj,
+                            quantity: listCart[i].amount,
+                        };
+                        sample.push(temp);
+                    }
+                }
+            }
+            setPurchaseUnits(...purchaseUnits, sample);
+        } else {
+            const sample = [];
+            let unitAmountObj = {
+                currency_code: 'USD',
+                value: ' ', // price
+            };
+
+            for (let i = 0; i < listCart.length; i++) {
+                for (let j = 0; j < listProd.length; j++) {
+                    if (listProd[j].productID === listCart[i].productid) {
+                        unitAmountObj = {
+                            ...unitAmountObj,
+                            value: Number(listProd[j].price),
+                        };
+                        const temp = {
+                            name: listProd[j].name,
+                            unit_amount: unitAmountObj,
+                            quantity: listCart[i].amount,
+                        };
+                        sample.push(temp);
+                    }
+                }
+            }
+            setPurchaseUnits(...purchaseUnits, sample);
+        }
+    };
+
+    const CountSubTotal = async (_cart, prList) => {
+        let newTotal = 0;
+        await _cart.map((item) => {
+            const rs = prList.find((ite) => ite.productID === item.productid);
+            if (rs !== undefined) newTotal += Number(Number(rs.price) * Number(item.amount));
+        });
+        setSubTotal(newTotal);
+    };
+
     useEffect(() => {
         const fetchYourCart = async () => {
             if (localStorage.getItem('role') === 'customer') {
                 let temp = [];
-                let listCart = [];
-                let listProd = [];
+                const listCart = [];
+                const listProd = [];
                 try {
                     const resultAction = await dispatch(getAllCart());
                     const originalPromiseResult = unwrapResult(resultAction);
@@ -103,11 +171,11 @@ export const CheckoutPage = () => {
                     alert(rejectedValueOrSerializedError);
                 }
             } else {
-                let temp = _guestCart;
-                let listCart = [];
-                let listProd = [];
+                const temp = _guestCart;
+                const listCart = [];
+                const listProd = [];
                 for (let i = 0; i < temp.length; i++) {
-                    if (temp.productid != 'undefined') {
+                    if (temp.productid !== 'undefined') {
                         listCart.push(temp[i]);
                         const resultAction2 = await dispatch(getProductWithID(temp[i].productid));
                         const originalPromiseResult2 = unwrapResult(resultAction2);
@@ -150,68 +218,12 @@ export const CheckoutPage = () => {
 
     const [purchaseUnits, setPurchaseUnits] = useState([]);
 
-    const MakePurchaseUnit = async (listCart, listProd) => {
-        if (localStorage.getItem('role') === 'customer') {
-            let sample = [];
-            let unitAmountObj = {
-                currency_code: 'USD',
-                value: ' ', //price
-            };
-
-            for (let i = 0; i < listCart.length; i++) {
-                for (let j = 0; j < listProd.length; j++) {
-                    if (listProd[j].productID === listCart[i].productid) {
-                        // amountObj = {
-                        //     ...amountObj,
-                        //     value: (Number(listCart[i].amount) * Number(listProd[j].price)) - Number(listCart[i].amount) * Number(listProd[j].price) * discount / 100
-                        // }
-                        unitAmountObj = {
-                            ...unitAmountObj,
-                            value: Number(listProd[j].price),
-                        };
-                        let temp = {
-                            name: listProd[j].name,
-                            unit_amount: unitAmountObj,
-                            quantity: listCart[i].amount,
-                        };
-                        sample.push(temp);
-                    }
-                }
-            }
-            setPurchaseUnits(...purchaseUnits, sample);
-        } else {
-            let sample = [];
-            let unitAmountObj = {
-                currency_code: 'USD',
-                value: ' ', //price
-            };
-
-            for (let i = 0; i < listCart.length; i++) {
-                for (let j = 0; j < listProd.length; j++) {
-                    if (listProd[j].productID === listCart[i].productid) {
-                        unitAmountObj = {
-                            ...unitAmountObj,
-                            value: Number(listProd[j].price),
-                        };
-                        let temp = {
-                            name: listProd[j].name,
-                            unit_amount: unitAmountObj,
-                            quantity: listCart[i].amount,
-                        };
-                        sample.push(temp);
-                    }
-                }
-            }
-            setPurchaseUnits(...purchaseUnits, sample);
-        }
-    };
-
     const [subTotal, setSubTotal] = useState(0);
     const CountTotal = async (_cart, prList) => {
         let newTotal = 0;
         await _cart.map((item) => {
-            let rs = prList.find((ite) => ite.productID == item.productid);
-            if (rs != undefined) newTotal = newTotal + Number(Number(rs.price) * Number(item.amount));
+            const rs = prList.find((ite) => ite.productID === item.productid);
+            if (rs !== undefined) newTotal += Number(Number(rs.price) * Number(item.amount));
         });
         // let t = newTotal - (newTotal * discount) / 100
         // let t2 = t + 2
@@ -221,16 +233,7 @@ export const CheckoutPage = () => {
         setSubTotal(newTotal);
     };
 
-    const CountSubTotal = async (_cart, prList) => {
-        let newTotal = 0;
-        await _cart.map((item) => {
-            let rs = prList.find((ite) => ite.productID == item.productid);
-            if (rs != undefined) newTotal = newTotal + Number(Number(rs.price) * Number(item.amount));
-        });
-        setSubTotal(newTotal);
-    };
-
-    //for snackbar
+    // for snackbar
     const [openSnackbar, setOpenSnackbar] = useState(false);
     const handleCloseSnackbar = (event, reason) => {
         if (reason === 'clickaway') {
@@ -240,7 +243,7 @@ export const CheckoutPage = () => {
         setOpenSnackbar(false);
     };
 
-    //for snackbar 2
+    // for snackbar 2
     const [openSnackbar2, setOpenSnackbar2] = useState(false);
     const handleCloseSnackbar2 = (event, reason) => {
         if (reason === 'clickaway') {
@@ -250,31 +253,27 @@ export const CheckoutPage = () => {
         setOpenSnackbar2(false);
     };
 
-    //for customer is member
+    // for customer is member
     const _currentUser = useSelector(currentUser);
     const [name, setName] = useState(_currentUser.name);
     const [phoneNumber, setPhoneNumber] = useState(_currentUser.phoneNumber);
 
-    //for guest
+    // for guest
     const [guestName, setGuestName] = useState('');
     const [guestPhoneNum, setGuestPhoneNum] = useState('');
     const [email, setEmail] = useState('');
-
-    //general information
+    // general information
     const [addressShip, setAddressShip] = useState('');
-
     const [province, setProvince] = useState({});
     const [provinceList, setProvinceList] = useState([]);
-
     const [district, setDistrict] = useState({});
     const [districtList, setDistrictList] = useState([]);
-
     const [commune, setCommune] = useState({});
     const [communeList, setCommuneList] = useState([]);
-
     const [bigAddress, setBigAddress] = useState('');
+    const [invoiceId, setInvoiceId] = useState(' ');
 
-    //get province
+    // get province
     useEffect(() => {
         const getProvinceList = async () => {
             const resProvince = await fetch('https://sheltered-anchorage-60344.herokuapp.com/province');
@@ -284,10 +283,10 @@ export const CheckoutPage = () => {
         getProvinceList();
     }, []);
 
-    function handleChangeProvince(event) {
+    const handleChangeProvince = (event) => {
         setProvince(event.target.value);
-    }
-    //get district
+    };
+    // get district
     useEffect(() => {
         const getDistrict = async () => {
             const resDistrict = await fetch(
@@ -299,11 +298,11 @@ export const CheckoutPage = () => {
         getDistrict();
     }, [province]);
 
-    function handleChangeDistrict(event) {
+    const handleChangeDistrict = (event) => {
         setDistrict(event.target.value);
-    }
+    };
 
-    //get commune
+    // get commune
     useEffect(() => {
         const getCommune = async () => {
             const reCommune = await fetch(
@@ -315,18 +314,18 @@ export const CheckoutPage = () => {
         getCommune();
     }, [district]);
 
-    async function handleChangeCommune(event) {
+    const handleChangeCommune = (event) => {
         setCommune(event.target.value);
-    }
+    };
 
-    function handleClickToCart(event) {
+    const handleClickToCart = (event) => {
         event.preventDefault();
         if (localStorage.getItem('role') === 'customer') {
             navigate('/myplace/mycart');
         } else {
             navigate('/guestCart');
         }
-    }
+    };
 
     const handleLogOut = () => {
         dispatch(accountSlice.actions.logout());
@@ -343,16 +342,14 @@ export const CheckoutPage = () => {
     const handleToPayment = async () => {
         if (name === '' || phoneNumber === '' || addressShip === '') {
             setOpenSnackbar(true);
+        } else if (province === null || (district === null && commune === null)) {
+            setOpenSnackbar(true);
         } else {
-            if (province === null || (district === null && commune === null)) {
-                setOpenSnackbar(true);
-            } else {
-                const temp = addressShip + ', ' + commune.name + ', ' + district.name + ', ' + province.name;
-                setBigAddress(temp);
-                setOpenPaymentMethodScreen(true);
-                // await MakePurchaseUnit()
-                // console.log(purchaseUnits)
-            }
+            const temp = `${addressShip}, ${commune.name}, ${district.name}, ${province.name}`;
+            setBigAddress(temp);
+            setOpenPaymentMethodScreen(true);
+            // await MakePurchaseUnit()
+            // console.log(purchaseUnits)
         }
     };
 
@@ -377,8 +374,7 @@ export const CheckoutPage = () => {
         if (localStorage.getItem('role') === 'customer') {
             for (let i = 0; i < listCart.length; i++) {
                 try {
-                    const resultAction = await dispatch(deleteCartById(listCart[i]));
-                    const originalPromiseResult = unwrapResult(resultAction);
+                    await dispatch(deleteCartById(listCart[i]));
                 } catch (rejectedValueOrSerializedError) {
                     alert(rejectedValueOrSerializedError);
                 }
@@ -390,23 +386,15 @@ export const CheckoutPage = () => {
         setPlacedOrderSuccessfully(true);
     };
 
-    const handleAgreeCOD = () => {
-        setOpenBackdrop(true);
-        MakeInvoice();
-    };
-
-    const [invoiceId, setInvoiceId] = useState(' ');
-
     const MakeInvoice = async () => {
-        var m = moment().format('H mm');
-        var date = moment().format('D/M/YYYY');
-        let tempID = '';
+        const m = moment().format('H mm');
+        const date = moment().format('D/M/YYYY');
         if (localStorage.getItem('role') === 'customer') {
-            let temp = {
+            const temp = {
                 moneyReceived: '0',
                 isChecked: false,
                 isPaid: false,
-                date: date + ' ' + m,
+                date: `${date} ${m}`,
                 address: bigAddress,
                 userID: _currentUser.userID,
                 branchID: 'a4a66b5e-182b-4b7d-bd13-8e6a54b686a6',
@@ -420,11 +408,11 @@ export const CheckoutPage = () => {
                 alert(rejectedValueOrSerializedError);
             }
         } else {
-            let temp = {
+            const temp = {
                 moneyReceived: '0',
                 isChecked: false,
                 isPaid: false,
-                date: date + ' ' + m,
+                date: `${date} ${m}`,
                 address: bigAddress,
                 userID: 'c464ea83-fcf5-44a4-8d90-f41b78b78db8',
                 branchID: 'a4a66b5e-182b-4b7d-bd13-8e6a54b686a6',
@@ -440,37 +428,40 @@ export const CheckoutPage = () => {
         }
     };
 
-    useEffect(async () => {
-        if (invoiceId != ' ') {
-            _addInvoiceItem(invoiceId);
-        }
-    }, [invoiceId]);
+    const handleAgreeCOD = () => {
+        setOpenBackdrop(true);
+        MakeInvoice();
+    };
 
-    const _addInvoiceItem = async (_invoiceId) => {
+    const addInvoiceItem1 = async (_invoiceId) => {
         let stringOrder = '';
         for (let i = 0; i < listCart.length; i++) {
             for (let j = 0; j < listProd.length; j++) {
                 if (listCart[i].productid === listProd[j].productID) {
-                    let item = {
+                    const item = {
                         invoiceID: _invoiceId,
                         productID: listProd[j].productID,
                         amount: listCart[i].amount,
                         total: Number(listCart[i].amount) * Number(listProd[j].price),
                     };
                     stringOrder =
-                        stringOrder +
-                        '\n' +
+                        `${stringOrder}\n` +
                         `${listProd[j].name} - Quantity: ${listCart[i].amount} - Sub-cost: $${item.total} `;
                     // t.push(item)
                     try {
-                        const resultAction = await dispatch(addInvoiceItem(item));
-                        const originalPromiseResult = unwrapResult(resultAction);
+                        await dispatch(addInvoiceItem(item));
                     } catch (rejectedValueOrSerializedError) {
                         console.log(rejectedValueOrSerializedError);
                     }
                 }
             }
         }
+
+        useEffect(async () => {
+            if (invoiceId !== ' ') {
+                await addInvoiceItem1(invoiceId);
+            }
+        }, [invoiceId]);
 
         if (localStorage.getItem('role') === 'customer') {
             emailApi
@@ -484,16 +475,14 @@ export const CheckoutPage = () => {
                         `Phone: ${_currentUser.phoneNumber} \n` +
                         `COD Address: ${bigAddress}` +
                         '\n' +
-                        '-------------------------------------------------------- \n' +
-                        stringOrder +
-                        '\n' +
+                        `-------------------------------------------------------- \n${stringOrder}\n` +
                         '-------------------------------------------------------- \n' +
                         `Total: ${subTotal} USD` +
                         '\n' +
                         '-------------------------------------------------------- \n' +
                         'Any wondered things ? Please contact with our shop with contact below site: ComeBuy.com',
                 })
-                .then((data) => {
+                .then(() => {
                     handleCloseBackdrop();
                 })
                 .catch((err) => console.log(err));
@@ -509,35 +498,17 @@ export const CheckoutPage = () => {
                         `Phone: ${guestPhoneNum} \n` +
                         `COD Address: ${bigAddress}` +
                         '\n' +
-                        '-------------------------------------------------------- \n' +
-                        stringOrder +
-                        '\n' +
+                        `-------------------------------------------------------- \n${stringOrder}\n` +
                         '-------------------------------------------------------- \n' +
                         `Total: ${subTotal} USD` +
                         '\n' +
                         '-------------------------------------------------------- \n' +
                         'Any wondered things. Please contact with our shop with contact below site: ComeBuy.com',
                 })
-                .then((data) => {
+                .then(() => {
                     handleCloseBackdrop();
                 })
                 .catch((err) => console.log(err));
-        }
-    };
-
-    const handlePaymentGuest = () => {
-        if (guestName === '' || guestPhoneNum === '' || addressShip === '' || email === '') {
-            setOpenSnackbar(true);
-        } else {
-            if (province != null && district != null && commune != null) {
-                setOpenSnackbar(true);
-            } else {
-                if (CheckEmail(email) && CheckPhoneNumber(guestPhoneNum)) {
-                    alert('Move to payment method');
-                } else {
-                    setOpenSnackbar2(true);
-                }
-            }
         }
     };
 
@@ -806,7 +777,7 @@ export const CheckoutPage = () => {
                                 </Stack>
                                 {openPayOnline ? (
                                     <>
-                                        <hr style={{ height: '1px', width: '100%', backgroundColor: 'black' }}></hr>
+                                        <hr style={{ height: '1px', width: '100%', backgroundColor: 'black' }} />
                                         <Typography
                                             sx={{
                                                 textAlign: 'center',
@@ -997,7 +968,7 @@ export const CheckoutPage = () => {
                             <TextField
                                 fullWidth
                                 id="outlined-basic"
-                                label={_currentUser.name != '' ? null : 'Full name'}
+                                label={_currentUser.name !== '' ? null : 'Full name'}
                                 variant="outlined"
                                 sx={{
                                     color: '#333333',
@@ -1010,7 +981,7 @@ export const CheckoutPage = () => {
                             <TextField
                                 fullWidth
                                 id="outlined-basic"
-                                label={_currentUser.phoneNumber != '' ? null : 'Phone number'}
+                                label={_currentUser.phoneNumber !== '' ? null : 'Phone number'}
                                 variant="outlined"
                                 value={phoneNumber}
                                 onChange={(e) => setPhoneNumber(e.target.value)}
@@ -1413,7 +1384,7 @@ export const CheckoutPage = () => {
                                 )}
                             </Stack>
                         ))}
-                        <div style={{ height: '1px', width: '100%', backgroundColor: '#BFBFBF' }}></div>
+                        <div style={{ height: '1px', width: '100%', backgroundColor: '#BFBFBF' }} />
                         <Grid container width="100%" spacing={1}>
                             <Grid item xs={8.5}>
                                 <TextField
@@ -1443,7 +1414,7 @@ export const CheckoutPage = () => {
                                 </Button>
                             </Grid>
                         </Grid>
-                        <div style={{ height: '1px', width: '100%', backgroundColor: '#BFBFBF' }}></div>
+                        <div style={{ height: '1px', width: '100%', backgroundColor: '#BFBFBF' }} />
                         <Stack direction="column" width="100%">
                             <Typography
                                 sx={{
@@ -1464,7 +1435,7 @@ export const CheckoutPage = () => {
                                             fontWeight: 'bold',
                                         }}
                                     >
-                                        {typeCus} - {_currentUser.score} point(s)
+                                        {typeCus} -{_currentUser.score} point(s)
                                     </Typography>
                                 </>
                                 <Typography
@@ -1478,7 +1449,7 @@ export const CheckoutPage = () => {
                                 </Typography>
                             </Stack>
                         </Stack>
-                        <div style={{ height: '1px', width: '100%', backgroundColor: '#BFBFBF' }}></div>
+                        <div style={{ height: '1px', width: '100%', backgroundColor: '#BFBFBF' }} />
                         <Stack direction="row" width="100%" justifyContent="space-between">
                             <Typography sx={{ marginTop: '1.2em', color: 'gray' }}>Temporary cost</Typography>
                             <Typography
@@ -1503,7 +1474,7 @@ export const CheckoutPage = () => {
                                 $2.00
                             </Typography>
                         </Stack>
-                        <div style={{ height: '1px', width: '100%', backgroundColor: '#BFBFBF' }}></div>
+                        <div style={{ height: '1px', width: '100%', backgroundColor: '#BFBFBF' }} />
 
                         <Stack direction="row" width="100%" justifyContent="space-between">
                             <Typography sx={{ color: 'gray', marginTop: '1.2em' }}>Total cost</Typography>
@@ -1571,7 +1542,7 @@ export const CheckoutPage = () => {
                                 )}
                             </Stack>
                         ))}
-                        <div style={{ height: '1px', width: '100%', backgroundColor: '#BFBFBF' }}></div>
+                        <div style={{ height: '1px', width: '100%', backgroundColor: '#BFBFBF' }} />
                         <Grid container width="100%" spacing={1}>
                             <Grid item xs={8.5}>
                                 <TextField
@@ -1601,7 +1572,7 @@ export const CheckoutPage = () => {
                                 </Button>
                             </Grid>
                         </Grid>
-                        <div style={{ height: '1px', width: '100%', backgroundColor: '#BFBFBF' }}></div>
+                        <div style={{ height: '1px', width: '100%', backgroundColor: '#BFBFBF' }} />
                         <Stack direction="column" width="100%">
                             <Typography
                                 sx={{
@@ -1626,7 +1597,7 @@ export const CheckoutPage = () => {
                                 </Typography>
                             </Stack>
                         </Stack>
-                        <div style={{ height: '1px', width: '100%', backgroundColor: '#BFBFBF' }}></div>
+                        <div style={{ height: '1px', width: '100%', backgroundColor: '#BFBFBF' }} />
                         <Stack direction="row" width="100%" justifyContent="space-between">
                             <Typography sx={{ marginTop: '1.2em', color: 'gray' }}>Temporary cost</Typography>
                             <Typography
@@ -1651,7 +1622,7 @@ export const CheckoutPage = () => {
                                 $2.00
                             </Typography>
                         </Stack>
-                        <div style={{ height: '1px', width: '100%', backgroundColor: '#BFBFBF' }}></div>
+                        <div style={{ height: '1px', width: '100%', backgroundColor: '#BFBFBF' }} />
 
                         <Stack direction="row" width="100%" justifyContent="space-between">
                             <Typography sx={{ color: 'gray', marginTop: '1.2em' }}>Total cost</Typography>
@@ -1695,7 +1666,7 @@ export const CheckoutPage = () => {
                 keepMounted
                 aria-describedby="alert-dialog-slide-description"
             >
-                <DialogTitle>{'Please check these information below carefully before placing an order'}</DialogTitle>
+                <DialogTitle>Please check these information below carefully before placing an order</DialogTitle>
                 <DialogContent>
                     {localStorage.getItem('role') === 'customer' ? (
                         <DialogContentText id="alert-dialog-slide-description">
@@ -1756,4 +1727,6 @@ export const CheckoutPage = () => {
             </Backdrop>
         </Grid>
     );
-};
+}
+
+export default CheckoutPage;

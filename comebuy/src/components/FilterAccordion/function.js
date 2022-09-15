@@ -50,17 +50,17 @@ const SplitFeatureFromList = async (
     setBrand({ loading: true, option: features.brandOptions });
     // cpu
     setGPU({ loading: true, option: features.gpuOptions });
-    //ram
+    // ram
     setRAM({ loading: true, option: features.ramOptions });
-    //screen dimension
+    // screen dimension
     setScreenDimension({ loading: true, option: features.SDOptions });
-    //weight
+    // weight
     setWeight({ loading: true, option: features.weightOptions });
-    //memory
+    // memory
     setMemory({ loading: true, option: features.memoryOptions });
     // year
     setYear({ loading: true, option: features.yearOptions });
     return true;
 };
 
-export { SplitFeatureFromList };
+export default SplitFeatureFromList;

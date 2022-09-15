@@ -1,41 +1,26 @@
+/* eslint-disable indent */
 import * as React from 'react';
 import { useDispatch } from 'react-redux';
-import { getAllInvoice } from '../../redux/slices/invoiceSlice';
 import { unwrapResult } from '@reduxjs/toolkit';
-import Row from '../../components/InvoiceRow';
-
 import Table from '@mui/material/Table';
 import TableBody from '@mui/material/TableBody';
 import TableCell from '@mui/material/TableCell';
 import TableContainer from '@mui/material/TableContainer';
 import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
-import Typography from '@mui/material/Typography';
-import NavigationIcon from '@mui/icons-material/Navigation';
-import TablePagination from '@mui/material/TablePagination';
-import Paper from '@mui/material/Paper';
-import { styled } from '@mui/material/styles';
-import { Stack, Box, IconButton } from '@mui/material';
-import AccountCircleIcon from '@mui/icons-material/AccountCircle';
-import { TextField } from '@mui/material';
+import { Stack, Box, IconButton, TextField, Button, Paper, TablePagination } from '@mui/material';
 import SpeedDial from '@mui/material/SpeedDial';
 import SpeedDialIcon from '@mui/material/SpeedDialIcon';
 import SpeedDialAction from '@mui/material/SpeedDialAction';
 import SearchIcon from '@mui/icons-material/Search';
-import { Button } from '@mui/material';
 import RefreshIcon from '@mui/icons-material/Refresh';
-import SnackBarAlert from './../../components/SnackBarAlert/index';
-
 import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 import RemoveDoneIcon from '@mui/icons-material/RemoveDone';
 import SortIcon from '@mui/icons-material/Sort';
 import FilterListIcon from '@mui/icons-material/FilterList';
-
-const BGImg = styled('img')({
-    height: '100%',
-    width: '100%',
-    position: 'fixed',
-});
+import SnackBarAlert from '../../components/SnackBarAlert/index';
+import Row from '../../components/InvoiceRow';
+import { getAllInvoice } from '../../redux/slices/invoiceSlice';
 
 const actions = [
     { icon: <CheckCircleIcon />, name: 'Show done orders' },
@@ -44,12 +29,12 @@ const actions = [
     { icon: <FilterListIcon />, name: 'Show decreased orders' },
 ];
 
-const Invoice = () => {
+function Invoice() {
     const [invoiceList, setInvoiceList] = React.useState([]);
 
     const dispatch = useDispatch();
 
-    //for paginating
+    // for paginating
     const [page, setPage] = React.useState(0);
     const [rowsPerPage, setRowsPerPage] = React.useState(10);
     const handleChangePage = (event, newPage) => {
@@ -62,18 +47,17 @@ const Invoice = () => {
 
     React.useEffect(() => {
         async function fetchInvoice() {
-            let temp = [];
             if (invoiceList.length === 0) {
                 try {
                     const resultAction = await dispatch(getAllInvoice());
                     const originalPromiseResult = unwrapResult(resultAction);
-                    let tempList = [];
+                    const tempList = [];
                     originalPromiseResult.map((invoice) => {
                         let t = 0;
                         invoice.invoiceitem.map((i) => {
-                            t = t + Number(i.total);
+                            t += Number(i.total);
                         });
-                        let obj = {
+                        const obj = {
                             ...invoice,
                             total: t,
                         };
@@ -95,14 +79,14 @@ const Invoice = () => {
     const [toDate, setToDate] = React.useState('');
 
     const makeDate = (ostr) => {
-        let index = ostr.indexOf(' ', 0);
-        let str = ostr.slice(0, index);
-        let i1 = str.indexOf('/', 0);
-        let i2 = str.indexOf('/', i1 + 1);
-        let day = str.slice(0, i1);
-        let month = str.slice(i1 + 1, i2);
-        let year = str.slice(i2 + 1, str.length);
-        let here = new Date(year + '-' + month + '-' + day);
+        const index = ostr.indexOf(' ', 0);
+        const str = ostr.slice(0, index);
+        const i1 = str.indexOf('/', 0);
+        const i2 = str.indexOf('/', i1 + 1);
+        const day = str.slice(0, i1);
+        const month = str.slice(i1 + 1, i2);
+        const year = str.slice(i2 + 1, str.length);
+        const here = new Date(`${year}-${month}-${day}`);
         return here;
     };
 
@@ -114,29 +98,25 @@ const Invoice = () => {
     const handleCloseSnackbar = () => setOpenSnackbar(false);
 
     const handleSearch = () => {
-        let temp = [];
+        const temp = [];
         if (new Date(fromDate) > new Date(toDate)) {
             setOpenSnackbar(true);
         } else {
             invoiceList.map((i) => {
-                if (fromDate != '') {
-                    if (toDate != '') {
+                if (fromDate !== '') {
+                    if (toDate !== '') {
                         if (makeDate(i.date) >= new Date(fromDate) && makeDate(i.date) <= new Date(toDate)) {
                             temp.push(i);
                         }
-                    } else {
-                        if (makeDate(i.date) >= new Date(fromDate)) {
-                            temp.push(i);
-                        }
+                    } else if (makeDate(i.date) >= new Date(fromDate)) {
+                        temp.push(i);
+                    }
+                } else if (toDate !== '') {
+                    if (makeDate(i.date) <= new Date(toDate)) {
+                        temp.push(i);
                     }
                 } else {
-                    if (toDate != '') {
-                        if (makeDate(i.date) <= new Date(toDate)) {
-                            temp.push(i);
-                        }
-                    } else {
-                        setChangeDataBySearch(false);
-                    }
+                    setChangeDataBySearch(false);
                 }
             });
             setOutput(temp);
@@ -152,7 +132,7 @@ const Invoice = () => {
 
     const handleSpeedDialClick = (action) => {
         if (action.name === 'Show done orders') {
-            let temp = [];
+            const temp = [];
             invoiceList.map((i) => {
                 if (i.isPaid === true && i.isChecked === true) {
                     temp.push(i);
@@ -161,7 +141,7 @@ const Invoice = () => {
             setOutput(temp);
             setChangeDataBySearch(true);
         } else if (action.name === 'Show not done orders') {
-            let temp = [];
+            const temp = [];
             invoiceList.map((i) => {
                 if (i.isPaid === false || i.isChecked === false) {
                     temp.push(i);
@@ -170,17 +150,13 @@ const Invoice = () => {
             setOutput(temp);
             setChangeDataBySearch(true);
         } else if (action.name === 'Show increased orders') {
-            let temp = invoiceList;
-            temp.sort((a, b) => {
-                return a.total - b.total;
-            });
+            const temp = invoiceList;
+            temp.sort((a, b) => a.total - b.total);
             setOutput(temp);
             setChangeDataBySearch(true);
         } else {
-            let temp = invoiceList;
-            temp.sort((a, b) => {
-                return b.total - a.total;
-            });
+            const temp = invoiceList;
+            temp.sort((a, b) => b.total - a.total);
             setOutput(temp);
             setChangeDataBySearch(true);
         }
@@ -311,7 +287,7 @@ const Invoice = () => {
                                 </TableRow>
                             </TableHead>
                             <TableBody>
-                                {changeDataBySearch != true
+                                {changeDataBySearch !== true
                                     ? invoiceList
                                           .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                                           .map((row) => <Row key={row.invoiceID} row={row} />)
@@ -359,5 +335,5 @@ const Invoice = () => {
             />
         </Stack>
     );
-};
+}
 export default Invoice;

@@ -10,8 +10,6 @@ import 'swiper/css/pagination';
 import { Pagination } from 'swiper';
 import { styled } from '@mui/material/styles';
 import BallotIcon from '@mui/icons-material/Ballot';
-import style from './style.js';
-import TechInforLine from '../TechInforLine';
 import MemoryIcon from '@mui/icons-material/Memory';
 import ScreenshotMonitorIcon from '@mui/icons-material/ScreenshotMonitor';
 import InventoryIcon from '@mui/icons-material/Inventory';
@@ -21,6 +19,8 @@ import ChromeReaderModeIcon from '@mui/icons-material/ChromeReaderMode';
 import Battery3BarIcon from '@mui/icons-material/Battery3Bar';
 import ScaleIcon from '@mui/icons-material/Scale';
 import DescriptionIcon from '@mui/icons-material/Description';
+import TechInforLine from '../TechInforLine';
+import style from './style.js';
 import FeatureChart from '../FeatureChart';
 
 const ProductImage = styled('img')({
@@ -31,7 +31,7 @@ const ProductImage = styled('img')({
     backgroundSize: 'cover',
 });
 
-const DetailProductModal = ({ open, product, onClose }) => {
+function DetailProductModal({ open, product, onClose }) {
     return (
         <div>
             <Modal open={open} aria-labelledby="modal-modal-title" aria-describedby="modal-modal-description">
@@ -59,11 +59,11 @@ const DetailProductModal = ({ open, product, onClose }) => {
                                     variant="h6"
                                     component="h2"
                                 >
-                                    {'$ ' + product.price}
+                                    {`$ ${product.price}`}
                                 </Typography>
                             </Grid>
                         </Grid>
-                        <Box sx={style.boxInfor_Line}></Box>
+                        <Box sx={style.boxInfor_Line} />
                         <Grid container>
                             <Typography
                                 xs={12}
@@ -77,11 +77,11 @@ const DetailProductModal = ({ open, product, onClose }) => {
                             </Typography>
                         </Grid>
                         {product.productimage.length > 0 ? (
-                            <Swiper slidesPerView={2} modules={[Pagination]} spaceBetween={30} pagination={true}>
+                            <Swiper slidesPerView={2} modules={[Pagination]} spaceBetween={30} pagination>
                                 {product.productimage.map((item, i) => (
                                     <SwiperSlide key={i}>
                                         <Button>
-                                            <ProductImage src={item.imageURL}></ProductImage>
+                                            <ProductImage src={item.imageURL} />
                                         </Button>
                                     </SwiperSlide>
                                 ))}
@@ -163,49 +163,49 @@ const DetailProductModal = ({ open, product, onClose }) => {
                                 <Grid item xs={6} paddingLeft={2}>
                                     <Stack xs={12} spacing={2} padding={2}>
                                         <TechInforLine Icon={<MemoryIcon />} Text={product.cpu} Title="CPU" />
-                                        <Box sx={style.boxinfor_Stack_Line}></Box>
+                                        <Box sx={style.boxinfor_Stack_Line} />
                                         <TechInforLine
                                             Icon={<ScreenshotMonitorIcon />}
-                                            Text={product.screenDimension + ' inch, ' + product.colorCoverage + ' RGBs'}
+                                            Text={`${product.screenDimension} inch, ${product.colorCoverage} RGBs`}
                                             Title="Screen Dimension"
                                         />
-                                        <Box sx={style.boxinfor_Stack_Line}></Box>
+                                        <Box sx={style.boxinfor_Stack_Line} />
                                         <TechInforLine
                                             Icon={<InventoryIcon />}
-                                            Text={product.memory + ' SSD'}
+                                            Text={`${product.memory} SSD`}
                                             Title="Store"
                                         />
-                                        <Box sx={style.boxinfor_Stack_Line}></Box>
+                                        <Box sx={style.boxinfor_Stack_Line} />
                                         <TechInforLine
                                             Icon={<CableIcon />}
                                             Text={product.externalIOPort}
                                             Title="External IO Port"
                                         />
-                                        <Box sx={style.boxinfor_Stack_Line}></Box>
+                                        <Box sx={style.boxinfor_Stack_Line} />
                                     </Stack>
                                 </Grid>
                                 <Grid item xs={6} paddingLeft={2}>
                                     <Stack xs={12} spacing={2} padding={2}>
                                         <TechInforLine
                                             Icon={<AutofpsSelectIcon />}
-                                            Text={product.ram + ' GB'}
+                                            Text={`${product.ram} GB`}
                                             Title="RAM"
                                         />
-                                        <Box sx={style.boxinfor_Stack_Line}></Box>
+                                        <Box sx={style.boxinfor_Stack_Line} />
                                         <TechInforLine Icon={<ChromeReaderModeIcon />} Text={product.gpu} Title="GPU" />
-                                        <Box sx={style.boxinfor_Stack_Line}></Box>
+                                        <Box sx={style.boxinfor_Stack_Line} />
                                         <TechInforLine
                                             Icon={<Battery3BarIcon />}
-                                            Text={product.battery + 'Whr'}
+                                            Text={`${product.battery}Whr`}
                                             Title="Battery"
                                         />
-                                        <Box sx={style.boxinfor_Stack_Line}></Box>
+                                        <Box sx={style.boxinfor_Stack_Line} />
                                         <TechInforLine
                                             Icon={<ScaleIcon />}
-                                            Text={product.weight + ' kg'}
+                                            Text={`${product.weight} kg`}
                                             Title="Weight"
                                         />
-                                        <Box sx={style.boxinfor_Stack_Line}></Box>
+                                        <Box sx={style.boxinfor_Stack_Line} />
                                     </Stack>
                                 </Grid>
                             </Grid>
@@ -220,7 +220,7 @@ const DetailProductModal = ({ open, product, onClose }) => {
                             <Grid container sx={style.BoxDes_Grid} paddingLeft={4} paddingRight={4}>
                                 <Stack xs={12}>
                                     {product.productimage.length > 0 && (
-                                        <ProductImage xs={12} src={product.productimage[0].imageURL}></ProductImage>
+                                        <ProductImage xs={12} src={product.productimage[0].imageURL} />
                                     )}
                                     <Typography xs={12} sx={{ marginBottom: 2 }} variant="body1">
                                         {product.description}
@@ -248,5 +248,5 @@ const DetailProductModal = ({ open, product, onClose }) => {
             </Modal>
         </div>
     );
-};
+}
 export default DetailProductModal;

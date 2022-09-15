@@ -1,3 +1,4 @@
+/* eslint-disable react/jsx-one-expression-per-line */
 import * as React from 'react';
 import { styled } from '@mui/material/styles';
 import Grid from '@mui/material/Grid';
@@ -5,7 +6,6 @@ import Paper from '@mui/material/Paper';
 import Typography from '@mui/material/Typography';
 import ButtonBase from '@mui/material/ButtonBase';
 import Button from '@mui/material/Button';
-import ShoppingCartIcon from '@mui/icons-material/ShoppingCart';
 import { useNavigate } from 'react-router-dom';
 import { Stack } from '@mui/material';
 
@@ -20,7 +20,7 @@ const CustomButton = styled(Button)(() => ({
     backgroundColor: 'black',
 }));
 
-const BrandItem = (props) => {
+function BrandItem(props) {
     const navigate = useNavigate();
 
     return (
@@ -44,7 +44,7 @@ const BrandItem = (props) => {
                 <Grid item xs={12} sm container>
                     <Grid item xs={10} container direction="column" spacing={1}>
                         <Grid item xs={8}>
-                            <Typography variant="subtitle2" fontWeight={'bold'}>
+                            <Typography variant="subtitle2" fontWeight="bold">
                                 {props.item.name.split(' (')[0]}
                             </Typography>
                             <Stack sx={{ p: 1 }}>
@@ -63,7 +63,7 @@ const BrandItem = (props) => {
                             <CustomButton
                                 size="small"
                                 variant="contained"
-                                onClick={() => navigate('/productSpace/' + props.item.productID)}
+                                onClick={() => navigate(`/productSpace/${props.item.productID}`)}
                             >
                                 Buy now
                             </CustomButton>
@@ -78,5 +78,5 @@ const BrandItem = (props) => {
             </Grid>
         </Paper>
     );
-};
+}
 export default BrandItem;

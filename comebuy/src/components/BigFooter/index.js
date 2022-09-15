@@ -1,14 +1,13 @@
+/* eslint-disable react/jsx-one-expression-per-line */
+/* eslint-disable jsx-a11y/anchor-is-valid */
 import { Facebook, Instagram, MailOutline, Phone, Pinterest, Room, Twitter } from '@material-ui/icons';
-
-import styled from 'styled-components';
 import { useNavigate } from 'react-router';
 import { useDispatch, useSelector } from 'react-redux';
-
+import { Link } from '@mui/material';
 import { accountSlice } from '../../redux/slices/accountSlice';
-import { Typography, Link } from '@mui/material';
-import { currentUser } from './../../redux/selectors';
+import { currentUser } from '../../redux/selectors';
 
-const BigFooter = () => {
+function BigFooter() {
     const _curUser = useSelector(currentUser);
 
     const navigate = useNavigate();
@@ -261,10 +260,10 @@ const BigFooter = () => {
                 >
                     <MailOutline style={{ marginRight: '10px' }} /> comebuyproject@gmail.com
                 </div>
-                <img style={{ width: '50%' }} src="https://i.ibb.co/Qfvn4z6/payment.png" />
+                <img alt="a" style={{ width: '50%' }} src="https://i.ibb.co/Qfvn4z6/payment.png" />
             </div>
         </div>
     );
-};
+}
 
 export default BigFooter;

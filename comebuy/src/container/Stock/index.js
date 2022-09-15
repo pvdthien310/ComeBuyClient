@@ -1,3 +1,4 @@
+/* eslint-disable operator-linebreak */
 import * as React from 'react';
 
 import Box from '@mui/material/Box';
@@ -22,7 +23,7 @@ export default function Stock() {
     async function LoadData() {
         try {
             const response = await branchApi.getAll();
-            if (response.status == 200) {
+            if (response.status === 200) {
                 setBranchList(response.data);
                 setMessageSuccess('Load Branch Successfully');
                 setOpenSuccessAlert(true);

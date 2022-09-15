@@ -8,10 +8,9 @@ export const getAllProduct = createAsyncThunk(
         const response = await productAPI.getAll();
         if (!response) {
             return rejectWithValue('Get All Failed');
-        } else {
-            // console.log(response)
-            return response;
         }
+        // console.log(response)
+        return response;
     },
 );
 
@@ -20,14 +19,14 @@ export const editProduct = createAsyncThunk(
     // Code async logic, tham số đầu tiên data là dữ liệu truyền vào khi gọi action
     async (data, { rejectWithValue }) => {
         const response = await productAPI.edit(data);
-        if (response.status != 200 && response != 'Product was updated successfully.') {
+        if (response.status !== 200 && response !== 'Product was updated successfully.') {
             return rejectWithValue('Get All Failed');
-        } else {
-            const response_2 = await productAPI.getProductWithID(data.productID);
-            if (response_2.status != 200) {
-                return rejectWithValue('Get All Failed');
-            } else return response_2.data;
         }
+        const response2 = await productAPI.getProductWithID(data.productID);
+        if (response2.status !== 200) {
+            return rejectWithValue('Get All Failed');
+        }
+        return response2.data;
     },
 );
 
@@ -36,8 +35,8 @@ export const deleteProductByID = createAsyncThunk(
     // Code async logic, tham số đầu tiên data là dữ liệu truyền vào khi gọi action
     async (productID, { rejectWithValue }) => {
         const response = await productAPI.deleteByID(productID);
-        if (response.status != 200) return rejectWithValue('Get All Failed');
-        else return productID;
+        if (response.status !== 200) return rejectWithValue('Get All Failed');
+        return productID;
     },
 );
 
@@ -45,9 +44,8 @@ export const getProductWithID = createAsyncThunk('product/findOne', async (data,
     const response = await productAPI.getProductWithID(data);
     if (!response) {
         return rejectedWithValue(' Find product failed');
-    } else {
-        return response.data;
     }
+    return response.data;
 });
 
 export const productSlice = createSlice({
@@ -75,30 +73,27 @@ export const productSlice = createSlice({
             state.loading = false;
             state.productList = action.payload;
         },
-        [getAllProduct.rejected]: (state, action) => {
+        [getAllProduct.rejected]: (state) => {
             state.loading = false;
-        },
-        [editProduct.pending]: (state) => {
-            /// Nothing
         },
         [editProduct.fulfilled]: (state, action) => {
             state.productList = state.productList.map((member) => {
-                if (member.productID == action.payload.productID) return action.payload;
-                else return member;
+                if (member.productID === action.payload.productID) return action.payload;
+                return member;
             });
         },
-        [editProduct.rejected]: (state, action) => {
+        [editProduct.rejected]: (state) => {
             state.loading = false;
         },
         [getProductWithID.pending]: (state) => {
             state.loading = true;
             console.log('Start slice');
         },
-        [getProductWithID.fulfilled]: (state, action) => {
+        [getProductWithID.fulfilled]: (state) => {
             state.loading = false;
             console.log('Successfully');
         },
-        [getProductWithID.rejected]: (state, action) => {
+        [getProductWithID.rejected]: (state) => {
             state.loading = false;
         },
         [deleteProductByID.pending]: (state) => {
@@ -106,10 +101,10 @@ export const productSlice = createSlice({
             console.log('Start slice');
         },
         [deleteProductByID.fulfilled]: (state, action) => {
-            state.productList = state.productList.filter((member) => member.productID != action.payload);
+            state.productList = state.productList.filter((member) => member.productID !== action.payload);
             console.log('Successfully');
         },
-        [deleteProductByID.rejected]: (state, action) => {
+        [deleteProductByID.rejected]: (state) => {
             state.loading = false;
         },
     },

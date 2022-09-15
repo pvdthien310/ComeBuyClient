@@ -1,12 +1,12 @@
 import * as React from 'react';
 import { useDispatch } from 'react-redux';
 import { unwrapResult } from '@reduxjs/toolkit';
-import { getProductWithID } from '../../redux/slices/productSlice';
 import CircularProgress from '@mui/material/CircularProgress';
 import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
+import { getProductWithID } from '../../redux/slices/productSlice';
 
-const ProdInfo = (props) => {
+function ProdInfo(props) {
     const [product, setProduct] = React.useState([]);
 
     const { productID } = props;
@@ -32,7 +32,7 @@ const ProdInfo = (props) => {
 
     return (
         <div>
-            {product != 0 ? (
+            {product !== 0 ? (
                 <div
                     style={{
                         maxWidth: 700,
@@ -62,16 +62,16 @@ const ProdInfo = (props) => {
 
                         <div style={{ display: 'flex', flexDirection: 'row' }}>
                             <Typography style={{ fontWeight: 'bold' }}>RAM/GPU/CPU:</Typography>
-                            <Typography
-                                style={{ marginLeft: '5px' }}
-                            >{`${product[0].ram} GB / ${product[0].gpu} / ${product[0].cpu}`}</Typography>
+                            <Typography style={{ marginLeft: '5px' }}>
+                                {`${product[0].ram} GB / ${product[0].gpu} / ${product[0].cpu}`}
+                            </Typography>
                         </div>
 
                         <div style={{ display: 'flex', flexDirection: 'row' }}>
                             <Typography style={{ fontWeight: 'bold' }}>ROM/Weight/External IO Port:</Typography>
-                            <Typography
-                                style={{ marginLeft: '5px' }}
-                            >{`${product[0].memory} GB / ${product[0].weight} kg / ${product[0].externalIOPort}`}</Typography>
+                            <Typography style={{ marginLeft: '5px' }}>
+                                {`${product[0].memory} GB / ${product[0].weight} kg / ${product[0].externalIOPort}`}
+                            </Typography>
                         </div>
                     </div>
                 </div>
@@ -83,6 +83,6 @@ const ProdInfo = (props) => {
             )}
         </div>
     );
-};
+}
 
 export default ProdInfo;

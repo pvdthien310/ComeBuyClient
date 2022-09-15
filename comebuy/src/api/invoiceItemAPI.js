@@ -4,9 +4,7 @@ const baseURL = 'invoiceItem';
 
 const invoiceItemAPI = {
     addInvoiceItem: async (invoiceItem) => {
-        const res = await DatabaseClient.post('/' + baseURL, invoiceItem).catch((err) => {
-            return err.response;
-        });
+        const res = await DatabaseClient.post(`/${baseURL}`, invoiceItem).catch((err) => err.response);
         return res;
     },
 };
