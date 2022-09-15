@@ -1,50 +1,46 @@
-import { Button, IconButton, TableRow } from '@mui/material';
+/* eslint-disable no-confusing-arrow */
+// eslint-disable-next-line no-unused-vars
+import { useDispatch } from 'react-redux';
+import {
+    Button,
+    IconButton,
+    TableRow,
+    Collapse,
+    Box,
+    Typography,
+    TableCell,
+    Table,
+    TableHead,
+    TableBody,
+} from '@mui/material';
 import * as React from 'react';
 import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp';
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
-import ProdInfo from '../InvoiceProdInfo';
 import Popover from '@mui/material/Popover';
-import { Collapse, Box, Typography, TableCell, Table, TableHead, TableBody } from '@mui/material';
-import { unwrapResult } from '@reduxjs/toolkit';
 import Stepper from '@mui/material/Stepper';
 import Step from '@mui/material/Step';
 import StepLabel from '@mui/material/StepLabel';
-
-import { useDispatch } from 'react-redux';
+import ProdInfo from '../InvoiceProdInfo';
 
 const steps = ['Checked', 'Delivered'];
 
-const OrderRow = (props) => {
+function OrderRow(props) {
     const { row } = props;
     const [open, setOpen] = React.useState(false);
 
-    //Get customer information
+    // eslint-disable-next-line no-unused-vars
     const [anchorEl, setAnchorEl] = React.useState(null);
-    const handleClick = (event) => {
-        setAnchorEl(event.currentTarget);
-    };
-    const handleClose = () => {
-        setAnchorEl(null);
-    };
-    const openHover = Boolean(anchorEl);
     const id = open ? 'simple-popover' : undefined;
 
-    //Get invoice detail (address)
+    // eslint-disable-next-line no-unused-vars
     const [anchorE3, setAnchorE3] = React.useState(null);
-    const handleClickInvoiceID = (event) => {
-        setAnchorE3(event.currentTarget);
-    };
-    const handleCloseInvoiceID = () => {
-        setAnchorE3(null);
-    };
-    const openHoverInvoiceID = Boolean(anchorE3);
-    const id3 = open ? 'simple-popover' : undefined;
+    // eslint-disable-next-line no-unused-vars
+    // eslint-disable-next-line no-unused-vars
+    // eslint-disable-next-line no-unused-vars
+    // eslint-disable-next-line no-unused-vars
 
-    //Get product information
     const [anchorEl2, setAnchorEl2] = React.useState(null);
-    const handleClickProductId = (event) => {
-        setAnchorEl2(event.currentTarget);
-    };
+    // eslint-disable-next-line no-unused-vars
     const handleProductPopoverOpen = (event) => {
         setAnchorEl2(event.currentTarget);
     };
@@ -52,15 +48,16 @@ const OrderRow = (props) => {
         setAnchorEl2(null);
     };
     const openProductHover = Boolean(anchorEl2);
-    const id2 = open ? 'simple-popover' : undefined;
 
-    //Execute process of managing invoice
+    // eslint-disable-next-line no-unused-vars
     const [disablePaid, setDisablePaid] = React.useState(false);
+    // eslint-disable-next-line no-unused-vars
     const [disableCheck, setDisableCheck] = React.useState(false);
-
+    // eslint-disable-next-line no-unused-vars
     const [isChecked, setIsChecked] = React.useState(row.isChecked);
+    // eslint-disable-next-line no-unused-vars
     const [isPaid, setIsPaid] = React.useState(row.isPaid);
-
+    // eslint-disable-next-line no-unused-vars
     const [dataForUpdate, setDataForUpdate] = React.useState({
         invoiceID: row.invoiceID,
         moneyReceived: row.moneyReceived,
@@ -69,14 +66,13 @@ const OrderRow = (props) => {
         isPaid: row.isPaid,
     });
 
+    // eslint-disable-next-line no-unused-vars
     const [updating, setUpdating] = React.useState(false);
-
-    const dispatch = useDispatch();
 
     function Total() {
         let total = 0;
         for (let i = 0; i < row.invoiceitem.length; i++) {
-            total = total + Number(row.invoiceitem[i].total);
+            total += Number(row.invoiceitem[i].total);
         }
         return total;
     }
@@ -110,7 +106,7 @@ const OrderRow = (props) => {
         }
     }, []);
     return (
-        <React.Fragment>
+        <>
             <TableRow sx={{ '& > *': { borderBottom: 'set', backgroundColor: 'white' } }}>
                 <TableCell>
                     <IconButton
@@ -187,47 +183,50 @@ const OrderRow = (props) => {
                                     </TableRow>
                                 </TableHead>
                                 <TableBody>
-                                    {row.invoiceitem.map((detailsRow) =>
-                                        detailsRow.productid != null ? (
-                                            <TableRow key={detailsRow.productid}>
-                                                <TableCell component="th" scope="row">
-                                                    <Button
-                                                        aria-describedby={id}
-                                                        onClick={handleProductPopoverOpen}
-                                                        style={{
-                                                            fontWeight: 'bold',
-                                                            fontSize: '14px',
-                                                            color: 'black',
-                                                            fontStyle: 'italic',
-                                                        }}
+                                    {row.invoiceitem.map(
+                                        (detailsRow) =>
+                                            // eslint-disable-next-line implicit-arrow-linebreak
+                                            detailsRow.productid != null ? (
+                                                <TableRow key={detailsRow.productid}>
+                                                    <TableCell component="th" scope="row">
+                                                        <Button
+                                                            aria-describedby={id}
+                                                            onClick={handleProductPopoverOpen}
+                                                            style={{
+                                                                fontWeight: 'bold',
+                                                                fontSize: '14px',
+                                                                color: 'black',
+                                                                fontStyle: 'italic',
+                                                            }}
+                                                        >
+                                                            {detailsRow.productid}
+                                                        </Button>
+                                                        <Popover
+                                                            id={id}
+                                                            open={openProductHover}
+                                                            anchorEl={anchorEl2}
+                                                            anchorOrigin={{
+                                                                vertical: 'top',
+                                                                horizontal: 'right',
+                                                            }}
+                                                            onClose={handleProductPopoverClose}
+                                                            // disableRestoreFocus
+                                                        >
+                                                            <ProdInfo productID={detailsRow.productid} />
+                                                        </Popover>
+                                                    </TableCell>
+                                                    <TableCell align="center" sx={{ fontSize: '13px' }}>
+                                                        {detailsRow.amount}
+                                                    </TableCell>
+                                                    <TableCell
+                                                        align="center"
+                                                        style={{ fontWeight: 'bold', color: 'black', fontSize: '13px' }}
                                                     >
-                                                        {detailsRow.productid}
-                                                    </Button>
-                                                    <Popover
-                                                        id={id}
-                                                        open={openProductHover}
-                                                        anchorEl={anchorEl2}
-                                                        anchorOrigin={{
-                                                            vertical: 'top',
-                                                            horizontal: 'right',
-                                                        }}
-                                                        onClose={handleProductPopoverClose}
-                                                        // disableRestoreFocus
-                                                    >
-                                                        <ProdInfo productID={detailsRow.productid} />
-                                                    </Popover>
-                                                </TableCell>
-                                                <TableCell align="center" sx={{ fontSize: '13px' }}>
-                                                    {detailsRow.amount}
-                                                </TableCell>
-                                                <TableCell
-                                                    align="center"
-                                                    style={{ fontWeight: 'bold', color: 'black', fontSize: '13px' }}
-                                                >
-                                                    {detailsRow.total}
-                                                </TableCell>
-                                            </TableRow>
-                                        ) : null,
+                                                        {detailsRow.total}
+                                                    </TableCell>
+                                                </TableRow>
+                                            ) : null,
+                                        // eslint-disable-next-line function-paren-newline
                                     )}
                                 </TableBody>
                             </Table>
@@ -235,8 +234,8 @@ const OrderRow = (props) => {
                     </Collapse>
                 </TableCell>
             </TableRow>
-        </React.Fragment>
+        </>
     );
-};
+}
 
 export default OrderRow;
