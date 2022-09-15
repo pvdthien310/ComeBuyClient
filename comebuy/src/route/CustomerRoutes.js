@@ -7,9 +7,9 @@ import CustomerPlace from '../container/CustomerPlace/index';
 import DetailProduct from '../container/Product/DetailProduct';
 import { ForgotPassword } from '../components';
 import CustomerCart from '../container/CustomerCart';
-import { CheckoutPage } from '../container/Checkout';
+import CheckoutPage from '../container/Checkout';
 import FavoritePlace from '../container/Favourite/index';
-import { CustomerOrderSpace } from '../container/CustomerOrder';
+import CustomerOrderSpace from '../container/CustomerOrder';
 
 const customerRoutes = [
     {

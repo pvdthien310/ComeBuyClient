@@ -1,3 +1,4 @@
+/* eslint-disable no-useless-escape */
 import validator from 'validator';
 
 // Validate password if it's false then it's false

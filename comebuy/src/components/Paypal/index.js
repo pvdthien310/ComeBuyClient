@@ -1,3 +1,4 @@
+/* eslint-disable implicit-arrow-linebreak */
 /* eslint-disable no-unused-vars */
 /* eslint-disable operator-linebreak */
 import React, { useRef, useEffect, useState } from 'react';

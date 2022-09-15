@@ -3,46 +3,32 @@ import { useDispatch, useSelector } from 'react-redux';
 import { styled } from '@mui/material/styles';
 import { DataGrid, GridActionsCellItem } from '@mui/x-data-grid';
 import { useNavigate } from 'react-router-dom';
-import { Box, Stack, TableCell, tableCellClasses, Typography } from '@mui/material';
-import { Button } from '@mui/material';
-// icons
+import { Box, Stack, Typography, Button } from '@mui/material';
 import DeleteIcon from '@mui/icons-material/Delete';
 import EditIcon from '@mui/icons-material/Edit';
 import InfoIcon from '@mui/icons-material/Info';
 import ImportantDevicesIcon from '@mui/icons-material/ImportantDevices';
-//components
 import DetailProductModal from '../../components/DetailProductModal';
 import { renderImportantTag } from '../../GridDataCellTemplate/ImportantTag';
-// variables
-import { productListSelector } from './../../redux/selectors';
-//function
-import { deleteProductByID, editProduct, getAllProduct, productSlice } from './../../redux/slices/productSlice';
+import { productListSelector } from '../../redux/selectors';
+import { deleteProductByID, editProduct, getAllProduct } from '../../redux/slices/productSlice';
 import SnackBarAlert from '../../components/SnackBarAlert';
 import ColorSwitch from './child';
 
-const ProductTable = styled(DataGrid)(({ theme }) => ({
+const ProductTable = styled(DataGrid)(() => ({
     height: 700,
     width: 1200,
     backgroundColor: 'white',
     alignSelf: 'center',
 }));
-const StyledTableCell = styled(TableCell)(({ theme }) => ({
-    [`&.${tableCellClasses.head}`]: {
-        backgroundColor: theme.palette.common.black,
-        color: theme.palette.common.white,
-    },
-    [`&.${tableCellClasses.body}`]: {
-        fontSize: 14,
-    },
-}));
 
-const Product = () => {
+function Product() {
     const _productList = useSelector(productListSelector); // list get from store
     const dispatch = useDispatch();
     const [productList, setProductList] = useState(_productList);
     const navigate = useNavigate();
     const initalValue = { index: 0, value: null };
-    //For Alert
+    // For Alert
     const [openSuccessAlert, setOpenSuccessAlert] = useState(false);
     const [openErrorAlert, setOpenErrorAlert] = useState(false);
     const [messageError, setMessageError] = useState('No Error');
@@ -58,7 +44,6 @@ const Product = () => {
     const [openModal, setOpenModal] = useState(false);
     const [currentProduct, setCurrentProduct] = useState(initalValue);
 
-    const handleOpenModal = () => setOpenModal(true);
     const handleCloseModal = () => setOpenModal(false);
 
     /// For GridData
@@ -67,11 +52,11 @@ const Product = () => {
         (value) => () => {
             dispatch(deleteProductByID(value))
                 .unwrap()
-                .then((originalPromiseResult) => {
+                .then(() => {
                     setMessageSuccess('Delete Product Successfully');
                     setOpenSuccessAlert(true);
                 })
-                .catch((rejectedValueOrSerializedError) => {
+                .catch(() => {
                     setMessageError('Error Delete Product Failed');
                     setOpenErrorAlert(true);
                 });
@@ -88,7 +73,7 @@ const Product = () => {
 
     const showDetail = useCallback(
         (value) => () => {
-            setCurrentProduct({ index: Math.random(), value: value });
+            setCurrentProduct({ index: Math.random(), value });
             // handleOpenModal()
         },
         [],
@@ -97,11 +82,11 @@ const Product = () => {
     const handleIsPublishedChange = (pr, value) => {
         dispatch(editProduct({ productID: pr.id, isPublished: value }))
             .unwrap()
-            .then((originalPromiseResult) => {
+            .then(() => {
                 setMessageSuccess('Publish Product Successfully');
                 setOpenSuccessAlert(true);
             })
-            .catch((rejectedValueOrSerializedError) => {
+            .catch(() => {
                 setMessageError('Publish Product Failed. Please Load Page Again');
                 setOpenErrorAlert(true);
             });
@@ -168,7 +153,7 @@ const Product = () => {
                     setMessageSuccess('Load Product Successfully');
                     setOpenSuccessAlert(true);
                 })
-                .catch((rejectedValueOrSerializedError) => {
+                .catch(() => {
                     console.log('Error load product');
                     setMessageError('Error Load Product List');
                     setOpenErrorAlert(true);
@@ -185,13 +170,13 @@ const Product = () => {
     }, [_productList]);
 
     const handleOnCellClick = async (e) => {
-        if (e.value != undefined) {
+        if (e.value !== undefined) {
             setCurrentProduct({ index: Math.random(), value: e.row });
         }
     };
 
     useEffect(() => {
-        if (currentProduct != initalValue) setOpenModal(true);
+        if (currentProduct !== initalValue) setOpenModal(true);
     }, [currentProduct]);
 
     return (
@@ -225,7 +210,7 @@ const Product = () => {
                 >
                     <Stack
                         sx={{ alignItems: 'center', justifyItems: 'center', pl: 2, pt: 2 }}
-                        direction={'row'}
+                        direction="row"
                         spacing={2}
                     >
                         <ImportantDevicesIcon />
@@ -270,7 +255,7 @@ const Product = () => {
                         handleClose={handleClose}
                         message={messageError}
                     />
-                    <Box sx={{ height: 20 }}></Box>
+                    <Box sx={{ height: 20 }} />
                     {/* <Routes>
                 <Route path='add' element={<AddProduct />}></Route>
                 <Route path='edit' element={<EditProduct />}></Route>
@@ -279,6 +264,6 @@ const Product = () => {
             </Box>
         </Stack>
     );
-};
+}
 
 export default memo(Product);

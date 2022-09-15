@@ -1,5 +1,6 @@
+/* eslint-disable no-unused-vars */
+/* eslint-disable class-methods-use-this */
 import React from 'react';
-import ReactDOM from 'react-dom';
 
 export default class CountDown extends React.Component {
     constructor(props) {
@@ -8,9 +9,10 @@ export default class CountDown extends React.Component {
             count: 3,
         };
     }
+
     componentDidMount() {
         this.timer = setInterval(() => {
-            let { count } = this.state;
+            const { count } = this.state;
             this.setState({
                 count: count - 1,
             });
@@ -27,11 +29,11 @@ export default class CountDown extends React.Component {
     }
 
     fmtMSS(s) {
-        return (s - (s % 60)) / 60 + (9 < s ? ':' : ':0') + s;
+        return (s - (s % 60)) / 60 + (s > 9 ? ':' : ':0') + s;
     }
 
     render() {
-        let { count } = this.state;
+        const { count } = this.state;
         return (
             <h1
                 style={{ marginRight: '10px', marginTop: '10px', fontSize: '20px', fontWeight: 'italic', color: 'red' }}

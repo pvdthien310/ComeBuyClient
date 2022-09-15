@@ -1,6 +1,5 @@
 import * as React from 'react';
 import { alpha, styled } from '@mui/material/styles';
-import { pink } from '@mui/material/colors';
 import Switch from '@mui/material/Switch';
 
 const GreenSwitch = styled(Switch)(({ theme }) => ({
@@ -17,7 +16,7 @@ const GreenSwitch = styled(Switch)(({ theme }) => ({
 
 const label = { inputProps: { 'aria-label': 'Switch demo' } };
 
-const ColorSwitch = (props) => {
+function ColorSwitch(props) {
     return (
         <GreenSwitch
             {...label}
@@ -26,5 +25,5 @@ const ColorSwitch = (props) => {
             onChange={(e) => props.onIsPublishedChange(props.param, e.target.checked)}
         />
     );
-};
+}
 export default ColorSwitch;

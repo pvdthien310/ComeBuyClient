@@ -1,28 +1,25 @@
-import { Button, Typography } from '@mui/material';
+/* eslint-disable camelcase */
+import { Button, Typography, Grid, Stack } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
-import { Grid, Stack, TextField } from '@mui/material';
-import { useDispatch } from 'react-redux';
-import { memo, useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import DriveFileRenameOutlineIcon from '@mui/icons-material/DriveFileRenameOutline';
-import style from './style.js';
 import Box from '@mui/material/Box';
 import EmailIcon from '@mui/icons-material/Email';
 import PasswordIcon from '@mui/icons-material/Password';
-import SnackBarAlert from '../../../components/SnackBarAlert';
 import AddReactionIcon from '@mui/icons-material/AddReaction';
-//icon styles
-import TextFieldForAdd from '../../../components/TextFieldForAdd';
-import { ConfirmDialog, RoleSelect } from '../../../components';
-import { SignalCellularNull } from '@material-ui/icons';
+// icon styles
 import BusinessIcon from '@mui/icons-material/Business';
 import WarningIcon from '@mui/icons-material/Warning';
-import { default_avatar } from './../../../constant';
+import { ConfirmDialog, RoleSelect } from '../../../components';
+import TextFieldForAdd from '../../../components/TextFieldForAdd';
+import SnackBarAlert from '../../../components/SnackBarAlert';
+import style from './style.js';
+import { default_avatar } from '../../../constant';
 import accountApi from '../../../api/accountAPI.js';
 import branchApi from '../../../api/branchAPI.js';
 import BranchSelect from '../../../components/BranchSelect/index.js';
 
-const AddStaff = () => {
-    const dispatch = useDispatch();
+function AddStaff() {
     const [openSuccessAlert, setOpenSuccessAlert] = useState(false);
     const [openErrorAlert, setOpenErrorAlert] = useState(false);
     const [openConfirmDialog, setOpenConfirmDialog] = useState(false);
@@ -54,7 +51,7 @@ const AddStaff = () => {
     async function LoadData() {
         try {
             const response = await branchApi.getAll();
-            if (response.status == 200) {
+            if (response.status === 200) {
                 setBranchList(response.data);
                 setMessageSuccess('Load Account Successfully');
                 setOpenSuccessAlert(true);
@@ -87,28 +84,29 @@ const AddStaff = () => {
             case 'Branch Address':
                 SetBranchAddress(event.target.value);
                 break;
+            default:
+                break;
         }
     };
 
     const handleAddNewMember = async () => {
-        if (password != confirmPassword) {
+        if (password !== confirmPassword) {
             setOpenConfirmDialog(false);
             setMessageError('Confirm Password is incorrect!');
             setOpenErrorAlert(true);
-            return;
         } else {
             const newAccount = {
-                name: name,
-                email: email,
-                password: password,
+                name,
+                email,
+                password,
                 phoneNumber: '',
                 dob: '1/1/2000',
                 avatar: default_avatar,
                 address: '',
-                role: role,
+                role,
                 sex: 'male',
                 bio: '',
-                branchAddress: branchAddress,
+                branchAddress,
                 branchID: existedBranch,
             };
             console.log(newAccount);
@@ -136,7 +134,6 @@ const AddStaff = () => {
                     setMessageError('Add Failed!');
                     setOpenErrorAlert(true);
                     setOpenConfirmDialog(false);
-                    return;
                 }
             }
         }
@@ -165,7 +162,7 @@ const AddStaff = () => {
                                 Title="Name"
                                 onChange={handleValueChange}
                             />
-                            <Box sx={style.boxinfor_Stack_Line}></Box>
+                            <Box sx={style.boxinfor_Stack_Line} />
                             <TextFieldForAdd
                                 inputConfig="email"
                                 Icon={<EmailIcon />}
@@ -173,7 +170,7 @@ const AddStaff = () => {
                                 Title="Email"
                                 onChange={handleValueChange}
                             />
-                            <Box sx={style.boxinfor_Stack_Line}></Box>
+                            <Box sx={style.boxinfor_Stack_Line} />
                             <TextFieldForAdd
                                 inputConfig="password"
                                 Icon={<PasswordIcon />}
@@ -181,7 +178,7 @@ const AddStaff = () => {
                                 Title="Password"
                                 onChange={handleValueChange}
                             />
-                            <Box sx={style.boxinfor_Stack_Line}></Box>
+                            <Box sx={style.boxinfor_Stack_Line} />
                             <TextFieldForAdd
                                 inputConfig="password"
                                 Icon={<PasswordIcon />}
@@ -189,9 +186,9 @@ const AddStaff = () => {
                                 Title="Confirm Password"
                                 onChange={handleValueChange}
                             />
-                            <Box sx={style.boxinfor_Stack_Line}></Box>
+                            <Box sx={style.boxinfor_Stack_Line} />
                             <RoleSelect value={role} handleChange={handleRoleChange} />
-                            {role == 'manager' && (
+                            {role === 'manager' && (
                                 <Stack xs={12} spacing={2} padding={2}>
                                     <Stack
                                         spacing={2}
@@ -221,13 +218,13 @@ const AddStaff = () => {
                                             (item) => item.userid == null || item.account == null,
                                         )}
                                         handleChange={handleBranchChange}
-                                    ></BranchSelect>
-                                    <Box sx={style.boxinfor_Stack_Line}></Box>
+                                    />
+                                    <Box sx={style.boxinfor_Stack_Line} />
                                 </Stack>
                             )}
                         </Stack>
                     </Grid>
-                    <Grid item xs={12} paddingLeft={2} paddingTop={2}></Grid>
+                    <Grid item xs={12} paddingLeft={2} paddingTop={2} />
                 </Grid>
                 <Stack sx={{ width: '100%', justifyContent: 'center' }} direction="row" spacing={3}>
                     <Button sx={style.BackButton} variant="contained" onClick={() => navigate('/staff')}>
@@ -254,6 +251,6 @@ const AddStaff = () => {
             />
         </Stack>
     );
-};
+}
 
 export default AddStaff;

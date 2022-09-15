@@ -1,5 +1,3 @@
-import { StickyNote2 } from '@mui/icons-material';
-
 const style = {
     boxContainer: {
         // transform: 'translate(-50%, -50%)',

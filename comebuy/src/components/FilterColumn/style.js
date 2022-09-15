@@ -1,10 +1,9 @@
+/* eslint-disable react/require-default-props */
 import * as React from 'react';
 import PropTypes from 'prop-types';
 import Slider, { SliderThumb } from '@mui/material/Slider';
 import { styled } from '@mui/material/styles';
-import Typography from '@mui/material/Typography';
-import Tooltip from '@mui/material/Tooltip';
-import Box from '@mui/material/Box';
+
 const marks = [
     {
         value: 0,
@@ -26,7 +25,7 @@ const marks = [
 const PrettoSlider = styled(Slider)({
     color: '#2D2059',
     height: 8,
-    marks: marks,
+    marks,
     '& .MuiSlider-track': {
         border: 'none',
     },
@@ -63,7 +62,7 @@ const PrettoSlider = styled(Slider)({
     },
 });
 
-const AirbnbThumbComponent = (props) => {
+function AirbnbThumbComponent(props) {
     const { children, ...other } = props;
     return (
         <SliderThumb {...other}>
@@ -73,7 +72,7 @@ const AirbnbThumbComponent = (props) => {
             <span className="airbnb-bar" />
         </SliderThumb>
     );
-};
+}
 
 AirbnbThumbComponent.propTypes = {
     children: PropTypes.node,
@@ -130,7 +129,7 @@ const AirbnbSlider = styled(Slider)(({ theme }) => ({
 function valuetext(value) {
     return `${value}°C`;
 }
-const ExampleSlider = () => {
+function ExampleSlider() {
     return (
         <Slider
             getAriaLabel={() => 'Temperature'}
@@ -140,6 +139,6 @@ const ExampleSlider = () => {
             marks={marks}
         />
     );
-};
+}
 
 export { PrettoSlider, AirbnbThumbComponent, AirbnbSlider, ExampleSlider };

@@ -8,14 +8,12 @@ import { CardActionArea, CardActions } from '@mui/material';
 import NavigateNextIcon from '@mui/icons-material/NavigateNext';
 import Button from '@mui/material/Button';
 import { useNavigate } from 'react-router-dom';
-import { useSelector } from 'react-redux';
 
-import NavBar from './../../components/NavBar/NavBar';
+import NavBar from '../../components/NavBar/NavBar';
 
-import { currentUser } from './../../redux/selectors';
 import { BigFooter } from '../../components';
 
-const CustomerPlace = () => {
+function CustomerPlace() {
     const navigate = useNavigate();
     const gotoProfile = () => {
         navigate('/profile');
@@ -33,7 +31,7 @@ const CustomerPlace = () => {
 
     return (
         <div style={{ height: '100%', width: '100%' }}>
-            <NavBar></NavBar>
+            <NavBar />
             <div style={{ height: '100%', width: '100%' }}>
                 <Stack
                     direction={{ xs: 'column', sm: 'row' }}
@@ -180,6 +178,6 @@ const CustomerPlace = () => {
             <BigFooter />
         </div>
     );
-};
+}
 
 export default CustomerPlace;
