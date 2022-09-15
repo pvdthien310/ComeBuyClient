@@ -3,9 +3,8 @@ import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import Typography from '@mui/material/Typography';
 import Modal from '@mui/material/Modal';
-import { Grid, Stack } from '@mui/material';
+import { Stack } from '@mui/material';
 import { Swiper, SwiperSlide } from 'swiper/react';
-import { useDispatch, useSelector } from 'react-redux';
 import 'swiper/css';
 import 'swiper/css/pagination';
 import { Pagination } from 'swiper';
@@ -25,7 +24,7 @@ const CustomButton = styled(Button)({
     },
 });
 
-const PreviewImagesModal = (props) => {
+function PreviewImagesModal(props) {
     return (
         <div>
             <Modal open={props.open} aria-labelledby="modal-modal-title" aria-describedby="modal-modal-description">
@@ -47,11 +46,11 @@ const PreviewImagesModal = (props) => {
                         alignItems: 'center',
                     }}
                 >
-                    <Typography variant="h6" fontWeight={'bold'}>
+                    <Typography variant="h6" fontWeight="bold">
                         Review Images
                     </Typography>
-                    <Box sx={{ width: '100%', backgroundColor: '#2E1534', height: 3 }}></Box>
-                    <Swiper slidesPerView={1} modules={[Pagination]} spaceBetween={30} pagination={true}>
+                    <Box sx={{ width: '100%', backgroundColor: '#2E1534', height: 3 }} />
+                    <Swiper slidesPerView={1} modules={[Pagination]} spaceBetween={30} pagination>
                         {props.images.map((item, i) => (
                             <SwiperSlide key={i}>
                                 <Stack sx={{ width: '100%', justifyContent: 'center' }}>
@@ -60,7 +59,7 @@ const PreviewImagesModal = (props) => {
                             </SwiperSlide>
                         ))}
                     </Swiper>
-                    <Stack direction={'row'} sx={{ width: '100%', justifyContent: 'center', mt: 2 }} spacing={2}>
+                    <Stack direction="row" sx={{ width: '100%', justifyContent: 'center', mt: 2 }} spacing={2}>
                         <Button onClick={props.onClose} variant="contained" color="error">
                             Back
                         </Button>
@@ -77,5 +76,5 @@ const PreviewImagesModal = (props) => {
             </Modal>
         </div>
     );
-};
+}
 export default PreviewImagesModal;

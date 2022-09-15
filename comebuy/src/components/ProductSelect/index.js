@@ -1,10 +1,10 @@
 import * as React from 'react';
 import TextField from '@mui/material/TextField';
 import Autocomplete from '@mui/material/Autocomplete';
-import productAPI from '../../api/productAPI';
 import { useState, useEffect } from 'react';
+import productAPI from '../../api/productAPI';
 
-const ProductSelect = (props) => {
+function ProductSelect(props) {
     const [options, setOptions] = useState([]);
     async function LoadData() {
         try {
@@ -46,5 +46,5 @@ const ProductSelect = (props) => {
             onChange={props.onChange}
         />
     );
-};
+}
 export default ProductSelect;

@@ -1,14 +1,16 @@
+/* eslint-disable function-paren-newline */
+/* eslint-disable implicit-arrow-linebreak */
 import { Box, Button, CircularProgress, Stack, Typography } from '@mui/material';
 import { useEffect, useState } from 'react';
+import AddShoppingCartIcon from '@mui/icons-material/AddShoppingCart';
 import stockApi from '../../api/stockAPI';
 import SnackBarAlert from '../SnackBarAlert';
 import ProductCardInStock from '../ProductCardInStock';
-import AddShoppingCartIcon from '@mui/icons-material/AddShoppingCart';
 import style from './style.js';
 import AddProductInStockModal from '../AddProductInStockModal';
 import UpdateAmountInStockModal from '../UpdateAmountInStockModel';
 
-const StockInBranch = (props) => {
+function StockInBranch(props) {
     const { branch } = props;
     const [stockList, setStockList] = useState([]);
     const [loading, setLoading] = useState(false);
@@ -25,6 +27,23 @@ const StockInBranch = (props) => {
         setOpenUpdateModal(false);
     };
 
+    async function LoadData() {
+        try {
+            const response = await stockApi.getAllStockByBranch(branch.branchID);
+            if (response.status === 200) {
+                setStockList(response.data);
+                setLoading(true);
+                setMessageSuccess('Load Stock Successfully');
+                setOpenSuccessAlert(true);
+            } else {
+                setMessageError('Load Stock Failed :((');
+                setOpenErrorAlert(true);
+            }
+        } catch (err) {
+            console.log(err);
+        }
+    }
+
     const handleUpdateAmountProduct = async (number) => {
         const updatedStock = {
             ...selectedStock,
@@ -32,12 +51,12 @@ const StockInBranch = (props) => {
             remaining: Number(selectedStock.remaining) + Number(number),
         };
         const response = await stockApi.updateStock(updatedStock);
-        if (response.status == 200) {
+        if (response.status === 200) {
             setSelectedStock(updatedStock);
             setStockList((prevList) =>
                 prevList.map((item) => {
-                    if (item.id == updatedStock.id) return updatedStock;
-                    else return item;
+                    if (item.id === updatedStock.id) return updatedStock;
+                    return item;
                 }),
             );
             setMessageSuccess('Update Quantity Successfully');
@@ -50,8 +69,8 @@ const StockInBranch = (props) => {
 
     const handleDeleteProduct = async (selectedStk) => {
         const response = await stockApi.deleteStock(selectedStk.id);
-        if (response.status == 200) {
-            const newList = stockList.filter((item) => item.id != selectedStk.id);
+        if (response.status === 200) {
+            const newList = stockList.filter((item) => item.id !== selectedStk.id);
             setStockList(newList);
             setMessageSuccess('Delete Stock Successfully');
             setOpenSuccessAlert(true);
@@ -69,7 +88,7 @@ const StockInBranch = (props) => {
             productID: value.product.productID,
         };
         const response = await stockApi.createNewStock(newStock);
-        if (response.status == 200) {
+        if (response.status === 200) {
             LoadData(); /// Using Load data cause response dont have product objects so child components will not function
             setMessageSuccess('Add Stock Successfully');
             setOpenSuccessAlert(true);
@@ -83,22 +102,7 @@ const StockInBranch = (props) => {
         setOpenSuccessAlert(false);
         setOpenErrorAlert(false);
     };
-    async function LoadData() {
-        try {
-            const response = await stockApi.getAllStockByBranch(branch.branchID);
-            if (response.status == 200) {
-                setStockList(response.data);
-                setLoading(true);
-                setMessageSuccess('Load Stock Successfully');
-                setOpenSuccessAlert(true);
-            } else {
-                setMessageError('Load Stock Failed :((');
-                setOpenErrorAlert(true);
-            }
-        } catch (err) {
-            console.log(err);
-        }
-    }
+
     useEffect(() => {
         LoadData();
     }, []);
@@ -113,7 +117,7 @@ const StockInBranch = (props) => {
                 >
                     Add Product
                 </Button>
-                {stockList != undefined && stockList.length > 0 ? (
+                {stockList !== undefined && stockList.length > 0 ? (
                     <Stack>
                         {stockList.map((item) => (
                             <ProductCardInStock
@@ -131,7 +135,7 @@ const StockInBranch = (props) => {
                     </Stack>
                 ) : (
                     <Box sx={{ display: 'flex' }}>
-                        {loading == false ? (
+                        {loading === false ? (
                             <CircularProgress />
                         ) : (
                             <Typography variant="h6">There is no product to show...</Typography>
@@ -164,5 +168,5 @@ const StockInBranch = (props) => {
             </Stack>
         </Box>
     );
-};
+}
 export default StockInBranch;

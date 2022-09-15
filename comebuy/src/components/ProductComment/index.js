@@ -4,10 +4,8 @@ import {
     Typography,
     Box,
     Button,
-    styled,
     CircularProgress,
     ListItem,
-    Divider,
     List,
     ListItemAvatar,
     ListItemText,
@@ -16,39 +14,19 @@ import {
     TextField,
     Modal,
 } from '@mui/material';
-import style from './style';
-import CurrencyExchangeIcon from '@mui/icons-material/CurrencyExchange';
 import MessageIcon from '@mui/icons-material/Message';
 import ChatBubbleOutlineIcon from '@mui/icons-material/ChatBubbleOutline';
 import SendIcon from '@mui/icons-material/Send';
 import React, { useEffect, useState } from 'react';
-import commentApi from '../../api/commentAPI';
 import EditIcon from '@mui/icons-material/Edit';
-import { useSelector } from 'react-redux';
-import { currentUser } from 'netlify-identity-widget';
 import { useNavigate } from 'react-router';
-import SnackBarAlert from '../SnackBarAlert';
 import RateReviewIcon from '@mui/icons-material/RateReview';
+import SnackBarAlert from '../SnackBarAlert';
+import commentApi from '../../api/commentAPI';
+import style from './style';
 
-const CustomButton = styled(Button)({
-    color: 'white',
-    backgroundColor: 'black',
-    width: '100%',
-    borderRadius: '5px',
-    borderWidth: '3px',
-    marginBottom: '20px',
-    paddingLeft: 20,
-    paddingRight: 20,
-
-    '&:hover': {
-        zIndex: 1,
-        backgroundColor: 'grey',
-    },
-});
-
-const ProductComment = (props) => {
+function ProductComment(props) {
     const navigate = useNavigate();
-    const _currentUser = useSelector(currentUser);
     const [comments, setComments] = useState([]);
     const [loading, setLoading] = useState(true);
     const [open, setOpen] = useState(false);
@@ -71,7 +49,7 @@ const ProductComment = (props) => {
             setMessageError('Comment is not allowed empty! :((');
             setOpenErrorAlert(true);
             handleClose();
-        } else if (localStorage.getItem('idUser') == '') {
+        } else if (localStorage.getItem('idUser') === '') {
             setMessageError('Please login before comment!');
             setOpenErrorAlert(true);
             handleClose();
@@ -84,7 +62,7 @@ const ProductComment = (props) => {
                 postDate: Date.now().toString(),
             };
             const response = await commentApi.postNewComment(newComment);
-            if (response.status == 200) {
+            if (response.status === 200) {
                 setComments(response.data);
                 setMessageSuccess('Post Comment Successfully');
                 setOpenSuccessAlert(true);
@@ -100,7 +78,7 @@ const ProductComment = (props) => {
     useEffect(async () => {
         let cancel = false;
         const response = await commentApi.getCommentsWithID(props.productID);
-        if (!cancel && response.status == 200) {
+        if (!cancel && response.status === 200) {
             if (cancel) return;
             setComments(response.data);
             setLoading(false);
@@ -133,15 +111,15 @@ const ProductComment = (props) => {
     return (
         <Grid container item xs={12} sx={style.boxComment}>
             <Stack sx={{ width: '100%' }}>
-                <Stack direction={'row'} sx={{ alignItems: 'center', p: 2 }} spacing={2}>
+                <Stack direction="row" sx={{ alignItems: 'center', p: 2 }} spacing={2}>
                     <MessageIcon />
-                    <Typography variant="h5" fontWeight={'bold'}>
+                    <Typography variant="h5" fontWeight="bold">
                         Reviews and Comments
                     </Typography>
                 </Stack>
-                {loading == true ? (
+                {loading === true ? (
                     <Grid container item xs={12} sx={{ p: 3, width: '100%' }}>
-                        <CircularProgress></CircularProgress>
+                        <CircularProgress />
                     </Grid>
                 ) : (
                     <Grid
@@ -153,7 +131,7 @@ const ProductComment = (props) => {
                         {!comments.length > 0 ? (
                             <Stack spacing={2} sx={{ boxShadow: 5, p: 4, borderRadius: 5 }}>
                                 <ChatBubbleOutlineIcon />
-                                <Typography variant="h6" fontWeight={'bold'}>
+                                <Typography variant="h6" fontWeight="bold">
                                     There are no reviews and comments yet
                                 </Typography>
                                 <Typography variant="body1">Should buy or not? Please help my brother.</Typography>
@@ -170,7 +148,7 @@ const ProductComment = (props) => {
                                             <ListItemText
                                                 primary={item.account.name}
                                                 secondary={
-                                                    <React.Fragment>
+                                                    <>
                                                         <Typography
                                                             sx={{ display: 'inline' }}
                                                             component="span"
@@ -180,7 +158,7 @@ const ProductComment = (props) => {
                                                             {item.account.name}
                                                         </Typography>
                                                         - {item.body}
-                                                    </React.Fragment>
+                                                    </>
                                                 }
                                             />
                                         </ListItem>
@@ -191,7 +169,7 @@ const ProductComment = (props) => {
                         <Grid container xs={12} item>
                             <Box
                                 sx={{ height: 3, width: '90%', backgroundColor: 'black', mt: 4, ml: 4, mr: 4, mb: 4 }}
-                            ></Box>
+                            />
                         </Grid>
                     </Grid>
                 )}
@@ -218,7 +196,7 @@ const ProductComment = (props) => {
                     <Typography id="modal-modal-title" variant="h6" component="h2">
                         Write your comment below. We appreciate your assistance!
                     </Typography>
-                    <TextField onChange={(e) => setNewCommentBody(e.target.value)}></TextField>
+                    <TextField onChange={(e) => setNewCommentBody(e.target.value)} />
                     <Button onClick={HandlePostNewComment} variant="contained" color="secondary" endIcon={<SendIcon />}>
                         Post
                     </Button>
@@ -238,6 +216,6 @@ const ProductComment = (props) => {
             />
         </Grid>
     );
-};
+}
 
 export default ProductComment;

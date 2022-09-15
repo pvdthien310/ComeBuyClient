@@ -3,11 +3,11 @@ import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import Typography from '@mui/material/Typography';
 import Modal from '@mui/material/Modal';
-import TextFieldForAdd from '../TextFieldForAdd';
 import AddShoppingCartIcon from '@mui/icons-material/AddShoppingCart';
 import WarningIcon from '@mui/icons-material/Warning';
 import { useState } from 'react';
 import { Stack } from '@mui/material';
+import TextFieldForAdd from '../TextFieldForAdd';
 
 const style = {
     position: 'absolute',
@@ -21,7 +21,7 @@ const style = {
     p: 4,
 };
 
-const UpdateAmountInStockModal = (props) => {
+function UpdateAmountInStockModal(props) {
     const [amount, setAmount] = useState(0);
     const [Error, setError] = useState({
         isError: false,
@@ -29,7 +29,7 @@ const UpdateAmountInStockModal = (props) => {
     });
 
     const handleAddAmountProduct = () => {
-        if (Number(amount) != 0) {
+        if (Number(amount) !== 0) {
             props.onSubmit(amount);
             props.onClose();
         } else setError({ isError: true, message: 'Amount is not allowed to equal 0!' });
@@ -42,9 +42,7 @@ const UpdateAmountInStockModal = (props) => {
                     <Typography variant="h6" component="h2">
                         Add quantity of product
                     </Typography>
-                    <Box
-                        sx={{ height: 5, backgroundColor: '#2e1534', width: '100%', mt: 1, mb: 1, borderRadius: 5 }}
-                    ></Box>
+                    <Box sx={{ height: 5, backgroundColor: '#2e1534', width: '100%', mt: 1, mb: 1, borderRadius: 5 }} />
                     <Typography sx={{ mb: 2 }}>Please fill in the information.</Typography>
                     <TextFieldForAdd
                         inputConfig="number"
@@ -52,7 +50,7 @@ const UpdateAmountInStockModal = (props) => {
                         Text={amount}
                         Title="Amount"
                         onChange={(event) => setAmount(event.target.value)}
-                    ></TextFieldForAdd>
+                    />
                     {Error.isError && (
                         <Stack direction="row" spacing={2} sx={{ margin: 1 }}>
                             <WarningIcon sx={{ color: 'red' }} />
@@ -64,5 +62,5 @@ const UpdateAmountInStockModal = (props) => {
             </Modal>
         </div>
     );
-};
+}
 export default UpdateAmountInStockModal;

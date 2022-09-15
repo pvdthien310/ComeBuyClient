@@ -3,9 +3,8 @@ import TextField from '@mui/material/TextField';
 import Stack from '@mui/material/Stack';
 import Autocomplete from '@mui/material/Autocomplete';
 import { useNavigate } from 'react-router-dom';
-import { makeStyles } from '@mui/styles';
 
-const SearchBar = (props) => {
+function SearchBar(props) {
     const navigate = useNavigate();
     return (
         <Stack spacing={2} sx={{ width: 500, m: 2, alignSelf: 'center' }}>
@@ -14,8 +13,8 @@ const SearchBar = (props) => {
                 id="free-solo-2-demo"
                 disableClearable
                 onChange={(event, newValue) => {
-                    const selectedProduct = props.productList.filter((item) => item.name == newValue);
-                    if (selectedProduct.length != 0) navigate('/productSpace/' + selectedProduct[0].productID);
+                    const selectedProduct = props.productList.filter((item) => item.name === newValue);
+                    if (selectedProduct.length !== 0) navigate(`/productSpace/${selectedProduct[0].productID}`);
                     else console.log('Product is not existed');
                 }}
                 color="secondary"
@@ -33,5 +32,5 @@ const SearchBar = (props) => {
             />
         </Stack>
     );
-};
+}
 export default SearchBar;

@@ -7,10 +7,10 @@ import ButtonBase from '@mui/material/ButtonBase';
 import Button from '@mui/material/Button';
 import ShoppingCartIcon from '@mui/icons-material/ShoppingCart';
 import { useSelector } from 'react-redux';
-import { productListSelector } from '../../../redux/selectors';
 import { CircularProgress } from '@mui/material';
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { productListSelector } from '../../../redux/selectors';
 
 const Img = styled('img')({
     margin: 'auto',
@@ -27,13 +27,13 @@ const CustomButton = styled(Button)(() => ({
     },
 }));
 
-const ProductItem = (props) => {
+function ProductItem(props) {
     const navigate = useNavigate();
     const _productList = useSelector(productListSelector);
     const [product, setProduct] = useState(null);
     const [loading, setLoading] = useState(true);
     useEffect(() => {
-        const temp = _productList.filter((ite) => ite.productID == props.product);
+        const temp = _productList.filter((ite) => ite.productID === props.product);
         setProduct(temp[0]);
         setLoading(false);
         return () => {
@@ -41,7 +41,7 @@ const ProductItem = (props) => {
             setLoading(false);
         };
     }, []);
-    const handleNavigateToDetail = () => navigate('/productSpace/' + props.product);
+    const handleNavigateToDetail = () => navigate(`/productSpace/${props.product}`);
     return (
         <Paper
             sx={{
@@ -83,16 +83,16 @@ const ProductItem = (props) => {
                             </Grid>
                         </Grid>
                         <Grid item>
-                            <Typography variant="subtitle1" color={'error'}>
+                            <Typography variant="subtitle1" color="error">
                                 ${product.price}
                             </Typography>
                         </Grid>
                     </Grid>
                 </Grid>
             ) : (
-                <CircularProgress></CircularProgress>
+                <CircularProgress />
             )}
         </Paper>
     );
-};
+}
 export default ProductItem;

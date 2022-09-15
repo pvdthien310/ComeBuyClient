@@ -1,9 +1,6 @@
 import * as React from 'react';
 import Card from '@mui/material/Card';
-import CardActions from '@mui/material/CardActions';
 import CardContent from '@mui/material/CardContent';
-import CardMedia from '@mui/material/CardMedia';
-import Button from '@mui/material/Button';
 import Typography from '@mui/material/Typography';
 import { Box, CardActionArea, Stack, styled } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
@@ -15,16 +12,16 @@ const Img = styled('img')({
     height: 120,
 });
 
-const ProductItem = (props) => {
+function ProductItem(props) {
     const navigate = useNavigate();
-    const handleNavigateToDetail = () => navigate('/productSpace/' + props.product.productID);
+    const handleNavigateToDetail = () => navigate(`/productSpace/${props.product.productID}`);
 
     return (
         <Card sx={{ width: 300, height: 380, p: 2, m: 1, boxShadow: 5 }}>
             <CardActionArea sx={{ height: '100%' }} onClick={handleNavigateToDetail}>
                 <Img alt="complex" src={props.product.productimage[0].imageURL} />
                 <CardContent>
-                    <Typography gutterBottom variant="body1" fontWeight={'bold'} component="div">
+                    <Typography gutterBottom variant="body1" fontWeight="bold" component="div">
                         {props.product.name}
                     </Typography>
                     <Typography gutterBottom variant="body2" color="#868C7D" component="div">
@@ -38,7 +35,7 @@ const ProductItem = (props) => {
                     </Stack>
                     <Typography
                         variant="body1"
-                        fontWeight={'bold'}
+                        fontWeight="bold"
                         sx={{ textAlign: 'end', alignSelf: 'end' }}
                         color="#D94A56"
                     >
@@ -48,5 +45,5 @@ const ProductItem = (props) => {
             </CardActionArea>
         </Card>
     );
-};
+}
 export default ProductItem;

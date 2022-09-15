@@ -1,16 +1,17 @@
+/* eslint-disable no-unused-vars */
+/* eslint-disable operator-linebreak */
 import React, { useRef, useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { currentUser } from '../../redux/selectors';
 import moment from 'moment';
-import { addInvoice } from '../../redux/slices/invoiceSlice';
 import { unwrapResult } from '@reduxjs/toolkit';
+import { Dialog, Button, DialogTitle } from '@mui/material';
+import { useNavigate } from 'react-router-dom';
+import { currentUser } from '../../redux/selectors';
+import { addInvoice } from '../../redux/slices/invoiceSlice';
 import { addInvoiceItem } from '../../redux/slices/invoiceItemSlice';
 import emailApi from '../../api/emailAPI';
 
-import { Dialog, Button } from '@mui/material';
-import { DialogTitle } from '@mui/material';
 import { deleteCartById } from '../../redux/slices/cartSlice';
-import { useNavigate } from 'react-router-dom';
 
 export default function Paypal({
     _discount,
@@ -27,7 +28,8 @@ export default function Paypal({
     const dispatch = useDispatch();
     const paypal = useRef();
     const navigate = useNavigate();
-
+    const [startAddInvoiceItem, setStartAddInvoiceItem] = useState(false);
+    const [isCompleted, setIsCompleted] = useState(false);
     const [paidSuccessfully, setPaidSuccessfully] = useState(false);
 
     const handleCloseDialog = async () => {
@@ -36,8 +38,7 @@ export default function Paypal({
         if (localStorage.getItem('role') === 'customer') {
             for (let i = 0; i < cartList.length; i++) {
                 try {
-                    const resultAction = await dispatch(deleteCartById(cartList[i]));
-                    const originalPromiseResult = unwrapResult(resultAction);
+                    await dispatch(deleteCartById(cartList[i]));
                 } catch (rejectedValueOrSerializedError) {
                     alert(rejectedValueOrSerializedError);
                 }
@@ -61,24 +62,24 @@ export default function Paypal({
         branchID: 'a4a66b5e-182b-4b7d-bd13-8e6a54b686a6',
     });
 
-    const [orderDataItem, setOrderDataItem] = useState({
-        invoiceid: '',
-        productid: '',
-        amount: 0,
-        total: 0,
-    });
+    // const [orderDataItem, setOrderDataItem] = useState({
+    //     invoiceid: '',
+    //     productid: '',
+    //     amount: 0,
+    //     total: 0,
+    // });
 
     // const [listOrderDataItem, setListOrderDataItem] = useState([])
 
     const [listItem, setListItem] = useState([]);
 
     const _addInvoiceItem = async (_invoiceId) => {
-        let t = [];
+        const t = [];
         let stringOrder = '';
         for (let i = 0; i < cartList.length; i++) {
             for (let j = 0; j < prodList.length; j++) {
                 if (cartList[i].productid === prodList[j].productID) {
-                    let item = {
+                    const item = {
                         invoiceID: _invoiceId,
                         productID: prodList[j].productID,
                         amount: cartList[i].amount,
@@ -86,8 +87,7 @@ export default function Paypal({
                     };
                     t.push(item);
                     stringOrder =
-                        stringOrder +
-                        '\n' +
+                        `${stringOrder}\n` +
                         `${prodList[j].name} - Quantity: ${cartList[i].amount} - Sub-cost: $${item.total} `;
                 }
             }
@@ -104,9 +104,7 @@ export default function Paypal({
                         `Phone: ${_currentUser.phoneNumber} \n` +
                         `COD Address: ${_bigAddress}` +
                         '\n' +
-                        '-------------------------------------------------------- \n' +
-                        stringOrder +
-                        '\n' +
+                        `-------------------------------------------------------- \n${stringOrder}\n` +
                         '-------------------------------------------------------- \n' +
                         `Subtotal: ${_lastTotal} USD` +
                         '\n' +
@@ -114,7 +112,7 @@ export default function Paypal({
                         `Discount: ${_discount} %` +
                         '\n' +
                         '-------------------------------------------------------- \n' +
-                        `Shipping-fee: 2 USD` +
+                        'Shipping-fee: 2 USD' +
                         '\n' +
                         '-------------------------------------------------------- \n' +
                         `Total: ${_lastTotal + 2 - (_lastTotal * _discount) / 100} USD` +
@@ -122,7 +120,7 @@ export default function Paypal({
                         '-------------------------------------------------------- \n' +
                         'Any wondered things. Please contact with our shop with contact below site: ComeBuy.com',
                 })
-                .then((data) => {
+                .then(() => {
                     setListItem(t);
                     setStartAddInvoiceItem(true);
                 })
@@ -139,11 +137,9 @@ export default function Paypal({
                         `Phone: ${_guestPhoneNumber} \n` +
                         `COD Address: ${_bigAddress}` +
                         '\n' +
+                        `-------------------------------------------------------- \n${stringOrder}\n` +
                         '-------------------------------------------------------- \n' +
-                        stringOrder +
-                        '\n' +
-                        '-------------------------------------------------------- \n' +
-                        `Shipping-fee: 2 USD` +
+                        'Shipping-fee: 2 USD' +
                         '\n' +
                         '-------------------------------------------------------- \n' +
                         `Subtotal: ${_lastTotal} USD` +
@@ -154,15 +150,14 @@ export default function Paypal({
                         '-------------------------------------------------------- \n' +
                         'Any wondered things. Please contact with our shop with contact below site: ComeBuy.com',
                 })
-                .then((data) => {
+                .then(() => {
                     setListItem(t);
                     setStartAddInvoiceItem(true);
                 })
                 .catch((err) => console.log(err));
         }
     };
-    const [startAddInvoiceItem, setStartAddInvoiceItem] = useState(false);
-    const [isCompleted, setIsCompleted] = useState(false);
+
     useEffect(() => {
         if (isCompleted === true) {
             setPaidSuccessfully(true);
@@ -173,8 +168,7 @@ export default function Paypal({
         const addItem = async () => {
             for (let i = 0; i < listItem.length; i++) {
                 try {
-                    const resultAction = await dispatch(addInvoiceItem(listItem[i]));
-                    const originalPromiseResult = unwrapResult(resultAction);
+                    await dispatch(addInvoiceItem(listItem[i]));
                 } catch (rejectedValueOrSerializedError) {
                     console.log(rejectedValueOrSerializedError);
                 }
@@ -191,15 +185,14 @@ export default function Paypal({
 
     const MakeInvoice = async () => {
         if (localStorage.getItem('role') === 'customer') {
-            var m = moment().format('H mm');
-            var date = moment().format('D/M/YYYY');
-            let tempID = '';
-            let temp = {
+            const m = moment().format('H mm');
+            const date = moment().format('D/M/YYYY');
+            const temp = {
                 ...orderData,
                 moneyReceived: _lastTotal,
                 isChecked: false,
                 isPaid: false,
-                date: date + ' ' + m,
+                date: `${date} ${m}`,
                 userID: _currentUser.userID,
                 address: _bigAddress,
                 branchID: 'a4a66b5e-182b-4b7d-bd13-8e6a54b686a6',
@@ -207,15 +200,14 @@ export default function Paypal({
             setOrderData(temp);
             setStartAddInvoice(true);
         } else {
-            var m = moment().format('H mm');
-            var date = moment().format('D/M/YYYY');
-            let tempID = '';
-            let temp = {
+            const m = moment().format('H mm');
+            const date = moment().format('D/M/YYYY');
+            const temp = {
                 ...orderData,
                 moneyReceived: _lastTotal.toString(),
                 isChecked: false,
                 isPaid: false,
-                date: date + ' ' + m,
+                date: `${date} ${m}`,
                 address: _bigAddress,
                 userID: 'c464ea83-fcf5-44a4-8d90-f41b78b78db8',
                 branchID: 'a4a66b5e-182b-4b7d-bd13-8e6a54b686a6',
@@ -228,7 +220,7 @@ export default function Paypal({
     const [invoiceId, setInvoiceId] = useState(' ');
 
     useEffect(async () => {
-        if (invoiceId != ' ') {
+        if (invoiceId !== ' ') {
             _addInvoiceItem(invoiceId);
         }
     }, [invoiceId]);
@@ -250,8 +242,8 @@ export default function Paypal({
         if (localStorage.getItem('role') === 'customer') {
             window.paypal
                 .Buttons({
-                    createOrder: (data, actions, err) => {
-                        return actions.order.create({
+                    createOrder: (data, actions, err) =>
+                        actions.order.create({
                             intent: 'CAPTURE',
                             purchase_units: [
                                 {
@@ -276,8 +268,7 @@ export default function Paypal({
                                     items: purchases,
                                 },
                             ],
-                        });
-                    },
+                        }),
                     onApprove: async (data, actions) => {
                         const order = await actions.order.capture();
                         await MakeInvoice();
@@ -290,8 +281,8 @@ export default function Paypal({
         } else {
             window.paypal
                 .Buttons({
-                    createOrder: (data, actions, err) => {
-                        return actions.order.create({
+                    createOrder: (data, actions, err) =>
+                        actions.order.create({
                             intent: 'CAPTURE',
                             purchase_units: [
                                 {
@@ -312,8 +303,7 @@ export default function Paypal({
                                     items: purchases,
                                 },
                             ],
-                        });
-                    },
+                        }),
                     onApprove: async (data, actions) => {
                         const order = await actions.order.capture();
                         await MakeInvoice();
@@ -328,7 +318,7 @@ export default function Paypal({
 
     return (
         <div>
-            <div ref={paypal}></div>
+            <div ref={paypal} />
             {/* {console.log(cartList)}
             {console.log(prodList)} */}
             {/* {console.log(purchases)}

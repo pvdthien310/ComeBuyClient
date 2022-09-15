@@ -2,7 +2,7 @@ import { Stack, TextField } from '@mui/material';
 import Typography from '@mui/material/Typography';
 import { memo } from 'react';
 
-const TextFieldForEdit = (props) => {
+function TextFieldForEdit(props) {
     return (
         /// Set key to re render child component when props change :))))
         <Stack key={props.Text} spacing={1}>
@@ -21,6 +21,6 @@ const TextFieldForEdit = (props) => {
             />
         </Stack>
     );
-};
+}
 
-export default memo(TextFieldForEdit, (prevProps, nextProps) => prevProps.Text != nextProps.Text);
+export default memo(TextFieldForEdit, (prevProps, nextProps) => prevProps.Text !== nextProps.Text);

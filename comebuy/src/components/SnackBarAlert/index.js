@@ -1,6 +1,6 @@
 import { Alert, Snackbar } from '@mui/material';
 
-const SnackBarAlert = (props) => {
+function SnackBarAlert(props) {
     return (
         <Snackbar open={props.open} autoHideDuration={2000} onClose={props.handleClose}>
             <Alert onClose={props.handleClose} severity={props.severity} sx={{ width: '100%' }}>
@@ -8,6 +8,6 @@ const SnackBarAlert = (props) => {
             </Alert>
         </Snackbar>
     );
-};
+}
 
 export default SnackBarAlert;

@@ -1,13 +1,13 @@
+/* eslint-disable prefer-destructuring */
 import React, { useEffect, useState } from 'react';
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
-import invoiceAPI from '../../api/invoiceAPI';
-import productAPI from '../../api/productAPI';
 import Box from '@mui/material/Box';
 import LinearProgress from '@mui/material/LinearProgress';
 import { Typography } from '@mui/material';
+import productAPI from '../../api/productAPI';
+import invoiceAPI from '../../api/invoiceAPI';
 
-const handleMouseEnter = () => {};
-const CustomizedAxisTick = (props) => {
+function CustomizedAxisTick(props) {
     const { x, y, payload, width, maxChars, lineHeight, fontSize, fill } = props;
     const rx = new RegExp(`.{1,${maxChars}}`, 'g');
     const chunks = payload.value
@@ -27,7 +27,7 @@ const CustomizedAxisTick = (props) => {
             </text>
         </g>
     );
-};
+}
 
 CustomizedAxisTick.defaultProps = {
     width: 50,
@@ -37,45 +37,48 @@ CustomizedAxisTick.defaultProps = {
     fill: '#333',
 };
 
-const RevenueChart = (props) => {
+function RevenueChart(props) {
     const [data, setData] = useState([]);
     const [loading, setLoading] = useState(false);
-    async function LoadRevenueData() {
-        try {
-            const response = await invoiceAPI.RevenueByBranch(props.branchID);
-            if (response.status == 200) {
-                await UpdateProductForData(response.data);
-            } else console.log('error');
-        } catch (err) {
-            console.log(err);
-        }
-    }
-    const UpdateProductForData = async (data) => {
+
+    const UpdateProductForData = async (data1) => {
         try {
             const response = await productAPI.getAll();
             if (response) {
-                for (var i = 0; i < data.length; i++) {
-                    for (var j = 0; j < response.length; j++) {
-                        if (data[i].name == response[j].productID) {
-                            data[i].name = response[j].name.split('(')[0];
+                for (let i = 0; i < data1.length; i++) {
+                    for (let j = 0; j < response.length; j++) {
+                        if (data1[i].name === response[j].productID) {
+                            data1[i].name = response[j].name.split('(')[0];
                             break;
                         }
                     }
                 }
-                setData(data);
+                setData(data1);
                 setLoading(true);
             } else console.log('Error');
         } catch (err) {
             console.log(err);
         }
     };
+
+    async function LoadRevenueData() {
+        try {
+            const response = await invoiceAPI.RevenueByBranch(props.branchID);
+            if (response.status === 200) {
+                await UpdateProductForData(response.data);
+            } else console.log('error');
+        } catch (err) {
+            console.log(err);
+        }
+    }
+
     useEffect(() => {
         LoadRevenueData();
         return () => setData([]);
     }, []);
     return (
         <ResponsiveContainer width="95%" height="100%">
-            {data.length > 0 && loading == true ? (
+            {data.length > 0 && loading === true ? (
                 <BarChart
                     BarChart
                     width={500}
@@ -100,7 +103,7 @@ const RevenueChart = (props) => {
                 </BarChart>
             ) : (
                 <Box sx={{ width: '100%' }}>
-                    {loading == true ? (
+                    {loading === true ? (
                         <Typography variant="h6">There is nothing to show...</Typography>
                     ) : (
                         <Box sx={{ width: '100%' }}>
@@ -114,5 +117,5 @@ const RevenueChart = (props) => {
             )}
         </ResponsiveContainer>
     );
-};
+}
 export default RevenueChart;

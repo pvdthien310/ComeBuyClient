@@ -1,7 +1,7 @@
 import { Stack } from '@mui/material';
 import Typography from '@mui/material/Typography';
 
-const TechInforLine = ({ Icon, Title, Text }) => {
+function TechInforLine({ Icon, Title, Text }) {
     return (
         <Stack spacing={1}>
             <Stack direction="row" spacing={1}>
@@ -11,6 +11,6 @@ const TechInforLine = ({ Icon, Title, Text }) => {
             <Typography sx={{ paddingLeft: 5 }}>{Text}</Typography>
         </Stack>
     );
-};
+}
 
 export default TechInforLine;

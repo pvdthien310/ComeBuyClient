@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import ArrowCircleUpSharpIcon from '@mui/icons-material/ArrowCircleUpSharp';
 import { Button } from './style';
 
-const ScrollButton = () => {
+function ScrollButton() {
     const [visible, setVisible] = useState(false);
 
     const toggleVisible = () => {
@@ -40,6 +40,6 @@ const ScrollButton = () => {
             />
         </Button>
     );
-};
+}
 
 export default ScrollButton;

@@ -5,7 +5,7 @@ import MenuItem from '@mui/material/MenuItem';
 import FormControl from '@mui/material/FormControl';
 import Select from '@mui/material/Select';
 
-const RoleSelect = (props) => {
+function RoleSelect(props) {
     return (
         <Box sx={{ minWidth: 120 }}>
             <FormControl fullWidth>
@@ -23,5 +23,5 @@ const RoleSelect = (props) => {
             </FormControl>
         </Box>
     );
-};
+}
 export default RoleSelect;
