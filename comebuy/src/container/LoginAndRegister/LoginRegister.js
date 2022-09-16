@@ -360,7 +360,7 @@ function LoginRegister() {
         if (isRegistering === 1) {
             setOpenBackdrop(false);
             setOpenDialogRegSuccessfully(true);
-        } else {
+        } else if (isRegistering === 2) {
             setOpenBackdrop(false);
             setOpenDialogRegFailed(true);
         }
