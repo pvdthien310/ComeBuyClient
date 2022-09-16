@@ -1,6 +1,7 @@
 import React from 'react';
 import CounterForManager from '../container/CounterForManger';
 import Distribution from '../container/Distribution';
+import ManagerHome from '../container/ManagerHome';
 import Revenue from '../container/Revenue';
 
 const managerRoutes = [
@@ -19,6 +20,11 @@ const managerRoutes = [
         path: '/distribution/*',
         exact: true,
         page: <Distribution />,
+    },
+    {
+        name: 'Manager Home',
+        path: '/',
+        page: <ManagerHome />,
     },
 ];
 
