@@ -19,5 +19,9 @@ const invoiceAPI = {
         const res = await DatabaseClient.post(`/${baseURL}`, newInvoice).catch((err) => err.response);
         return res;
     },
+    addInvoiceItem: async (item) => {
+        const res = await DatabaseClient.post(`/${baseURL}/invoiceItem`, item).catch((err) => err.response);
+        return res;
+    },
 };
 export default invoiceAPI;

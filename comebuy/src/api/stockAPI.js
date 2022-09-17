@@ -19,5 +19,9 @@ const stockApi = {
         const res = DatabaseClient.put(`/${baseURL}/${data.id}`, data).catch((err) => err.response);
         return res;
     },
+    dealRemain: async (data) => {
+        const res = DatabaseClient.put(`/${baseURL}/dealRemain`, data).catch((err) => err.response);
+        return res;
+    },
 };
 export default stockApi;

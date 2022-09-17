@@ -41,9 +41,9 @@ import { isSignedIn_user, currentUser, cartListSelector } from '../../redux/sele
 import { deleteCartById, getAllCart } from '../../redux/slices/cartSlice';
 import { getProductWithID } from '../../redux/slices/productSlice';
 import { accountSlice } from '../../redux/slices/accountSlice';
-import { addInvoice } from '../../redux/slices/invoiceSlice';
-import { addInvoiceItem } from '../../redux/slices/invoiceItemSlice';
+import { addInvoice, addInvoiceItem } from '../../redux/slices/invoiceSlice';
 import emailApi from '../../api/emailAPI';
+import { dealRemain } from '../../redux/slices/stockSlice';
 
 const Alert = React.forwardRef((props, ref) => <MuiAlert elevation={6} ref={ref} variant="filled" {...props} />);
 const Transition = React.forwardRef((props, ref) => <Slide direction="up" ref={ref} {...props} />);
@@ -373,9 +373,18 @@ function CheckoutPage() {
         handleCloseConfirm();
         if (localStorage.getItem('role') === 'customer') {
             for (let i = 0; i < listCart.length; i++) {
+                const param = {
+                    isOnline: true,
+                    quantity: listCart[i].amount,
+                    branchId: '',
+                    productId: listCart[i].productid,
+                };
+                console.log(param);
                 try {
+                    await dispatch(dealRemain(param));
                     await dispatch(deleteCartById(listCart[i]));
                 } catch (rejectedValueOrSerializedError) {
+                    // eslint-disable-next-line no-alert
                     alert(rejectedValueOrSerializedError);
                 }
             }
@@ -389,22 +398,33 @@ function CheckoutPage() {
     const MakeInvoice = async () => {
         const m = moment().format('H mm');
         const date = moment().format('D/M/YYYY');
+        // eslint-disable-next-line prefer-const
+        let listGoods = [];
+        listCart.map((i) => {
+            const pro = {
+                productid: i.productid,
+                quantity: i.amount,
+            };
+            listGoods.push(pro);
+        });
         if (localStorage.getItem('role') === 'customer') {
             const temp = {
+                date: `${date} ${m}`,
                 moneyReceived: '0',
                 isChecked: false,
                 isPaid: false,
-                date: `${date} ${m}`,
-                address: bigAddress,
                 userID: _currentUser.userID,
-                branchID: 'a4a66b5e-182b-4b7d-bd13-8e6a54b686a6',
+                address: bigAddress,
+                isOnline: true,
+                branchID: '',
+                listGoods,
             };
-
             try {
-                const resultAction = await dispatch(addInvoice(temp));
-                const originalPromiseResult = unwrapResult(resultAction);
-                setInvoiceId(originalPromiseResult.data.invoiceID);
+                const createInvoice = await dispatch(addInvoice(temp));
+                const resultCreateInv = unwrapResult(createInvoice);
+                setInvoiceId(resultCreateInv.data.data.invoiceID);
             } catch (rejectedValueOrSerializedError) {
+                // eslint-disable-next-line no-alert
                 alert(rejectedValueOrSerializedError);
             }
         } else {
@@ -423,6 +443,7 @@ function CheckoutPage() {
                 const originalPromiseResult = unwrapResult(resultAction);
                 setInvoiceId(originalPromiseResult.data.invoiceID);
             } catch (rejectedValueOrSerializedError) {
+                // eslint-disable-next-line no-alert
                 alert(rejectedValueOrSerializedError);
             }
         }
@@ -432,6 +453,12 @@ function CheckoutPage() {
         setOpenBackdrop(true);
         MakeInvoice();
     };
+
+    useEffect(async () => {
+        if (invoiceId !== ' ') {
+            await addInvoiceItem1(invoiceId);
+        }
+    }, [invoiceId]);
 
     const addInvoiceItem1 = async (_invoiceId) => {
         let stringOrder = '';
@@ -447,22 +474,15 @@ function CheckoutPage() {
                     stringOrder =
                         `${stringOrder}\n` +
                         `${listProd[j].name} - Quantity: ${listCart[i].amount} - Sub-cost: $${item.total} `;
-                    // t.push(item)
                     try {
-                        await dispatch(addInvoiceItem(item));
+                        const addItem = await dispatch(addInvoiceItem(item));
                     } catch (rejectedValueOrSerializedError) {
-                        console.log(rejectedValueOrSerializedError);
+                        // eslint-disable-next-line no-alert
+                        alert(rejectedValueOrSerializedError);
                     }
                 }
             }
         }
-
-        useEffect(async () => {
-            if (invoiceId !== ' ') {
-                await addInvoiceItem1(invoiceId);
-            }
-        }, [invoiceId]);
-
         if (localStorage.getItem('role') === 'customer') {
             emailApi
                 .sendOrder({
@@ -480,7 +500,7 @@ function CheckoutPage() {
                         `Total: ${subTotal} USD` +
                         '\n' +
                         '-------------------------------------------------------- \n' +
-                        'Any wondered things ? Please contact with our shop with contact below site: ComeBuy.com',
+                        'Any wondered things ? Please contact with our shop with information below site: ComeBuy.com',
                 })
                 .then(() => {
                     handleCloseBackdrop();

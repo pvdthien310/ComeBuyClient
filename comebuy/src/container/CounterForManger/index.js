@@ -19,8 +19,7 @@ import { currentUser } from '../../redux/selectors';
 import { getAllBranch } from '../../redux/slices/branchSlice';
 import { BigFooter, SnackBarAlert } from '../../components';
 import { getAccountWithID } from '../../redux/slices/accountSlice';
-import { addInvoice } from '../../redux/slices/invoiceSlice';
-import { addInvoiceItem } from '../../redux/slices/invoiceItemSlice';
+import { addInvoice, addInvoiceItem } from '../../redux/slices/invoiceSlice';
 
 function CounterForManager() {
     const _currentUser = useSelector(currentUser);

@@ -8,8 +8,7 @@ import { unwrapResult } from '@reduxjs/toolkit';
 import { Dialog, Button, DialogTitle } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
 import { currentUser } from '../../redux/selectors';
-import { addInvoice } from '../../redux/slices/invoiceSlice';
-import { addInvoiceItem } from '../../redux/slices/invoiceItemSlice';
+import { addInvoice, addInvoiceItem } from '../../redux/slices/invoiceSlice';
 import emailApi from '../../api/emailAPI';
 
 import { deleteCartById } from '../../redux/slices/cartSlice';
