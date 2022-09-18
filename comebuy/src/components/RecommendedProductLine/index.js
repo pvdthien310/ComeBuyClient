@@ -22,7 +22,7 @@ function RecommendedProductLine(props) {
             const resultAction = await dispatch(getAllInvoice());
             const originalPromiseResult = unwrapResult(resultAction);
             const newData = [];
-            await originalPromiseResult.map((ite) => {
+            await originalPromiseResult.data.map((ite) => {
                 ite.invoiceitem.map((ite2) => {
                     if (ite2.productid != null) {
                         const Time = ite.date.split(' ');

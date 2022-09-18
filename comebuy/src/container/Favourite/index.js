@@ -19,6 +19,7 @@ import {
     createFilterOptions,
     TextField,
     Autocomplete,
+    Pagination,
 } from '@mui/material';
 import Backdrop from '@mui/material/Backdrop';
 import CircularProgress from '@mui/material/CircularProgress';
@@ -40,10 +41,10 @@ import { BigFooter, ProductInFavorite } from '../../components';
 import { mobile } from './responsive';
 
 // Importation from slices, api,...
-import { getAllFavorite, deleteFavoriteById } from '../../redux/slices/favoriteSlice';
+import { deleteFavoriteById } from '../../redux/slices/favoriteSlice';
 import { currentUser } from '../../redux/selectors';
-import { getProductWithID } from '../../redux/slices/productSlice';
 import { addCart } from '../../redux/slices/cartSlice';
+import favoriteApi from '../../api/favoriteAPI';
 
 const Container = styled.div`
     background-color: white;
@@ -106,6 +107,7 @@ function FavoritePlace() {
     const [openMoveAllSuccess, setOpenMoveAllSuccess] = useState(false);
     const [openConfirmDelete, setOpenConfirmDelete] = useState(false);
     const [openConfirmMove, setOpenConfirmMove] = useState(false);
+    const [total, SetTotal] = useState(0);
 
     // function middle handler
     const handleCloseMovingToCart = () => {
@@ -141,26 +143,26 @@ function FavoritePlace() {
     // };
 
     // task function
-    const fetchYourFavorite = async (listFavorite, listProduct) => {
-        let temp = [];
-        try {
-            const resultAction = await dispatch(getAllFavorite());
-            const originalPromiseResult = unwrapResult(resultAction);
-            temp = originalPromiseResult;
-            for (let i = 0; i < temp.length; i++) {
-                if (temp[i].userid === _currentUser.userID) {
-                    listFavorite.push(temp[i]);
-                    const resultAction2 = await dispatch(getProductWithID(temp[i].productid));
-                    const originalPromiseResult2 = unwrapResult(resultAction2);
-                    listProduct.push(originalPromiseResult2);
-                }
-            }
-            setIsLoading(false);
-            // await CountTotal(listFavorite, listProduct);
-        } catch (rejectedValueOrSerializedError) {
-            return rejectedValueOrSerializedError;
-        }
-    };
+    // const fetchYourFavorite = async (listFavorite, listProduct) => {
+    //     let temp = [];
+    //     try {
+    //         const resultAction = await dispatch(getAllFavorite());
+    //         const originalPromiseResult = unwrapResult(resultAction);
+    //         temp = originalPromiseResult;
+    //         for (let i = 0; i < temp.length; i++) {
+    //             if (temp[i].userid === _currentUser.userID) {
+    //                 listFavorite.push(temp[i]);
+    //                 const resultAction2 = await dispatch(getProductWithID(temp[i].productid));
+    //                 const originalPromiseResult2 = unwrapResult(resultAction2);
+    //                 listProduct.push(originalPromiseResult2);
+    //             }
+    //         }
+    //         setIsLoading(false);
+    //         // await CountTotal(listFavorite, listProduct);
+    //     } catch (rejectedValueOrSerializedError) {
+    //         return rejectedValueOrSerializedError;
+    //     }
+    // };
 
     const handleDeleteOneFav = async (value) => {
         setIsMovingToCart(true);
@@ -250,16 +252,42 @@ function FavoritePlace() {
         navigate('/');
     };
 
+    const fetchYourFavorite1 = async (offset) => {
+        try {
+            const res = await favoriteApi.getByOffset(offset);
+            if (res.status === 200) {
+                setFavoriteList(
+                    res.data.map((item) => {
+                        const object = { productid: item.productid };
+                        return object;
+                    }),
+                );
+                setIsLoading(false);
+                SetTotal(res.data[0].total);
+            } else {
+                console.log('Load Favorite Failed');
+                setIsLoading(false);
+            }
+        } catch (rejectedValueOrSerializedError) {
+            return rejectedValueOrSerializedError;
+        }
+    };
+
     // useEffect..
     useEffect(() => {
         if (isLoading === true) {
-            const listFavorite = [];
-            const listProduct = [];
-            fetchYourFavorite(listFavorite, listProduct);
-            setFavoriteList(listFavorite);
+            // const listFavorite = [];
+            // const listProduct = [];
+            // fetchYourFavorite(listFavorite, listProduct);
+            fetchYourFavorite1(1);
+            // setFavoriteList(listFavorite);
             // setProdList(listProduct);
         }
     }, []);
+
+    useEffect(() => {
+        console.log(favoriteList);
+    }, [favoriteList]);
 
     // Breadcrumb
     const breadcrumbs = [
@@ -353,10 +381,9 @@ function FavoritePlace() {
                 </Top>
                 <Bottom>
                     <Stack sx={{ marginLeft: '12%', p: 2 }}>
-                        {favoriteList.map((item, i) => (
-                            <>
+                        {favoriteList.map((item) => (
+                            <Stack key={item.productid}>
                                 <ProductInFavorite
-                                    key={i}
                                     handleDeleteOneFavorite={handleDeleteOneFav}
                                     handleMoveItemToCart={handleMoveItemToMyCart}
                                     productInFavorite={item}
@@ -378,8 +405,18 @@ function FavoritePlace() {
                                         <Button onClick={() => handleAgree(item)}>Ok</Button>
                                     </DialogActions>
                                 </Dialog>
-                            </>
+                            </Stack>
                         ))}
+                        {Math.ceil(total / 3) > 1 && (
+                            <Pagination
+                                sx={{ alignSelf: 'center', m: 1 }}
+                                count={Math.ceil(total / 3)}
+                                color="secondary"
+                                onChange={async (e) => {
+                                    await fetchYourFavorite1(e.target.textContent);
+                                }}
+                            />
+                        )}
                     </Stack>
                 </Bottom>
             </Wrapper>

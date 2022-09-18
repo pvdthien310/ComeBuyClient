@@ -7,6 +7,12 @@ const favoriteApi = {
         const res = DatabaseClient.get(`/${baseURL}`).catch((err) => err.response);
         return res;
     },
+    getByOffset: async (offset) => {
+        const res = DatabaseClient.get(`/${baseURL}/${localStorage.getItem('idUser')}/${offset}`).catch(
+            (err) => err.response,
+        );
+        return res;
+    },
     // updateCart: async (data) => {
     //     const res = await DatabaseClient.put('/' + baseURL + '/' + data.cartID, data)
     //         .catch(err => { return err.response })
