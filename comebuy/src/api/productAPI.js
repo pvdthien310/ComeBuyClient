@@ -39,5 +39,9 @@ const productAPI = {
         const res = await DatabaseClient.post(`/${baseURL}/filter`, filterOptions).catch((err) => err.response);
         return res;
     },
+    getBestSelling: async () => {
+        const res = await DatabaseClient.get(`/${baseURL}/get/best-selling`).catch((err) => err.response);
+        return res;
+    },
 };
 export default productAPI;

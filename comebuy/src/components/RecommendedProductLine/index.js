@@ -9,6 +9,7 @@ import ProductItem from './ProductItem';
 import { currentUser, productListSelector } from '../../redux/selectors';
 import { getAllInvoice } from '../../redux/slices/invoiceSlice';
 import style from './style';
+import productAPI from '../../api/productAPI';
 
 function RecommendedProductLine(props) {
     const dispatch = useDispatch();
@@ -22,7 +23,7 @@ function RecommendedProductLine(props) {
             const resultAction = await dispatch(getAllInvoice());
             const originalPromiseResult = unwrapResult(resultAction);
             const newData = [];
-            await originalPromiseResult.map((ite) => {
+            await originalPromiseResult.data.map((ite) => {
                 ite.invoiceitem.map((ite2) => {
                     if (ite2.productid != null) {
                         const Time = ite.date.split(' ');
@@ -48,6 +49,11 @@ function RecommendedProductLine(props) {
                 }
                 setProduct(recommendedList);
             } else console.log('Loi ');
+
+            const response2 = await productAPI.getBestSelling();
+            if (response2.status === 200) {
+                setProduct((prev) => prev.concat(response2.data.map((item) => item.productid)));
+            } else console.log('Cant load best-selling product!');
         } catch (rejectedValueOrSerializedError) {
             return rejectedValueOrSerializedError;
         }
@@ -57,6 +63,10 @@ function RecommendedProductLine(props) {
             cancel = true;
         };
     }, []);
+
+    useEffect(() => {
+        console.log(products);
+    });
 
     return (
         <Grid container item xs={12} sx={style.boxShopInfo}>

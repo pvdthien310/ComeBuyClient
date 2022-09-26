@@ -24,6 +24,7 @@ import CountertopsIcon from '@mui/icons-material/Countertops';
 import ReceiptIcon from '@mui/icons-material/Receipt';
 import MoveDownIcon from '@mui/icons-material/MoveDown';
 import ViewCarouselIcon from '@mui/icons-material/ViewCarousel';
+import ManageHistoryIcon from '@mui/icons-material/ManageHistory';
 import { currentUser } from '../../redux/selectors';
 import { accountSlice } from '../../redux/slices/accountSlice';
 import NotFound from '../../container/NotFound';
@@ -107,6 +108,7 @@ function MainLayout(props) {
                             {route.name === 'Invoice' && <ReceiptIcon />}
                             {route.name === 'Distribution' && <MoveDownIcon />}
                             {route.name === 'Banner Manage' && <ViewCarouselIcon />}
+                            {route.name === 'System Log' && <ManageHistoryIcon />}
                         </ListItemIcon>
                         <ListItemText sx={{ color: 'white' }} primary={route.name} />
                     </ListItem>
