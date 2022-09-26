@@ -1,6 +1,7 @@
 import React from 'react';
 import BannerManage from '../container/BannerManage';
 import DataAnalysis from '../container/DataAnalysis';
+import LogHistory from '../container/LogHistory';
 import ManagerHome from '../container/ManagerHome';
 import Product from '../container/Product';
 import AddProduct from '../container/Product/AddProduct';
@@ -57,6 +58,11 @@ const adminRoutes = [
         page: <BannerManage />,
     },
     {
+        name: 'System Log',
+        path: '/log/*',
+        page: <LogHistory />,
+    },
+    {
         name: 'Manager Home',
         path: '/',
         page: <ManagerHome />,
@@ -93,6 +99,11 @@ const adminMenuItems = [
         name: 'Banner Manage',
         path: '/bannerManage/*',
         page: <BannerManage />,
+    },
+    {
+        name: 'System Log',
+        path: '/log/*',
+        page: <LogHistory />,
     },
 ];
 
