@@ -109,6 +109,7 @@ function MainLayout(props) {
                             {route.name === 'Distribution' && <MoveDownIcon />}
                             {route.name === 'Banner Manage' && <ViewCarouselIcon />}
                             {route.name === 'System Log' && <ManageHistoryIcon />}
+                            {route.name === 'Branch distribution' && <MoveDownIcon />}
                         </ListItemIcon>
                         <ListItemText sx={{ color: 'white' }} primary={route.name} />
                     </ListItem>

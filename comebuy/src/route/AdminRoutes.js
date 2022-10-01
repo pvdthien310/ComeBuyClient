@@ -1,5 +1,6 @@
 import React from 'react';
 import BannerManage from '../container/BannerManage';
+import BigDistribution from '../container/BigDistribution';
 import DataAnalysis from '../container/DataAnalysis';
 import LogHistory from '../container/LogHistory';
 import ManagerHome from '../container/ManagerHome';
@@ -67,6 +68,11 @@ const adminRoutes = [
         path: '/',
         page: <ManagerHome />,
     },
+    {
+        name: 'Branch distribution',
+        path: '/branchDistribution/*',
+        page: <BigDistribution />,
+    },
 ];
 
 const adminMenuItems = [
@@ -104,6 +110,11 @@ const adminMenuItems = [
         name: 'System Log',
         path: '/log/*',
         page: <LogHistory />,
+    },
+    {
+        name: 'Branch distribution',
+        path: '/branchDistribution/*',
+        page: <BigDistribution />,
     },
 ];
 

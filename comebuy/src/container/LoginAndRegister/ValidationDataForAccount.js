@@ -28,7 +28,7 @@ export function CheckEmail(mail) {
 
 // validation phone number
 export function CheckPhoneNumber(contact) {
-    const phoneno = /^[0-9]{10,11}$/;
+    const phoneno = /((09|03|07|08|05)+([0-9]{8})\b)/g;
     if (phoneno.test(contact)) {
         return true;
     }
