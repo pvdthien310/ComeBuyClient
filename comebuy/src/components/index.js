@@ -53,3 +53,4 @@ export { default as ProductInFavorite } from './ProductInFavorite';
 export { default as OrderRow } from './OrderRow';
 export { default as NewProductLine } from './NewProductLine';
 export { default as LiveBanner } from './LiveBanner';
+export { default as LogItem } from './LogItem';

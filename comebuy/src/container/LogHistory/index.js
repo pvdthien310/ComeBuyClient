@@ -1,6 +1,7 @@
 import { Backdrop, CircularProgress, Pagination, Stack, Typography } from '@mui/material';
 import { useState, useEffect } from 'react';
 import logApi from '../../api/logAPi';
+import { LogItem } from '../../components';
 
 function LogHistory() {
     const [log, SetLog] = useState([]);
@@ -26,7 +27,10 @@ function LogHistory() {
 
     return (
         <Stack>
-            {log.length > 0 && log.map((item) => <Typography>{item.action}</Typography>)}
+            <Typography variant="h5" sx={{ alignSelf: 'center', fontWeight: 'bold' }}>
+                History
+            </Typography>
+            {log.length > 0 && log.map((item) => <LogItem key={item.logid} log={item} />)}
             <Pagination
                 sx={{ alignSelf: 'center', m: 1 }}
                 count={log.length > 0 ? Math.ceil(log[0].total / 5) : 0}
