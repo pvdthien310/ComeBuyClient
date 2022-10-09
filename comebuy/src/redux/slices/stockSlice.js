@@ -9,6 +9,25 @@ export const dealRemain = createAsyncThunk('stock/dealRemain', async (data, { re
     return response;
 });
 
+export const getStockAndRemain = createAsyncThunk('stock/getStockAndRemain', async (data, { rejectedWithValue }) => {
+    const response = await stockApi.getStockAndTotalRemain(data);
+    if (!response) {
+        return rejectedWithValue('Get stock failed');
+    }
+    return response.data;
+});
+
+export const getProdInStockByBranchId = createAsyncThunk(
+    'stock/getProdInStockByBranchId',
+    async (data, { rejectedWithValue }) => {
+        const response = await stockApi.getProdInStockByBranchId(data);
+        if (!response) {
+            return rejectedWithValue('Get product failed');
+        }
+        return response.data;
+    },
+);
+
 export const stockSlice = createSlice({
     name: 'stock',
     initialState: {
@@ -35,6 +54,26 @@ export const stockSlice = createSlice({
             state.branchList = action.payload;
         },
         [dealRemain.rejected]: (state) => {
+            state.loading = false;
+        },
+        [getStockAndRemain.pending]: (state) => {
+            state.loading = true;
+        },
+        [getStockAndRemain.fulfilled]: (state, action) => {
+            state.loading = false;
+            state.branchList = action.payload;
+        },
+        [getStockAndRemain.rejected]: (state) => {
+            state.loading = false;
+        },
+        [getProdInStockByBranchId.pending]: (state) => {
+            state.loading = true;
+        },
+        [getProdInStockByBranchId.fulfilled]: (state, action) => {
+            state.loading = false;
+            state.branchList = action.payload;
+        },
+        [getProdInStockByBranchId.rejected]: (state) => {
             state.loading = false;
         },
     },

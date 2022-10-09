@@ -54,3 +54,7 @@ export { default as OrderRow } from './OrderRow';
 export { default as NewProductLine } from './NewProductLine';
 export { default as LiveBanner } from './LiveBanner';
 export { default as AddressSelector } from './AddressSelector';
+export { default as CurrentRoute } from './CurrentRoute';
+export { default as SuggestedRoute } from './SuggestedRoute';
+export { default as DistributionModal } from './DistributionModal';
+export { default as StockItem } from './StockItem';

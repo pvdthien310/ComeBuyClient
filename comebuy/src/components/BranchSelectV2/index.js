@@ -4,17 +4,11 @@ import MenuItem from '@mui/material/MenuItem';
 import FormControl from '@mui/material/FormControl';
 import Select from '@mui/material/Select';
 
-function BranchSelect(props) {
+function BranchSelectV2(props) {
     return (
-        <FormControl sx={{ m: 1, minWidth: 120 }} size="small">
-            <InputLabel id="demo-select-small">Select existed branch</InputLabel>
-            <Select
-                labelId="demo-select-small"
-                id="demo-select-small"
-                value={props.value}
-                label="Select existed branch"
-                onChange={props.handleChange}
-            >
+        <FormControl sx={{ minWidth: 200 }} size="small">
+            <InputLabel id="demo-select-small">Select branch</InputLabel>
+            <Select value={props.currentBranch} label="Select branch" onChange={props.onChangeBranch}>
                 {props.branchList?.map((item) => (
                     <MenuItem key={item.branchID} value={item.branchID}>
                         {item.address}
@@ -24,4 +18,4 @@ function BranchSelect(props) {
         </FormControl>
     );
 }
-export default BranchSelect;
+export default BranchSelectV2;

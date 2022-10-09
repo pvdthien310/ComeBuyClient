@@ -23,5 +23,13 @@ const stockApi = {
         const res = DatabaseClient.put(`/${baseURL}/dealRemain`, data).catch((err) => err.response);
         return res;
     },
+    getStockAndTotalRemain: async (userId) => {
+        const res = DatabaseClient.get(`/${baseURL}/getCurrStock/${userId}`).catch((err) => err.response);
+        return res;
+    },
+    getProdInStockByBranchId: async (branchId) => {
+        const res = DatabaseClient.get(`/${baseURL}/getProdInStockBy/${branchId}`).catch((err) => err.response);
+        return res;
+    },
 };
 export default stockApi;

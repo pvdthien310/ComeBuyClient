@@ -1,15 +1,20 @@
 import React from 'react';
+import { useSelector } from 'react-redux';
 import { Typography, Stack, Grid } from '@mui/material';
-import CurrentRoute from './CurrentRoute';
-import SuggestedRoute from './SuggestedRoute/index';
+import { CurrentRoute, SuggestedRoute } from '../../components';
+import { currentUser } from '../../redux/selectors';
+
+import style from './style';
 
 function BigDistribution() {
+    const _currentUser = useSelector(currentUser);
+
     return (
-        <Stack justifyContent="center" alignItems="center" sx={{ width: '100%', height: '100%' }}>
+        <Stack justifyContent="center" alignItems="center" sx={style.wrapper}>
             <Typography variant="h5" fontWeight="bold" mt={2}>
-                Branch Distribution
+                {_currentUser.role === 'admin' ? 'Branch distribution' : 'Request product'}
             </Typography>
-            <Grid container sx={{ width: '100%', height: '100%' }}>
+            <Grid container sx={style.wrapper}>
                 <CurrentRoute />
                 <SuggestedRoute />
             </Grid>

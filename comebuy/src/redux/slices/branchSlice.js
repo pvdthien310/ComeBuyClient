@@ -13,47 +13,16 @@ export const getAllBranch = createAsyncThunk(
     },
 );
 
-// export const editbranch = createAsyncThunk(
-//     'branch/edit',
-//     // Code async logic, tham số đầu tiên data là dữ liệu truyền vào khi gọi action
-//     async (data, { rejectWithValue }) => {
-//         const response = await branchAPI.edit(data)
-//         if (response.status != 200 && response != "branch was updated successfully.") {
-//             return rejectWithValue("Get All Failed");
-//         }
-//         else {
-//             const response_2 = await branchAPI.getbranchWithID(data.branchID)
-//             if (response_2.status != 200) {
-//                 return rejectWithValue("Get All Failed");
-//             }
-//             else
-//                 return response_2.data;
-//         }
-//     }
-// );
-
-// export const deletebranchByID = createAsyncThunk(
-//     'branch/deletebyid',
-//     // Code async logic, tham số đầu tiên data là dữ liệu truyền vào khi gọi action
-//     async (branchID, { rejectWithValue }) => {
-//         const response = await branchAPI.deleteByID(branchID)
-//         if (response.status != 200)
-//             return rejectWithValue("Get All Failed");
-//         else return branchID
-//     }
-// );
-
-// export const getbranchWithID = createAsyncThunk(
-//     'branch/findOne',
-//     async (data, { rejectedWithValue }) => {
-//         const response = await branchAPI.getbranchWithID(data)
-//         if (!response) {
-//             return rejectedWithValue(" Find branch failed")
-//         } else {
-//             return response.data
-//         }
-//     }
-// )
+export const getBranchAndTotalStock = createAsyncThunk(
+    'branch//getAllBranch/getTotalStock',
+    async (data, { rejectWithValue }) => {
+        const response = await branchApi.getBranchAndTotalStock();
+        if (!response) {
+            return rejectWithValue('Get Branches and Total stock failed');
+        }
+        return response.data;
+    },
+);
 
 export const branchSlice = createSlice({
     name: 'branch',
@@ -81,6 +50,16 @@ export const branchSlice = createSlice({
             state.branchList = action.payload;
         },
         [getAllBranch.rejected]: (state) => {
+            state.loading = false;
+        },
+        [getBranchAndTotalStock.pending]: (state) => {
+            state.loading = true;
+        },
+        [getBranchAndTotalStock.fulfilled]: (state, action) => {
+            state.loading = false;
+            state.branchList = action.payload;
+        },
+        [getBranchAndTotalStock.rejected]: (state) => {
             state.loading = false;
         },
     },
