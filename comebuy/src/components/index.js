@@ -58,3 +58,4 @@ export { default as CurrentRoute } from './CurrentRoute';
 export { default as SuggestedRoute } from './SuggestedRoute';
 export { default as DistributionModal } from './DistributionModal';
 export { default as StockItem } from './StockItem';
+export { default as LogItem } from './LogItem';
