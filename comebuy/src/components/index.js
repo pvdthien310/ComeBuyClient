@@ -54,3 +54,6 @@ export { default as OrderRow } from './OrderRow';
 export { default as NewProductLine } from './NewProductLine';
 export { default as LiveBanner } from './LiveBanner';
 export { default as LogItem } from './LogItem';
+export { default as ChatBot } from './Chatbot';
+export { default as LoadingChatbot } from './LoadingChatbot';
+export { default as TypingAnim } from './TypingAnim';

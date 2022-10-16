@@ -8,7 +8,7 @@ import ListItem from '@mui/material/ListItem';
 import ListItemIcon from '@mui/material/ListItemIcon';
 import ListItemText from '@mui/material/ListItemText';
 // import { useState, useEffect } from 'react';
-import { Route, Routes, Navigate, useNavigate } from 'react-router-dom';
+import { Route, Routes, useNavigate } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { Grid, IconButton, Stack, Typography } from '@mui/material';
 import MenuIcon from '@mui/icons-material/Menu';
@@ -147,7 +147,7 @@ function MainLayout(props) {
                 <Stack sx={{ height: '100%', width: '100%', mt: 2, backgroundColor: 'grey' }}>
                     <Routes>
                         {showRoutes(props.routes)}
-                        <Route element={<Navigate replace to={{ pathname: '/' }} />} />
+                        {/* <Route element={<Navigate replace to={{ pathname: '/' }} />} /> */}
                     </Routes>
                 </Stack>
             </React.Fragment>

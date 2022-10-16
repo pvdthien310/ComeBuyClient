@@ -1,5 +1,5 @@
 import './App.css';
-import { Route, Routes, useNavigate } from 'react-router-dom';
+import { Route, Routes } from 'react-router-dom';
 import { useEffect } from 'react';
 import { useDispatch } from 'react-redux';
 import LoginRegister from './container/LoginAndRegister/LoginRegister';
@@ -20,7 +20,7 @@ function App() {
 
     const dispatch = useDispatch();
     const role = localStorage.getItem('role');
-    const navigate = useNavigate();
+    // const navigate = useNavigate();
 
     const LoadCurrentUser = async () => {
         if (localStorage.getItem('idUser') && localStorage.getItem('idUser') !== '') {
@@ -35,7 +35,7 @@ function App() {
 
     useEffect(async () => {
         await LoadCurrentUser();
-        navigate('/');
+        // navigate('/');
     }, [role]);
 
     const renderRoutes = () => {
