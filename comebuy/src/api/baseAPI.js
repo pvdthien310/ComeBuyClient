@@ -1,7 +1,7 @@
 /* eslint-disable import/no-cycle */
 /* eslint-disable camelcase */
 import axios from 'axios';
-import { local_base_URL } from '../constant.js';
+import { DELOYED_BASE_SERVER_URL } from '../constant.js';
 import JWTApi from './JWTAPI.js';
 
 const DatabaseClient = axios.create({
