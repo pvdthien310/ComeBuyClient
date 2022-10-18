@@ -31,20 +31,15 @@ import NotFound from '../../container/NotFound';
 
 function MainLayout(props) {
     const _currentUser = useSelector(currentUser);
-    // const [pathname, setPathname] = useState(window.location.pathname);
     const navigate = useNavigate();
     const dispatch = useDispatch();
-    // useEffect(() => {
-    //     const path = window.location.pathname;
-    //     setPathname(path);
-    // });
 
     const showRoutes = (routes) => {
         let result = null;
         if (routes.length > 0) {
             result = routes.map((route, index) => <Route key={index} path={route.path} element={route.page} />);
         }
-        result.push(<Route key={routes.length} path="/error" element={<NotFound />} />);
+        result.push(<Route key={routes.length} path="*" element={<NotFound />} />);
         return result;
     };
 
@@ -145,10 +140,7 @@ function MainLayout(props) {
                     {list('left')}
                 </Drawer>
                 <Stack sx={{ height: '100%', width: '100%', mt: 2, backgroundColor: 'grey' }}>
-                    <Routes>
-                        {showRoutes(props.routes)}
-                        {/* <Route element={<Navigate replace to={{ pathname: '/' }} />} /> */}
-                    </Routes>
+                    <Routes>{showRoutes(props.routes)}</Routes>
                 </Stack>
             </React.Fragment>
         </Stack>

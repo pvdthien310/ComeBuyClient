@@ -1,6 +1,6 @@
 import './App.css';
-import { Route, Routes } from 'react-router-dom';
-import { useEffect } from 'react';
+import { Route, Routes, useNavigate } from 'react-router-dom';
+import { useEffect, useState } from 'react';
 import { useDispatch } from 'react-redux';
 import LoginRegister from './container/LoginAndRegister/LoginRegister';
 import MainLayout from './page/MainLayout';
@@ -19,8 +19,9 @@ function App() {
     SetUpFunction();
 
     const dispatch = useDispatch();
+    const navigate = useNavigate();
     const role = localStorage.getItem('role');
-    // const navigate = useNavigate();
+    const [pathname, setPathname] = useState(window.location.pathname);
 
     const LoadCurrentUser = async () => {
         if (localStorage.getItem('idUser') && localStorage.getItem('idUser') !== '') {
@@ -35,7 +36,9 @@ function App() {
 
     useEffect(async () => {
         await LoadCurrentUser();
-        // navigate('/');
+        const path = window.location.pathname;
+        setPathname(path);
+        navigate(pathname);
     }, [role]);
 
     const renderRoutes = () => {
@@ -59,9 +62,8 @@ function App() {
 
     return (
         <Routes>
-            {/* <Route path="/" element={<HomePage />} /> */}
             <Route path="/login" element={<LoginRegister />} />
-            <Route path="*" element={renderRoutes()} />
+            <Route path="/*" element={renderRoutes()} />
             <Route path="/forgetpasswordinlogin" element={<ForgotPasswordInLogin />} />
         </Routes>
     );
