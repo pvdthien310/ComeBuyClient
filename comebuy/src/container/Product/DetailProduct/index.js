@@ -33,6 +33,8 @@ import MuiAlert from '@mui/material/Alert';
 import { useDispatch, useSelector } from 'react-redux';
 import { unwrapResult } from '@reduxjs/toolkit';
 import FavoriteIcon from '@mui/icons-material/Favorite';
+import MoodBadIcon from '@mui/icons-material/MoodBad';
+import SentimentSatisfiedAltIcon from '@mui/icons-material/SentimentSatisfiedAlt';
 import { cartListSelector, currentUser } from '../../../redux/selectors.js';
 import { addCart, cartSlice, updateCart } from '../../../redux/slices/cartSlice.js';
 import ProductComment from '../../../components/ProductComment/index.js';
@@ -433,6 +435,25 @@ function DetailProduct() {
                                 <Typography variant="h6" fontWeight="bold" sx={{ color: '#F23E2E', pl: 1 }}>
                                     $ {product.price}
                                 </Typography>
+                                {product.status !== 0 && (
+                                    <Stack direction="row" sx={{ padding: 1, alignItems: 'center' }}>
+                                        {product.status >= 0.5 ? (
+                                            <SentimentSatisfiedAltIcon sx={{ color: 'lightgreen' }} />
+                                        ) : (
+                                            <MoodBadIcon sx={{ color: 'maroon' }} />
+                                        )}
+                                        <Typography
+                                            variant="body2"
+                                            fontWeight="bold"
+                                            sx={{
+                                                marginLeft: 1,
+                                                color: product.status >= 0.5 ? 'lightgreen' : 'maroon',
+                                            }}
+                                        >
+                                            {product.status}
+                                        </Typography>
+                                    </Stack>
+                                )}
                                 <Box sx={{ p: 3, backgroundColor: '#FFFFF7', borderRadius: 2, boxShadow: 1, mt: 1 }}>
                                     <Chip
                                         sx={{ backgroundColor: 'inherit', color: 'black', fontWeight: 'bold' }}

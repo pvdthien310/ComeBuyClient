@@ -59,3 +59,6 @@ export { default as SuggestedRoute } from './SuggestedRoute';
 export { default as DistributionModal } from './DistributionModal';
 export { default as StockItem } from './StockItem';
 export { default as LogItem } from './LogItem';
+export { default as ChatBot } from './Chatbot';
+export { default as LoadingChatbot } from './LoadingChatbot';
+export { default as TypingAnim } from './TypingAnim';

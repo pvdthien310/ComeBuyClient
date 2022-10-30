@@ -15,13 +15,7 @@ function GuestLayout(props) {
     return (
         <div style={{ height: 850, width: '100%' }}>
             <div style={{ height: '80%', width: '100%' }}>
-                <Routes>
-                    {showRoutes(props.routes)}
-                    {/* <Route element={
-            <Navigate replace to={{ pathname: '/' }} />
-          }>
-          </Route> */}
-                </Routes>
+                <Routes>{showRoutes(props.routes)}</Routes>
             </div>
         </div>
     );

@@ -65,9 +65,6 @@ function ProductItem(props) {
                                 <Typography gutterBottom variant="subtitle2" component="div">
                                     {product.name.split(' (')[0]}
                                 </Typography>
-                                {/* <Typography variant="body2" gutterBottom>
-                  {product.screenDimension}
-                  </Typography> */}
                                 <Typography variant="caption" color="text.secondary">
                                     {product.productID}
                                 </Typography>

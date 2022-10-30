@@ -8,9 +8,7 @@ import ListItem from '@mui/material/ListItem';
 import ListItemIcon from '@mui/material/ListItemIcon';
 import ListItemText from '@mui/material/ListItemText';
 // import { useState, useEffect } from 'react';
-import { ToastContainer } from 'react-toastify';
-import 'react-toastify/dist/ReactToastify.css';
-import { Route, Routes, Navigate, useNavigate } from 'react-router-dom';
+import { Route, Routes, useNavigate } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { Grid, IconButton, Stack, Typography } from '@mui/material';
 import MenuIcon from '@mui/icons-material/Menu';
@@ -33,20 +31,15 @@ import NotFound from '../../container/NotFound';
 
 function MainLayout(props) {
     const _currentUser = useSelector(currentUser);
-    // const [pathname, setPathname] = useState(window.location.pathname);
     const navigate = useNavigate();
     const dispatch = useDispatch();
-    // useEffect(() => {
-    //     const path = window.location.pathname;
-    //     setPathname(path);
-    // });
 
     const showRoutes = (routes) => {
         let result = null;
         if (routes.length > 0) {
             result = routes.map((route, index) => <Route key={index} path={route.path} element={route.page} />);
         }
-        result.push(<Route key={routes.length} path="/error" element={<NotFound />} />);
+        result.push(<Route key={routes.length} path="*" element={<NotFound />} />);
         return result;
     };
 
@@ -149,10 +142,7 @@ function MainLayout(props) {
                     {list('left')}
                 </Drawer>
                 <Stack sx={{ height: '100%', width: '100%', mt: 2, backgroundColor: 'grey' }}>
-                    <Routes>
-                        {showRoutes(props.routes)}
-                        <Route element={<Navigate replace to={{ pathname: '/' }} />} />
-                    </Routes>
+                    <Routes>{showRoutes(props.routes)}</Routes>
                 </Stack>
             </React.Fragment>
         </Stack>

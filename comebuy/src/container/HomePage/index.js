@@ -22,6 +22,7 @@ import { getAllProduct } from '../../redux/slices/productSlice';
 import { productListSelector } from '../../redux/selectors';
 import bannerApi from '../../api/bannerAPI';
 import { DEPLOYED_WS } from '../../constant';
+import ChatBot from '../../components/Chatbot';
 
 function HomePage() {
     const socket = io(DEPLOYED_WS, {
@@ -153,6 +154,7 @@ function HomePage() {
                 </Typography>
                 <LaptopImageLine />
             </Stack>
+            <ChatBot />
             <BigFooter />
         </Stack>
     );
