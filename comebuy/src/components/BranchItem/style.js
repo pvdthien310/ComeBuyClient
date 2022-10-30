@@ -10,11 +10,11 @@ const style = {
     typo: {
         color: '#289E82',
         fontWeight: 'bold',
-        fontSize: '17px',
+        fontSize: '14px',
     },
     typo2: {
         color: 'gray',
-        fontSize: '16px',
+        fontSize: '14px',
     },
     lastLine: {
         width: '100%',

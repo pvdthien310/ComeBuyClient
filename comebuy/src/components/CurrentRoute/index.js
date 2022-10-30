@@ -1,125 +1,226 @@
+/* eslint-disable no-useless-return */
+/* eslint-disable prefer-const */
+/* eslint-disable indent */
 /* eslint-disable operator-linebreak */
 /* eslint-disable no-unused-vars */
 import React, { useEffect, useState } from 'react';
+import io from 'socket.io-client';
 import { useSelector, useDispatch } from 'react-redux';
 import { unwrapResult } from '@reduxjs/toolkit';
-import { CircularProgress, Grid, Stack, Typography } from '@mui/material';
+import { CircularProgress, Grid, Stack, Typography, Box } from '@mui/material';
+import Backdrop from '@mui/material/Backdrop';
+import Tooltip from '@mui/material/Tooltip';
 import { styled, alpha } from '@mui/material/styles';
 import InputBase from '@mui/material/InputBase';
+import SpeedDial from '@mui/material/SpeedDial';
+import SpeedDialIcon from '@mui/material/SpeedDialIcon';
+import SpeedDialAction from '@mui/material/SpeedDialAction';
+import ArrowCircleRightIcon from '@mui/icons-material/ArrowCircleRight';
 import AssistantDirectionRoundedIcon from '@mui/icons-material/AssistantDirectionRounded';
 import SwitchAccessShortcutAddIcon from '@mui/icons-material/SwitchAccessShortcutAdd';
 import SearchIcon from '@mui/icons-material/Search';
+import AddBoxIcon from '@mui/icons-material/AddBox';
+import DoDisturbOnIcon from '@mui/icons-material/DoDisturbOn';
 import IconButton from '@mui/material/IconButton';
 import BranchItem from '../BranchItem';
 import style from './style';
 
+import { DEPLOYED_WS } from '../../constant';
+import SnackBarAlert from '../SnackBarAlert';
 import { currentUser } from '../../redux/selectors';
 import { getBranchAndTotalStock } from '../../redux/slices/branchSlice';
 import StockItem from '../StockItem';
 import { getStockAndRemain } from '../../redux/slices/stockSlice';
-
-const Search = styled('div')(({ theme }) => ({
-    position: 'relative',
-    borderRadius: theme.shape.borderRadius,
-    backgroundColor: alpha(theme.palette.common.black, 0.05),
-    '&:hover': {
-        backgroundColor: alpha(theme.palette.common.black, 0.15),
-    },
-    marginLeft: 0,
-    width: '100%',
-    [theme.breakpoints.up('sm')]: {
-        marginLeft: theme.spacing(1),
-        width: 'auto',
-    },
-}));
-
-const SearchIconWrapper = styled('div')(({ theme }) => ({
-    padding: theme.spacing(0, 2),
-    height: '100%',
-    position: 'absolute',
-    pointerEvents: 'none',
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'center',
-}));
-
-const StyledInputBase = styled(InputBase)(({ theme }) => ({
-    color: 'inherit',
-    '& .MuiInputBase-input': {
-        padding: theme.spacing(1, 1, 1, 0),
-        paddingLeft: `calc(1em + ${theme.spacing(4)})`,
-        transition: theme.transitions.create('width'),
-        width: '100%',
-        [theme.breakpoints.up('sm')]: {
-            width: '12ch',
-            '&:focus': {
-                width: '20ch',
-            },
-        },
-    },
-}));
+import requestProdApi from '../../api/requestProductAPI';
+import RequestItem from '../RequestItem/index';
+import CreateProdReqModal from '../CreateProdReqModal/index';
+import MenuDropDown from '../MenuDropDown';
+import DistributionModalVer2 from '../DistributionModalVer2/index';
+import callToast from '../../helperToast/index';
 
 export default function CurrentRoute() {
     const _currentUser = useSelector(currentUser);
+    const socket = io(DEPLOYED_WS, {
+        transports: ['websocket'],
+    });
     const dispatch = useDispatch();
     const [list, setList] = useState([]);
+    const [openModal, setOpenModal] = useState(false);
     const [isLoading, setIsLoading] = useState(true);
+    const [openBackdrop, setOpenBackdrop] = useState(false);
+    const [openModalDistribution, setOpenModalDistribution] = useState(false);
+    const [alert, setAlert] = useState({
+        open: false,
+        severity: '',
+        message: '',
+    });
+    const [anchorEl, setAnchorEl] = useState(null);
+    const openMenu = Boolean(anchorEl);
+    const handleClickBigIcon = (event) => {
+        setAnchorEl(event.currentTarget);
+    };
+    const handleCloseMenu = () => {
+        setAnchorEl(null);
+    };
 
-    useEffect(() => {
-        const fetch = async () => {
-            if (_currentUser.role === 'admin') {
+    const closeAlert = () => setAlert({ ...alert, open: false });
+
+    const fetchData = async () => {
+        if (_currentUser.role !== 'admin') {
+            await requestProdApi
+                .getReqFromMe(_currentUser.branch.branchid)
+                .then((data) => {
+                    let temp1 = [];
+                    data.data.map((i) => {
+                        if (i.status === 'pending') {
+                            temp1.push(i);
+                        }
+                    });
+                    setList(temp1.reverse());
+                })
+                .catch(() => {
+                    console.log('Error load request list');
+                });
+        } else {
+            try {
                 const temp = await dispatch(getBranchAndTotalStock());
                 const result = unwrapResult(temp);
                 setList(result);
-            } else {
-                const temp = await dispatch(getStockAndRemain(_currentUser.userID));
-                const result = unwrapResult(temp);
-                console.log(result);
-                setList(result);
+            } catch (error) {
+                console.log(error);
             }
-            setIsLoading(false);
-        };
-        if (list.length === 0) {
-            fetch();
         }
+    };
+
+    const handleSocket = () => {
+        socket.on('new-product-request', (message) => {
+            const data = JSON.parse(message);
+            if (data.fromBranchId === _currentUser.branch.branchid) {
+                if (list.find((ite) => ite.requestId === data.requestId) === undefined) {
+                    setList((prev) => [data, ...prev]);
+                }
+            }
+        });
+    };
+
+    const listenStatusReqChange = () => {
+        socket.on('update-status-product-request', (message) => {
+            fetchData();
+        });
+    };
+
+    const listenDealRequest = () => {
+        socket.on('deal-request', (message) => {
+            const data = JSON.parse(message);
+            if (data.type === 'single') {
+                if (data.request.fromBranchId === _currentUser.branch.branchid) {
+                    callToast.dealSingleToast(data);
+                    fetchData();
+                }
+            }
+            if (data.type === 'multiple' && data.userID !== _currentUser.userID) {
+                callToast.dealMultipleToast(data);
+                fetchData();
+            }
+        });
+    };
+
+    useEffect(() => {
+        handleSocket();
+        listenStatusReqChange();
+        listenDealRequest();
+        fetchData();
+        setIsLoading(false);
+        return () => {};
     }, []);
 
+    const handleAction = async (e) => {
+        if (e === 'create-new') {
+            handleCloseMenu();
+            setOpenModal(true);
+        } else if (e === 'cancel-all') {
+            handleCloseMenu();
+            setOpenBackdrop(true);
+            const params = {
+                type: '10',
+                request: {},
+                myBranchId: _currentUser.branch.branchid,
+                userID: _currentUser.userID,
+                role: _currentUser.role,
+            };
+            await requestProdApi.updateReqStatus(params).then((data) => {
+                setOpenBackdrop(false);
+                setAlert({
+                    ...alert,
+                    open: true,
+                    severity: 'success',
+                    message: 'Cancelled all requests successfully',
+                });
+            });
+        } else {
+            handleCloseMenu();
+            setOpenModalDistribution(true);
+        }
+    };
+
     return (
-        <Grid item xs={6} sx={{ p: 6 }}>
+        <Grid item xs={4} sx={{ pt: 2, pl: 2, pr: 1 }}>
             <Stack direction="row" spacing={1} sx={{ pb: 1 }}>
-                <AssistantDirectionRoundedIcon sx={style.bigIcon} />
+                <Tooltip title="Current request actions">
+                    <IconButton
+                        onClick={handleClickBigIcon}
+                        size="small"
+                        sx={{ ml: 2 }}
+                        aria-controls={openMenu ? 'current-request-route-menu' : undefined}
+                        aria-haspopup="true"
+                        aria-expanded={openMenu ? 'true' : undefined}
+                    >
+                        <AssistantDirectionRoundedIcon sx={style.bigIcon} />
+                    </IconButton>
+                </Tooltip>
+                <MenuDropDown
+                    role={_currentUser.role}
+                    anchorEl={anchorEl}
+                    id="current-request-route-menu"
+                    open={openMenu}
+                    handleClose={handleCloseMenu}
+                    handleClickMenuItem={(e) => handleAction(e)}
+                />
                 {_currentUser.role === 'admin' ? (
                     <Typography sx={style.tabTitle}>Current branches</Typography>
                 ) : (
-                    <Typography sx={style.tabTitle}>Current stock</Typography>
+                    <Typography sx={style.tabTitle}>Current Request</Typography>
                 )}
-            </Stack>
-            <Stack direction="row">
-                <Stack pl={7}>
-                    <Search>
-                        <SearchIconWrapper>
-                            <SearchIcon />
-                        </SearchIconWrapper>
-                        <StyledInputBase placeholder="Search…" inputProps={{ 'aria-label': 'search' }} />
-                    </Search>
-                </Stack>
-                {_currentUser.role === 'admin' ? (
-                    <Stack sx={style.stack}>
-                        <IconButton style={style.iconButton}>
-                            <SwitchAccessShortcutAddIcon fontSize="inherit" />
-                        </IconButton>
-                    </Stack>
-                ) : null}
             </Stack>
             {isLoading ? (
                 <CircularProgress sx={{ width: '100%', alignSelf: 'center' }} color="secondary" />
             ) : (
-                <Stack sx={style.stackContent} direction="column" spacing={1.5}>
+                <Stack sx={style.stackContent} direction="column">
                     {_currentUser.role === 'admin'
-                        ? list.map((item) => <BranchItem key={item.branchid} branch={item} />)
-                        : list.map((item) => <StockItem key={item.id} stock={item} />)}
+                        ? list.map((item) => <BranchItem key={item.branchid} branch={item} admin={_currentUser} />)
+                        : list.map((request) => (
+                              <RequestItem key={request.requestProductId} request={request} currUser={_currentUser} />
+                          ))}
                 </Stack>
             )}
+            <CreateProdReqModal open={openModal} closeModal={() => setOpenModal(false)} />
+            <DistributionModalVer2
+                type="all"
+                user={_currentUser}
+                branchId={list}
+                open={openModalDistribution}
+                closeModal={() => setOpenModalDistribution(false)}
+                currentMainBranchId={_currentUser.branch.branchid}
+            />
+            <Backdrop sx={{ color: '#fff', zIndex: (theme) => theme.zIndex.drawer + 1 }} open={openBackdrop}>
+                <CircularProgress color="inherit" />
+            </Backdrop>
+            <SnackBarAlert
+                open={alert.open}
+                handleClose={closeAlert}
+                severity={alert.severity}
+                message={alert.message}
+            />
         </Grid>
     );
 }

@@ -8,6 +8,8 @@ import ListItem from '@mui/material/ListItem';
 import ListItemIcon from '@mui/material/ListItemIcon';
 import ListItemText from '@mui/material/ListItemText';
 // import { useState, useEffect } from 'react';
+import { ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 import { Route, Routes, Navigate, useNavigate } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { Grid, IconButton, Stack, Typography } from '@mui/material';
@@ -126,6 +128,7 @@ function MainLayout(props) {
     return (
         <Stack sx={{ height: window.innerHeight }}>
             <React.Fragment key="left">
+                <ToastContainer style={{ fontSize: '12px' }} />
                 <Stack direction="row" sx={{ width: '100%', backgroundColor: '#2E1534' }}>
                     <Grid container sx={{ width: '100%' }}>
                         <Grid item xs={10}>

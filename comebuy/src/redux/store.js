@@ -8,6 +8,7 @@ import { productImageSlice } from './slices/productImageSlice';
 import { cartSlice } from './slices/cartSlice';
 import { favoriteSlice } from './slices/favoriteSlice';
 import { stockSlice } from './slices/stockSlice';
+import { requestSlice } from './slices/requestSlice';
 
 const store = configureStore({
     reducer: {
@@ -20,6 +21,7 @@ const store = configureStore({
         cart: cartSlice.reducer,
         favorite: favoriteSlice.reducer,
         stock: stockSlice.reducer,
+        request: requestSlice.reducer,
     },
 });
 

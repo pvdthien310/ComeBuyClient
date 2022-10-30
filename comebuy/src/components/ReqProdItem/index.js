@@ -46,34 +46,34 @@ export default function ReqProdItem(props) {
                     <HighlightOffRoundedIcon color="error" />
                 </IconButton>
             </Box>
-            <Box sx={style.box}>
-                <ItemClickToolTips
-                    title={
-                        <Fragment>
-                            <Typography fontSize="10px" color="inherit">
-                                Note:
-                            </Typography>
-                            <Typography fontSize="10px" color="inherit">
-                                Double Click to view detail
-                            </Typography>
-                        </Fragment>
-                    }
-                >
-                    <Badge components="span" badgeContent={props.info.quantity} color="success">
+            <Badge components="span" badgeContent={props.info.quantity} color="success">
+                <Box sx={style.box}>
+                    <ItemClickToolTips
+                        title={
+                            <Fragment>
+                                <Typography fontSize="10px" color="inherit">
+                                    Note:
+                                </Typography>
+                                <Typography fontSize="10px" color="inherit">
+                                    Double Click to view detail
+                                </Typography>
+                            </Fragment>
+                        }
+                    >
                         <Button onDoubleClick={handleDoubleClick} sx={style.btnText}>
                             {props.info.productID}
                         </Button>
-                    </Badge>
-                </ItemClickToolTips>
-                <DetailProductModal open={open} product={product} onClose={handleClose} />
-                <Backdrop
-                    sx={{ color: '#fff', zIndex: (theme) => theme.zIndex.drawer + 1 }}
-                    open={openBackdrop}
-                    onClick={handleClose}
-                >
-                    <CircularProgress color="inherit" />
-                </Backdrop>
-            </Box>
+                    </ItemClickToolTips>
+                    <DetailProductModal open={open} product={product} onClose={handleClose} />
+                    <Backdrop
+                        sx={{ color: '#fff', zIndex: (theme) => theme.zIndex.drawer + 1 }}
+                        open={openBackdrop}
+                        onClick={handleClose}
+                    >
+                        <CircularProgress color="inherit" />
+                    </Backdrop>
+                </Box>
+            </Badge>
         </Stack>
     );
 }

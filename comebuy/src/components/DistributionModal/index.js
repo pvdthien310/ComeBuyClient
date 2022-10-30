@@ -15,7 +15,7 @@ import TextFieldForAdd from '../TextFieldForAdd';
 import ProductSelect from '../ProductSelect';
 
 import style from './style';
-import { getAllProduct } from '../../redux/slices/productSlice';
+import { getProdInStockByBranchId } from '../../redux/slices/stockSlice';
 
 function DistributionModal(prop) {
     const dispatch = useDispatch();
@@ -28,13 +28,14 @@ function DistributionModal(prop) {
     });
 
     React.useEffect(() => {
-        const loadProd = async () => {
-            const action = await dispatch(getAllProduct());
+        const handleBranchChange = async () => {
+            console.log('day ne: ', prop.currentMainBranchId);
+            const action = await dispatch(getProdInStockByBranchId(prop.currentMainBranchId));
             const result = unwrapResult(action);
             setProductList(result);
         };
         if (productList.length === 0) {
-            loadProd();
+            handleBranchChange();
         }
     }, []);
 

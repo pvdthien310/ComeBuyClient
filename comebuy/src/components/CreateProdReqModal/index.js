@@ -293,7 +293,7 @@ function CreateProdReqModal(prop) {
                                             style={style.textArea}
                                         />
                                     </Grid>
-                                    <Grid width="100%" alignContent="center">
+                                    <Grid width="100%" justifyContent="center">
                                         <Button
                                             onClick={handleStartReq}
                                             sx={style.btnStart}

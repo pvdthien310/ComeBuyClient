@@ -5,9 +5,8 @@ import Badge from '@mui/material/Badge';
 import StoreMallDirectoryIcon from '@mui/icons-material/StoreMallDirectory';
 import LocationOnIcon from '@mui/icons-material/LocationOn';
 import AddCircleIcon from '@mui/icons-material/AddCircle';
-import DialpadIcon from '@mui/icons-material/Dialpad';
 import style from './style';
-import DistributionModal from '../DistributionModal';
+import DistributionModalVer2 from '../DistributionModalVer2/index';
 
 export default function BranchItem(prop) {
     const [openModalDistribution, setOpenModalDistribution] = useState(false);
@@ -28,20 +27,22 @@ export default function BranchItem(prop) {
                         <Typography sx={style.typo2}>{prop.branch.address}</Typography>
                     </Stack>
                 </Stack>
-                <Stack direction="column">
-                    <IconButton onClick={handleOpenModal}>
-                        <AddCircleIcon />
-                    </IconButton>
-                    <IconButton>
-                        <DialpadIcon />
-                    </IconButton>
-                </Stack>
+                {prop.admin.branch.branchid !== prop.branch.branchid && (
+                    <Stack direction="column">
+                        <IconButton onClick={handleOpenModal}>
+                            <AddCircleIcon />
+                        </IconButton>
+                    </Stack>
+                )}
             </Stack>
             <div style={style.lastLine} />
-            <DistributionModal
+            <DistributionModalVer2
+                type="single"
+                user={prop.admin}
                 branchId={prop.branch.branchid}
                 open={openModalDistribution}
                 closeModal={() => setOpenModalDistribution(false)}
+                currentMainBranchId={prop.admin.branch.branchid}
             />
         </Stack>
     );
