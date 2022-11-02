@@ -1,5 +1,7 @@
 /* eslint-disable react/jsx-one-expression-per-line */
 import * as React from 'react';
+import { ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 import Box from '@mui/material/Box';
 import Drawer from '@mui/material/Drawer';
 import List from '@mui/material/List';

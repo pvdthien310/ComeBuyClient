@@ -1,3 +1,4 @@
+/* eslint-disable operator-linebreak */
 /* eslint-disable no-unused-vars */
 import React, { useEffect, useState } from 'react';
 import Box from '@mui/material/Box';
@@ -14,6 +15,7 @@ import CircularProgress from '@mui/material/CircularProgress';
 import style from './style';
 import requestProdApi from '../../api/requestProductAPI';
 import ProdItem from './ProdItem';
+import ProductReqResItem from './ProdductReqResItem/index';
 
 export default function ProductReqDetail(props) {
     const [request, setRequest] = useState(null);
@@ -109,9 +111,11 @@ export default function ProductReqDetail(props) {
                         </Stack>
                         <div style={style.lastLine} />
                         <Stack sx={style.stackContent} direction="column" spacing={1.5}>
-                            {request?.requestproditem?.map((item) => (
-                                <ProdItem info={item} />
-                            ))}
+                            {request?.status === 'pending' &&
+                                request?.requestproditem?.map((item) => <ProdItem info={item} />)}
+                            {request?.status !== 'pending' &&
+                                request?.status !== 'cancelled' &&
+                                request?.requestproditem?.map((item) => <ProductReqResItem info={item} />)}
                         </Stack>
                     </Stack>
                     <Backdrop

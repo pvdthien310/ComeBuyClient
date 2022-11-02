@@ -1,3 +1,4 @@
+/* eslint-disable operator-linebreak */
 /* eslint-disable no-unused-vars */
 import React, { useState, useEffect } from 'react';
 import { IconButton, Stack, Typography, Button, Box, dialogActionsClasses } from '@mui/material';
@@ -13,6 +14,7 @@ import CheckIcon from '@mui/icons-material/Check';
 import CancelScheduleSendIcon from '@mui/icons-material/CancelScheduleSend';
 import DoDisturbOnIcon from '@mui/icons-material/DoDisturbOn';
 import AddBusinessIcon from '@mui/icons-material/AddBusiness';
+import DeleteIcon from '@mui/icons-material/Delete';
 import DeleteForeverIcon from '@mui/icons-material/DeleteForever';
 import AccessTimeFilledIcon from '@mui/icons-material/AccessTimeFilled';
 import style from './style';
@@ -119,7 +121,10 @@ export default function RequestItem(prop) {
                 sx={{
                     borderRadius: '5px',
                     backgroundColor: `${
-                        request.isChecked || prop.currUser.branch.branchid === request.fromBranchId
+                        request.isChecked ||
+                        prop.currUser.branch.branchid === request.fromBranchId ||
+                        request.status === 'responsed' ||
+                        request.status === 'declined'
                             ? 'white'
                             : alpha('#161717', 0.05)
                     }`,
@@ -129,9 +134,22 @@ export default function RequestItem(prop) {
                     <Button onClick={handleClickDetail} sx={style.button1}>
                         <Stack direction="column" spacing={1} sx={{ width: '100%' }}>
                             <Stack direction="row" spacing={2}>
-                                <Badge badgeContent={request.total} color="primary">
-                                    <AddBusinessIcon color="action" sx={style.icon} />
-                                </Badge>
+                                {request.status === 'pending' && (
+                                    <Badge badgeContent={request.total} color="primary">
+                                        <AddBusinessIcon sx={{ ...style.icon, color: '#289E82' }} />
+                                    </Badge>
+                                )}
+                                {request.status === 'responsed' && (
+                                    <Badge badgeContent="res" color="warning">
+                                        <AddBusinessIcon sx={{ ...style.icon, color: '#289E82' }} />
+                                    </Badge>
+                                )}
+                                {request.status === 'declined' && (
+                                    <Badge badgeContent="dec" color="error">
+                                        <AddBusinessIcon sx={{ ...style.icon, color: '#289E82' }} />
+                                    </Badge>
+                                )}
+
                                 <Typography
                                     sx={{
                                         ...style.typo1,
@@ -142,13 +160,16 @@ export default function RequestItem(prop) {
                                         }`,
                                     }}
                                 >
-                                    {request.fromBranchId === prop.currUser.branch.branchid
-                                        ? `Request to ${request.toBranchId}`
-                                        : ` Request from: ${request.fromBranchId}`}
+                                    {request.fromBranchId === prop.currUser.branch.branchid &&
+                                        request.status !== 'responsed' &&
+                                        `Request to ${request.toBranchId}`}
+                                    {request.fromBranchId !== prop.currUser.branch.branchid &&
+                                        ` Request from: ${request.fromBranchId}`}
+                                    {request.status === 'responsed' && ` Request ID: ${request.requestProductId}`}
                                 </Typography>
                             </Stack>
                             <Stack direction="row" spacing={2}>
-                                <AccessTimeFilledIcon color="action" sx={style.icon} />
+                                <AccessTimeFilledIcon sx={{ ...style.icon, color: '#289E82' }} />
                                 <Typography sx={style.typo2}>At {request.timeRequest}</Typography>
                             </Stack>
                         </Stack>
@@ -156,7 +177,7 @@ export default function RequestItem(prop) {
                     <Stack direction="column">
                         {request?.status === 'pending' && request?.fromBranchId !== prop.currUser.branch.branchid ? (
                             <IconButton onClick={openSupplyConfirm}>
-                                <CheckCircleIcon sx={{ color: 'green' }} />
+                                <CheckCircleIcon sx={{ color: '#289E82' }} />
                             </IconButton>
                         ) : null}
                         {request?.status === 'pending' && request.toBranchId === prop.currUser.branch.branchid ? (
@@ -167,6 +188,11 @@ export default function RequestItem(prop) {
                         {request?.status === 'pending' && request.fromBranchId === prop.currUser.branch.branchid ? (
                             <IconButton onClick={() => handleUpdateStatus('1')}>
                                 <DoDisturbOnIcon sx={{ color: 'red' }} />
+                            </IconButton>
+                        ) : null}
+                        {request?.status === 'responsed' || request?.status === 'declined' ? (
+                            <IconButton onClick={prop.handleDeleteResOrDec}>
+                                <DeleteIcon sx={{ color: 'red' }} />
                             </IconButton>
                         ) : null}
                     </Stack>

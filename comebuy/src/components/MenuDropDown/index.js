@@ -8,6 +8,11 @@ import DoDisturbOnIcon from '@mui/icons-material/DoDisturbOn';
 import AddBusinessIcon from '@mui/icons-material/AddBusiness';
 import CancelScheduleSendIcon from '@mui/icons-material/CancelScheduleSend';
 import DoneAllIcon from '@mui/icons-material/DoneAll';
+import JoinFullIcon from '@mui/icons-material/JoinFull';
+import SwipeLeftIcon from '@mui/icons-material/SwipeLeft';
+import DateRangeIcon from '@mui/icons-material/DateRange';
+
+import style from './style';
 
 export default function MenuDropDown(prop) {
     return (
@@ -50,19 +55,28 @@ export default function MenuDropDown(prop) {
                     <MenuItem
                         disabled={prop.role === 'manager'}
                         onClick={() => prop.handleClickMenuItem('distribute-all')}
+                        sx={style.title}
                     >
                         <ListItemIcon>
                             <AddBusinessIcon fontSize="small" color="secondary" />
                         </ListItemIcon>
                         Distribution to all
                     </MenuItem>
-                    <MenuItem disabled={prop.role !== 'manager'} onClick={() => prop.handleClickMenuItem('create-new')}>
+                    <MenuItem
+                        sx={style.title}
+                        disabled={prop.role !== 'manager'}
+                        onClick={() => prop.handleClickMenuItem('create-new')}
+                    >
                         <ListItemIcon>
                             <AddBoxIcon fontSize="small" color="primary" />
                         </ListItemIcon>
                         Create new request
                     </MenuItem>
-                    <MenuItem onClick={() => prop.handleClickMenuItem('cancel-all')} disabled={prop.role !== 'manager'}>
+                    <MenuItem
+                        sx={style.title}
+                        onClick={() => prop.handleClickMenuItem('cancel-all')}
+                        disabled={prop.role !== 'manager'}
+                    >
                         <ListItemIcon>
                             <DoDisturbOnIcon color="error" fontSize="small" />
                         </ListItemIcon>
@@ -73,17 +87,40 @@ export default function MenuDropDown(prop) {
 
             {prop.id === 'handle-request-route-menu' && (
                 <>
-                    <MenuItem onClick={() => prop.handleClickMenuItem('supply-all')}>
+                    <MenuItem sx={style.title} onClick={() => prop.handleClickMenuItem('supply-all')}>
                         <ListItemIcon>
                             <DoneAllIcon color="primary" fontSize="small" />
                         </ListItemIcon>
                         Supply all request
                     </MenuItem>
-                    <MenuItem onClick={() => prop.handleClickMenuItem('decline-all')}>
+                    <MenuItem sx={style.title} onClick={() => prop.handleClickMenuItem('decline-all')}>
                         <ListItemIcon>
                             <CancelScheduleSendIcon fontSize="small" color="error" />
                         </ListItemIcon>
                         Decline all
+                    </MenuItem>
+                </>
+            )}
+
+            {prop.id === 'handle-response-route-menu' && (
+                <>
+                    <MenuItem sx={style.title} onClick={() => prop.handleClickMenuItem('show-fully-supplied')}>
+                        <ListItemIcon>
+                            <JoinFullIcon color="success" fontSize="small" />
+                        </ListItemIcon>
+                        Show fully supplied only
+                    </MenuItem>
+                    <MenuItem sx={style.title} onClick={() => prop.handleClickMenuItem('show-declined')}>
+                        <ListItemIcon>
+                            <SwipeLeftIcon fontSize="small" color="error" />
+                        </ListItemIcon>
+                        Show declined only
+                    </MenuItem>
+                    <MenuItem sx={style.title} onClick={() => prop.handleClickMenuItem('show-with-date-range')}>
+                        <ListItemIcon>
+                            <DateRangeIcon fontSize="small" color="primary" />
+                        </ListItemIcon>
+                        Show with date range
                     </MenuItem>
                 </>
             )}
