@@ -24,12 +24,6 @@ const style = {
         p: 1,
         pt: 2,
     },
-    stackNoRecord: {
-        height: '65vh',
-        display: 'flex',
-        justifyContent: 'center',
-        pt: 2,
-    },
     stack1: {
         paddingBottom: 2,
         alignSelf: 'flex-end',

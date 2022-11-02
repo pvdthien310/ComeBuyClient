@@ -16,11 +16,11 @@ import SpeedDial from '@mui/material/SpeedDial';
 import SpeedDialIcon from '@mui/material/SpeedDialIcon';
 import SpeedDialAction from '@mui/material/SpeedDialAction';
 import ArrowCircleRightIcon from '@mui/icons-material/ArrowCircleRight';
-import AssistantDirectionRoundedIcon from '@mui/icons-material/AssistantDirectionRounded';
 import SwitchAccessShortcutAddIcon from '@mui/icons-material/SwitchAccessShortcutAdd';
 import SearchIcon from '@mui/icons-material/Search';
 import AddBoxIcon from '@mui/icons-material/AddBox';
 import DoDisturbOnIcon from '@mui/icons-material/DoDisturbOn';
+import AddCircleIcon from '@mui/icons-material/AddCircle';
 import IconButton from '@mui/material/IconButton';
 import BranchItem from '../BranchItem';
 import style from './style';
@@ -139,24 +139,33 @@ export default function CurrentRoute() {
             handleCloseMenu();
             setOpenModal(true);
         } else if (e === 'cancel-all') {
-            handleCloseMenu();
-            setOpenBackdrop(true);
-            const params = {
-                type: '10',
-                request: {},
-                myBranchId: _currentUser.branch.branchid,
-                userID: _currentUser.userID,
-                role: _currentUser.role,
-            };
-            await requestProdApi.updateReqStatus(params).then((data) => {
-                setOpenBackdrop(false);
+            if (list.length !== 0) {
+                handleCloseMenu();
+                setOpenBackdrop(true);
+                const params = {
+                    type: '10',
+                    request: {},
+                    myBranchId: _currentUser.branch.branchid,
+                    userID: _currentUser.userID,
+                    role: _currentUser.role,
+                };
+                await requestProdApi.updateReqStatus(params).then((data) => {
+                    setOpenBackdrop(false);
+                    setAlert({
+                        ...alert,
+                        open: true,
+                        severity: 'success',
+                        message: 'Cancelled all requests successfully',
+                    });
+                });
+            } else {
                 setAlert({
                     ...alert,
                     open: true,
-                    severity: 'success',
-                    message: 'Cancelled all requests successfully',
+                    severity: 'warning',
+                    message: 'No records found',
                 });
-            });
+            }
         } else {
             handleCloseMenu();
             setOpenModalDistribution(true);
@@ -166,7 +175,7 @@ export default function CurrentRoute() {
     return (
         <Grid item xs={4} sx={{ pt: 2, pl: 2, pr: 1 }}>
             <Stack direction="row" spacing={1} sx={{ pb: 1 }}>
-                <Tooltip title="Current request actions">
+                <Tooltip title="Current route actions">
                     <IconButton
                         onClick={handleClickBigIcon}
                         size="small"
@@ -175,7 +184,7 @@ export default function CurrentRoute() {
                         aria-haspopup="true"
                         aria-expanded={openMenu ? 'true' : undefined}
                     >
-                        <AssistantDirectionRoundedIcon sx={style.bigIcon} />
+                        <AddCircleIcon sx={style.bigIcon} />
                     </IconButton>
                 </Tooltip>
                 <MenuDropDown
@@ -203,6 +212,7 @@ export default function CurrentRoute() {
                           ))}
                 </Stack>
             )}
+
             <CreateProdReqModal open={openModal} closeModal={() => setOpenModal(false)} />
             <DistributionModalVer2
                 type="all"

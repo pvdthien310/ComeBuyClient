@@ -4,7 +4,7 @@ import { useSelector } from 'react-redux';
 import { Typography, Stack, Grid } from '@mui/material';
 import io from 'socket.io-client';
 
-import { CurrentRoute, SuggestedRoute } from '../../components';
+import { CurrentRoute, SuggestedRoute, ResponseRoute } from '../../components';
 import { currentUser } from '../../redux/selectors';
 import { DEPLOYED_WS } from '../../constant';
 
@@ -41,6 +41,7 @@ function BigDistribution() {
             <Grid container sx={style.wrapper}>
                 <CurrentRoute />
                 <SuggestedRoute />
+                <ResponseRoute />
             </Grid>
         </Stack>
     );

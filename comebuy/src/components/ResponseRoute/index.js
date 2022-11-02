@@ -4,15 +4,12 @@ import React, { useState, useEffect } from 'react';
 import io from 'socket.io-client';
 import { useSelector } from 'react-redux';
 
-import { Box, Grid, Stack, Typography } from '@mui/material';
+import { Grid, Stack, Typography } from '@mui/material';
 import AltRouteIcon from '@mui/icons-material/AltRoute';
 import Backdrop from '@mui/material/Backdrop';
 import CircularProgress from '@mui/material/CircularProgress';
-import SpeedDial from '@mui/material/SpeedDial';
-import SpeedDialIcon from '@mui/material/SpeedDialIcon';
-import SpeedDialAction from '@mui/material/SpeedDialAction';
-import ArrowCircleRightIcon from '@mui/icons-material/ArrowCircleRight';
-import AssistantDirectionRoundedIcon from '@mui/icons-material/AssistantDirectionRounded';
+import CircleNotificationsIcon from '@mui/icons-material/CircleNotifications';
+
 import Tooltip from '@mui/material/Tooltip';
 import IconButton from '@mui/material/IconButton';
 import MenuDropDown from '../MenuDropDown';
@@ -20,21 +17,19 @@ import MenuDropDown from '../MenuDropDown';
 import RequestItem from '../RequestItem';
 import SnackBarAlert from '../SnackBarAlert';
 import style from './style';
-import CreateProdReqModal from '../CreateProdReqModal';
 import { DEPLOYED_WS } from '../../constant';
 import { currentUser } from '../../redux/selectors';
 import requestProdApi from '../../api/requestProductAPI';
 import callToast from '../../helperToast/index';
 
-export default function SuggestedRoute() {
+export default function ResponseRoute() {
     const _currentUser = useSelector(currentUser);
     const socket = io(DEPLOYED_WS, {
         transports: ['websocket'],
     });
     const [openModal, setOpenModal] = useState(false);
-    const [listRequestPending, setListRequestPending] = useState([]);
+    const [listReqRes, setListReqRes] = useState([]);
     const [isLoading, setIsLoading] = useState(true);
-    const [hidden, setHidden] = React.useState(false);
     const [openBackdrop, setOpenBackdrop] = useState(false);
     const [alert, setAlert] = useState({
         open: false,
@@ -54,16 +49,16 @@ export default function SuggestedRoute() {
 
     const fetchReq = async () => {
         await requestProdApi
-            .getReqToMine(_currentUser.branch.branchid)
+            .getReqFromMe(_currentUser.branch.branchid)
             .then((data) => {
                 let temp1 = [];
                 data.data.map((i) => {
-                    if (i.status === 'pending') {
+                    if (i.status === 'responsed' || i.status === 'declined') {
                         temp1.push(i);
                     }
                 });
                 setIsLoading(false);
-                setListRequestPending(temp1.reverse());
+                setListReqRes(temp1.reverse());
             })
             .catch(() => {
                 console.log('Error load request list');
@@ -74,7 +69,7 @@ export default function SuggestedRoute() {
         socket.on('new-product-request', (message) => {
             const data = JSON.parse(message);
             if (data.toBranchId === _currentUser.branch.branchid) {
-                if (listRequestPending.find((ite) => ite.requestId === data.requestId) === undefined) {
+                if (listReqRes.find((ite) => ite.requestId === data.requestId) === undefined) {
                     fetchReq();
                     callToast.newReqToast(data.fromBranchId);
                 }
@@ -123,7 +118,7 @@ export default function SuggestedRoute() {
     }, []);
 
     const handleAction = async (e) => {
-        if (listRequestPending.length === 0) {
+        if (listReqRes.length === 0) {
             setAlert({
                 ...alert,
                 open: true,
@@ -139,7 +134,7 @@ export default function SuggestedRoute() {
                 role: _currentUser.role,
             };
             handleCloseMenu();
-            if (e === 'decline-all' && listRequestPending.length > 0) {
+            if (e === 'decline-all' && listReqRes.length > 0) {
                 setOpenBackdrop(true);
                 const temp = { ...params, type: '20' };
                 await requestProdApi.updateReqStatus(temp).then((data) => {
@@ -165,25 +160,50 @@ export default function SuggestedRoute() {
         }
     };
 
+    const handleDeleteResOrDec = async (e) => {
+        setOpenBackdrop(true);
+        const temp = {
+            requestId: e.requestProductId,
+            message: e.message,
+            status: 'deleted',
+            isChecked: e.isChecked,
+        };
+        try {
+            await requestProdApi.updateReq(temp).then((data) => {
+                setIsLoading(true);
+                fetchReq();
+                setOpenBackdrop(false);
+                setAlert({
+                    ...alert,
+                    open: true,
+                    message: 'Delete request successful',
+                    severity: 'success',
+                });
+            });
+        } catch (error) {
+            console.log(error);
+        }
+    };
+
     return (
         <Grid item xs={4} sx={{ pl: 2, pr: 1 }}>
             <Stack direction="row" spacing={1} sx={{ pb: 0.5, mt: 1 }}>
-                <Tooltip title="Handle suggest request">
+                <Tooltip title="Handle response request">
                     <IconButton
                         onClick={handleClickBigIcon}
                         size="small"
                         sx={{ ml: 2 }}
-                        aria-controls={openMenu ? 'handle-request-route-menu' : undefined}
+                        aria-controls={openMenu ? 'handle-response-route-menu' : undefined}
                         aria-haspopup="true"
                         aria-expanded={openMenu ? 'true' : undefined}
                     >
-                        <AssistantDirectionRoundedIcon sx={style.bigIcon} />
+                        <CircleNotificationsIcon sx={style.bigIcon} />
                     </IconButton>
                 </Tooltip>
                 <MenuDropDown
                     role={_currentUser.role}
                     anchorEl={anchorEl}
-                    id="handle-request-route-menu"
+                    id="handle-response-route-menu"
                     open={openMenu}
                     handleClose={handleCloseMenu}
                     handleClickMenuItem={(e) => handleAction(e)}
@@ -194,8 +214,13 @@ export default function SuggestedRoute() {
                 <CircularProgress sx={{ width: '100%', alignSelf: 'center' }} color="secondary" />
             ) : (
                 <Stack sx={style.stackContent} direction="column">
-                    {listRequestPending?.map((request) => (
-                        <RequestItem key={request.requestProductId} request={request} currUser={_currentUser} />
+                    {listReqRes?.map((request) => (
+                        <RequestItem
+                            handleDeleteResOrDec={() => handleDeleteResOrDec(request)}
+                            key={request.requestProductId}
+                            request={request}
+                            currUser={_currentUser}
+                        />
                     ))}
                 </Stack>
             )}
