@@ -275,7 +275,6 @@ function ProfileManage() {
     };
 
     const handleChangeDobAndSex = async () => {
-        console.log(selectedDate.toISOString().substring(0, 10));
         setUpdating(true);
         const temp = {
             ...dataForUpdate,

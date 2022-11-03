@@ -1,11 +1,9 @@
 /* eslint-disable prefer-const */
-/* eslint-disable no-unused-vars */
 import React, { useState, useEffect } from 'react';
 import io from 'socket.io-client';
 import { useSelector } from 'react-redux';
 
 import { Grid, Stack, Typography } from '@mui/material';
-import AltRouteIcon from '@mui/icons-material/AltRoute';
 import Backdrop from '@mui/material/Backdrop';
 import CircularProgress from '@mui/material/CircularProgress';
 import CircleNotificationsIcon from '@mui/icons-material/CircleNotifications';
@@ -20,14 +18,12 @@ import style from './style';
 import { DEPLOYED_WS } from '../../constant';
 import { currentUser } from '../../redux/selectors';
 import requestProdApi from '../../api/requestProductAPI';
-import callToast from '../../helperToast/index';
 
 export default function ResponseRoute() {
     const _currentUser = useSelector(currentUser);
     const socket = io(DEPLOYED_WS, {
         transports: ['websocket'],
     });
-    const [openModal, setOpenModal] = useState(false);
     const [listReqRes, setListReqRes] = useState([]);
     const [isLoading, setIsLoading] = useState(true);
     const [openBackdrop, setOpenBackdrop] = useState(false);
@@ -65,14 +61,16 @@ export default function ResponseRoute() {
             });
     };
 
-    const handleSocket = () => {
-        socket.on('new-product-request', (message) => {
+    const listenDealRequest = () => {
+        socket.on('deal-request', (message) => {
             const data = JSON.parse(message);
-            if (data.toBranchId === _currentUser.branch.branchid) {
-                if (listReqRes.find((ite) => ite.requestId === data.requestId) === undefined) {
+            if (data.type === 'single') {
+                if (data.request.fromBranchId === _currentUser.branch.branchid) {
                     fetchReq();
-                    callToast.newReqToast(data.fromBranchId);
                 }
+            }
+            if (data.type === 'multiple' && data.userID !== _currentUser.userID) {
+                fetchReq();
             }
         });
     };
@@ -80,42 +78,53 @@ export default function ResponseRoute() {
     const listenStatusReqChange = () => {
         socket.on('update-status-product-request', (message) => {
             const data = JSON.parse(message);
-            if (data.type === '1' && data.request.toBranchId === _currentUser.branch.branchid) {
-                callToast.cancelOneToast(data);
-            }
             if (data.type === '2' && data.request.fromBranchId === _currentUser.branch.branchid) {
-                callToast.declineOneToast(data);
-            }
-            if (data.type === '10' && data.userId !== _currentUser.userID) {
-                callToast.cancelAllToast(data);
+                fetchReq();
             }
             if (data.type === '20' && data.userId !== _currentUser.userID) {
-                callToast.declineAllToast(data);
-            }
-        });
-    };
-
-    const listenDealRequest = () => {
-        socket.on('deal-request', (message) => {
-            const data = JSON.parse(message);
-            if (data.type === 'single') {
-                if (data.request.toBranchId === _currentUser.branch.branchid) {
-                    fetchReq();
-                }
-            }
-            if (data.type === 'multiple' && data.userID === _currentUser.userID) {
                 fetchReq();
             }
         });
     };
 
     useEffect(async () => {
-        handleSocket();
         listenStatusReqChange();
         listenDealRequest();
         fetchReq();
         return () => {};
     }, []);
+
+    const refreshList = async () => {
+        await requestProdApi
+            .getReqFromMe(_currentUser.branch.branchid)
+            .then((data) => {
+                let temp1 = [];
+                data.data.map((i) => {
+                    if (i.status === 'responsed' || i.status === 'declined') {
+                        temp1.push(i);
+                    }
+                });
+                setListReqRes(temp1.reverse());
+            })
+            .catch(() => {
+                console.log('Error load request list');
+            });
+    };
+
+    const getResultFilter = (temp) => {
+        if (temp.length !== 0) {
+            setListReqRes(temp);
+            setIsLoading(false);
+        } else {
+            setIsLoading(false);
+            setAlert({
+                ...alert,
+                open: true,
+                message: 'No records found',
+                severity: 'warning',
+            });
+        }
+    };
 
     const handleAction = async (e) => {
         if (listReqRes.length === 0) {
@@ -126,36 +135,41 @@ export default function ResponseRoute() {
                 message: 'No records found',
             });
         } else {
-            let params = {
-                type: '20',
-                request: {},
-                myBranchId: _currentUser.branch.branchid,
-                userID: _currentUser.userID,
-                role: _currentUser.role,
-            };
             handleCloseMenu();
-            if (e === 'decline-all' && listReqRes.length > 0) {
-                setOpenBackdrop(true);
-                const temp = { ...params, type: '20' };
-                await requestProdApi.updateReqStatus(temp).then((data) => {
-                    setOpenBackdrop(false);
-                    setAlert({
-                        ...alert,
-                        open: true,
-                        severity: 'success',
-                        message: 'Declined all requests successfully',
+            if (e === 'show-fully-supplied' && listReqRes.length > 0) {
+                setIsLoading(true);
+                let temp = [];
+                await requestProdApi.showMyFullySupplied(_currentUser.branch.branchid).then((res) => {
+                    res.data.map((i) => {
+                        if (i.status === 'responsed') {
+                            requestProdApi.getReqById(i.requestproductid).then((response) => {
+                                temp.push(response.data);
+                            });
+                        }
                     });
+                    setTimeout(() => {
+                        getResultFilter(temp);
+                    }, 2000);
                 });
-            } else if (e === 'supply-all') {
-                setOpenBackdrop(true);
-                const pars = {
-                    branchId: _currentUser.branch.branchid,
-                    userID: _currentUser.userID,
-                    role: _currentUser.role,
-                };
-                await requestProdApi.dealMultiReq(pars).then((res) => {
-                    setOpenBackdrop(false);
+            } else if (e === 'show-declined') {
+                handleCloseMenu();
+                setIsLoading(true);
+                refreshList();
+                let temp = [];
+                listReqRes.map((i) => {
+                    if (i.status === 'declined') {
+                        temp.push(i);
+                    }
                 });
+                setTimeout(() => {
+                    getResultFilter(temp);
+                }, 3000);
+            } else {
+                setIsLoading(true);
+                refreshList();
+                setTimeout(() => {
+                    setIsLoading(false);
+                }, 3000);
             }
         }
     };
@@ -169,7 +183,7 @@ export default function ResponseRoute() {
             isChecked: e.isChecked,
         };
         try {
-            await requestProdApi.updateReq(temp).then((data) => {
+            await requestProdApi.updateReq(temp).then(() => {
                 setIsLoading(true);
                 fetchReq();
                 setOpenBackdrop(false);

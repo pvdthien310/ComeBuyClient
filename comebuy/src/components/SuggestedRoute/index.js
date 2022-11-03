@@ -1,17 +1,11 @@
 /* eslint-disable prefer-const */
-/* eslint-disable no-unused-vars */
 import React, { useState, useEffect } from 'react';
 import io from 'socket.io-client';
 import { useSelector } from 'react-redux';
 
-import { Box, Grid, Stack, Typography } from '@mui/material';
-import AltRouteIcon from '@mui/icons-material/AltRoute';
+import { Grid, Stack, Typography } from '@mui/material';
 import Backdrop from '@mui/material/Backdrop';
 import CircularProgress from '@mui/material/CircularProgress';
-import SpeedDial from '@mui/material/SpeedDial';
-import SpeedDialIcon from '@mui/material/SpeedDialIcon';
-import SpeedDialAction from '@mui/material/SpeedDialAction';
-import ArrowCircleRightIcon from '@mui/icons-material/ArrowCircleRight';
 import AssistantDirectionRoundedIcon from '@mui/icons-material/AssistantDirectionRounded';
 import Tooltip from '@mui/material/Tooltip';
 import IconButton from '@mui/material/IconButton';
@@ -20,7 +14,6 @@ import MenuDropDown from '../MenuDropDown';
 import RequestItem from '../RequestItem';
 import SnackBarAlert from '../SnackBarAlert';
 import style from './style';
-import CreateProdReqModal from '../CreateProdReqModal';
 import { DEPLOYED_WS } from '../../constant';
 import { currentUser } from '../../redux/selectors';
 import requestProdApi from '../../api/requestProductAPI';
@@ -31,10 +24,8 @@ export default function SuggestedRoute() {
     const socket = io(DEPLOYED_WS, {
         transports: ['websocket'],
     });
-    const [openModal, setOpenModal] = useState(false);
     const [listRequestPending, setListRequestPending] = useState([]);
     const [isLoading, setIsLoading] = useState(true);
-    const [hidden, setHidden] = React.useState(false);
     const [openBackdrop, setOpenBackdrop] = useState(false);
     const [alert, setAlert] = useState({
         open: false,
@@ -86,6 +77,8 @@ export default function SuggestedRoute() {
         socket.on('update-status-product-request', (message) => {
             const data = JSON.parse(message);
             if (data.type === '1' && data.request.toBranchId === _currentUser.branch.branchid) {
+                setIsLoading(true);
+                fetchReq();
                 callToast.cancelOneToast(data);
             }
             if (data.type === '2' && data.request.fromBranchId === _currentUser.branch.branchid) {
@@ -93,8 +86,11 @@ export default function SuggestedRoute() {
             }
             if (data.type === '10' && data.userId !== _currentUser.userID) {
                 callToast.cancelAllToast(data);
+                fetchReq();
             }
             if (data.type === '20' && data.userId !== _currentUser.userID) {
+                setIsLoading(true);
+                fetchReq();
                 callToast.declineAllToast(data);
             }
         });
@@ -142,7 +138,7 @@ export default function SuggestedRoute() {
             if (e === 'decline-all' && listRequestPending.length > 0) {
                 setOpenBackdrop(true);
                 const temp = { ...params, type: '20' };
-                await requestProdApi.updateReqStatus(temp).then((data) => {
+                await requestProdApi.updateReqStatus(temp).then(() => {
                     setOpenBackdrop(false);
                     setAlert({
                         ...alert,
@@ -158,7 +154,7 @@ export default function SuggestedRoute() {
                     userID: _currentUser.userID,
                     role: _currentUser.role,
                 };
-                await requestProdApi.dealMultiReq(pars).then((res) => {
+                await requestProdApi.dealMultiReq(pars).then(() => {
                     setOpenBackdrop(false);
                 });
             }
@@ -166,7 +162,7 @@ export default function SuggestedRoute() {
     };
 
     return (
-        <Grid item xs={4} sx={{ pl: 2, pr: 1 }}>
+        <Grid item xs={_currentUser.role !== 'admin' ? 4 : 6} sx={{ pl: 2, pr: 1 }}>
             <Stack direction="row" spacing={1} sx={{ pb: 0.5, mt: 1 }}>
                 <Tooltip title="Handle suggest request">
                     <IconButton

@@ -41,7 +41,7 @@ function BigDistribution() {
             <Grid container sx={style.wrapper}>
                 <CurrentRoute />
                 <SuggestedRoute />
-                <ResponseRoute />
+                {_currentUser.role !== 'admin' && <ResponseRoute />}
             </Grid>
         </Stack>
     );

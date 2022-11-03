@@ -55,5 +55,9 @@ const requestProdApi = {
         const res = DatabaseClient.post(`${baseURL}/deal/multi/${data.branchId}`, data).catch((err) => err.response);
         return res;
     },
+    showMyFullySupplied: async (branchId) => {
+        const res = DatabaseClient.get(`${baseURL}/getMyFullySupplied/${branchId}`).catch((err) => err.response);
+        return res;
+    },
 };
 export default requestProdApi;

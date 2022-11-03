@@ -20,7 +20,6 @@ import TextFieldForAdd from '../TextFieldForAdd';
 import style from './style';
 import { getProdInStockByBranchId } from '../../redux/slices/stockSlice';
 import SnackBarAlert from '../SnackBarAlert/index';
-import { doDistribution } from '../../redux/slices/requestSlice';
 import requestProdApi from '../../api/requestProductAPI';
 
 export default function DistributionModalVer2(prop) {
