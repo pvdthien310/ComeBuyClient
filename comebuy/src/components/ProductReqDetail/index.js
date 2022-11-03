@@ -1,14 +1,11 @@
 /* eslint-disable operator-linebreak */
-/* eslint-disable no-unused-vars */
 import React, { useEffect, useState } from 'react';
 import Box from '@mui/material/Box';
-import Button from '@mui/material/Button';
 import Typography from '@mui/material/Typography';
 import Modal from '@mui/material/Modal';
-import TextareaAutosize from '@mui/material/TextareaAutosize';
 import HighlightOffRoundedIcon from '@mui/icons-material/HighlightOffRounded';
 import InfoIcon from '@mui/icons-material/Info';
-import { IconButton, Stack, Grid } from '@mui/material';
+import { IconButton, Stack } from '@mui/material';
 import Backdrop from '@mui/material/Backdrop';
 import CircularProgress from '@mui/material/CircularProgress';
 
@@ -25,7 +22,6 @@ export default function ProductReqDetail(props) {
     useEffect(async () => {
         await requestProdApi.getReqById(props.request.requestProductId).then((data) => {
             setRequest(data.data);
-            console.log(data.data);
         });
     }, []);
 

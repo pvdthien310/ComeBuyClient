@@ -10,7 +10,7 @@ import CancelScheduleSendIcon from '@mui/icons-material/CancelScheduleSend';
 import DoneAllIcon from '@mui/icons-material/DoneAll';
 import JoinFullIcon from '@mui/icons-material/JoinFull';
 import SwipeLeftIcon from '@mui/icons-material/SwipeLeft';
-import DateRangeIcon from '@mui/icons-material/DateRange';
+import RefreshIcon from '@mui/icons-material/Refresh';
 
 import style from './style';
 
@@ -116,11 +116,11 @@ export default function MenuDropDown(prop) {
                         </ListItemIcon>
                         Show declined only
                     </MenuItem>
-                    <MenuItem sx={style.title} onClick={() => prop.handleClickMenuItem('show-with-date-range')}>
+                    <MenuItem sx={style.title} onClick={() => prop.handleClickMenuItem('refresh')}>
                         <ListItemIcon>
-                            <DateRangeIcon fontSize="small" color="primary" />
+                            <RefreshIcon fontSize="small" color="success" />
                         </ListItemIcon>
-                        Show with date range
+                        Refresh
                     </MenuItem>
                 </>
             )}

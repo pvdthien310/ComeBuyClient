@@ -40,7 +40,7 @@ export default function ProductReqResItem(props) {
 
     return (
         <Stack direction="row" spacing={1}>
-            <Box sx={props.info.issupplied === 'true' ? style.box : style.box1}>
+            <Box sx={props.info.issupplied ? style.box : style.box1}>
                 <ItemClickToolTips
                     title={
                         <Fragment>
@@ -55,14 +55,12 @@ export default function ProductReqResItem(props) {
                 >
                     <Badge
                         components="span"
-                        badgeContent={
-                            props.info.issupplied === 'true' ? `✔️${props.info.quantity}` : `❌${props.info.quantity}`
-                        }
-                        color={props.info.issupplied === 'true' ? 'success' : 'error'}
+                        badgeContent={props.info.issupplied ? `✔️${props.info.quantity}` : `❌${props.info.quantity}`}
+                        color={props.info.issupplied ? 'success' : 'error'}
                     >
                         <Button
                             onDoubleClick={handleDoubleClick}
-                            sx={props.info.issupplied === 'true' ? style.btnTextX : style.btnTextY}
+                            sx={props.info.issupplied ? style.btnTextX : style.btnTextY}
                         >
                             {props.info.productid}
                         </Button>

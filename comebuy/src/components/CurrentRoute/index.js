@@ -2,24 +2,13 @@
 /* eslint-disable prefer-const */
 /* eslint-disable indent */
 /* eslint-disable operator-linebreak */
-/* eslint-disable no-unused-vars */
 import React, { useEffect, useState } from 'react';
 import io from 'socket.io-client';
 import { useSelector, useDispatch } from 'react-redux';
 import { unwrapResult } from '@reduxjs/toolkit';
-import { CircularProgress, Grid, Stack, Typography, Box } from '@mui/material';
+import { CircularProgress, Grid, Stack, Typography } from '@mui/material';
 import Backdrop from '@mui/material/Backdrop';
 import Tooltip from '@mui/material/Tooltip';
-import { styled, alpha } from '@mui/material/styles';
-import InputBase from '@mui/material/InputBase';
-import SpeedDial from '@mui/material/SpeedDial';
-import SpeedDialIcon from '@mui/material/SpeedDialIcon';
-import SpeedDialAction from '@mui/material/SpeedDialAction';
-import ArrowCircleRightIcon from '@mui/icons-material/ArrowCircleRight';
-import SwitchAccessShortcutAddIcon from '@mui/icons-material/SwitchAccessShortcutAdd';
-import SearchIcon from '@mui/icons-material/Search';
-import AddBoxIcon from '@mui/icons-material/AddBox';
-import DoDisturbOnIcon from '@mui/icons-material/DoDisturbOn';
 import AddCircleIcon from '@mui/icons-material/AddCircle';
 import IconButton from '@mui/material/IconButton';
 import BranchItem from '../BranchItem';
@@ -29,8 +18,6 @@ import { DEPLOYED_WS } from '../../constant';
 import SnackBarAlert from '../SnackBarAlert';
 import { currentUser } from '../../redux/selectors';
 import { getBranchAndTotalStock } from '../../redux/slices/branchSlice';
-import StockItem from '../StockItem';
-import { getStockAndRemain } from '../../redux/slices/stockSlice';
 import requestProdApi from '../../api/requestProductAPI';
 import RequestItem from '../RequestItem/index';
 import CreateProdReqModal from '../CreateProdReqModal/index';
@@ -104,7 +91,7 @@ export default function CurrentRoute() {
     };
 
     const listenStatusReqChange = () => {
-        socket.on('update-status-product-request', (message) => {
+        socket.on('update-status-product-request', () => {
             fetchData();
         });
     };
@@ -149,7 +136,7 @@ export default function CurrentRoute() {
                     userID: _currentUser.userID,
                     role: _currentUser.role,
                 };
-                await requestProdApi.updateReqStatus(params).then((data) => {
+                await requestProdApi.updateReqStatus(params).then(() => {
                     setOpenBackdrop(false);
                     setAlert({
                         ...alert,
@@ -173,7 +160,7 @@ export default function CurrentRoute() {
     };
 
     return (
-        <Grid item xs={4} sx={{ pt: 2, pl: 2, pr: 1 }}>
+        <Grid item xs={_currentUser.role !== 'admin' ? 4 : 6} sx={{ pt: 2, pl: 2, pr: 1 }}>
             <Stack direction="row" spacing={1} sx={{ pb: 1 }}>
                 <Tooltip title="Current route actions">
                     <IconButton

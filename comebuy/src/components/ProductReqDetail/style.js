@@ -23,11 +23,11 @@ const style = {
     },
     stackContent: {
         height: '20vh',
-        overflow: 'scroll',
+        overflowY: 'scroll',
         p: 1,
         pt: 2,
         mt: 1,
-        flexDirection: 'center',
+        ml: 10,
     },
     titleList: {
         fontWeight: 'bold',

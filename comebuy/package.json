@@ -21,6 +21,7 @@
         "@testing-library/user-event": "^13.5.0",
         "axios": "^0.26.1",
         "clsx": "^1.1.1",
+        "dayjs": "^1.11.6",
         "moment": "^2.18.1",
         "netlify-identity-widget": "^1.9.2",
         "prettier": "^2.7.1",
