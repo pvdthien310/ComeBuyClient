@@ -3,7 +3,7 @@ import React, { useState } from 'react';
 import { Button, Link, Stack, Typography } from '@mui/material';
 import Radio from '@mui/material/Radio';
 import Grid from '@mui/material/Grid';
-import { Paypal } from '../../../components';
+import { Paypal } from '..';
 
 export default function PaymentPart(prop) {
     const [openPayOnline, setOpenPayOnline] = useState(false);

@@ -84,6 +84,10 @@ export default function SuggestedRoute() {
             if (data.type === '2' && data.request.fromBranchId === _currentUser.branch.branchid) {
                 callToast.declineOneToast(data);
             }
+            if (data.type === '2' && data.request.toBranchId === _currentUser.branch.branchid) {
+                setIsLoading(true);
+                fetchReq();
+            }
             if (data.type === '10' && data.userId !== _currentUser.userID) {
                 callToast.cancelAllToast(data);
                 fetchReq();
