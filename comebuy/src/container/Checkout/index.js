@@ -13,6 +13,8 @@ import { getProductWithID } from '../../redux/slices/productSlice';
 import { cartListSelector, currentUser } from '../../redux/selectors';
 import CartInCheckOut from '../../components/CartInCheckOut';
 
+import style from './style';
+
 export default function CheckoutPage() {
     const dispatch = useDispatch();
     const _guestCart = useSelector(cartListSelector);
@@ -157,17 +159,7 @@ export default function CheckoutPage() {
     }, []);
 
     return (
-        <Grid
-            container
-            sx={{
-                width: '100%',
-                height: '100%',
-                position: 'absolute',
-                backgroundColor: 'white',
-                resize: 'none',
-            }}
-            spacing={2}
-        >
+        <Grid container sx={style.wrapper} spacing={2}>
             {!isPaymentPart ? (
                 <OrderInfoPart setIsPaymentPart={setIsPaymentPart} orderInfo={orderInfo} setOrderInfo={setOrderInfo} />
             ) : (

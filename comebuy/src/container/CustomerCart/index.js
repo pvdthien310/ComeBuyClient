@@ -1,8 +1,9 @@
+/* eslint-disable no-unused-vars */
 /* eslint-disable react/jsx-one-expression-per-line */
 /* eslint-disable react/jsx-props-no-spreading */
 import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
-import { Typography, Link, Stack, Breadcrumbs, TextField, Button } from '@mui/material';
+import { Typography, Link, Stack, Breadcrumbs, Button } from '@mui/material';
 import Backdrop from '@mui/material/Backdrop';
 import CircularProgress from '@mui/material/CircularProgress';
 import Dialog from '@mui/material/Dialog';
@@ -49,9 +50,13 @@ const TopButton = styled.button`
     padding: 10px;
     font-weight: 600;
     cursor: pointer;
-    border: ${(props) => props.type === 'filled' && 'none'};
-    background-color: ${(props) => (props.type === 'filled' ? '#2C4001' : 'transparent')};
-    color: ${(props) => props.type === 'filled' && 'white'};
+    border-radius: 7px;
+    :hover {
+        background-color: #f7f7f7;
+    }
+    border: ${(props) => props.type === 'none' && 'none'};
+    background-color: ${(props) => (props.type === 'filled' ? 'transparent' : 'transparent')};
+    color: ${(props) => props.type === 'filled' && 'filled'};
 `;
 
 const Bottom = styled.div`
@@ -67,7 +72,7 @@ const Summary = styled.div`
     padding: 20px;
     height: 50vh;
     box-shadow: 2px 2px 2px 2px;
-    margin-top: 3%;
+    margin-top: 2%;
 `;
 
 const SummaryTitle = styled.h1`
@@ -100,8 +105,8 @@ function CustomerCart() {
     const [prodList, setProdList] = useState([]);
     const [subTotal, setSubTotal] = useState(0);
     const [openSnackbar, setOpenSnackbar] = useState(false);
-    const [search, setSearch] = React.useState('');
-    const [masterData, setmasterData] = React.useState([]);
+    // const [search, setSearch] = React.useState('');
+    // const [masterData, setmasterData] = React.useState([]);
     const [open, setOpen] = useState(false);
     // const [input, setInput] = useState('');
     // const [output, setOutput] = useState([]);
@@ -159,7 +164,7 @@ function CustomerCart() {
             const listProduct = [];
             fetchYourCart(listCart, listProduct);
             setCartList(listCart);
-            setmasterData(listCart);
+            // setmasterData(listCart);
             setProdList(listProduct);
         }
     }, []);
@@ -168,20 +173,20 @@ function CustomerCart() {
         setOpen(false);
     };
 
-    const searchFilter = (text) => {
-        if (text) {
-            const newData = masterData.filter((item) => {
-                const itemData = item.email ? item.email.toUpperCase() : ''.toUpperCase();
-                const textData = text.toUpperCase();
-                return itemData.indexOf(textData) > -1;
-            });
-            setCartList(newData);
-            setSearch(text);
-        } else {
-            setCartList(masterData);
-            setSearch(text);
-        }
-    };
+    // const searchFilter = (text) => {
+    //     if (text) {
+    //         const newData = masterData.filter((item) => {
+    //             const itemData = item.email ? item.email.toUpperCase() : ''.toUpperCase();
+    //             const textData = text.toUpperCase();
+    //             return itemData.indexOf(textData) > -1;
+    //         });
+    //         setCartList(newData);
+    //         setSearch(text);
+    //     } else {
+    //         setCartList(masterData);
+    //         setSearch(text);
+    //     }
+    // };
 
     // handling change amount
     const handleChangeAmount = async (value, actionType) => {
@@ -247,12 +252,10 @@ function CustomerCart() {
         }
     };
 
-    // handle agree dis-cart
     const handleAgree = async (item) => {
         try {
             const resultAction = await dispatch(deleteCartById(item));
             const originalPromiseResult = unwrapResult(resultAction);
-            console.log(originalPromiseResult);
             for (let i = 0; i < cartList.length; i++) {
                 if (cartList[i].cartID === item.cartID) {
                     cartList.splice(i, 1);
@@ -282,46 +285,35 @@ function CustomerCart() {
         navigate('/');
     };
 
-    const breadcrumbs = [
-        <Link underline="hover" key="2" style={{ color: '#000D0A' }} href="/myplace" onClick={handleClickToHome}>
-            Home
-        </Link>,
-        <Link underline="hover" key="2" style={{ color: '#000D0A' }} href="/myplace" onClick={handleClick}>
-            My place
-        </Link>,
-        <Typography key="3" style={{ color: '#000D0A' }}>
-            My Cart
-        </Typography>,
-    ];
+    // const breadcrumbs = [
+    //     <Link underline="hover" key="2" style={{ color: '#000D0A' }} href="/myplace" onClick={handleClickToHome}>
+    //         Home
+    //     </Link>,
+    //     <Link underline="hover" key="2" style={{ color: '#000D0A' }} href="/myplace" onClick={handleClick}>
+    //         My place
+    //     </Link>,
+    //     <Typography key="3" style={{ color: '#000D0A' }}>
+    //         My Cart
+    //     </Typography>,
+    // ];
 
     const gotoProductScreen = () => navigate('/productSpace');
 
     return (
         <Container>
             <NavBar hiddenCartLabel={false} />
-            <Stack direction="row" spacing={3} style={{ marginLeft: '15%', marginTop: '1%' }}>
+            {/* <Stack direction="row" spacing={3} style={{ marginLeft: '15%', marginTop: '1%' }}>
                 <Breadcrumbs separator="›" style={{ color: '#000D0A' }} aria-label="breadcrumb">
                     {breadcrumbs}
                 </Breadcrumbs>
-            </Stack>
+            </Stack> */}
             <Wrapper>
                 <Title>YOUR CART</Title>
                 <Top>
-                    <TopButton onClick={gotoProductScreen}>CONTINUE SHOPPING</TopButton>
-                    <TextField
-                        sx={{ p: '2px 4px 2px 2px', display: 'flex', alignItems: 'center', width: 500 }}
-                        placeholder="Search cart "
-                        variant="outlined"
-                        inputProps={{ 'aria-label': 'Search cart' }}
-                        value={search}
-                        onChange={(text) => searchFilter(text.target.value)}
-                    />
-                    <TopButton onClick={handleCheckout} type="filled">
-                        CHECKOUT NOW
-                    </TopButton>
+                    <TopButton onClick={gotoProductScreen}>Continue Shopping</TopButton>
                 </Top>
                 <Bottom>
-                    <Stack sx={{ m: 2, p: 2 }}>
+                    <Stack sx={{ p: 2 }}>
                         {cartList.map((item, i) => (
                             <>
                                 <ProductInCart key={i} productInCart={item} handleChangeAmount={handleChangeAmount} />
@@ -346,7 +338,7 @@ function CustomerCart() {
                         ))}
                     </Stack>
                     <Summary>
-                        <SummaryTitle>ORDER SUMMARY</SummaryTitle>
+                        <SummaryTitle>Order Summary</SummaryTitle>
                         <SummaryItem>
                             <SummaryItemText>Subtotal</SummaryItemText>
                             <SummaryItemPrice>${subTotal}</SummaryItemPrice>

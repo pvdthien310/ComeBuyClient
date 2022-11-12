@@ -2,74 +2,67 @@
 /* eslint-disable implicit-arrow-linebreak */
 /* eslint-disable no-confusing-arrow */
 /* eslint-disable no-unused-vars */
-import React, { useState } from 'react';
-import { Stack, Grid, TextField, Button, Typography } from '@mui/material';
+import React, { useState, useEffect, useRef } from 'react';
+import { Stack, Grid, TextField, Button, Typography, Box } from '@mui/material';
+import IconButton from '@mui/material/IconButton';
+import Tooltip from '@mui/material/Tooltip';
+import LinearProgress from '@mui/material/LinearProgress';
+import InfoIcon from '@mui/icons-material/Info';
+import { DiamondOutlined } from '@mui/icons-material';
+
 import { useSelector } from 'react-redux';
 import { currentUser } from '../../redux/selectors';
+
+import style from './style';
 
 export default function CartInCheckOut(props) {
     const _currentUser = useSelector(currentUser);
     const [typeCus, setTypeCus] = useState('Rare member');
+    const [discount, setDiscount] = useState(0);
+    const [isLoading, setIsLoading] = useState(false);
+    const [isShowCoupon, setIsShowCoupon] = useState(false);
+
+    const Identify = () => {
+        if (localStorage.getItem('role') === 'customer') {
+            if (_currentUser.score < 2000) {
+                setDiscount(0);
+                setTypeCus('Rare Member');
+            } else if (_currentUser.score >= 2000 && _currentUser.score < 5000) {
+                setDiscount(10);
+                setTypeCus('Silver Member');
+            } else if (_currentUser.score >= 5000 && _currentUser.score < 20000) {
+                setDiscount(20);
+                setTypeCus('Golden Member');
+            } else {
+                setDiscount(30);
+                setTypeCus('Diamond Member');
+            }
+        } else {
+            setDiscount(0);
+        }
+    };
+
+    const handleUseCoupon = () => {
+        setIsLoading(true);
+    };
+
+    useEffect(() => {
+        Identify();
+    }, []);
 
     return (
-        <Grid
-            sx={{
-                backgroundColor: '#fafafa',
-                left: 0,
-                backgroundPosition: 'left top',
-                boxShadow: '1px 0 0 #e1e1e1 inset',
-            }}
-            height="100%"
-            item
-            xs={5}
-        >
-            <Stack
-                direction="column"
-                spacing={2}
-                p="2rem"
-                sx={{ height: '220px', overflowY: 'scroll', overflowX: 'hidden' }}
-                paddingRight="6em"
-            >
+        <Grid sx={style.wrapper} height="100%" item xs={5}>
+            <Stack direction="column" spacing={2} p="2rem" sx={style.stackWrapper} paddingRight="6em">
                 {props.listCart.map((cart) => (
-                    <Stack
-                        sx={{
-                            backgroundColor: '#F2F2F2',
-                            borderRadius: '8px',
-                            padding: '1em',
-                            ':hover': {
-                                backgroundColor: 'bisque',
-                            },
-                            width: '100%',
-                        }}
-                        direction="row"
-                    >
+                    <Stack sx={style.listWrapper} direction="row">
                         {props.listProd.map((prod) =>
                             prod.productID === cart.productid ? (
-                                <img
-                                    style={{
-                                        width: '5em',
-                                        height: '5em',
-                                        borderRadius: '8px',
-                                        background: '#fff',
-                                        position: 'relative',
-                                    }}
-                                    alt={prod.name}
-                                    src={prod.productimage[0].imageURL}
-                                />
+                                <img style={style.img} alt={prod.name} src={prod.productimage[0].imageURL} />
                             ) : null,
                         )}
-                        <Stack sx={{ width: '100%', paddingRight: '2em' }} direction="column">
+                        <Stack sx={style.infoWrapper} direction="column">
                             <Typography sx={{ marginLeft: '1em', marginTop: '1em' }}>{cart.product.name}</Typography>
-                            <Stack
-                                direction="row"
-                                sx={{
-                                    width: '100%',
-                                    display: 'flex',
-                                    justifyContent: 'space-between',
-                                    marginLeft: '1em',
-                                    marginTop: '1em',
-                                }}
-                            >
+                            <Stack direction="row" sx={style.listProdWrapper}>
                                 {props.listProd.map((prod) =>
                                     prod.productID === cart.productid ? (
                                         <Typography sx={{ fontWeight: 600 }}>
@@ -90,14 +83,8 @@ export default function CartInCheckOut(props) {
                     </Stack>
                 ))}
             </Stack>
-            <div
-                style={{
-                    height: '1px',
-                    width: '90%',
-                    backgroundColor: '#BFBFBF',
-                }}
-            />
-            <Stack direction="column" spacing={2} p="2rem" paddingRight="6em">
+            <div style={style.line} />
+            <Stack direction="column" spacing={2} p="2rem">
                 <Grid container width="100%" spacing={1}>
                     <Grid item xs={8.5}>
                         <TextField
@@ -105,118 +92,58 @@ export default function CartInCheckOut(props) {
                             id="outlined-basic"
                             label="Discount code"
                             variant="outlined"
-                            sx={{
-                                color: '#333333',
-                                fontFamily: 'sans-serif',
-                            }}
+                            sx={style.textField}
                         />
                     </Grid>
                     <Grid item xs={3.5} sx={{ height: '100%' }}>
-                        <Button
-                            variant="contained"
-                            sx={{
-                                fontSize: '14px',
-                                backgroundColor: 'gray',
-                                marginTop: '0.5em',
-                                width: '100%',
-                                height: '100%',
-                            }}
-                        >
+                        <Button onClick={handleUseCoupon} variant="contained" sx={style.btn}>
                             Use
                         </Button>
                     </Grid>
                 </Grid>
-                <div
-                    style={{
-                        height: '1px',
-                        width: '100%',
-                        backgroundColor: '#BFBFBF',
-                    }}
-                />
+                {isLoading && (
+                    <Box sx={{ width: '100%' }}>
+                        <LinearProgress />
+                    </Box>
+                )}
+
                 <Stack direction="column" width="100%">
-                    <Typography
-                        sx={{
-                            color: '#333333',
-                            fontFamily: 'sans-serif',
-                            fontWeight: 300,
-                        }}
-                    >
-                        MEMBERSHIP
-                    </Typography>
+                    <Typography sx={style.memberShipText}>MEMBERSHIP</Typography>
                     <Stack direction="row" width="100%" justifyContent="space-between">
-                        <>
-                            {/* <DiamondIcon sx={{ width: '17px', height: '17px' }} /> */}
-                            <Typography
-                                sx={{
-                                    color: '#333333',
-                                    fontSize: '13px',
-                                    fontWeight: 'bold',
-                                }}
-                            >
+                        <Stack direction="row" spacing={2}>
+                            <DiamondOutlined sx={{ width: '17px', height: '17px' }} />
+                            <Typography sx={style.memberType}>
                                 {typeCus} -{_currentUser.score} point(s)
                             </Typography>
-                        </>
-                        <Typography
-                            sx={{
-                                color: '#333333',
-                                fontWeight: 600,
-                                marginTop: '1.2em',
-                            }}
-                        >
-                            -{props.discount}%
-                        </Typography>
+                        </Stack>
+                        <Tooltip title="Click to see rule of membership" placement="top-start">
+                            <IconButton
+                                color="primary"
+                                sx={{ width: '15px', height: '15px' }}
+                                aria-label="add to shopping cart"
+                            >
+                                <InfoIcon />
+                            </IconButton>
+                        </Tooltip>
                     </Stack>
                 </Stack>
-                <div
-                    style={{
-                        height: '1px',
-                        width: '100%',
-                        backgroundColor: '#BFBFBF',
-                    }}
-                />
+                <div style={style.line} />
                 <Stack direction="row" width="100%" justifyContent="space-between">
                     <Typography sx={{ marginTop: '1.2em', color: 'gray' }}>Temporary cost</Typography>
-                    <Typography
-                        sx={{
-                            color: '#333333',
-                            fontWeight: 600,
-                            marginTop: '1.2em',
-                        }}
-                    >
+                    <Typography sx={style.subTotal}>
                         ${props.subTotal - (props.subTotal * props.discount) / 100}
                     </Typography>
                 </Stack>
                 <Stack direction="row" width="100%" justifyContent="space-between">
                     <Typography sx={{ color: 'gray', marginTop: '-0.5em' }}>Delivery cost</Typography>
-                    <Typography
-                        sx={{
-                            color: '#333333',
-                            fontWeight: 800,
-                            marginTop: '-0.5em',
-                        }}
-                    >
-                        $2.00
-                    </Typography>
+                    <Typography sx={style.twoDollar}>$2.00</Typography>
                 </Stack>
-                <div
-                    style={{
-                        height: '1px',
-                        width: '100%',
-                        backgroundColor: '#BFBFBF',
-                    }}
-                />
+                <div style={style.line} />
 
                 <Stack direction="row" width="100%" justifyContent="space-between">
                     <Typography sx={{ color: 'gray', marginTop: '1.2em' }}>Total cost</Typography>
-                    <Typography
-                        sx={{
-                            color: '#333333',
-                            fontWeight: 600,
-                            marginTop: '1.2em',
-                            fontSize: '20px',
-                        }}
-                    >
-                        {props.subTotal - (props.subTotal * props.discount) / 100 + 2} USD
+                    <Typography sx={style.total}>
+                        {props.subTotal - (props.subTotal * discount) / 100 + 2} USD
                     </Typography>
                 </Stack>
             </Stack>

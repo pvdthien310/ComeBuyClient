@@ -8,7 +8,7 @@ const style = {
     titleTypo: {
         color: '#333333',
         fontSize: '1.28571em',
-        fontWeight: 'normal',
+        fontWeight: 'bold',
         lineHeight: '1em',
         marginBlockStart: '0.83em',
         marginBlockEnd: '0.83em',
@@ -44,7 +44,7 @@ const style = {
     },
     grid: {
         width: '100%',
-        position: 'relative',
+
         marginTop: '0.25rem',
     },
     textFieldEmail: {
