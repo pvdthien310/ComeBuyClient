@@ -7,12 +7,12 @@ import Select from '@mui/material/Select';
 export default function AddressSelector(props) {
     return (
         <FormControl fullWidth>
-            <InputLabel id="demo-simple-select-label">City/Province</InputLabel>
+            <InputLabel id="demo-simple-select-label">{props.holder}</InputLabel>
             <Select
                 labelId="demo-simple-select-label"
                 id="demo-simple-select"
                 value={props.selected}
-                label="Province/City"
+                label={props.holder}
                 onChange={(event) => props.handleChangePlace(event)}
             >
                 {props.listPlace.map((province) => (

@@ -38,7 +38,7 @@ function ProductInCart(props) {
     }, [props.productInCart.amount]);
 
     return (
-        <Card sx={{ p: 2, m: 1, boxShadow: 5 }}>
+        <Card sx={{ p: 2, m: 1, boxShadow: 4 }}>
             {product != null ? (
                 <Stack direction="row" sx={{ height: '100%', alignContent: 'center' }}>
                     <Img alt="complex" sx={{ maxWidth: 180 }} src={product.productimage[0].imageURL} />
@@ -48,6 +48,7 @@ function ProductInCart(props) {
                             variant="body1"
                             fontWeight="bold"
                             component="div"
+                            sx={{ cursor: 'pointer' }}
                             onClick={handleNavigateToDetail}
                         >
                             {product.name}
@@ -56,10 +57,10 @@ function ProductInCart(props) {
                             Warranty {product.warranty}
                         </Typography>
                         <Stack sx={{ p: 1 }} spacing={1}>
-                            <Box>CPU: {product.cpu}</Box>
-                            <Box>GPU: {product.gpu}</Box>
-                            <Box>RAM: {product.ram}</Box>
-                            <Box>Screen: {product.screenDimension}' inch</Box>
+                            <Box sx={{ fontSize: '13px' }}>CPU: {product.cpu}</Box>
+                            <Box sx={{ fontSize: '13px' }}>GPU: {product.gpu}</Box>
+                            <Box sx={{ fontSize: '13px' }}>RAM: {product.ram}</Box>
+                            <Box sx={{ fontSize: '13px' }}>Screen: {product.screenDimension}' inch</Box>
                         </Stack>
                     </CardContent>
                     <Stack

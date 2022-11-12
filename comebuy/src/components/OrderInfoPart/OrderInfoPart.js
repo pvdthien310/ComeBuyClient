@@ -6,11 +6,13 @@ import { Button, Stack, Typography, TextField, Avatar } from '@mui/material';
 import Grid from '@mui/material/Grid';
 import Link from '@mui/material/Link';
 
-import { AddressSelector } from '../../../components';
-import { currentUser } from '../../../redux/selectors';
-import { accountSlice } from '../../../redux/slices/accountSlice';
-import { CheckEmail } from '../../LoginAndRegister/ValidationDataForAccount';
-import SnackBarAlert from '../../../components/SnackBarAlert/index';
+import { AddressSelector } from '..';
+import { currentUser } from '../../redux/selectors';
+import { accountSlice } from '../../redux/slices/accountSlice';
+import { CheckEmail } from '../../container/LoginAndRegister/ValidationDataForAccount';
+import SnackBarAlert from '../SnackBarAlert/index';
+
+import style from './style';
 
 export default function OrderInfoPart(prop) {
     const navigate = useNavigate();
@@ -103,65 +105,18 @@ export default function OrderInfoPart(prop) {
 
     return (
         <Grid item xs={7} height="100%">
-            {console.log(prop.orderInfo)}
             <Stack direction="column" spacing={2} p="2rem" paddingLeft="12em">
-                <Stack
-                    direction="column"
-                    sx={{
-                        paddingBottom: '1em',
-                        display: 'block',
-                    }}
-                >
+                <Stack direction="column" sx={style.stackContainer}>
                     <Stack marginTop="-3%">
-                        <Typography
-                            sx={{
-                                color: '#333333',
-                                fontSize: '1.28571em',
-                                fontWeight: 'normal',
-                                lineHeight: '1em',
-                                marginBlockStart: '0.83em',
-                                marginBlockEnd: '0.83em',
-                                display: 'block',
-                                fontFamily: 'sans-serif',
-                            }}
-                        >
-                            Checkout detail
-                        </Typography>
+                        <Typography sx={style.titleTypo}>Checkout detail</Typography>
                     </Stack>
-                    <Stack direction="row" sx={{ width: '100%', position: 'relative' }}>
-                        <Avatar sx={{ height: '70px', width: '70px' }} alt="" src={_currentUser.avatar} />
+                    <Stack direction="row" sx={style.stackUserInfo}>
+                        <Avatar sx={style.avt} alt="" src={_currentUser.avatar} />
                         <Stack direction="column" marginLeft="0.1em">
-                            <p
-                                style={{
-                                    marginBlockStart: '1em',
-                                    marginBlockEnd: '1em',
-                                    display: 'block',
-                                    marginBottom: '0.75em',
-                                    lineHeight: '1.5em',
-                                    fontSize: '14px',
-                                    fontFamily: 'sans-serif',
-                                    marginTop: '0.1%',
-                                    marginLeft: '1.2em',
-                                }}
-                            >
+                            <p style={style.userInfo}>
                                 {_currentUser.name} ({_currentUser.email})
                             </p>
-                            <Link
-                                underline="hover"
-                                sx={{
-                                    textDecoration: 'none',
-                                    color: '#338dbc',
-                                    transition: 'color 0.2s ease-in-out',
-                                    display: 'inline-block',
-                                    cursor: 'pointer',
-                                    fontSize: '14px',
-                                    fontFamily: 'sans-serif',
-                                    lineHeight: '1.5em',
-                                    marginLeft: '1.2em',
-                                }}
-                                onClick={handleLogOutOrIn}
-                                href
-                            >
+                            <Link underline="hover" sx={style.backToCartBtn} onClick={handleLogOutOrIn} href>
                                 {isCustomer ? 'Log out' : 'Log in'}
                             </Link>
                         </Stack>
@@ -171,24 +126,21 @@ export default function OrderInfoPart(prop) {
                         id="outlined-basic"
                         label="Full name"
                         variant="outlined"
-                        sx={{
-                            color: '#333333',
-                            fontFamily: 'sans-serif',
-                            marginTop: '1em',
-                        }}
+                        sx={style.textField}
                         value={prop.orderInfo.fullName}
                         onChange={(e) => prop.setOrderInfo({ ...prop.orderInfo, fullName: e.target.value })}
                     />
-                    <Grid
-                        spacing={2}
-                        container
-                        sx={{
-                            width: '100%',
-                            position: 'relative',
-                            marginTop: '0.25rem',
-                        }}
-                    >
-                        <Grid item xs={8}>
+                    <TextField
+                        fullWidth
+                        id="outlined-basic"
+                        label="Your address to get order"
+                        variant="outlined"
+                        sx={{ ...style.textFieldEmail, marginTop: '1.3rem' }}
+                        value={prop.orderInfo.address}
+                        onChange={(e) => prop.setOrderInfo({ ...prop.orderInfo, address: e.target.value })}
+                    />
+                    <Grid spacing={3} container sx={style.grid}>
+                        <Grid item xs={7}>
                             <TextField
                                 fullWidth
                                 id="outlined-basic"
@@ -197,14 +149,10 @@ export default function OrderInfoPart(prop) {
                                 type="email"
                                 value={prop.orderInfo.email}
                                 onChange={(e) => prop.setOrderInfo({ ...prop.orderInfo, email: e.target.value })}
-                                sx={{
-                                    color: '#333333',
-                                    fontFamily: 'sans-serif',
-                                }}
+                                sx={style.textFieldEmail}
                             />
                         </Grid>
-
-                        <Grid item xs={4}>
+                        <Grid item xs={5}>
                             <TextField
                                 fullWidth
                                 id="outlined-basic"
@@ -213,30 +161,16 @@ export default function OrderInfoPart(prop) {
                                 type="tel"
                                 value={prop.orderInfo.phoneNumber}
                                 onChange={(e) => prop.setOrderInfo({ ...prop.orderInfo, phoneNumber: e.target.value })}
-                                sx={{
-                                    color: '#333333',
-                                    fontFamily: 'sans-serif',
-                                }}
+                                sx={style.textFieldEmail}
                             />
                         </Grid>
                     </Grid>
-                    <TextField
-                        fullWidth
-                        id="outlined-basic"
-                        label="Your address to get order"
-                        variant="outlined"
-                        sx={{
-                            color: '#333333',
-                            fontFamily: 'sans-serif',
-                            marginTop: '1.3rem',
-                        }}
-                        value={prop.orderInfo.address}
-                        onChange={(e) => prop.setOrderInfo({ ...prop.orderInfo, address: e.target.value })}
-                    />
-                    <Grid spacing={2} container sx={{ width: '100%', position: 'relative', marginTop: '1em' }}>
+
+                    <Grid spacing={2} container sx={style.grid2}>
                         <Grid item xs={4}>
                             <AddressSelector
                                 selected={province}
+                                holder="Province"
                                 handleChangePlace={(e) => setProvince(e.target.value)}
                                 listPlace={provinceList}
                             />
@@ -245,6 +179,7 @@ export default function OrderInfoPart(prop) {
                         <Grid item xs={4}>
                             <AddressSelector
                                 selected={district}
+                                holder="District"
                                 handleChangePlace={(e) => setDistrict(e.target.value)}
                                 listPlace={districtList}
                             />
@@ -253,27 +188,18 @@ export default function OrderInfoPart(prop) {
                         <Grid item xs={4}>
                             <AddressSelector
                                 selected={commune}
+                                holder="Commune"
                                 handleChangePlace={(e) => setCommune(e.target.value)}
                                 listPlace={communeList}
                             />
                         </Grid>
 
-                        <Grid spacing={2} container sx={{ width: '100%', position: 'relative', marginTop: '2rem' }}>
+                        <Grid spacing={2} container sx={style.grid3}>
                             <Grid item xs={6}>
                                 <Link
                                     underline="hover"
                                     onClick={() => navigate('/myplace/mycart')}
-                                    sx={{
-                                        textDecoration: 'none',
-                                        color: '#338dbc',
-                                        transition: 'color 0.2s ease-in-out',
-                                        display: 'inline-block',
-                                        cursor: 'pointer',
-                                        fontSize: '14px',
-                                        fontFamily: 'sans-serif',
-                                        lineHeight: '1.5em',
-                                        marginLeft: '1.2em',
-                                    }}
+                                    sx={style.backToCartBtn}
                                     href
                                 >
                                     My Cart
@@ -283,7 +209,7 @@ export default function OrderInfoPart(prop) {
                                 <Button
                                     onClick={() => handleSubmit()}
                                     variant="contained"
-                                    sx={{ fontSize: '14px' }}
+                                    sx={style.goToBtn}
                                     size="large"
                                 >
                                     Continue to payment method

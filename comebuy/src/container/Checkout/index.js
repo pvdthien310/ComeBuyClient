@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 /* eslint-disable no-alert */
 /* eslint-disable no-shadow */
 import React, { useState, useEffect } from 'react';
@@ -5,11 +6,14 @@ import { useDispatch, useSelector } from 'react-redux';
 import { unwrapResult } from '@reduxjs/toolkit';
 import Grid from '@mui/material/Grid';
 
-import OrderInfoPart from './OrderInfoPart/OrderInfoPart';
-import PaymentPart from './PaymentPart/PaymentPart';
+import OrderInfoPart from '../../components/OrderInfoPart/OrderInfoPart';
+import PaymentPart from '../../components/PaymentPart/PaymentPart';
 import { getAllCart } from '../../redux/slices/cartSlice';
 import { getProductWithID } from '../../redux/slices/productSlice';
 import { cartListSelector, currentUser } from '../../redux/selectors';
+import CartInCheckOut from '../../components/CartInCheckOut';
+
+import style from './style';
 
 export default function CheckoutPage() {
     const dispatch = useDispatch();
@@ -22,7 +26,7 @@ export default function CheckoutPage() {
         address: '',
     });
     const [isPaymentPart, setIsPaymentPart] = useState(false);
-    const discount = 0;
+    const [discount, setDiscount] = useState(0);
     const [purchaseUnits, setPurchaseUnits] = useState([]);
     const [subTotal, setSubTotal] = useState(0);
     const [listCart, setListCart] = useState([]);
@@ -43,11 +47,6 @@ export default function CheckoutPage() {
             const rs = prList.find((ite) => ite.productID === item.productid);
             if (rs !== undefined) newTotal += Number(Number(rs.price) * Number(item.amount));
         });
-        // let t = newTotal - (newTotal * discount) / 100
-        // let t2 = t + 2
-
-        // await setSubTotal(t)
-        // await setLastTotal(t2)
         setSubTotal(newTotal);
     };
 
@@ -103,6 +102,17 @@ export default function CheckoutPage() {
     };
 
     useEffect(() => {
+        if (isPaymentPart === false) {
+            setOrderInfo({
+                ...orderInfo,
+                phoneNumber: '',
+                email: '',
+                address: '',
+            });
+        }
+    }, [isPaymentPart]);
+
+    useEffect(() => {
         const fetchYourCart = async () => {
             if (localStorage.getItem('role') === 'customer') {
                 let temp = [];
@@ -149,17 +159,7 @@ export default function CheckoutPage() {
     }, []);
 
     return (
-        <Grid
-            container
-            sx={{
-                width: '100%',
-                height: '100%',
-                position: 'absolute',
-                backgroundColor: 'white',
-                resize: 'none',
-            }}
-            spacing={2}
-        >
+        <Grid container sx={style.wrapper} spacing={2}>
             {!isPaymentPart ? (
                 <OrderInfoPart setIsPaymentPart={setIsPaymentPart} orderInfo={orderInfo} setOrderInfo={setOrderInfo} />
             ) : (
@@ -171,8 +171,10 @@ export default function CheckoutPage() {
                     listCart={listCart}
                     listProd={listProd}
                     MakePurchaseUnit={MakePurchaseUnit}
+                    setIsPaymentPart={setIsPaymentPart}
                 />
             )}
+            <CartInCheckOut subTotal={subTotal} discount={discount} listCart={listCart} listProd={listProd} />
         </Grid>
     );
 }
