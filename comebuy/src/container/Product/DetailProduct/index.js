@@ -450,7 +450,7 @@ function DetailProduct() {
                                                 color: product.status >= 0.5 ? 'lightgreen' : 'maroon',
                                             }}
                                         >
-                                            {product.status}
+                                            {product.status * 100}%
                                         </Typography>
                                     </Stack>
                                 )}
