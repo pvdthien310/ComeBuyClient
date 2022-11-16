@@ -9,7 +9,7 @@ import { staffMenuItems, staffRoutes } from './route/StaffRoutes';
 import { managerRoutes, managerMenuItems } from './route/ManagerRoutes';
 import { customerMenuItems, customerRoutes } from './route/CustomerRoutes';
 import GuestLayout from './page/GuestLayout';
-import { ForgotPasswordInLogin } from './components';
+import { ForgotPasswordInLogin, Register } from './components';
 import { guestMenuItems, guestRoutes } from './route/GuestRoutes';
 import { getAccountWithID } from './redux/slices/accountSlice';
 import SetUpFunction from './lib/utils/setUpFunction';
@@ -63,6 +63,7 @@ function App() {
     return (
         <Routes>
             <Route path="/login" element={<LoginRegister />} />
+            <Route path="/register" element={<Register />} />
             <Route path="/*" element={renderRoutes()} />
             <Route path="/forgetpasswordinlogin" element={<ForgotPasswordInLogin />} />
         </Routes>
