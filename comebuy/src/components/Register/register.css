@@ -3,41 +3,41 @@
 .bigContainer {
     overflow: hidden;
 }
-section {
+.registerSection {
     display: flex;
     justify-content: center;
     align-items: center;
     min-height: 100vh;
     background: linear-gradient(to bottom, #f1f4f9, #dff1ff);
 }
-section .color {
+.registerSection .color {
     position: absolute;
     filter: blur(220px);
 }
-section .color:nth-child(1) {
+.registerSection .color:nth-child(1) {
     top: -350px;
     width: 600px;
     height: 600px;
-    background: #ff359b;
+    background: #00d2ff;
 }
-section .color:nth-child(2) {
+.registerSection .color:nth-child(2) {
     bottom: -150px;
     left: 100px;
     width: 500px;
     height: 500px;
-    background: #fffd87;
+    background: #ff359b;
 }
-section .color:nth-child(3) {
+.registerSection .color:nth-child(3) {
     bottom: 50px;
     right: 100px;
     width: 300px;
     height: 300px;
-    background: #00d2ff;
+    background: #fffd87;
 }
-.loginBox {
+.registerBox {
     position: relative;
 }
-.loginBox .square {
+.registerBox .square {
     position: absolute;
     backdrop-filter: blur(5px);
     box-shadow: 0 25px 45px rgba(0, 0, 0, 0.1);
@@ -57,14 +57,14 @@ section .color:nth-child(3) {
         transform: translateY(40px);
     }
 }
-.loginBox .square:nth-child(1) {
+.registerBox .square:nth-child(1) {
     top: -50px;
     right: -60px;
     width: 100px;
     height: 100px;
     animation-delay: calc(-1s * 1);
 }
-.loginBox .square:nth-child(2) {
+.registerBox .square:nth-child(2) {
     top: 150px;
     left: -100px;
     width: 120px;
@@ -72,7 +72,7 @@ section .color:nth-child(3) {
     z-index: 2;
     animation-delay: calc(-1s * 2);
 }
-.loginBox .square:nth-child(3) {
+.registerBox .square:nth-child(3) {
     bottom: 50px;
     right: -60px;
     width: 80px;
@@ -80,14 +80,14 @@ section .color:nth-child(3) {
     z-index: 2;
     animation-delay: calc(-1s * 3);
 }
-.loginBox .square:nth-child(4) {
+.registerBox .square:nth-child(4) {
     bottom: -80px;
     left: 100px;
     width: 50px;
     height: 50px;
     animation-delay: calc(-1s * 4);
 }
-.loginBox .square:nth-child(5) {
+.registerBox .square:nth-child(5) {
     top: -80px;
     left: 140px;
     width: 60px;
@@ -109,13 +109,13 @@ section .color:nth-child(3) {
     border-right: 1px solid rgba(255, 255, 255, 0.2);
     border-bottom: 1px solid rgba(255, 255, 255, 0.2);
 }
-.loginForm {
+.registerForm {
     position: relative;
     width: 100%;
     height: 100%;
     padding: 40px;
 }
-.loginForm h2 {
+.registerForm h2 {
     position: relative;
     color: #fff;
     font-size: 24px;
@@ -123,7 +123,7 @@ section .color:nth-child(3) {
     letter-spacing: 1px;
     margin-bottom: 40px;
 }
-.loginForm h2::before {
+.registerForm h2::before {
     content: '';
     position: absolute;
     left: 0;
@@ -132,11 +132,11 @@ section .color:nth-child(3) {
     height: 4px;
     background: #fff;
 }
-.loginForm .loginInputBox {
+.registerForm .registerInputBox {
     width: 100%;
     margin-top: 20px;
 }
-.loginForm .loginInputBox input {
+.registerForm .registerInputBox input {
     width: 80%;
     background: rgba(255, 255, 255, 0.2);
     border: none;
@@ -151,13 +151,13 @@ section .color:nth-child(3) {
     color: #666;
     box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
 }
-.loginForm .loginInputBox input::placeholder {
+.registerForm .registerInputBox input::placeholder {
     color: #fff;
 }
-.loginForm .loginInputBox input[type='button'] {
+.registerForm .registerInputBox input[type='button'] {
     background: #fff;
     color: #666;
-    max-width: 100px;
+    max-width: 120px;
     cursor: pointer;
     margin-bottom: 20px;
     font-weight: 600;
