@@ -11,6 +11,7 @@ import Revenue from '../container/Revenue';
 import Staff from '../container/Staff';
 import AddStaff from '../container/Staff/AddStaff';
 import Stock from '../container/Stock';
+import PromotionManagement from '../container/PromotionManagement';
 
 const adminRoutes = [
     {
@@ -69,9 +70,14 @@ const adminRoutes = [
         page: <ManagerHome />,
     },
     {
-        name: 'Branch distribution',
+        name: 'Branch Distribution',
         path: '/branchDistribution/*',
         page: <BigDistribution />,
+    },
+    {
+        name: 'Promotion Management',
+        path: '/PromotionManagement/*',
+        page: <PromotionManagement />,
     },
 ];
 
@@ -112,9 +118,9 @@ const adminMenuItems = [
         page: <LogHistory />,
     },
     {
-        name: 'Branch distribution',
-        path: '/branchDistribution/*',
-        page: <BigDistribution />,
+        name: 'Promotion Management',
+        path: '/PromotionManagement/*',
+        page: <PromotionManagement />,
     },
 ];
 

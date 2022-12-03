@@ -9,6 +9,7 @@ import Divider from '@mui/material/Divider';
 import ListItem from '@mui/material/ListItem';
 import ListItemIcon from '@mui/material/ListItemIcon';
 import ListItemText from '@mui/material/ListItemText';
+import PriceChangeIcon from '@mui/icons-material/PriceChange';
 // import { useState, useEffect } from 'react';
 import { Route, Routes, useNavigate } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
@@ -107,6 +108,7 @@ function MainLayout(props) {
                             {route.name === 'Banner Manage' && <ViewCarouselIcon />}
                             {route.name === 'System Log' && <ManageHistoryIcon />}
                             {route.name === 'Branch distribution' && <MoveDownIcon />}
+                            {route.name === 'Promotion Management' && <PriceChangeIcon />}
                         </ListItemIcon>
                         <ListItemText sx={{ color: 'white' }} primary={route.name} />
                     </ListItem>
