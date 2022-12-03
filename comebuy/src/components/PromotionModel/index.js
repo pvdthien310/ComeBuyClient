@@ -61,6 +61,7 @@ function PromotionModal(props) {
                 isError: true,
                 message: 'Please fill full information!',
             });
+            SetLoading(false);
             return;
         }
         await props.addNewPack(amount, selectedProductList);

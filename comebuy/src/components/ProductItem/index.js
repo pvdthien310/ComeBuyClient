@@ -15,7 +15,6 @@ const Img = styled('img')({
 function ProductItem(props) {
     const navigate = useNavigate();
     const handleNavigateToDetail = () => navigate(`/productSpace/${props.product.productID}`);
-    console.log(props.product);
     return (
         <Card sx={{ width: 300, height: 380, p: 2, m: 1, boxShadow: 5 }}>
             <CardActionArea sx={{ height: '100%' }} onClick={handleNavigateToDetail}>

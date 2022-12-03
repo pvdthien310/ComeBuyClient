@@ -4,12 +4,14 @@ import { Grid, Stack, Button, CircularProgress } from '@mui/material';
 import { useEffect, useState } from 'react';
 import productAPI from '../../api/productAPI';
 import { SnackBarAlert } from '../../components';
+import ProductItemV2 from '../../components/ProductItemV2';
 import PromotionModal from '../../components/PromotionModel';
 import PromotionPack from '../../components/PromotionPack';
 import style from './style';
 
 function PromotionManagement() {
     const [pack, SetPack] = useState([]);
+    const [selectedPack, SetSelectedPack] = useState(undefined);
     const [loading, SetLoading] = useState(false);
     const [openSuccessAlert, setOpenSuccessAlert] = useState(false);
     const [openErrorAlert, setOpenErrorAlert] = useState(false);
@@ -65,6 +67,7 @@ function PromotionManagement() {
             setMessageError('Error whiling Delet Pack');
         }
         await loadPack();
+        if (selectedPack.promotion === deletedPack.promotion) SetSelectedPack(undefined);
         console.log('delete pack');
     };
 
@@ -84,12 +87,21 @@ function PromotionManagement() {
                     </Stack>
                     {loading && <CircularProgress color="inherit" />}
                     {pack.length > 0 &&
-                        pack.map((item) => <PromotionPack key={item.promotion} pack={item} deletePack={DeletePack} />)}
+                        pack.map((item) => (
+                            <PromotionPack
+                                key={item.promotion}
+                                pack={item}
+                                deletePack={DeletePack}
+                                showPackItem={(selectedPack_) => SetSelectedPack(selectedPack_)}
+                            />
+                        ))}
                 </Stack>
             </Grid>
             <Grid item xs={6} sx={{ height: '100%' }}>
                 <Stack sx={{ height: '100%', padding: 3 }}>
                     <Typography fontWeight="bold">Product In Pack</Typography>
+                    {selectedPack !== undefined &&
+                        selectedPack.productids.map((item) => <ProductItemV2 productid={item} />)}
                 </Stack>
             </Grid>
             <PromotionModal
