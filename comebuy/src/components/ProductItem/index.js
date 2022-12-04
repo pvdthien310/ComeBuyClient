@@ -15,10 +15,20 @@ const Img = styled('img')({
 function ProductItem(props) {
     const navigate = useNavigate();
     const handleNavigateToDetail = () => navigate(`/productSpace/${props.product.productID}`);
-
     return (
         <Card sx={{ width: 300, height: 380, p: 2, m: 1, boxShadow: 5 }}>
             <CardActionArea sx={{ height: '100%' }} onClick={handleNavigateToDetail}>
+                {props.product.promotion !== '0' && (
+                    <Stack>
+                        <Typography
+                            variant="body1"
+                            fontWeight="bold"
+                            sx={{ textAlign: 'end', color: 'red', borderWidth: 2, borderColor: 'black' }}
+                        >
+                            {props.product.promotion}%
+                        </Typography>
+                    </Stack>
+                )}
                 <Img alt="complex" src={props.product.productimage[0].imageURL} />
                 <CardContent>
                     <Typography gutterBottom variant="body1" fontWeight="bold" component="div">
@@ -39,7 +49,7 @@ function ProductItem(props) {
                         sx={{ textAlign: 'end', alignSelf: 'end' }}
                         color="#D94A56"
                     >
-                        $ {props.product.price}
+                        $ {Math.round(props.product.price * ((100 - props.product.promotion) / 100))}
                     </Typography>
                 </CardContent>
             </CardActionArea>

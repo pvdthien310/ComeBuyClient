@@ -3,11 +3,11 @@ import { useEffect, useState } from 'react';
 import io from 'socket.io-client';
 import { BreadCrumb, FilterColumn, NavBar, ProductItem, SearchBar, SnackBarAlert } from '../../components';
 
-import { WS_URL } from '../../constant';
+import { DEPLOYED_WS } from '../../constant';
 import productAPI from '../../api/productAPI';
 
 function ProductSpace() {
-    const socket = io(WS_URL, {
+    const socket = io(DEPLOYED_WS, {
         transports: ['websocket'],
     });
     const [productList, setProductList] = useState([]);

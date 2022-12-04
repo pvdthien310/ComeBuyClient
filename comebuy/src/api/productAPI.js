@@ -43,5 +43,22 @@ const productAPI = {
         const res = await DatabaseClient.get(`/${baseURL}/get/best-selling`).catch((err) => err.response);
         return res;
     },
+    getProductForPromotion: async () => {
+        const res = await DatabaseClient.get(`/${baseURL}/PromotionManagement/getProduct`).catch((err) => err.response);
+        return res;
+    },
+    updatePromotion: async (promotion, productIds) => {
+        const res = await DatabaseClient.put(`/${baseURL}/PromotionManagement/update/Promotion`, {
+            promotion,
+            productIds,
+        }).catch((err) => err.response);
+        return res;
+    },
+    getPromotionPack: async () => {
+        const res = await DatabaseClient.get(`/${baseURL}/PromotionManagement/getPromotionPack`).catch(
+            (err) => err.response,
+        );
+        return res;
+    },
 };
 export default productAPI;
