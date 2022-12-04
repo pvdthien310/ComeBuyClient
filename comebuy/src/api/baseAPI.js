@@ -2,12 +2,12 @@
 /* eslint-disable import/no-cycle */
 /* eslint-disable camelcase */
 import axios from 'axios';
-import { deploy_base_URL } from '../constant.js';
+import { deploy_base_URL, local_base_URL } from '../constant.js';
 import JWTApi from './JWTAPI.js';
 
 const DatabaseClient = axios.create({
-    // baseURL: local_base_URL,
-    baseURL: deploy_base_URL,
+    baseURL: local_base_URL,
+    // baseURL: deploy_base_URL,
     headers: {
         'Content-Type': 'application/json',
     },

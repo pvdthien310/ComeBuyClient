@@ -11,6 +11,8 @@ import Revenue from '../container/Revenue';
 import Staff from '../container/Staff';
 import AddStaff from '../container/Staff/AddStaff';
 import Stock from '../container/Stock';
+import PublishCoupon from '../container/PublishCoupon/index';
+import CreateCoupon from '../container/PublishCoupon/CreateCoupon/index';
 
 const adminRoutes = [
     {
@@ -69,9 +71,19 @@ const adminRoutes = [
         page: <ManagerHome />,
     },
     {
-        name: 'Branch distribution',
+        name: 'Branch Distribution',
         path: '/branchDistribution/*',
         page: <BigDistribution />,
+    },
+    {
+        name: 'Publish Coupon',
+        path: '/publishCoupon/*',
+        page: <PublishCoupon />,
+    },
+    {
+        name: 'Create Coupon',
+        path: '/publishCoupon/create',
+        page: <CreateCoupon />,
     },
 ];
 
@@ -112,9 +124,14 @@ const adminMenuItems = [
         page: <LogHistory />,
     },
     {
-        name: 'Branch distribution',
+        name: 'Branch Distribution',
         path: '/branchDistribution/*',
         page: <BigDistribution />,
+    },
+    {
+        name: 'Publish Coupon',
+        path: '/publishCoupon/*',
+        page: <PublishCoupon />,
     },
 ];
 
