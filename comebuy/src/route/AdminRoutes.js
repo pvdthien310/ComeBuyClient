@@ -85,6 +85,8 @@ const adminRoutes = [
         name: 'Create Coupon',
         path: '/publishCoupon/create',
         page: <CreateCoupon />,
+    },
+    {
         name: 'Promotion Management',
         path: '/PromotionManagement/*',
         page: <PromotionManagement />,

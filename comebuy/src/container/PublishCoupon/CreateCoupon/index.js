@@ -1,11 +1,8 @@
-/* eslint-disable operator-linebreak */
-/* eslint-disable no-unused-vars */
 /* eslint-disable prefer-const */
-/* eslint-disable react/jsx-boolean-value */
-/* eslint-disable camelcase */
+/* eslint-disable operator-linebreak */
 import { Button, Typography, Grid, Stack, TextField, Select } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import DriveFileRenameOutlineIcon from '@mui/icons-material/DriveFileRenameOutline';
 import Box from '@mui/material/Box';
 import BorderOuterIcon from '@mui/icons-material/BorderOuter';
@@ -29,21 +26,12 @@ import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { MobileDatePicker } from '@mui/x-date-pickers/MobileDatePicker';
 
-// icon styles
 import TextFieldForAdd from '../../../components/TextFieldForAdd';
 import SnackBarAlert from '../../../components/SnackBarAlert';
 import style from './style.js';
-import { default_avatar } from '../../../constant';
-import accountApi from '../../../api/accountAPI.js';
-import branchApi from '../../../api/branchAPI.js';
 import couponAPI from '../../../api/couponAPI';
 
 function CreateCoupon() {
-    const [openSuccessAlert, setOpenSuccessAlert] = useState(false);
-    const [openErrorAlert, setOpenErrorAlert] = useState(false);
-    const [openConfirmDialog, setOpenConfirmDialog] = useState(false);
-    const [messageError, setMessageError] = useState('No Error');
-    const [messageSuccess, setMessageSuccess] = useState('Notification');
     const [params, setParams] = useState({
         name: '',
         description: '',
@@ -70,31 +58,7 @@ function CreateCoupon() {
     const handleCloseConfirm = () => setOpenConfirm(false);
     const navigate = useNavigate();
 
-    const handleClose = (event, reason) => {
-        if (reason === 'clickaway') return;
-        setOpenSuccessAlert(false);
-        setOpenErrorAlert(false);
-        setOpenConfirmDialog(false);
-    };
     const handleCloseAlert = () => setAlert({ ...alert, open: false });
-    async function LoadData() {
-        try {
-            const response = await branchApi.getAll();
-            if (response.status === 200) {
-                setMessageSuccess('Load Account Successfully');
-                setOpenSuccessAlert(true);
-            } else {
-                setMessageError('Load Account Failed :((');
-                setOpenErrorAlert(true);
-            }
-        } catch (err) {
-            console.log(err);
-        }
-    }
-    useEffect(() => {
-        LoadData();
-    }, []);
-
     const handleChangeCouponType = (event) => {
         setParams({ ...params, isMultiCode: event.target.value });
     };
@@ -378,13 +342,6 @@ function CreateCoupon() {
                     </Button>
                 </Stack>
             </Box>
-            <SnackBarAlert
-                severity="success"
-                open={openSuccessAlert}
-                handleClose={handleClose}
-                message={messageSuccess}
-            />
-            <SnackBarAlert severity="error" open={openErrorAlert} handleClose={handleClose} message={messageError} />
             <Dialog
                 open={openConfirm}
                 onClose={handleCloseConfirm}
