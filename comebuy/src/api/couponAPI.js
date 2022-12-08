@@ -11,5 +11,15 @@ const couponAPI = {
         const res = await DatabaseClient.post(`/${baseURL}/getCoupon`, params).catch((err) => err.response);
         return res;
     },
+    updateStatusCoupon: async (params) => {
+        const res = await DatabaseClient.put(`/${baseURL}/updateStatus/${params.couponId}`, params).catch(
+            (err) => err.response,
+        );
+        return res;
+    },
+    deleteOneCoupon: async (id) => {
+        const res = await DatabaseClient.post(`/${baseURL}/${id}`).catch((err) => err.response);
+        return res;
+    },
 };
 export default couponAPI;

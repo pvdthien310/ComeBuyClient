@@ -2,13 +2,11 @@ import * as React from 'react';
 import Switch from '@mui/material/Switch';
 
 function CouponStatus(props) {
-    return (
-        <Switch
-            size="large"
-            checked={props.coupon.active}
-            onChange={() => props.handleChangeStatus(props.coupon.couponId)}
-            inputProps={{ 'aria-label': 'controlled' }}
-        />
-    );
+    const [active, setActive] = React.useState(props.coupon.active);
+    const handleChange = () => {
+        setActive(!active);
+        props.handleChangeStatus(props.coupon);
+    };
+    return <Switch size="large" checked={active} onChange={handleChange} inputProps={{ 'aria-label': 'controlled' }} />;
 }
 export default CouponStatus;

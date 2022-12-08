@@ -9,11 +9,14 @@ import { Button, Stack, styled, Typography, Box } from '@mui/material';
 import InputLabel from '@mui/material/InputLabel';
 import MenuItem from '@mui/material/MenuItem';
 import RemoveRedEyeIcon from '@mui/icons-material/RemoveRedEye';
+import DeleteForeverIcon from '@mui/icons-material/DeleteForever';
+import CircularProgress from '@mui/material/CircularProgress';
+import Backdrop from '@mui/material/Backdrop';
 import EditIcon from '@mui/icons-material/Edit';
 import FormControl from '@mui/material/FormControl';
 import Select from '@mui/material/Select';
 import { useNavigate } from 'react-router';
-import { ConfirmDialog, CouponInfoPopUp, CouponStatus } from '../../components';
+import { ConfirmDialog, CouponInfoPopUp, CouponStatus, DiscountInfoModal } from '../../components';
 import SnackBarAlert from '../../components/SnackBarAlert';
 import couponAPI from '../../api/couponAPI';
 
@@ -29,26 +32,31 @@ const ProductTable = styled(DataGrid)(() => ({
 function PublishCoupon() {
     const navigate = useNavigate();
     const [couponList, setCouponList] = useState([]);
-
-    const [openSuccessAlert, setOpenSuccessAlert] = useState(false);
-    const [openErrorAlert, setOpenErrorAlert] = useState(false);
     const [openConfirmDialog, setOpenConfirmDialog] = useState(false);
-    const [messageError, setMessageError] = useState('No Error');
-    const [messageSuccess, setMessageSuccess] = useState('Notification');
+    const [alert, setAlert] = useState({
+        open: false,
+        severity: '',
+        message: '',
+    });
+    const [openBackdrop, setOpenBackdrop] = useState(false);
     const [selectedCoupon, setSelectedCoupon] = useState(null);
-
+    const [openModalDiscount, setOpenModalDiscount] = useState(false);
     const [filter, setFilter] = useState({
         couponStatus: 'all',
         couponType: 'all',
     });
 
+    const handleCloseDiscountModal = () => setOpenModalDiscount(false);
     const handleClose = (event, reason) => {
         if (reason === 'clickaway') return;
-        setOpenSuccessAlert(false);
-        setOpenErrorAlert(false);
+        setAlert({
+            ...alert,
+            open: false,
+        });
         setOpenConfirmDialog(false);
     };
     async function LoadData() {
+        setCouponList([]);
         try {
             const data = await couponAPI.getCouponData(filter);
             if (data.status === 200) {
@@ -62,56 +70,85 @@ function PublishCoupon() {
         LoadData();
     }, []);
 
-    // const handleDeleteUser = async () => {
-    //     if (selectedAccount.row.role === 'customer' || selectedAccount.row.role === 'admin') {
-    //         setMessageError('you are not allowed to deleted Customers account or Admin :((');
-    //         setOpenErrorAlert(true);
-    //         handleClose();
-    //         return;
-    //     }
-
-    //     const response = await accountApi.deleteAccount(selectedAccount.id);
-    //     if (response.status === 200) {
-    //         /// Type this to set new vlue for state
-    //         setAccountList((prevList) => prevList.filter((item) => item.userID !== selectedAccount.id));
-    //         setMessageSuccess('Delete Account Successfully');
-    //         setOpenSuccessAlert(true);
-    //         handleClose();
-    //     } else {
-    //         console.log('error');
-    //         setMessageError('Delete Account Failed :((');
-    //         setOpenErrorAlert(true);
-    //         handleClose();
-    //     }
-    // };
-
-    const deleteUser = React.useCallback(
+    const deleteCoupon = React.useCallback(
         (value) => async () => {
-            setSelectedCoupon(value);
+            setSelectedCoupon(value.id);
             setOpenConfirmDialog(true);
         },
         [],
     );
 
-    const changeCouponStatus = (couponId) => {
-        console.log(couponId);
+    const getDiscountInfo = React.useCallback(
+        (value) => async () => {
+            setSelectedCoupon(value.row);
+            setOpenModalDiscount(true);
+        },
+        [],
+    );
+
+    const handleDeleteCoupon = async () => {
+        setOpenConfirmDialog(false);
+        setOpenBackdrop(true);
+        await couponAPI
+            .deleteOneCoupon(selectedCoupon)
+            .then((data) => {
+                if (data.status === 200) {
+                    setOpenBackdrop(false);
+                    setAlert({
+                        ...alert,
+                        open: true,
+                        message: 'Deleted coupon successful',
+                        severity: 'success',
+                    });
+                    LoadData();
+                }
+            })
+            .catch((err) => {
+                setOpenBackdrop(false);
+                setAlert({
+                    ...alert,
+                    open: true,
+                    message: 'Deleted coupon failed',
+                    severity: 'error',
+                });
+            });
     };
+
+    const changeCouponStatus = async (coupon) => {
+        try {
+            setOpenBackdrop(true);
+            const params = {
+                couponId: coupon.couponId,
+                active: !coupon.active,
+            };
+            await couponAPI.updateStatusCoupon(params).then((data) => {
+                if (data.status === 200) {
+                    setOpenBackdrop(false);
+                    setAlert({
+                        ...alert,
+                        open: true,
+                        message: 'Update coupon successful',
+                        severity: 'success',
+                    });
+                }
+            });
+        } catch (err) {
+            setOpenBackdrop(false);
+            setAlert({
+                ...alert,
+                open: true,
+                message: 'Coupon active failed. Please  try again',
+                severity: 'error',
+            });
+        }
+    };
+
+    useEffect(() => {
+        LoadData();
+    }, [filter]);
 
     const columns = React.useMemo(
         () => [
-            {
-                field: 'editable',
-                type: 'actions',
-                headerName: 'Edit',
-                width: 50,
-                getActions: (params) => [
-                    <GridActionsCellItem
-                        icon={<EditIcon color="primary" />}
-                        label="Edit"
-                        onClick={deleteUser(params)}
-                    />,
-                ],
-            },
             {
                 field: 'couponid',
                 headerName: 'Coupon',
@@ -123,7 +160,7 @@ function PublishCoupon() {
                 headerName: 'Status',
                 width: 150,
                 renderCell: (params) => (
-                    <CouponStatus coupon={params.row} handleChangeStatus={(couponId) => changeCouponStatus(couponId)} />
+                    <CouponStatus coupon={params.row} handleChangeStatus={(coupon) => changeCouponStatus(coupon)} />
                 ),
             },
             {
@@ -163,25 +200,26 @@ function PublishCoupon() {
                     <GridActionsCellItem
                         icon={<DiscountIcon color="secondary" />}
                         label="See discount"
-                        onClick={deleteUser(params)}
+                        onClick={getDiscountInfo(params)}
                     />,
                 ],
             },
             {
-                field: 'couponcodes',
+                field: 'delete',
                 type: 'actions',
-                headerName: 'Codes',
-                width: 150,
+                headerName: 'Action',
+                width: 100,
                 getActions: (params) => [
                     <GridActionsCellItem
-                        icon={<RemoveRedEyeIcon color="success" />}
-                        label="See codes"
-                        onClick={deleteUser(params)}
+                        icon={<DeleteForeverIcon color="error" />}
+                        label="Delete"
+                        onClick={deleteCoupon(params)}
                     />,
                 ],
             },
         ],
-        [deleteUser],
+        [deleteCoupon],
+        [getDiscountInfo],
     );
 
     return (
@@ -254,20 +292,28 @@ function PublishCoupon() {
                     getRowId={(row) => row.couponId}
                 />
                 <ConfirmDialog
-                    body="Please check the product information again to make sure. This operation cannot be redo. If you are sure, please confirm!"
-                    title="Confirm Action?"
+                    body="Do you want to delete this coupon out of system ?"
+                    title="Confirm Deletion?"
                     open={openConfirmDialog}
                     handleClose={handleClose}
-                    handleConfirm={() => console.log('Handle delete')}
+                    handleConfirm={() => handleDeleteCoupon()}
                 />
                 <SnackBarAlert
-                    severity="error"
-                    open={openErrorAlert}
+                    severity={alert.severity}
+                    open={alert.open}
                     handleClose={handleClose}
-                    message={messageError}
+                    message={alert.message}
                 />
                 <Box sx={{ height: 20 }} />
             </Stack>
+            <Backdrop sx={{ color: '#fff', zIndex: (theme) => theme.zIndex.drawer + 1 }} open={openBackdrop}>
+                <CircularProgress color="inherit" />
+            </Backdrop>
+            <DiscountInfoModal
+                handleCloseDiscountModal={handleCloseDiscountModal}
+                openDiscountModal={openModalDiscount}
+                discount={selectedCoupon?.discount[0]}
+            />
         </Stack>
     );
 }
