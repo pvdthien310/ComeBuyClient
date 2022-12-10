@@ -11,4 +11,4 @@ export const DELOYED_BASE_SERVER_URL = 'https://comebuy-server.onrender.com/api'
 export const DELOYED_AI_SERVER_URL = 'https://comebuy-ai.onrender.com';
 export const WS_URL = 'https://localhost:8080/?';
 // export const DEPLOYED_WS = 'https://comebuyws.herokuapp.com/';
-export const DEPLOYED_WS = 'https://comebuy-ws.onrender.com';
+export const DEPLOYED_WS = 'https://comebuy-ws.onrender.com/';
