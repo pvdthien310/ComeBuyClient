@@ -8,4 +8,5 @@ export const default_avatar =
 export const DELOYED_BASE_SERVER_URL = 'https://comebuyserver.herokuapp.com/api';
 export const DELOYED_AI_SERVER_URL = 'https://comebuyaiserver.herokuapp.com';
 export const WS_URL = 'https://localhost:8080/?';
-export const DEPLOYED_WS = 'https://comebuyws.herokuapp.com/';
+// export const DEPLOYED_WS = 'https://comebuyws.herokuapp.com/';
+export const DEPLOYED_WS = 'https://comebuy-ws.onrender.com';
