@@ -15,6 +15,7 @@ import { Route, Routes, useNavigate } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { Grid, IconButton, Stack, Typography } from '@mui/material';
 import MenuIcon from '@mui/icons-material/Menu';
+import DiscountIcon from '@mui/icons-material/Discount';
 import ComputerIcon from '@mui/icons-material/Computer';
 import PeopleIcon from '@mui/icons-material/People';
 import InventoryIcon from '@mui/icons-material/Inventory';
@@ -107,7 +108,8 @@ function MainLayout(props) {
                             {route.name === 'Distribution' && <MoveDownIcon />}
                             {route.name === 'Banner Manage' && <ViewCarouselIcon />}
                             {route.name === 'System Log' && <ManageHistoryIcon />}
-                            {route.name === 'Branch distribution' && <MoveDownIcon />}
+                            {route.name === 'Branch Distribution' && <MoveDownIcon />}
+                            {route.name === 'Publish Coupon' && <DiscountIcon />}
                             {route.name === 'Promotion Management' && <PriceChangeIcon />}
                         </ListItemIcon>
                         <ListItemText sx={{ color: 'white' }} primary={route.name} />

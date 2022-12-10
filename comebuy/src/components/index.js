@@ -64,3 +64,6 @@ export { default as LoadingChatbot } from './LoadingChatbot';
 export { default as TypingAnim } from './TypingAnim';
 export { default as ResponseRoute } from './ResponseRoute';
 export { default as Register } from './Register';
+export { default as CouponInfoPopUp } from './CouponInfoPopUp';
+export { default as CouponStatus } from './CouponStatus';
+export { default as DiscountInfoModal } from './DiscountInfo';
