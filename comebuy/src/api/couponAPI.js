@@ -21,5 +21,9 @@ const couponAPI = {
         const res = await DatabaseClient.post(`/${baseURL}/${id}`).catch((err) => err.response);
         return res;
     },
+    crawlCoupon: async (params) => {
+        const res = await DatabaseClient.post(`/${baseURL}/crawlCoupon`, params).catch((err) => err.response);
+        return res;
+    },
 };
 export default couponAPI;

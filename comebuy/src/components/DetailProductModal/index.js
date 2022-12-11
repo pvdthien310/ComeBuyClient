@@ -243,7 +243,7 @@ function DetailProductModal({ open, product, onClose }) {
                         </Button>
                     </Box>
                 ) : (
-                    <Typography variant="h6">No Data</Typography>
+                    <Typography variant="h6"> </Typography>
                 )}
             </Modal>
         </div>

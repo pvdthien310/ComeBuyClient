@@ -72,7 +72,8 @@ function PublishCoupon() {
 
     const deleteCoupon = React.useCallback(
         (value) => async () => {
-            setSelectedCoupon(value.id);
+            console.log(value);
+            setSelectedCoupon(value.row);
             setOpenConfirmDialog(true);
         },
         [],
@@ -90,7 +91,7 @@ function PublishCoupon() {
         setOpenConfirmDialog(false);
         setOpenBackdrop(true);
         await couponAPI
-            .deleteOneCoupon(selectedCoupon)
+            .deleteOneCoupon(selectedCoupon.couponId)
             .then((data) => {
                 if (data.status === 200) {
                     setOpenBackdrop(false);

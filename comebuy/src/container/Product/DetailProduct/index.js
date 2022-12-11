@@ -414,7 +414,7 @@ function DetailProduct() {
                             </Box>
                         </Box>
                     ) : (
-                        <Typography variant="h6">No Data</Typography>
+                        <Typography variant="h6"> </Typography>
                     )}
                 </Grid>
                 <Grid container item xs={4}>

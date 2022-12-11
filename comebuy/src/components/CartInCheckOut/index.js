@@ -12,8 +12,11 @@ import { DiamondOutlined } from '@mui/icons-material';
 
 import { useSelector } from 'react-redux';
 import { currentUser } from '../../redux/selectors';
+import couponAPI from '../../api/couponAPI';
+import SnackBarAlert from '../SnackBarAlert/index';
 
 import style from './style';
+import ScratchCouponModal from '../ScratchCoupon';
 
 export default function CartInCheckOut(props) {
     const _currentUser = useSelector(currentUser);
@@ -21,6 +24,21 @@ export default function CartInCheckOut(props) {
     const [discount, setDiscount] = useState(0);
     const [isLoading, setIsLoading] = useState(false);
     const [isShowCoupon, setIsShowCoupon] = useState(false);
+    const [code, setCode] = useState('');
+    const [alert, setAlert] = useState({
+        open: false,
+        severity: '',
+        message: '',
+    });
+    const [couponInfo, setCouponInfo] = useState({
+        openScratch: false,
+        discount: {
+            discountType: '',
+            minTotal: '',
+            valueType: '',
+            value: '',
+        },
+    });
 
     const Identify = () => {
         if (localStorage.getItem('role') === 'customer') {
@@ -42,9 +60,56 @@ export default function CartInCheckOut(props) {
         }
     };
 
-    const handleUseCoupon = () => {
+    const handleUseCoupon = async () => {
+        if (code === '') {
+            return;
+        }
         setIsLoading(true);
+        const params = {
+            code,
+            userId: _currentUser.userID,
+        };
+        await couponAPI
+            .crawlCoupon(params)
+            .then((data) => {
+                setIsLoading(false);
+                const res = data.data[0];
+                console.log(data);
+                if (res.isvalid === true) {
+                    setCouponInfo({
+                        ...couponInfo,
+                        openScratch: true,
+                        discount: {
+                            ...discount,
+                            discountType: res.discounttype,
+                            minTotal: res.mintotal,
+                            valueType: res.valuetype,
+                            value: res.valuediscount,
+                        },
+                    });
+                } else {
+                    setAlert({
+                        ...alert,
+                        open: true,
+                        severity: 'error',
+                        message: 'This code is invalid. Please try another coupon code',
+                    });
+                }
+            })
+            .catch((err) => {
+                setIsLoading(false);
+                setAlert({
+                    ...alert,
+                    open: true,
+                    severity: 'error',
+                    message: 'Something went wrong while crawling coupon',
+                });
+            });
     };
+
+    const useCoupon = async () => {};
+
+    const skipCoupon = async () => {};
 
     useEffect(() => {
         Identify();
@@ -93,11 +158,12 @@ export default function CartInCheckOut(props) {
                             label="Discount code"
                             variant="outlined"
                             sx={style.textField}
+                            onChange={(e) => setCode(e.target.value)}
                         />
                     </Grid>
                     <Grid item xs={3.5} sx={{ height: '100%' }}>
                         <Button onClick={handleUseCoupon} variant="contained" sx={style.btn}>
-                            Use
+                            Crawl
                         </Button>
                     </Grid>
                 </Grid>
@@ -147,6 +213,18 @@ export default function CartInCheckOut(props) {
                     </Typography>
                 </Stack>
             </Stack>
+            <SnackBarAlert
+                handleClose={() => setAlert({ ...alert, open: false })}
+                open={alert.open}
+                severity={alert.severity}
+                message={alert.message}
+            />
+            <ScratchCouponModal
+                useHandle={useCoupon}
+                skipHandle={skipCoupon}
+                discount={couponInfo.discount}
+                openScratchCoupon={couponInfo.openScratch}
+            />
         </Grid>
     );
 }
