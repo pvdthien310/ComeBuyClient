@@ -67,3 +67,4 @@ export { default as Register } from './Register';
 export { default as CouponInfoPopUp } from './CouponInfoPopUp';
 export { default as CouponStatus } from './CouponStatus';
 export { default as DiscountInfoModal } from './DiscountInfo';
+export { default as ScratchCouponModal } from './ScratchCoupon';
