@@ -148,17 +148,14 @@ function ProductComment(props) {
                                             <ListItemText
                                                 primary={item.account.name}
                                                 secondary={
-                                                    <>
-                                                        <Typography
-                                                            sx={{ display: 'inline' }}
-                                                            component="span"
-                                                            variant="body1"
-                                                            color="text.primary"
-                                                        >
-                                                            {item.account.name}
-                                                        </Typography>
-                                                        - {item.body}
-                                                    </>
+                                                    <Typography
+                                                        sx={{ display: 'inline' }}
+                                                        component="span"
+                                                        variant="body2"
+                                                        color="text.primary"
+                                                    >
+                                                        {item.body}
+                                                    </Typography>
                                                 }
                                             />
                                         </ListItem>

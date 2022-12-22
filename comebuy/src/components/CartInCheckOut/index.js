@@ -1,3 +1,4 @@
+/* eslint-disable operator-linebreak */
 /* eslint-disable function-paren-newline */
 /* eslint-disable implicit-arrow-linebreak */
 /* eslint-disable no-confusing-arrow */
@@ -66,7 +67,8 @@ export default function CartInCheckOut(props) {
                                 {props.listProd.map((prod) =>
                                     prod.productID === cart.productid ? (
                                         <Typography sx={{ fontWeight: 600 }}>
-                                            ${prod.price} x {cart.amount}
+                                            ${Number((prod.price * (100 - prod.promotion)) / 100) * Number(cart.amount)}{' '}
+                                            x {Number(cart.amount)}
                                         </Typography>
                                     ) : null,
                                 )}
@@ -74,7 +76,9 @@ export default function CartInCheckOut(props) {
                                     prod.productID === cart.productid ? (
                                         <Typography sx={{ fontWeight: 600 }}>
                                             {' '}
-                                            ${Number(prod.price) * Number(cart.amount)}
+                                            ${Number((prod.price * (100 - prod.promotion)) / 100) *
+                                                Number(cart.amount)}{' '}
+                                            x {Number(cart.amount)}
                                         </Typography>
                                     ) : null,
                                 )}

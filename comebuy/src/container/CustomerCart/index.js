@@ -132,7 +132,9 @@ function CustomerCart() {
         let newTotal = 0;
         await _cart.map((item) => {
             const rs = prList.find((ite) => ite.productID === item.productid);
-            if (rs !== undefined) newTotal += Number(Number(rs.price) * Number(item.amount));
+            if (rs !== undefined) {
+                newTotal += Number(Number((rs.price * (100 - rs.promotion)) / 100) * Number(item.amount));
+            }
         });
         setSubTotal(newTotal);
     };

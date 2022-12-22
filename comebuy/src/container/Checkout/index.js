@@ -36,7 +36,9 @@ export default function CheckoutPage() {
         let newTotal = 0;
         await _cart.map((item) => {
             const rs = prList.find((ite) => ite.productID === item.productid);
-            if (rs !== undefined) newTotal += Number(Number(rs.price) * Number(item.amount));
+            if (rs !== undefined) {
+                newTotal += Number(Number((rs.price * (100 - rs.promotion)) / 100) * Number(item.amount));
+            }
         });
         setSubTotal(newTotal);
     };
@@ -45,7 +47,9 @@ export default function CheckoutPage() {
         let newTotal = 0;
         await _cart.map((item) => {
             const rs = prList.find((ite) => ite.productID === item.productid);
-            if (rs !== undefined) newTotal += Number(Number(rs.price) * Number(item.amount));
+            if (rs !== undefined) {
+                newTotal += Number(Number((rs.price * (100 - rs.promotion)) / 100) * Number(item.amount));
+            }
         });
         setSubTotal(newTotal);
     };
@@ -63,7 +67,7 @@ export default function CheckoutPage() {
                     if (listProd[j].productID === listCart[i].productid) {
                         unitAmountObj = {
                             ...unitAmountObj,
-                            value: Number(listProd[j].price),
+                            value: Number(Number((listCart[i].price * (100 - listCart[i].promotion)) / 100)),
                         };
                         const temp = {
                             name: listProd[j].name,
@@ -86,7 +90,7 @@ export default function CheckoutPage() {
                     if (listProd[j].productID === listCart[i].productid) {
                         unitAmountObj = {
                             ...unitAmountObj,
-                            value: Number(listProd[j].price),
+                            value: Number(Number((listCart[i].price * (100 - listCart[i].promotion)) / 100)),
                         };
                         const temp = {
                             name: listProd[j].name,
