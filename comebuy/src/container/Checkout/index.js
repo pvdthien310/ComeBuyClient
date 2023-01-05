@@ -26,11 +26,14 @@ export default function CheckoutPage() {
         address: '',
     });
     const [isPaymentPart, setIsPaymentPart] = useState(false);
-    const [discount, setDiscount] = useState(0);
     const [purchaseUnits, setPurchaseUnits] = useState([]);
     const [subTotal, setSubTotal] = useState(0);
     const [listCart, setListCart] = useState([]);
     const [listProd, setListProd] = useState([]);
+    const [lastTotal, setLastTotal] = useState(0);
+    const [discount, setDiscount] = useState(0);
+    const [couponId, setCouponId] = useState('');
+    const [discountCode, setDiscountCode] = useState('');
 
     const CountSubTotal = async (_cart, prList) => {
         let newTotal = 0;
@@ -61,13 +64,13 @@ export default function CheckoutPage() {
                 currency_code: 'USD',
                 value: ' ',
             };
-
+            console.log(listProd);
             for (let i = 0; i < listCart.length; i++) {
                 for (let j = 0; j < listProd.length; j++) {
                     if (listProd[j].productID === listCart[i].productid) {
                         unitAmountObj = {
                             ...unitAmountObj,
-                            value: Number(Number((listCart[i].price * (100 - listCart[i].promotion)) / 100)),
+                            value: (listProd[i].price * (100 - Number(listProd[i].promotion))) / 100,
                         };
                         const temp = {
                             name: listProd[j].name,
@@ -90,7 +93,7 @@ export default function CheckoutPage() {
                     if (listProd[j].productID === listCart[i].productid) {
                         unitAmountObj = {
                             ...unitAmountObj,
-                            value: Number(Number((listCart[i].price * (100 - listCart[i].promotion)) / 100)),
+                            value: (listProd[i].price * (100 - Number(listProd[i].promotion))) / 100,
                         };
                         const temp = {
                             name: listProd[j].name,
@@ -162,6 +165,12 @@ export default function CheckoutPage() {
         fetchYourCart();
     }, []);
 
+    const getTotalAndDiscount = (lastTotal, discountValue, code) => {
+        setDiscount(discountValue);
+        setLastTotal(lastTotal);
+        setDiscountCode(code);
+    };
+
     return (
         <Grid container sx={style.wrapper} spacing={2}>
             {!isPaymentPart ? (
@@ -169,16 +178,26 @@ export default function CheckoutPage() {
             ) : (
                 <PaymentPart
                     orderInfo={orderInfo}
-                    subTotal={subTotal}
-                    purchaseUnits={purchaseUnits}
                     discount={discount}
+                    discountCode={discountCode}
+                    subTotal={subTotal}
+                    lastTotal={lastTotal === 0 ? subTotal : lastTotal}
+                    purchaseUnits={purchaseUnits}
                     listCart={listCart}
                     listProd={listProd}
+                    couponId={couponId}
                     MakePurchaseUnit={MakePurchaseUnit}
                     setIsPaymentPart={setIsPaymentPart}
                 />
             )}
-            <CartInCheckOut subTotal={subTotal} discount={discount} listCart={listCart} listProd={listProd} />
+            <CartInCheckOut
+                getTotalAndDiscount={(lastTotal, discountValue, code) => {
+                    getTotalAndDiscount(lastTotal, discountValue, code);
+                }}
+                subTotal={subTotal}
+                listCart={listCart}
+                listProd={listProd}
+            />
         </Grid>
     );
 }

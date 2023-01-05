@@ -90,7 +90,9 @@ export default function PaymentPart(prop) {
                                 <div style={style.methodSpace}>
                                     <Paypal
                                         _discount={prop.discount}
-                                        _lastTotal={prop.subTotal}
+                                        _discountCode={prop.discountCode}
+                                        _lastTotal={prop.lastTotal}
+                                        _subTotal={prop.subTotal}
                                         _bigAddress={prop.orderInfo.address}
                                         _guestEmail={prop.orderInfo.email}
                                         _guestName={prop.orderInfo.fullName}
@@ -98,6 +100,7 @@ export default function PaymentPart(prop) {
                                         cartList={prop.listCart}
                                         prodList={prop.listProd}
                                         purchases={prop.purchaseUnits}
+                                        _couponId={prop.couponId}
                                     />
                                 </div>
                             </>

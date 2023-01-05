@@ -25,5 +25,9 @@ const couponAPI = {
         const res = await DatabaseClient.post(`/${baseURL}/crawlCoupon`, params).catch((err) => err.response);
         return res;
     },
+    settle: async (params) => {
+        const res = await DatabaseClient.post(`/${baseURL}/settle`, params).catch((err) => err.response);
+        return res;
+    },
 };
 export default couponAPI;

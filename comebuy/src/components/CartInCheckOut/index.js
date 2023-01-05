@@ -6,10 +6,11 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { Stack, Grid, TextField, Button, Typography, Box } from '@mui/material';
 import IconButton from '@mui/material/IconButton';
-import Tooltip from '@mui/material/Tooltip';
 import LinearProgress from '@mui/material/LinearProgress';
 import InfoIcon from '@mui/icons-material/Info';
 import { DiamondOutlined } from '@mui/icons-material';
+import Tooltip, { tooltipClasses } from '@mui/material/Tooltip';
+import { styled } from '@mui/material/styles';
 
 import { useSelector } from 'react-redux';
 import { currentUser } from '../../redux/selectors';
@@ -19,27 +20,38 @@ import SnackBarAlert from '../SnackBarAlert/index';
 import style from './style';
 import ScratchCouponModal from '../ScratchCoupon';
 
+const BootstrapTooltip = styled(({ className, ...props }) => (
+    <Tooltip {...props} arrow classes={{ popper: className }} />
+))(({ theme }) => ({
+    [`& .${tooltipClasses.arrow}`]: {
+        color: theme.palette.common.black,
+    },
+    [`& .${tooltipClasses.tooltip}`]: {
+        backgroundColor: theme.palette.common.black,
+    },
+}));
+
 export default function CartInCheckOut(props) {
     const _currentUser = useSelector(currentUser);
     const [typeCus, setTypeCus] = useState('Rare member');
     const [discount, setDiscount] = useState(0);
     const [isLoading, setIsLoading] = useState(false);
-    const [isShowCoupon, setIsShowCoupon] = useState(false);
+    const [finalCost, setFinalCost] = useState(0);
     const [code, setCode] = useState('');
     const [alert, setAlert] = useState({
         open: false,
         severity: '',
         message: '',
     });
+    const [openScratch, setOpenScratch] = useState(false);
     const [couponInfo, setCouponInfo] = useState({
-        openScratch: false,
-        discount: {
-            discountType: '',
-            minTotal: '',
-            valueType: '',
-            value: '',
-        },
+        discountType: '',
+        minTotal: '',
+        valueType: '',
+        value: '',
+        couponId: '',
     });
+    const [hideDiscount, setHideDiscount] = useState(true);
 
     const Identify = () => {
         if (localStorage.getItem('role') === 'customer') {
@@ -75,19 +87,16 @@ export default function CartInCheckOut(props) {
             .then((data) => {
                 setIsLoading(false);
                 const res = data.data[0];
-                console.log(data);
                 if (res.isvalid === true) {
                     setCouponInfo({
                         ...couponInfo,
-                        openScratch: true,
-                        discount: {
-                            ...discount,
-                            discountType: res.discounttype,
-                            minTotal: res.mintotal,
-                            valueType: res.valuetype,
-                            value: res.valuediscount,
-                        },
+                        discountType: res.discounttype,
+                        minTotal: res.mintotal,
+                        valueType: res.valuetype,
+                        value: res.valuediscount,
+                        couponId: res.couponid,
                     });
+                    setOpenScratch(true);
                 } else {
                     setAlert({
                         ...alert,
@@ -108,9 +117,22 @@ export default function CartInCheckOut(props) {
             });
     };
 
-    const useCoupon = async () => {};
-
-    const skipCoupon = async () => {};
+    const useCoupon = () => {
+        if (couponInfo.valueType === 'cash') {
+            const tempDis = couponInfo.value;
+            const temp = props.subTotal + 2 - Number(couponInfo.value);
+            setFinalCost(temp);
+            const tempValue = (Number(couponInfo.value) / props.subTotal) * 100;
+            props.getTotalAndDiscount(temp - 2, tempValue, code);
+        } else {
+            const tempDis = couponInfo.value;
+            const temp = props.subTotal + 2 - (props.subTotal * Number(tempDis)) / 100;
+            setFinalCost(temp);
+            props.getTotalAndDiscount(temp - 2, tempDis, code);
+        }
+        setOpenScratch(false);
+        setHideDiscount(false);
+    };
 
     useEffect(() => {
         Identify();
@@ -120,36 +142,43 @@ export default function CartInCheckOut(props) {
         <Grid sx={style.wrapper} height="100%" item xs={5}>
             <Stack direction="column" spacing={2} p="2rem" sx={style.stackWrapper} paddingRight="6em">
                 {props.listCart.map((cart) => (
-                    <Stack sx={style.listWrapper} direction="row">
-                        {props.listProd.map((prod) =>
-                            prod.productID === cart.productid ? (
-                                <img style={style.img} alt={prod.name} src={prod.productimage[0].imageURL} />
-                            ) : null,
-                        )}
-                        <Stack sx={style.infoWrapper} direction="column">
-                            <Typography sx={{ marginLeft: '1em', marginTop: '1em' }}>{cart.product.name}</Typography>
-                            <Stack direction="row" sx={style.listProdWrapper}>
-                                {props.listProd.map((prod) =>
-                                    prod.productID === cart.productid ? (
-                                        <Typography sx={{ fontWeight: 600 }}>
-                                            ${Number((prod.price * (100 - prod.promotion)) / 100) * Number(cart.amount)}{' '}
-                                            x {Number(cart.amount)}
-                                        </Typography>
-                                    ) : null,
-                                )}
-                                {props.listProd.map((prod) =>
-                                    prod.productID === cart.productid ? (
-                                        <Typography sx={{ fontWeight: 600 }}>
-                                            {' '}
-                                            ${Number((prod.price * (100 - prod.promotion)) / 100) *
-                                                Number(cart.amount)}{' '}
-                                            x {Number(cart.amount)}
-                                        </Typography>
-                                    ) : null,
-                                )}
+                    <BootstrapTooltip title="If there is a promotion on product. We calculated">
+                        <Stack sx={style.listWrapper} direction="row">
+                            {props.listProd.map((prod) =>
+                                prod.productID === cart.productid ? (
+                                    <img style={style.img} alt={prod.name} src={prod.productimage[0].imageURL} />
+                                ) : null,
+                            )}
+                            <Stack sx={style.infoWrapper} direction="column">
+                                <Typography sx={{ marginLeft: '1em', marginTop: '1em' }}>
+                                    {cart.product.name}
+                                </Typography>
+                                <Stack direction="row" sx={style.listProdWrapper}>
+                                    {props.listProd.map((prod) =>
+                                        prod.productID === cart.productid ? (
+                                            <Typography sx={{ fontWeight: 600 }}>
+                                                $
+                                                {Number((prod.price * (100 - prod.promotion)) / 100) *
+                                                    Number(cart.amount)}{' '}
+                                                x {Number(cart.amount)}
+                                            </Typography>
+                                        ) : null,
+                                    )}
+                                    {props.listProd.map((prod) =>
+                                        prod.productID === cart.productid ? (
+                                            <Typography sx={{ fontWeight: 600 }}>
+                                                {' '}
+                                                $
+                                                {Number((prod.price * (100 - prod.promotion)) / 100) *
+                                                    Number(cart.amount)}{' '}
+                                                x {Number(cart.amount)}
+                                            </Typography>
+                                        ) : null,
+                                    )}
+                                </Stack>
                             </Stack>
                         </Stack>
-                    </Stack>
+                    </BootstrapTooltip>
                 ))}
             </Stack>
             <div style={style.line} />
@@ -200,21 +229,29 @@ export default function CartInCheckOut(props) {
                 <div style={style.line} />
                 <Stack direction="row" width="100%" justifyContent="space-between">
                     <Typography sx={{ marginTop: '1.2em', color: 'gray' }}>Temporary cost</Typography>
-                    <Typography sx={style.subTotal}>
-                        ${props.subTotal - (props.subTotal * props.discount) / 100}
-                    </Typography>
+                    <Typography sx={style.subTotal}>${props.subTotal}</Typography>
                 </Stack>
                 <Stack direction="row" width="100%" justifyContent="space-between">
                     <Typography sx={{ color: 'gray', marginTop: '-0.5em' }}>Delivery cost</Typography>
                     <Typography sx={style.twoDollar}>$2.00</Typography>
                 </Stack>
+                {!hideDiscount && (
+                    <Stack direction="row" width="100%" justifyContent="space-between">
+                        <Typography sx={{ color: 'gray', marginTop: '-0.5em' }}>Discount using</Typography>
+                        <Typography sx={{ ...style.twoDollar, color: 'green' }}>
+                            {couponInfo.valueType === 'cash' ? `- $ ${couponInfo.value}` : `- ${couponInfo.value}%`}
+                        </Typography>
+                    </Stack>
+                )}
                 <div style={style.line} />
 
                 <Stack direction="row" width="100%" justifyContent="space-between">
-                    <Typography sx={{ color: 'gray', marginTop: '1.2em' }}>Total cost</Typography>
-                    <Typography sx={style.total}>
-                        {props.subTotal - (props.subTotal * discount) / 100 + 2} USD
-                    </Typography>
+                    <Typography sx={{ color: 'gray', marginTop: '1.2em' }}>Final cost</Typography>
+                    {hideDiscount ? (
+                        <Typography sx={style.total}>{props.subTotal + 2} USD</Typography>
+                    ) : (
+                        <Typography sx={style.total}>{finalCost} USD</Typography>
+                    )}
                 </Stack>
             </Stack>
             <SnackBarAlert
@@ -225,9 +262,10 @@ export default function CartInCheckOut(props) {
             />
             <ScratchCouponModal
                 useHandle={useCoupon}
-                skipHandle={skipCoupon}
-                discount={couponInfo.discount}
-                openScratchCoupon={couponInfo.openScratch}
+                totalCost={props.subTotal}
+                discount={couponInfo}
+                openScratchCoupon={openScratch}
+                closeScratchCoupon={() => setOpenScratch(false)}
             />
         </Grid>
     );

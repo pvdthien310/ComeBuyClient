@@ -9,6 +9,7 @@ function ScratchCouponModal(props) {
     return (
         <Modal
             open={props.openScratchCoupon}
+            onClose={props.closeScratchCoupon}
             aria-labelledby="modal-verify-title"
             aria-describedby="modal-verify-description"
         >
@@ -25,7 +26,11 @@ function ScratchCouponModal(props) {
                                 Text={props.discount?.discountType}
                             />
                             <TechInforLine
-                                Icon={<InfoIcon color="success" />}
+                                Icon={
+                                    <InfoIcon
+                                        color={props.discount?.minTotal <= props.totalCost ? 'success' : 'error'}
+                                    />
+                                }
                                 Title="Min total"
                                 Text={props.discount?.minTotal}
                             />
@@ -47,10 +52,14 @@ function ScratchCouponModal(props) {
                     </Grid>
                 </Grid>
                 <Stack direction="row" sx={{ justifyContent: 'space-between' }}>
-                    <Button onClick={props.skipHandle} sx={style.skipBtn}>
+                    <Button onClick={props.closeScratchCoupon} sx={style.skipBtn}>
                         Skip
                     </Button>
-                    <Button onClick={props.useHandle} sx={style.useBtn}>
+                    <Button
+                        onClick={props.useHandle}
+                        disabled={props.discount?.minTotal > props.totalCost}
+                        sx={style.useBtn}
+                    >
                         Use
                     </Button>
                 </Stack>
